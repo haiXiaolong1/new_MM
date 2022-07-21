@@ -144,7 +144,7 @@ def quote_list(request):
     """进行报价"""
     q=models.Baojiadan.objects.all()
 
-    return render(request,'quote_list.html',{"queryset":q})
+    return render(request, 'quote_list.html', {"queryset":q})
 
 
 def quote_add(request):

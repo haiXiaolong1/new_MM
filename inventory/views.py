@@ -18,7 +18,7 @@ def inventory_display(request):
         )
         #查询展示每个工厂物料对应的最新的库存信息
     # print(q[0].updatetime)
-    return render(request,'inventory_display.html',{"queryset":q})
+    return render(request, 'inventory_display.html', {"queryset":q})
 
 
 def inventory_detail(request,uid):#路径传参要写进函数参数中
@@ -54,7 +54,7 @@ def inventory_detail(request,uid):#路径传参要写进函数参数中
 
     }
     print(result)
-    return render(request,'inventory_detail.html',result)
+    return render(request, 'inventory_detail.html', result)
 
 # 采购需求列表
 def inventory_demand(request):
@@ -67,7 +67,7 @@ def inventory_demand(request):
         "factory":factory,
         "caigou":caigou
     }
-    return render(request,'inventory_demand.html',result)
+    return render(request, 'inventory_demand.html', result)
 
 def demand_add(request):
     """添加采购需求"""
@@ -169,7 +169,7 @@ def inventory_receive(request):
     """入库管理"""
     q=models.Rukudan.objects.all()
 
-    return render(request,'inventory_receive.html',{"queryset":q})
+    return render(request, 'inventory_receive.html', {"queryset":q})
 
 
 def receive_add(request):
@@ -220,7 +220,7 @@ def receive_add(request):
 def inventory_invoice(request):
     q=models.Fapiao.objects.all()
 
-    return render(request,'inventory_invoice.html',{"queryset":q})
+    return render(request, 'inventory_invoice.html', {"queryset":q})
 
 
 def invoice_add(request):

@@ -28,8 +28,7 @@ def inquiry_create(request):
         "fid":fid,
         "mid":mid
     }
-    return render(request,'inquiry_create.html',result)
-
+    return render(request, 'inquiry_create.html', result)
 
 def inquiry_createByid(request,did):
     """创建引用请购单的询价单"""
@@ -40,7 +39,7 @@ def inquiry_createByid(request,did):
         "queryset":queryset,
         "demand":demand
     }
-    return render(request,'inquiry_createByid.html',result)
+    return render(request, 'inquiry_createByid.html', result)
 
 @csrf_exempt
 def create_qui(request):
@@ -74,7 +73,7 @@ def quote_list(request):
     """进行报价"""
     q=models.Baojiadan.objects.all()
 
-    return render(request,'quote_list.html',{"queryset":q})
+    return render(request, 'quote_list.html', {"queryset":q})
 
 
 def quote_add(request):
@@ -101,7 +100,7 @@ def quote_evaluate(request):
     result={
         "queryset":q
     }
-    return render(request,'quote_evaluate.html',result)
+    return render(request, 'quote_evaluate.html', result)
 
 
 def quote_evaluateByID(request):
@@ -126,7 +125,7 @@ def purchase_list(request):
         "queryset":q
     }
     print(q)
-    return render(request,'purchase_list.html',result)
+    return render(request, 'purchase_list.html', result)
 
 
 def purchase_create(request):
@@ -135,7 +134,7 @@ def purchase_create(request):
     result={
         "queryset":q
     }
-    return render(request,"purchase_create.html",result)
+    return render(request, "purchase_create.html", result)
 
 
 def purchase_createByQuote(request):
@@ -323,4 +322,4 @@ def purchase_documents(request):
         "puid":puid
     }
 
-    return render(request,'purchase_documents.html',result)
+    return render(request, 'purchase_documents.html', result)
