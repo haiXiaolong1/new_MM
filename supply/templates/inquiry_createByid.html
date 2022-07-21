@@ -1,0 +1,137 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">创建询价单</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title">创建引用请购单的询价单</h4>
+                        </div>
+                        <div class="panel-body">
+                            <form method="get">
+                                <div class="col-md-8">
+                                    <div class="panel panel-white">
+                                        <div class="panel-heading clearfix">
+                                            <h4 class="panel-title">询价单信息</h4>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="col-md-4">
+                                                <span>物料编号</span><input type="text" class="form-control"  name="mid" value="{{ demand.maid_id }}" disabled>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span>工厂编号</span><input type="text" class="form-control"  name="fid" disabled value="{{ demand.facid_id }}">
+                                            </div>
+                                            <div class="col-md-4">
+                                                <span>数量</span><input type="number" class="form-control"  name="mid" disabled value="{{ demand.tcount }}">
+                                            </div>
+                                            <div class="col-md-6" style="margin-top: 20px">
+                                                <label>有效期：</label><input type="datetime-local" class="form-control"  id="date" placeholder="输入供应商编号" value="">
+                                            </div>
+                                            <div class="col-md-4" style="margin-top: 20px">
+                                                <label>供应商：</label><input type="text" class="form-control"  id="sid" placeholder="输入供应商编号" value="">
+                                            </div>
+                                            <div class="col-md-2" style="margin-top: 25px">
+                                                <label> </label><button class="btn btn-success" type="button" id="createBtn">创建</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-white">
+                                        <div class="panel-heading clearfix">
+                                            <h4 class="panel-title">供应商信息</h4>
+                                        </div>
+                                        <div class="panel-body">
+                                            <div class="table-responsive">
+                                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                                    <thead>
+                                                    <tr>
+                                                        <th>供应商编号</th>
+                                                        <th>物料编号</th>
+                                                        <th>供应商名称</th>
+                                                        <th>地址</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="table">
+                                                    {% for obj in queryset %}
+                                                        <tr>
+                                                            <td>{{ obj.supplyid_id }}</td>
+                                                            <td>{{ obj.materialid_id }}</td>
+                                                            <td>{{ obj.supplyid.name }}</td>
+                                                            <td>{{ obj.supplyid.address }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="panel panel-white">
+                                        <div class="panel-heading clearfix">
+                                            <h4 class="panel-title">物料信息</h4>
+                                        </div>
+                                        <div class="panel-body">
+                                            <span>物料编号：{{ demand.maid_id }}</span><br/>
+                                            <span>物料类型：{{ demand.maid.type }}</span><br/>
+                                            <span>物料描述：{{ demand.maid.desc }}</span><br/>
+                                            <span>计量单位：{{ demand.maid.calcutype }}</span>
+                                        </div>
+                                    </div>
+                                    <div class="panel panel-white">
+                                        <div class="panel-heading clearfix">
+                                            <h4 class="panel-title">工厂信息</h4>
+                                        </div>
+                                        <div class="panel-body">
+                                            <span>工厂编号：{{ demand.facid_id }}</span><br/>
+                                            <span>工厂类型：{{ demand.facid.type }}</span><br/>
+                                            <span>地址：{{ demand.facid.address }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- Row -->
+        </div><!-- Main Wrapper -->
+    </div>
+{% endblock %}
+
+{% block js%}
+    <script type="text/javascript">
+        var VERIFY_ID;
+        $(document).ready(function() {
+            $('li').removeClass('active-page');
+            $('#purchase_create_inquiry').addClass('active-page');
+            $('#purchase').addClass('active-page').addClass('open');
+            $('#purchase_ul').css('display','block');
+            $('#purchase_ul li').addClass('animation');
+
+            $('#createBtn').click(function () {
+                var date=$("#date")[0].value;
+                var sid=$("#sid")[0].value;
+                $.ajax({
+                    url:"/purchase/create/qui/"+"?did="+"{{ demand.demandid }}",
+                    type:"post",
+                    data:{"date":date,"sid":sid},
+                    dataType:"JSON",
+                    success:function (res){
+                        if(res.status){
+                            alert("创建成功，询价单号:"+res.inid);
+                            location.reload();
+                        }
+                    }
+
+                })
+            })
+
+        })
+
+
+    </script>
+{% endblock %}

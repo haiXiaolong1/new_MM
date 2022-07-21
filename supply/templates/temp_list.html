@@ -1,0 +1,181 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">暂存检查</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title">采购订单列表</h4>
+                        </div>
+                        <div>
+                            <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel"></h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" id="formAdd">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <div class="control-group m-b-sm" id="toastTypeGroup">
+                                                        <div class="controls">
+                                                            <label id="myLa">质检结果</label><br>
+                                                            <label>
+                                                                <input type="radio" name="check" value="1" checked /> 通过
+                                                            </label><br><br>
+                                                            <label>
+                                                                <input type="radio" name="check" value="0" /> 不通过
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group" style="margin-top: 15px">
+                                                            <textarea class="input-large form-control" name="moreinfo" id="message" rows="3" placeholder="情况说明"></textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                            </form>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="submit" id="btnSave" class="btn btn-success">确定</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th>采购单号</th>
+                                        <th>物料编号</th>
+                                        <th>工厂编号</th>
+                                        <th>价格</th>
+                                        <th>数量</th>
+                                        <th>质检状态</th>
+                                        <th>量检状态</th>
+                                        <th>暂存单号</th>
+                                        {% if  request.session.info.issuper %}
+                                            <th>操作</th>
+                                        {% endif %}
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table">
+                                    {% for obj in queryset %}
+                                        <tr>
+                                            <td>{{ obj.purchaseid_id }}</td>
+                                            <td>{{ obj.purchaseid.maid_id }}</td>
+                                            <td>{{ obj.purchaseid.facid_id }}</td>
+                                            <td>{{ obj.purchaseid.price }}</td>
+                                            <td>{{ obj.purchaseid.tcount }}</td>
+                                            <td>{{ obj.get_qualitycheckinfo_display }}</td>
+                                            <td>{{ obj.get_quantitycheckinfo_display }}</td>
+                                            {% if obj.temid == obj.purchaseid_id %}
+                                                <td>未检收</td>
+                                            {% else %}
+                                              <td>{{ obj.temid }}</td>
+                                            {% endif %}
+                                            {#                                        判断是否是管理员，普通员工只能查看#}
+                                            {% if  request.session.info.issuper %}
+                                                <td>
+                                                    {% if obj.qualitycheckinfo == -1 %}
+                                                        <button class="btn btn-primary btn-xs btnQuality" uid="{{ obj.purchaseid_id }}">质检</button>
+                                                    {% endif %}
+                                                    {% if obj.quantitycheckinfo == -1 %}
+                                                        <button class="btn btn-primary btn-xs btnQuantity" uid="{{ obj.purchaseid_id }}">量检</button>
+                                                    {% endif %}
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- Row -->
+        </div><!-- Main Wrapper -->
+    </div>
+{% endblock %}
+
+{% block js%}
+    <script type="text/javascript">
+        var QUANTITY_ID,QUALITY_ID;
+        $(document).ready(function() {
+            $('li').removeClass('active-page');
+            $('#inventory_temp').addClass('active-page');
+            $('#inventory').addClass('active-page').addClass('open');
+            $('#inventory_ul').css('display','block');
+            $('#inventory_ul li').addClass('animation');
+
+
+
+            $("#btnSave").click(function () {
+                if (QUALITY_ID){
+                    $.ajax({
+                        url:"/inventory/quality/check/"+"?puid="+QUALITY_ID,
+                        type:"post",
+                        data:$("#formAdd").serialize(),
+                        dataType:"JSON",
+                        success:function (res){
+                            if(res.status){
+                                $("#myd").modal('hide');
+                                $("#formAdd")[0].reset();
+                                location.reload();
+                            }
+                        }
+                    })
+
+                    QUALITY_ID=undefined;
+                }
+                if(QUANTITY_ID){
+                    $.ajax({
+                        url:"/inventory/quantity/check/"+"?puid="+QUANTITY_ID,
+                        type:"post",
+                        data:$("#formAdd").serialize(),
+                        dataType:"JSON",
+                        success:function (res){
+                            if(res.status){
+                                $("#myd").modal('hide');
+                                $("#formAdd")[0].reset();
+                                location.reload();
+                            }
+                        }
+                    })
+
+                    QUANTITY_ID=undefined;
+                }
+
+            })
+
+            $("#table").on('click','.btnQuantity',function () {
+                QUANTITY_ID=$(this).attr("uid");
+                $("#formAdd")[0].reset();
+                $("#myModalLabel").text("数量检查");
+                $("#myLa").text("量检结果");
+                $("#myd").modal('show');
+            })
+            $("#table").on('click','.btnQuality',function () {
+                QUALITY_ID=$(this).attr("uid");
+                $("#formAdd")[0].reset();
+                $("#myModalLabel").text("质量检查");
+                $("#myLa").text("质检结果");
+                $("#myd").modal('show');
+            })
+
+        })
+
+
+    </script>
+{% endblock %}

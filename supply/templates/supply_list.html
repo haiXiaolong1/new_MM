@@ -1,0 +1,270 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">供应商管理</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title">供应商列表</h4>
+                        </div>
+                        <div>
+
+{#                            提示框#}
+                            <div class="modal fade" id="alertModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="alert alert-success alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <span id="alertText"> </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加</button>
+                            <!-- 新建/编辑对话框 -->
+
+                            <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">新建供应商</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" id="formAdd">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <input type="text"  class="form-control" placeholder="供应商名称" name="name" id="name" required >
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="text"  class="form-control" placeholder="地址" name="address" id="address" required>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="submit" id="btnSave" class="btn btn-success">保存</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            {#                            删除对话框#}
+                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" >删除供应商</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <span>是否确定删除？</span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="submit" id="Delete" class="btn btn-success">确定</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th>供应商编号</th>
+                                        <th>供应商名称</th>
+                                        <th>地址</th>
+                                        <th>创建时间</th>
+                                        <th>修改时间</th>
+                                        <th>创建人</th>
+                                        <th>修改人</th>
+                                        {% if  request.session.info.issuper %}
+                                        <th>操作</th>
+                                        {% endif %}
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table">
+                                    {% for obj in queryset %}
+                                        <tr>
+                                            <td>{{ obj.id }}</td>
+                                            <td>{{ obj.name }}</td>
+                                            <td>{{ obj.address }}</td>
+                                            <td>{{ obj.createtime|date:"Y-m-d H:i:s"  }}</td>
+                                            <td>{{ obj.updatetime|date:"Y-m-d H:i:s" }}</td>
+                                            <td>{{ obj.createnumberid.username }}</td>
+                                            <td>{{ obj.updatenumberid.username }}</td>
+{#                                        判断是否是管理员，普通员工只能查看#}
+                                            {% if  request.session.info.issuper %}
+                                            <td>
+                                                <button class="btn btn-primary btn-xs btnEdit" id="" uid="{{ obj.id }}">编辑</button>
+                                                <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>
+                                            </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- Row -->
+        </div><!-- Main Wrapper -->
+    </div>
+{% endblock %}
+
+{% block js%}
+    <script type="text/javascript">
+        var EDIT_ID;
+        var DELETE_ID;
+        $(document).ready(function() {
+            $('li').removeClass('active-page');
+            $('#supply1').addClass('active-page');
+            $('#supply').addClass('active-page').addClass('open');
+            $('#supply_ul').css('display','block');
+            $('#supply_ul li').addClass('animation');
+            {#图表#}
+
+
+            $("#btnAdd").click(function () {
+                //将正在编辑的ID置空
+                EDIT_ID=undefined;
+                $("#myModalLabel").text("新建供应商");
+                $("#formAdd")[0].reset();
+                $("#myd").modal('show');
+            })
+            $("#btnSave").click(function () {
+
+                if(!EDIT_ID){
+                    if(!$("#name").val())
+                    {
+                        alert("供应商名称不能为空")
+                        return;
+                    }
+                    else if(!$("#address").val())
+                    {
+                        alert("供应商地址不能为空")
+                        return;
+                    }
+                    else {
+                        $.ajax({
+                            url:"/supply/add/",
+                            type:"post",
+                            data:$("#formAdd").serialize(),
+                            dataType:"JSON",
+                            success:function (res){
+                                if(res.status){
+                                    {#验证是否为空#}
+                                    $("#formAdd")[0].reset();
+                                    $("#myd").modal('hide');
+                                    alert("添加成功");
+                                    location.reload();
+                                }
+                            }
+
+                        })
+                    }
+
+                }else {
+                    if(!$("#name").val())
+                    {
+                        alert("供应商名称不能为空")
+                        return;
+                    }
+                    else if(!$("#address").val())
+                    {
+                        alert("供应商地址不能为空")
+                        return;
+                    }
+                    else {
+                        $.ajax({
+                            url:"/supply/edit/"+"?uid="+EDIT_ID,
+                            type:"post",
+                            data:$("#formAdd").serialize(),
+                            dataType:"JSON",
+                            success:function (res){
+                                if(res.status){
+                                    $("#myd").modal('hide');
+                                    $("#formAdd")[0].reset();
+                                    location.reload();
+                                }
+                            }
+
+                        })
+                        EDIT_ID=undefined;
+                    }
+                }
+
+
+            })
+
+            $("#table").on('click','.btnDelete',function () {
+                DELETE_ID=$(this).attr("uid");
+                $("#deleteModel").modal('show');
+            })
+
+            $("#Delete").click(
+                function () {
+                    $.ajax({
+                        url:"/supply/delete/",
+                        type:"get",
+                        data:{uid:DELETE_ID},
+                        dataType:"JSON",
+                        success:function (res){
+                            if(res.status){
+                                $("#deleteModel").modal('hide');
+                                DELETE_ID=undefined;
+                                location.reload();
+                            }
+                            else {
+                                alert("该供应商关联有供应关系，不能删除！");
+                                $("#deleteModel").modal('hide');
+                                DELETE_ID=undefined;
+                                location.reload();
+                            }
+                        }
+                    })
+                }
+            )
+
+
+            $("#table").on('click','.btnEdit',function () {
+                var curid=$(this).attr("uid");
+                EDIT_ID=curid;
+                $("#formAdd")[0].reset();
+                $.ajax({
+                    url:"/supply/detail/",
+                    type: "get",
+                    data:{uid:curid},
+                    dataType: "JSON",
+                    success:function (res) {
+                        if(res.status){
+                            $.each(res.supply,function (name,value){
+                                $("#"+name).val(value);
+                            })
+                            $("#myModalLabel").text("编辑供应商")
+                            $("#myd").modal('show');
+                        }else {
+
+                        }
+                    }
+                })
+            })
+
+        })
+
+
+    </script>
+{% endblock %}

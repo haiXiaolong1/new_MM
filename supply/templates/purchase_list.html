@@ -1,0 +1,122 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">创建采购订单</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title">采购订单列表</h4>
+                        </div>
+                        <div>
+                            <a type="button" class="btn btn-info" style="margin-bottom: 20px" href="/purchase/create/">创建新订单</a>
+                        </div>
+                        <div>
+                            <!-- 对话框 -->
+                            <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">评估报价单</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" id="formAdd">
+                                                {% csrf_token %}
+
+                                                <div class="form-group col-md-7">
+                                                    <select class="form-control"  name="isreceived" id="isreceived">
+                                                        <option value="0" selected>评估</option>
+                                                        <option value="1">接受</option>
+                                                        <option value="2">拒绝</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-check form-switch col-md-5">
+                                                    <input class="form-check-input " type="checkbox" id="mySwitch" name="isall" value="1">
+                                                    <label class="form-check-label" for="mySwitch">同时拒绝其他报价单</label>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                        <div class="modal-footer" style="margin-top: 40px">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="submit" id="btnSave" class="btn btn-success">保存</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th>采购订单编号</th>
+                                        <th>物料编号</th>
+                                        <th>工厂编号</th>
+                                        <th>供应商编号</th>
+                                        <th>是否完成</th>
+                                        <th>价格</th>
+                                        <th>数量</th>
+                                        <th>送货截至日期</th>
+                                        {% if obj.iscomplete == 1 %}
+                                        <th>操作</th>
+                                        {% endif %}
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table">
+                                    {% for obj in queryset %}
+                                        {% if obj.quoteid != obj.inquiryid_id %}
+                                            <tr>
+                                                <td>{{ obj.purchaseid }}</td>
+                                                <td>{{ obj.maid_id }}</td>
+                                                <td>{{ obj.facid_id }}</td>
+                                                <td>{{ obj.supplyid_id }}</td>
+                                                <td>{{ obj.get_iscomplete_display }}</td>
+                                                <td>{{ obj.price }}</td>
+                                                <td>{{ obj.tcount }}</td>
+                                                <td>{{ obj.deadline|date:"Y-m-d"  }}</td>
+                                                <td>
+                                                    {% if obj.iscomplete == 1 %}
+                                                        <button class="btn btn-danger btn-xs btnDelete"  uid="{{ obj.purchaseid }}">删除</button>
+                                                    {% endif %}
+                                                </td>
+                                            </tr>
+                                        {% endif %}
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- Row -->
+        </div><!-- Main Wrapper -->
+    </div>
+{% endblock %}
+
+{% block js%}
+    <script type="text/javascript">
+        var DELETE_ID;
+        $(document).ready(function() {
+            $('li').removeClass('active-page');
+            $('#purchase_list').addClass('active-page');
+            $('#purchase').addClass('active-page').addClass('open');
+            $('#purchase_ul').css('display','block');
+            $('#purchase_ul li').addClass('animation');
+
+            {#动态增加点击事件#}
+            $("#table").on('click','.btnDelete',function () {
+                $("#myd").modal('show');
+
+            })
+        })
+
+
+    </script>
+{% endblock %}

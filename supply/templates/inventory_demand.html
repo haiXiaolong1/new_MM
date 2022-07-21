@@ -1,0 +1,177 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">采购需求管理</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title">采购需求列表</h4>
+                        </div>
+                        <div>
+
+                            <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加</button>
+                            <!-- 新建对话框 -->
+
+                            <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">新建采购需求</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" id="formAdd">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <select class="form-control"  name="facid_id" id="facid_id">
+                                                        <option value selected>工厂编号</option>
+                                                        {% for s in factory %}
+                                                            <option value="{{ s.id }}">{{ s.id }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <select class="form-control"  name="maid_id" id="maid_id">
+                                                        <option value selected>物料编号</option>
+                                                        {% for m in material %}
+                                                            <option value="{{ m.id }}" id="{{ m.id }}">{{ m.id }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="number"  class="form-control" placeholder="价格" name="price" id="price"required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <input type="number"  class="form-control" placeholder="数量" name="tcount" id="tcount" required>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="submit" id="btnSave" class="btn btn-success">保存</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th>请购单号</th>
+                                        <th>物料编号</th>
+                                        <th>工厂编号</th>
+                                        <th>价格</th>
+                                        <th>数量</th>
+                                        <th>状态</th>
+                                        <th>创建时间</th>
+                                        <th>审核时间</th>
+                                        <th>创建人</th>
+                                        <th>审核人</th>
+                                        {% if  request.session.info.issuper %}
+                                            <th>操作</th>
+                                        {% endif %}
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table">
+                                    {% for obj in caigou %}
+                                        <tr>
+                                            <td>{{ obj.demandid }}</td>
+                                            <td>{{ obj.maid_id }}</td>
+                                            <td>{{ obj.facid_id }}</td>
+                                            <td>{{ obj.price }}</td>
+                                            <td>{{ obj.tcount }}</td>
+                                            <td>{{ obj.get_status_display }}</td>
+                                            <td>{{ obj.createtime|date:"Y-m-d H:i:s"  }}</td>
+                                            <td>{{ obj.verifytime|date:"Y-m-d H:i:s" }}</td>
+                                            <td>{{ obj.createuserid.username }}</td>
+                                            <td>{{ obj.verifyuserid.username }}</td>
+                                            {#                                        判断是否是管理员，普通员工只能查看#}
+                                            {% if  request.session.info.issuper %}
+                                                <td>
+                                                    {% if obj.status == 2 %}
+                                                        <button class="btn btn-danger btn-xs btnDelete" uid="{{ obj.demandid }}">删除</button>
+                                                    {% elif obj.status == 1%}
+                                                        <button class="btn btn-default btn-xs btnCom" uid="{{ obj.demandid }}">完成</button>
+                                                    {% else %}
+                                                        <button class="btn btn-primary btn-xs btnVerify" uid="{{ obj.demandid }}">确认</button>
+                                                    {% endif %}
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- Row -->
+        </div><!-- Main Wrapper -->
+    </div>
+{% endblock %}
+
+{% block js%}
+    <script type="text/javascript">
+        var VERIFY_ID;
+        $(document).ready(function() {
+            $('li').removeClass('active-page');
+            $('#inventory_demand').addClass('active-page');
+            $('#inventory').addClass('active-page').addClass('open');
+            $('#inventory_ul').css('display','block');
+            $('#inventory_ul li').addClass('animation');
+
+
+            $("#btnAdd").click(function () {
+                $("#formAdd")[0].reset();
+                $("#myd").modal('show');
+            })
+            $("#btnSave").click(function () {
+                $.ajax({
+                    url:"/inventory/demand/add/",
+                    type:"post",
+                    data:$("#formAdd").serialize(),
+                    dataType:"JSON",
+                    success:function (res){
+                        if(res.status){
+                            $("#myd").modal('hide');
+                            $("#formAdd")[0].reset();
+                            alert("添加成功");
+                            location.reload();
+                        }
+                    }
+                })
+            })
+
+            $("#table").on('click','.btnVerify',function () {
+                VERIFY_ID=$(this).attr("uid");
+
+                $.ajax({
+                    url:"/inventory/demand/verify/",
+                    type:"post",
+                    data:{"did":VERIFY_ID},
+                    dataType:"JSON",
+                    success:function (res){
+                        if(res.status){
+                            alert("已确认");
+                            location.reload();
+                        }
+                    }
+                })
+            })
+
+        })
+
+
+    </script>
+{% endblock %}

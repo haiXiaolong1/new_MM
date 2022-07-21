@@ -1,0 +1,75 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">查看库存</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title">库存列表</h4>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th>工厂编号</th>
+                                        <th>物料编号</th>
+                                        <th>在途库存</th>
+                                        <th>暂存库存</th>
+                                        <th>未限制使用库存</th>
+                                        <th>冻结库存</th>
+                                        <th>更新时间</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table">
+                                    {% for obj in queryset %}
+                                        <tr>
+                                            <td>{{ obj.facid_id }}</td>
+                                            <td>{{ obj.maid_id }}</td>
+                                            <td>{{ obj.inventoryonroad }}</td>
+                                            <td>{{ obj.inventorytemp }}</td>
+                                            <td>{{ obj.inventoryunrest }}</td>
+                                            <td>{{ obj.inventoryfreeze }}</td>
+                                            <td>{{ obj.updatetime|date:"Y-m-d H:i:s" }}</td>
+                                            <td>
+                                                <a class="btn btn-primary btn-xs" href="/inventory/{{ obj.id }}/detail/">查看详情</a>
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- Row -->
+        </div><!-- Main Wrapper -->
+    </div>
+{% endblock %}
+
+{% block js%}
+    <script type="text/javascript">
+        var EDIT_ID;
+        var DELETE_ID;
+        $(document).ready(function() {
+            $('li').removeClass('active-page');
+            $('#inventory_display').addClass('active-page');
+            $('#inventory').addClass('active-page').addClass('open');
+            $('#inventory_ul').css('display','block');
+            $('#inventory_ul li').addClass('animation');
+            {#图表#}
+
+
+        })
+
+
+    </script>
+{% endblock %}

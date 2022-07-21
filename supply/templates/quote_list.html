@@ -1,0 +1,132 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">报价单管理</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title">报价单列表</h4>
+                        </div>
+                        <div>
+                            <!-- 对话框 -->
+                            <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">报价</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" id="formAdd">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <input type="number"  class="form-control" placeholder="价格" name="quote" id="quote" required>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="submit" id="btnSave" class="btn btn-success">保存</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th>报价单编号</th>
+                                        <th>询价单编号</th>
+                                        <th>物料编号</th>
+                                        <th>供应商编号</th>
+                                        <th>公司编号</th>
+                                        <th>报价</th>
+                                        <th>有效期</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table">
+                                    {% for obj in queryset %}
+                                        <tr>
+                                            <td>
+                                                {% if obj.quoteid != obj.inquiryid_id%}
+                                                    {{ obj.quoteid }}
+                                                {% endif %}
+                                            </td>
+                                            <td>{{ obj.inquiryid_id }}</td>
+                                            <td>{{ obj.maid_id }}</td>
+                                            <td>{{ obj.supplyid_id }}</td>
+                                            <td>{{ obj.bussid_id }}</td>
+                                            <td>{{ obj.quote }}</td>
+                                            <td>{{ obj.validitytime|date:"Y-m-d H:i:s"  }}</td>
+                                            <td>
+                                                {% if obj.inquiryid_id == obj.quoteid %}
+                                                    <button class="btn btn-primary btn-xs btnQuote"  uid="{{ obj.inquiryid_id }}">报价</button>
+                                                {% elif obj.isreceived == 0 %}
+                                                    <button class="btn btn-primary btn-xs btnEdit"  uid="{{ obj.inquiryid_id }}">修改报价</button>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- Row -->
+        </div><!-- Main Wrapper -->
+    </div>
+{% endblock %}
+
+{% block js%}
+    <script type="text/javascript">
+        var QUOTE_ID;
+        $(document).ready(function() {
+            $('li').removeClass('active-page');
+            $('#supply3').addClass('active-page');
+            $('#supply').addClass('active-page').addClass('open');
+            $('#supply_ul').css('display','block');
+            $('#supply_ul li').addClass('animation');
+
+
+
+            $("#btnSave").click(function () {
+                $.ajax({
+                    url:"/supply/quote/add/"+"?inid="+QUOTE_ID,
+                    type:"post",
+                    data:$("#formAdd").serialize(),
+                    dataType:"JSON",
+                    success:function (res){
+                        if(res.status){
+                            $("#myd").modal('hide');
+                            $("#formAdd")[0].reset();
+                            location.reload();
+                        }
+                    }
+
+                })
+                EDIT_ID=undefined;
+            })
+
+            {#动态增加点击事件#}
+            $("#table").on('click','.btnQuote',function () {
+                var curid=$(this).attr("uid");
+                QUOTE_ID=curid;
+                $("#formAdd")[0].reset();
+                $("#myd").modal('show');
+            })
+        })
+
+
+    </script>
+{% endblock %}
