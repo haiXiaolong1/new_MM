@@ -273,7 +273,7 @@ def purchase_documents(request):
                 list.append(m)
             else:
                 name="暂收单"
-                status=t.isreceived
+                status=t.isreceived-1
                 id=t.temid
                 moreinfo=t.moreinfo
                 date=t.createtime
