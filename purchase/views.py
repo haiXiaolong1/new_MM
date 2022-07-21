@@ -7,7 +7,7 @@ from django.views.decorators.csrf import csrf_exempt
 from supply import models
 
 
-
+# 创建询价单
 def inquiry_create(request):
     """创建询价单页面"""
     q={}
@@ -20,7 +20,7 @@ def inquiry_create(request):
         q['facid__id__contains']=fid
     if mid:
         q['maid__id__contains']=mid
-
+    # 根据条件进行模糊搜索，并返回结果集
     queryset=models.Caigouxuqiu.objects.filter(**q).all()
     result={
         "queryset":queryset,
@@ -34,7 +34,7 @@ def inquiry_createByid(request,did):
     """创建引用请购单的询价单"""
     queryset=models.Gongyingguanxi.objects.filter().all()
     demand=models.Caigouxuqiu.objects.filter(demandid=did).first()
-    print(demand)
+    # print(demand)
     result={
         "queryset":queryset,
         "demand":demand
@@ -58,24 +58,24 @@ def create_qui(request):
                                     createtime=time,bussid_id=user.businessid_id,createuserid_id=id,
                                     demandid_id=did,maid_id=d.maid_id,supplyid_id=sid
                                     )
-    # 将请购单的状态修改为2
+    # 将请购单的状态修改为2，即已完成状态，所有的状态含义在supply的models里面找到对应实体类可以查看
     models.Caigouxuqiu.objects.filter(demandid=did).update(status=2)
 
 
-    #需要同时生成报价单,暂时将报价单号等于询价单号，供应商完报价之后，真正形成报价单
+    #这里为了展示，需要同时生成报价单,暂时将报价单号等于询价单号，供应商完报价之后，真正形成报价单
     models.Baojiadan.objects.create(inquiryid_id=inid,tcount=d.tcount,validitytime=date,
                                     bussid_id=user.businessid_id,maid_id=d.maid_id,
                                     supplyid_id=sid,quoteid=inid)
     return JsonResponse({"status":True,"inid":inid})
 
-
+# 报价单列表
 def quote_list(request):
     """进行报价"""
     q=models.Baojiadan.objects.all()
 
     return render(request, 'quote_list.html', {"queryset":q})
 
-
+# 新增报价单
 def quote_add(request):
     """报价完成"""
     inid=request.GET.get("inid")
@@ -86,6 +86,7 @@ def quote_add(request):
     qid="qu"+str(int(n)+1)#编号递增，这样计算避免删除后出现错误
     time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id=request.session["info"]['id']
+    # 真正生成供应商的报价单
     models.Baojiadan.objects.filter(inquiryid_id=inid).update(quote=quote,
                                                               quoteid=qid,
                                                               createtime=time,
@@ -93,7 +94,7 @@ def quote_add(request):
                                                               isreceived=0)
     return JsonResponse({"status":True})
 
-
+# 评估报价单页面
 def quote_evaluate(request):
 
     q=models.Baojiadan.objects.all()
@@ -102,7 +103,7 @@ def quote_evaluate(request):
     }
     return render(request, 'quote_evaluate.html', result)
 
-
+# 评估相应的报价单
 def quote_evaluateByID(request):
     """评估报价单"""
     quid=request.GET.get("quid")
@@ -117,7 +118,7 @@ def quote_evaluateByID(request):
     models.Baojiadan.objects.filter(quoteid=quid).update(isreceived=isrece)
     return JsonResponse({"status":True})
 
-
+# 采购订单列表
 def purchase_list(request):
 
     q=models.Caigoudan.objects.all()
@@ -127,7 +128,7 @@ def purchase_list(request):
     print(q)
     return render(request, 'purchase_list.html', result)
 
-
+# 创建采购订单
 def purchase_create(request):
 
     q=models.Baojiadan.objects.all()
@@ -136,7 +137,7 @@ def purchase_create(request):
     }
     return render(request, "purchase_create.html", result)
 
-
+# 根据报价单创建采购订单
 def purchase_createByQuote(request):
     """根据报价单创建采购订单"""
     quid=request.GET.get("quid")
@@ -173,7 +174,7 @@ def purchase_createByQuote(request):
                                              inventoryfreeze=0,inventoryunrest=0
                                              ,updatetime=createtime)
 
-    #需要同时生成暂存单，当进行暂存处理时真正生成暂存单
+    #为了展示需要这里需要，同时生成暂存单，当进行暂存处理时真正生成暂存单
     models.Zanshoudan.objects.create(temid=puid,tcount=tcount,maid_id=mid,
                                      purchaseid_id=puid,qualitycheckinfo=-1,
                                      quantitycheckinfo=-1)
@@ -182,7 +183,8 @@ def purchase_createByQuote(request):
 
 def purchase_documents(request):
     """查看单据流"""
-    # 目前暂时只支持根据采购单号，后续再改
+    # 目前暂时只支持根据采购单号，后续再改，这里写的比较繁琐可以考虑优化
+    # 目前的想法是，前端传过来哪个编号就按哪个编号查，这样的话，下面的if puid就要做三遍
     list=[]
     q={}
     # did=request.GET.get("did","")
@@ -193,6 +195,7 @@ def purchase_documents(request):
     if puid:
         # 采购单
         p=models.Caigoudan.objects.filter(purchaseid=puid).first()
+        # 有这个采购单才接着做
         if p:
             m={}
             date=p.createtime

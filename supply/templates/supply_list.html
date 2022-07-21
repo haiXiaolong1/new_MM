@@ -104,7 +104,7 @@
                                             <td>{{ obj.updatetime|date:"Y-m-d H:i:s" }}</td>
                                             <td>{{ obj.createnumberid.username }}</td>
                                             <td>{{ obj.updatenumberid.username }}</td>
-{#                                        判断是否是管理员，普通员工只能查看#}
+{#                                        判断是否是管理员，普通员工只能查看,可以优化，其他页面同样#}
                                             {% if  request.session.info.issuper %}
                                             <td>
                                                 <button class="btn btn-primary btn-xs btnEdit" id="" uid="{{ obj.id }}">编辑</button>
@@ -135,7 +135,6 @@
             $('#supply').addClass('active-page').addClass('open');
             $('#supply_ul').css('display','block');
             $('#supply_ul li').addClass('animation');
-            {#图表#}
 
 
             $("#btnAdd").click(function () {
@@ -201,7 +200,6 @@
                                     location.reload();
                                 }
                             }
-
                         })
                         EDIT_ID=undefined;
                     }

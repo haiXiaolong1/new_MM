@@ -68,7 +68,7 @@ def inventory_demand(request):
         "caigou":caigou
     }
     return render(request, 'inventory_demand.html', result)
-
+# 添加采购需求
 def demand_add(request):
     """添加采购需求"""
     n=10000000
@@ -93,7 +93,7 @@ def demand_verify(request):
                                                            verifyuserid_id=id,status=1)
     return JsonResponse({"status":True})
 
-
+# 进行暂存检查
 def inventory_temp(request):
 
     """暂存检查"""
@@ -107,6 +107,7 @@ def ischeck(request,pid):
     """判断是否检查完成"""
     z=models.Zanshoudan.objects.filter(purchaseid_id=pid)
     flag=False
+    # 质检量检均完成后，才算完成
     if z.first().quantitycheckinfo!=-1 and z.first().qualitycheckinfo!=-1:
         n=10000000
         createtime=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -164,14 +165,14 @@ def quantity_check(request):
     ischeck(request,puid)
     return JsonResponse({"status":True})
 
-
+# 展示入库单
 def inventory_receive(request):
     """入库管理"""
     q=models.Rukudan.objects.all()
 
     return render(request, 'inventory_receive.html', {"queryset":q})
 
-
+# 添加入库
 def receive_add(request):
     """添加入库"""
     tid=request.GET.get("tid")
@@ -216,13 +217,13 @@ def receive_add(request):
     return JsonResponse({"status":True})
 
 
-
+# 展示发票
 def inventory_invoice(request):
     q=models.Fapiao.objects.all()
 
     return render(request, 'inventory_invoice.html', {"queryset":q})
 
-
+# 添加发票
 def invoice_add(request):
     tid=request.GET.get("tid")
     t=models.Rukudan.objects.filter(temid_id=tid)
@@ -239,16 +240,16 @@ def invoice_add(request):
     money=float(totalcount)*float(price)
     totalmoney=money+float(fee)
     moreinfo=request.POST.get("moreinfo")
-    # 对于税率的计算有待进一步验证
+
     n=10000000
     if models.Fapiao.objects.all().first():
         n=models.Fapiao.objects.all().order_by('-invoiceid').first().invoiceid[2:]
-    ivid="iv"+str(int(n)+1)#编号递增，这样计算避免删除后出现错误
+    ivid="iv"+str(int(n)+1)#编号递增，
     models.Fapiao.objects.create(invoiceid=ivid,totalmoney=totalmoney,totalcount=totalcount
                                  ,fee=fee,createtime=time,  supplyid_id=sid,
                                  createuserid_id=id,purchaseid_id=pid,money=money,moreinfo=moreinfo
                                  )
-    #更更新状态
+    #更新暂收单状态
     models.Zanshoudan.objects.filter(temid=tid).update(isreceived=2)
     return JsonResponse({"status":True,"id":ivid})
 
