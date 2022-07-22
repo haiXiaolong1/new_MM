@@ -1,0 +1,38 @@
+/* Write your custom CSS here */
+
+/*待审核*/
+.table_status_0
+{
+    border: 1px;
+    color:azure;
+    border-radius: 3px;
+    display: block;
+    font-weight:400;
+    text-align: center;
+    background-color: rgb(238, 194, 18);
+    border-color: seashell;
+}
+/*已审核*/
+.table_status_1
+{
+    border: 1px;
+    color:azure;
+    border-radius: 3px;
+    display: block;
+    font-weight:400;
+    text-align: center;
+    background-color: rgb(68, 107, 223);
+    border-color: seashell;
+}
+/*已完成*/
+.table_status_2
+{
+    border: 1px;
+    color:azure;
+    border-radius: 3px;
+    display: block;
+    font-weight:400;
+    text-align: center;
+    background-color: rgb(98, 229, 119);
+    border-color: grey;
+}
