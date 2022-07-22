@@ -62,7 +62,7 @@
             $('#inventory_ul').css('display','block');
             $('#inventory_ul li').addClass('animation');
 
-            console.log({{datelist|safe}});
+            {#console.log({{datelist|safe}});#}
             {#图表#}
             var myChart = echarts.init(document.getElementById('chart1'));
             var legenddata,xdata,sdata;
@@ -93,7 +93,7 @@
                 series: sdata//后台获取
             };
             // 使用刚指定的配置项和数据显示图表。
-            console.log(option)
+            {#console.log(option)#}
             myChart.setOption(option);
 
             var myChart2 = echarts.init(document.getElementById('chart2'));

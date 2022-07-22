@@ -2,7 +2,6 @@ from django.urls import path,include
 from supply import  views
 
 urlpatterns = [
-    # path('admin/', admin.site.urls),
     path('list/',views.supply_list),
     path('add/',views.supply_add),
     path('detail/', views.supply_detail),
