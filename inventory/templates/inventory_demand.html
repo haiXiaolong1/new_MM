@@ -107,7 +107,7 @@
                                             <td>{{ obj.price }}</td>
                                             <td>{{ obj.tcount }}</td>
                                             {% load myfilter %}
-                                            <td><a class={{obj.status|table_status}}>{{ obj.get_status_display }}</a></td>
+                                            <td><a class={{obj.status|table_status:"cgxq"}}>{{ obj.get_status_display }}</a></td>
                                             <td>{{ obj.createtime|date:"Y-m-d H:i:s"  }}</td>
                                             <td>{{ obj.verifytime|date:"Y-m-d H:i:s" }}</td>
                                             <td>{{ obj.createuserid.username }}</td>
