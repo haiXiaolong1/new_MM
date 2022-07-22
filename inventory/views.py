@@ -258,4 +258,4 @@ def invoice_add(request):
 def invoice_display(request,ivid):
     """展示发票详情"""
     invoice=models.Fapiao.objects.filter(invoiceid=ivid).first()
-    return render(request,'invoice_display.html',{"invoice":invoice,"title":"发票展示"})
+    return render(request, 'invoice_display.html', {"invoice":invoice, "title": "发票展示"})
