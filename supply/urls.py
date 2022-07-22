@@ -19,4 +19,10 @@ urlpatterns = [
     path('quote/detail/',views.quote_detail),
     path('quote/edit/',views.quote_edit),
 
+    path('mm/list/', views.mm_list),
+    path('mm/add/', views.mm_add),
+    path('mm/detail/', views.mm_detail),
+    path('mm/edit/', views.mm_edit),
+    path('mm/delete/', views.mm_delete),
+
 ]
