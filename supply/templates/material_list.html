@@ -34,6 +34,7 @@
                                                         <option value="{{ s.id }}">{{ s.id }}</option>
                                                         {% endfor %}
                                                     </select>
+                                                    <a class="formError" id="supplyid_id_error"></a>
                                                 </div>
                                                 <div class="form-group">
                                                     <select class="form-control"  name="materialid" id="materialid_id">
@@ -42,6 +43,7 @@
                                                             <option value="{{ m.id }}" id="{{ m.id }}">{{ m.id }}</option>
                                                         {% endfor %}
                                                     </select>
+                                                    <a class="formError" id="materialid_id_error"></a>
                                                 </div>
                                             </form>
 
@@ -165,15 +167,28 @@
                         data:$("#formAdd").serialize(),
                         dataType:"JSON",
                         success:function (res){
+                            res=JSON.parse(res);
                             if(res.status){
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
                                 if(!res.isexist){
                                     alert("保存修改成功");
                                 }else {
-                                    alert("不能添加重复的供应关系")
+                                    alert("不能添加重复的供应关系");
                                 }
                                 location.reload();
+                            }
+                            else{
+                                alert("?")
+                                var ids=["#supplyid_id_error","#materialid_id_error"];
+                                for(var i=0;i<ids.length;i++)
+                                {
+                                    $(ids[i]).text("");
+                                    if(res.error[i]!=true)
+                                    {
+                                        $(ids[i]).text(res.error[i]);
+                                    }
+                                }
                             }
                         }
 
