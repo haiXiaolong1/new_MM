@@ -13,7 +13,7 @@
 (function( factory ){
 	if ( typeof define === 'function' && define.amd ) {
 		// AMD
-		define( ['static/plugins/datatables/js/jquery', 'datatables.net'], function ($ ) {
+		define( ['supply/static/plugins/datatables/js/jquery', 'datatables.net'], function ($ ) {
 			return factory( $, window, document );
 		} );
 	}
