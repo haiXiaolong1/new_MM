@@ -26,6 +26,7 @@
                                                 {% csrf_token %}
                                                 <div class="form-group">
                                                     <input type="number"  class="form-control" placeholder="价格" name="quote" id="quote" required>
+                                                    <a class="formError" id="quote_error"></a>
                                                 </div>
                                             </form>
 
@@ -125,12 +126,15 @@
                         data:$("#formAdd").serialize(),
                         dataType:"JSON",
                         success:function (res){
+                            res=JSON.parse(res);
                             if(res.status){
                                 alert("报价成功")
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
                                 location.reload();
                             }
+                            else{
+                            $("#quote_error").text(res.error[0]);}
                         }
 
                     })
@@ -141,11 +145,14 @@
                         data:$("#formAdd").serialize(),
                         dataType:"JSON",
                         success:function (res){
+                            res=JSON.parse(res);
                             if(res.status){
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
                                 location.reload();
                             }
+                            else{
+                            $("#quote_error").text(res.error[0]);}
                         }
 
                     })
@@ -155,6 +162,7 @@
 
             {#动态增加点击事件#}
             $("#table").on('click','.btnQuote',function () {
+                $("#quote_error").text("")
                 var curid=$(this).attr("uid");
                 QUOTE_ID=curid;
                 $("#myModalLabel").text("进行报价")
@@ -164,6 +172,7 @@
 
             $("#table").on('click','.btnDelete',function () {
                 DELETE_ID=$(this).attr("uid");
+                $("#quote_error").text("")
                 $("#deleteModel").modal('show');
             })
 
@@ -189,6 +198,7 @@
 
             $("#table").on('click','.btnEdit',function () {
                 var curid=$(this).attr("uid");
+                $("#quote_error").text("")
                 EDIT_ID=curid;
                 $("#formAdd")[0].reset();
                 $.ajax({

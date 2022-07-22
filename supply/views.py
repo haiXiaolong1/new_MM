@@ -7,6 +7,36 @@ from django.views.decorators.csrf import csrf_exempt
 from supply import models
 # Create your views here.
 
+import json
+""" 表单数据验证+报错信息 """
+def form_item_check(context,type="nan"):
+    if context.strip()=="":
+        if type[:2] == "id":
+            return "请设置" + type[2:]
+        return "必填字段，内容不能为空"
+    need={"int":"整数","int+":"正整数","float":"数字","float+":"正数"}
+    if not type=="nan" and not type[:2]=="id":
+        ctx=context
+        if context[0]=="-":
+            ctx=context[1:]
+        if ctx.count(".")>1 or not ctx[0].isdigit() or not ctx.replace(".","").isdigit():
+            return "输入错误,请输入"+need[type]
+        if type[-1]=="+" and float(context)<=0:
+            return "输入错误,请输入"+need[type]
+    return True
+
+def form_check(toCheck,types):
+    #设置表单数据校验
+    errors=[] #校验结果
+    returnStatus=True #是否通过所有校验
+    for idx,(cck,typ) in enumerate(zip(toCheck,types)):
+        result=form_item_check(cck,typ)
+        errors.append(result)
+        if not result==True:
+            returnStatus=False
+    res_dict = {"status": returnStatus, "error": errors}
+    return res_dict
+
 # 登录功能
 def login(request):
     if request.method=="GET":
@@ -46,10 +76,15 @@ def supply_add(request):
     time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     o=request.POST
     id=request.session["info"]['id']
-    models.Gongyingshang.objects.create(name=o['name'],address=o['address'],createtime=time
-                                        ,id=sid,updatetime=time,createnumberid_id=id,updatenumberid_id=id)
-    print(request.POST)
-    return JsonResponse({"status":True})
+    toCheck=[o['name'],o['address']]
+    types=['nan','nan']
+    res=form_check(toCheck,types)
+    if res['status']:
+        models.Gongyingshang.objects.create(name=o['name'],address=o['address'],createtime=time
+                                            ,id=sid,updatetime=time,createnumberid_id=id,updatenumberid_id=id)
+    # print(request.POST)
+    return JsonResponse(json.dumps(res,ensure_ascii=False),safe=False)
+
 # 编辑供应商时返回供应商原始数据
 def supply_detail(request):
     sid=request.GET.get("uid")
@@ -108,10 +143,16 @@ def material_add(request):
     isexist=models.Gongyingguanxi.objects.filter(supplyid_id=sid,materialid_id=mid)
     if isexist:
         return JsonResponse({"status":True,"isexist":True})
-    models.Gongyingguanxi.objects.create(createtime=time,updatetime=time,
-                                         createid_id=id,updateid_id=id,
-                                         supplyid_id=sid,materialid_id=mid)
-    return JsonResponse({"status":True,"isexist":False})
+    toCheck = [sid, mid]
+    types = ['id供应商编号', 'id物料编号']
+    res = form_check(toCheck, types)
+    res["isexist"]=False
+    print(res)
+    if res['status']:
+        models.Gongyingguanxi.objects.create(createtime=time,updatetime=time,
+                                             createid_id=id,updateid_id=id,
+                                             supplyid_id=sid,materialid_id=mid)
+    return JsonResponse(json.dumps(res,ensure_ascii=False),safe=False)
 
 # 编辑供应关系时展示原始数据
 def material_detail(request):
@@ -158,12 +199,16 @@ def quote_add(request):
     qid="qu"+str(int(n)+1)#编号递增，这样计算避免删除后出现错误
     time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id=request.session["info"]['id']
-    models.Baojiadan.objects.filter(inquiryid_id=inid).update(quote=quote,
-                                                              quoteid=qid,
-                                                              createtime=time,
-                                                              createuserid_id=id,
-                                                              isreceived=0)
-    return JsonResponse({"status":True})
+    toCheck=[quote]
+    types=["float+"]
+    res=form_check(toCheck,types)
+    if res['status']:
+        models.Baojiadan.objects.filter(inquiryid_id=inid).update(quote=quote,
+                                                                  quoteid=qid,
+                                                                  createtime=time,
+                                                                  createuserid_id=id,
+                                                                  isreceived=0)
+    return JsonResponse(json.dumps(res,ensure_ascii=False),safe=False)
 
 
 def quote_detail(request):

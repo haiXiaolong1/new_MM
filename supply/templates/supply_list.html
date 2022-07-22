@@ -42,9 +42,11 @@
                                                 {% csrf_token %}
                                                 <div class="form-group">
                                                     <input type="text"  class="form-control" placeholder="供应商名称" name="name" id="name" required >
+                                                    <a class="formError" id="name_error"></a>
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="text"  class="form-control" placeholder="地址" name="address" id="address" required>
+                                                    <a class="formError" id="address_error"></a>
                                                 </div>
                                             </form>
 
@@ -140,6 +142,7 @@
             $("#btnAdd").click(function () {
                 //将正在编辑的ID置空
                 EDIT_ID=undefined;
+                $(".formError").text("");
                 $("#myModalLabel").text("新建供应商");
                 $("#formAdd")[0].reset();
                 $("#myd").modal('show');
@@ -164,12 +167,24 @@
                             data:$("#formAdd").serialize(),
                             dataType:"JSON",
                             success:function (res){
+                                res=JSON.parse(res);
                                 if(res.status){
                                     {#验证是否为空#}
                                     $("#formAdd")[0].reset();
                                     $("#myd").modal('hide');
                                     alert("添加成功");
                                     location.reload();
+                                }
+                                else{
+                                    var ids=["#name_error","#address_error"];
+                                    for(var i=0;i<ids.length;i++)
+                                    {
+                                        $(ids[i]).text("");
+                                        if(res.error[i]!=true)
+                                        {
+                                            $(ids[i]).text(res.error[i]);
+                                        }
+                                    }
                                 }
                             }
 
