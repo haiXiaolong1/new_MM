@@ -36,3 +36,16 @@
     background-color: rgb(98, 229, 119);
     border-color: grey;
 }
+
+/*失败*/
+.table_status_3
+{
+    border: 1px;
+    color:azure;
+    border-radius: 3px;
+    display: block;
+    font-weight:400;
+    text-align: center;
+    background-color: rgb(243, 100, 103);
+    border-color: grey;
+}
