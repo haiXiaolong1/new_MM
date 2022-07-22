@@ -154,6 +154,7 @@
 
 
             $("#btnAdd").click(function () {
+                $(".formError").text("");
                 $("#formAdd")[0].reset();
                 $("#myd").modal('show');
             })
@@ -182,7 +183,6 @@
                                     $(ids[i]).text(res_dict.error[i]);
                                 }
                             }
-
                         }
                     }
                 })
