@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'supply',
     'inventory',
-    'purchase'
+    'purchase',
+    'supply.templatetags'
 ]
 
 MIDDLEWARE = [
@@ -82,7 +83,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mmssm',
         'USER': 'root',
-        'PASSWORD':'201221',
+        'PASSWORD':'ymysql',
         'HOST':'localhost',
         'PORT':'3306',
     }
