@@ -88,7 +88,7 @@
                                                 {% if obj.inquiryid_id == obj.quoteid %}
                                                     <button class="btn btn-primary btn-xs btnQuote"  uid="{{ obj.inquiryid_id }}">报价</button>
                                                 {% elif obj.isreceived == 0 %}
-                                                    <button class="btn btn-primary btn-xs btnEdit"  uid="{{ obj.inquiryid_id }}">修改报价</button>
+                                                    <button class="btn btn-primary btn-xs btnEdit"  uid="{{ obj.quoteid }}">修改报价</button>
                                                 {% else %}
                                                     <button class="btn btn-danger btn-xs btnDelete"  uid="{{ obj.quoteid }}">删除</button>
                                                 {% endif %}
@@ -109,7 +109,7 @@
 
 {% block js%}
     <script type="text/javascript">
-        var QUOTE_ID;
+        var QUOTE_ID,DELETE_ID,EDIT_ID;
         $(document).ready(function() {
             $('li').removeClass('active-page');
             $('#supply3').addClass('active-page');
@@ -118,20 +118,38 @@
             $('#supply_ul li').addClass('animation');
 
             $("#btnSave").click(function () {
-                $.ajax({
-                    url:"/supply/quote/add/"+"?inid="+QUOTE_ID,
-                    type:"post",
-                    data:$("#formAdd").serialize(),
-                    dataType:"JSON",
-                    success:function (res){
-                        if(res.status){
-                            $("#myd").modal('hide');
-                            $("#formAdd")[0].reset();
-                            location.reload();
+                if(!EDIT_ID){
+                    $.ajax({
+                        url:"/supply/quote/add/"+"?inid="+QUOTE_ID,
+                        type:"post",
+                        data:$("#formAdd").serialize(),
+                        dataType:"JSON",
+                        success:function (res){
+                            if(res.status){
+                                alert("报价成功")
+                                $("#myd").modal('hide');
+                                $("#formAdd")[0].reset();
+                                location.reload();
+                            }
                         }
-                    }
 
-                })
+                    })
+                }else {
+                    $.ajax({
+                        url:"/supply/quote/edit/"+"?quid="+EDIT_ID,
+                        type:"post",
+                        data:$("#formAdd").serialize(),
+                        dataType:"JSON",
+                        success:function (res){
+                            if(res.status){
+                                $("#myd").modal('hide');
+                                $("#formAdd")[0].reset();
+                                location.reload();
+                            }
+                        }
+
+                    })
+                }
                 EDIT_ID=undefined;
             })
 
@@ -139,6 +157,7 @@
             $("#table").on('click','.btnQuote',function () {
                 var curid=$(this).attr("uid");
                 QUOTE_ID=curid;
+                $("#myModalLabel").text("进行报价")
                 $("#formAdd")[0].reset();
                 $("#myd").modal('show');
             })
@@ -167,6 +186,27 @@
                     })
                 }
             )
+
+            $("#table").on('click','.btnEdit',function () {
+                var curid=$(this).attr("uid");
+                EDIT_ID=curid;
+                $("#formAdd")[0].reset();
+                $.ajax({
+                    url:"/supply/quote/detail/",
+                    type: "get",
+                    data:{uid:curid},
+                    dataType: "JSON",
+                    success:function (res) {
+                        if(res.status){
+                            $("#quote").val(res.quote)
+                            $("#myModalLabel").text("修改报价")
+                            $("#myd").modal('show');
+                        }else {
+
+                        }
+                    }
+                })
+            })
         })
     </script>
 {% endblock %}

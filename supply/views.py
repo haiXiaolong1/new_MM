@@ -166,3 +166,16 @@ def quote_add(request):
     return JsonResponse({"status":True})
 
 
+def quote_detail(request):
+    """修改报价单时返回相应数据"""
+    id=request.GET.get("uid")
+    quote=models.Baojiadan.objects.filter(quoteid=id).first().quote
+    return JsonResponse({"status":True,"quote":quote})
+
+
+def quote_edit(request):
+    """根据报价单号修改报价"""
+    quid=request.GET.get("quid")
+    quote=request.POST.get("quote")
+    models.Baojiadan.objects.filter(quoteid=quid).update(quote=quote)
+    return JsonResponse({"status":True})

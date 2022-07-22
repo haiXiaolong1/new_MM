@@ -16,5 +16,7 @@ urlpatterns = [
 
     path('quote/list/',views.quote_list),
     path('quote/add/',views.quote_add),
+    path('quote/detail/',views.quote_detail),
+    path('quote/edit/',views.quote_edit),
 
 ]
