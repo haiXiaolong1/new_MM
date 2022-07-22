@@ -29,7 +29,7 @@
 
 	if ( typeof define === 'function' && define.amd ) {
 		// AMD
-		define( ['static/plugins/datatables/js/jquery'], function ($ ) {
+		define( ['supply/static/plugins/datatables/js/jquery'], function ($ ) {
 			return factory( $, window, document );
 		} );
 	}
@@ -44,8 +44,8 @@
 
 			if ( ! $ ) {
 				$ = typeof window !== 'undefined' ? // jQuery's factory checks for a global window
-					require('static/plugins/datatables/js/jquery') :
-					require('static/plugins/datatables/js/jquery')( root );
+					require('supply/static/plugins/datatables/js/jquery') :
+					require('supply/static/plugins/datatables/js/jquery')( root );
 			}
 
 			return factory( $, root, root.document );

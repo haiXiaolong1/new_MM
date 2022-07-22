@@ -8,6 +8,7 @@ urlpatterns = [
 
     path("inquiry/<slug:did>/create/",views.inquiry_createByid),
     path("create/qui/",views.create_qui),
+    path("delete/",views.purchase_delete),
 
 
     path('quote/evaluate/',views.quote_evaluate),

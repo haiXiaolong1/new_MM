@@ -17,34 +17,19 @@
                         </div>
                         <div>
                             <!-- 对话框 -->
-                            <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" id="myModalLabel">评估报价单</h4>
+                                            <h4 class="modal-title" >删除供应商</h4>
                                         </div>
                                         <div class="modal-body">
-                                            <form method="post" id="formAdd">
-                                                {% csrf_token %}
-
-                                                <div class="form-group col-md-7">
-                                                    <select class="form-control"  name="isreceived" id="isreceived">
-                                                        <option value="0" selected>评估</option>
-                                                        <option value="1">接受</option>
-                                                        <option value="2">拒绝</option>
-                                                    </select>
-                                                </div>
-                                                <div class="form-check form-switch col-md-5">
-                                                    <input class="form-check-input " type="checkbox" id="mySwitch" name="isall" value="1">
-                                                    <label class="form-check-label" for="mySwitch">同时拒绝其他报价单</label>
-                                                </div>
-                                            </form>
-
+                                            <span>是否确定删除？</span>
                                         </div>
-                                        <div class="modal-footer" style="margin-top: 40px">
+                                        <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                            <button type="submit" id="btnSave" class="btn btn-success">保存</button>
+                                            <button type="submit" id="Delete" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
                                 </div>
@@ -112,9 +97,30 @@
 
             {#动态增加点击事件#}
             $("#table").on('click','.btnDelete',function () {
-                $("#myd").modal('show');
-
+                DELETE_ID=$(this).attr("uid");
+                $("#deleteModel").modal('show');
             })
+
+            $("#Delete").click(
+                function () {
+                    $.ajax({
+                        url:"/purchase/delete/",
+                        type:"get",
+                        data:{uid:DELETE_ID},
+                        dataType:"JSON",
+                        success:function (res){
+                            if(res.status){
+                                $("#deleteModel").modal('hide');
+                                DELETE_ID=undefined;
+                                location.reload();
+                            }
+                            else {
+                            }
+                        }
+                    })
+                }
+            )
+
         })
 
 
