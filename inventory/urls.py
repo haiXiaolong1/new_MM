@@ -9,6 +9,7 @@ urlpatterns = [
 
     path("demand/add/",views.demand_add),
     path("demand/verify/",views.demand_verify),
+    path("demand/delete/",views.demand_delete),
 
     path("quality/check/",views.quality_check),
     path("quantity/check/",views.quantity_check),

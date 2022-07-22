@@ -16,7 +16,6 @@
 
                             <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加</button>
                             <!-- 新建对话框 -->
-
                             <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
@@ -60,6 +59,23 @@
                                 </div>
                             </div>
 
+                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" >删除采购需求</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <span>是否确定删除？</span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="submit" id="Delete" class="btn btn-success">确定</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
                         </div>
                         <div class="panel-body">
@@ -124,7 +140,7 @@
 
 {% block js%}
     <script type="text/javascript">
-        var VERIFY_ID;
+        var VERIFY_ID,DELETE_ID;
         $(document).ready(function() {
             $('li').removeClass('active-page');
             $('#inventory_demand').addClass('active-page');
@@ -170,6 +186,31 @@
                     }
                 })
             })
+
+            $("#table").on('click','.btnDelete',function () {
+                DELETE_ID=$(this).attr("uid");
+                $("#deleteModel").modal('show');
+            })
+
+            $("#Delete").click(
+                function () {
+                    $.ajax({
+                        url:"/inventory/demand/delete/",
+                        type:"get",
+                        data:{uid:DELETE_ID},
+                        dataType:"JSON",
+                        success:function (res){
+                            if(res.status){
+                                $("#deleteModel").modal('hide');
+                                DELETE_ID=undefined;
+                                location.reload();
+                            }
+                            else {
+                            }
+                        }
+                    })
+                }
+            )
 
         })
 
