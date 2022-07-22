@@ -96,10 +96,11 @@
                                             <td>{{ obj.purchaseid.facid_id }}</td>
                                             <td>{{ obj.purchaseid.price }}</td>
                                             <td>{{ obj.purchaseid.tcount }}</td>
-                                            <td>{{ obj.get_qualitycheckinfo_display }}</td>
-                                            <td>{{ obj.get_quantitycheckinfo_display }}</td>
+                                             {% load myfilter %}
+                                            <td><a class={{obj.qualitycheckinfo|table_status:"zsd-jc"}}>{{ obj.get_qualitycheckinfo_display }}</a></td>
+                                            <td><a class={{obj.quantitycheckinfo|table_status:"zsd-jc"}}>{{ obj.get_quantitycheckinfo_display }}</a></td>
                                             {% if obj.temid == obj.purchaseid_id %}
-                                                <td>未检收</td>
+                                                <td><a class="table_status_0">未检收</a></td>
                                             {% else %}
                                               <td>{{ obj.temid }}</td>
                                             {% endif %}

@@ -88,7 +88,8 @@
                                             <td>{{ obj.inquiryid.demandid.demandid }}</td>
                                             <td>{{ obj.maid_id }}</td>
                                             <td>{{ obj.supplyid_id }}</td>
-                                            <td>{{ obj.get_isreceived_display }}</td>
+                                             {% load myfilter %}
+                                            <td><a class={{obj.isreceived|table_status:"bjd"}}>{{ obj.get_isreceived_display }}</a></td>
                                             <td>{{ obj.quote }}</td>
                                             <td>{{ obj.validitytime|date:"Y-m-d H:i:s"  }}</td>
                                             <td>
