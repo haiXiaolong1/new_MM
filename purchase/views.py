@@ -99,7 +99,7 @@ def quote_add(request):
 # 评估报价单页面
 def quote_evaluate(request):
 
-    q=models.Baojiadan.objects.all()
+    q=models.Baojiadan.objects.filter(isdelete=0).all()
     result={
         "queryset":q
         ,"title":"评估报价单"
@@ -337,4 +337,10 @@ def purchase_documents(request):
 def purchase_delete(request):
     id=request.GET.get("uid")
     models.Caigoudan.objects.filter(purchaseid=id).update(isdelete=1)
+    return JsonResponse({"status":True})
+
+# 根据id逻辑删除已完成或者已拒绝的报单，已删除的报价单不再显示
+def quote_delete(request):
+    id=request.GET.get("uid")
+    models.Baojiadan.objects.filter(quoteid=id).update(isdelete=1)
     return JsonResponse({"status":True})

@@ -61,7 +61,7 @@ def inventory_demand(request):
     """采购需求管理（请购单）"""
     material=models.Wuliao.objects.filter().all()
     factory=models.Gongchang.objects.filter().all()
-    caigou=models.Caigouxuqiu.objects.filter().all()
+    caigou=models.Caigouxuqiu.objects.filter(isdelete=0).all()
     result={
         "material":material,
         "factory":factory,
@@ -259,3 +259,10 @@ def invoice_display(request,ivid):
     """展示发票详情"""
     invoice=models.Fapiao.objects.filter(invoiceid=ivid).first()
     return render(request, 'invoice_display.html', {"invoice":invoice, "title": "发票展示"})
+
+
+def demand_delete(request):
+    """删除已完成的采购需求"""
+    id=request.GET.get("uid")
+    models.Caigouxuqiu.objects.filter(demandid=id).update(isdelete=1)
+    return JsonResponse({"status":True})

@@ -13,6 +13,7 @@ urlpatterns = [
 
     path('quote/evaluate/',views.quote_evaluate),
     path("quote/evaluateByID/",views.quote_evaluateByID),
+    path("quote/delete/",views.quote_delete),
 
 
     path('list/',views.purchase_list),
