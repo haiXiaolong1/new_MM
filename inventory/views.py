@@ -100,7 +100,7 @@ def inventory_temp(request):
     """暂存检查"""
     # 首先查到所有待暂存的采购订单
 
-    q=models.Zanshoudan.objects.all()
+    q=models.Zanshoudan.objects.filter(isdelete=0).all()
 
     return render(request, 'temp_list.html', {"queryset":q,"title":"暂存管理"})
 
@@ -169,7 +169,7 @@ def quantity_check(request):
 # 展示入库单
 def inventory_receive(request):
     """入库管理"""
-    q=models.Rukudan.objects.all()
+    q=models.Rukudan.objects.filter(isdelete=0).all()
 
     return render(request, 'inventory_receive.html', {"queryset":q,"title":"入库管理"})
 
@@ -265,4 +265,19 @@ def demand_delete(request):
     """删除已完成的采购需求"""
     id=request.GET.get("uid")
     models.Caigouxuqiu.objects.filter(demandid=id).update(isdelete=1)
+    return JsonResponse({"status":True})
+
+
+def inventory_delete(request):
+    """删除已完成的暂存单"""
+    id=request.GET.get("uid")
+
+    models.Zanshoudan.objects.filter(purchaseid_id=id).update(isdelete=1)
+    return JsonResponse({"status":True})
+
+
+def receive_delete(request):
+    """删除已完成的入库单"""
+    id=request.GET.get("uid")
+    models.Rukudan.objects.filter(temid_id=id).update(isdelete=1)
     return JsonResponse({"status":True})

@@ -21,7 +21,7 @@ def inquiry_create(request):
     if mid:
         q['maid__id__contains']=mid
     # 根据条件进行模糊搜索，并返回结果集
-    queryset=models.Caigouxuqiu.objects.filter(**q).all()
+    queryset=models.Caigouxuqiu.objects.filter(**q).filter(isdelete=0).all()
     result={
         "queryset":queryset,
         "did":did,
