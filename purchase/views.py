@@ -27,6 +27,7 @@ def inquiry_create(request):
         "did":did,
         "fid":fid,
         "mid":mid
+        ,"title":"询价单管理"
     }
     return render(request, 'inquiry_create.html', result)
 
@@ -38,6 +39,7 @@ def inquiry_createByid(request,did):
     result={
         "queryset":queryset,
         "demand":demand
+        ,"title":"创建询价单"
     }
     return render(request, 'inquiry_createByid.html', result)
 
@@ -73,7 +75,7 @@ def quote_list(request):
     """进行报价"""
     q=models.Baojiadan.objects.all()
 
-    return render(request, 'quote_list.html', {"queryset":q})
+    return render(request, 'quote_list.html', {"queryset":q,"title":"报价单列表"})
 
 # 新增报价单
 def quote_add(request):
@@ -100,6 +102,7 @@ def quote_evaluate(request):
     q=models.Baojiadan.objects.all()
     result={
         "queryset":q
+        ,"title":"评估报价单"
     }
     return render(request, 'quote_evaluate.html', result)
 
@@ -124,6 +127,7 @@ def purchase_list(request):
     q=models.Caigoudan.objects.all()
     result={
         "queryset":q
+        ,"title":"采购订单管理"
     }
     print(q)
     return render(request, 'purchase_list.html', result)
@@ -134,6 +138,7 @@ def purchase_create(request):
     q=models.Baojiadan.objects.all()
     result={
         "queryset":q
+        ,"title":"创建采购订单"
     }
     return render(request, "purchase_create.html", result)
 
@@ -323,6 +328,7 @@ def purchase_documents(request):
         # "did":did,
         # "quid":quid,
         "puid":puid
+        ,"title":"查看单据流"
     }
 
     return render(request, 'purchase_documents.html', result)

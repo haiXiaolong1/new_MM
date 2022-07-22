@@ -36,7 +36,7 @@ def supply_list(request):
         id.append(i.id)
         n.append(i.username)
     yuan=dict(zip(id,n))
-    return render(request,'supply_list.html',{"queryset":qu,"yuangong":yuan})
+    return render(request,'supply_list.html',{"queryset":qu,"yuangong":yuan,"title":"供应商列表"})
 # 添加供应商
 def supply_add(request):
     n=10000000
@@ -91,6 +91,7 @@ def material_list(request):
         "queryset":qu,
         "material":material,
         "supply":supply
+        ,"title":"物料供应关系"
     }
 
     return render(request,'material_list.html',result)
@@ -144,7 +145,7 @@ def quote_list(request):
     """进行报价"""
     q=models.Baojiadan.objects.all()
 
-    return render(request, 'quote_list.html', {"queryset":q})
+    return render(request, 'quote_list.html', {"queryset":q,"title":"报价单管理"})
 
 
 def quote_add(request):
