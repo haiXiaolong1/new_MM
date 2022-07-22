@@ -6,7 +6,6 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from supply import models
 
-
 # 创建询价单
 def inquiry_create(request):
     """创建询价单页面"""
@@ -26,8 +25,8 @@ def inquiry_create(request):
         "queryset":queryset,
         "did":did,
         "fid":fid,
-        "mid":mid
-        ,"title":"询价单管理"
+        "mid":mid,
+        "title":"询价单管理"
     }
     return render(request, 'inquiry_create.html', result)
 
