@@ -69,6 +69,25 @@ def inventory_demand(request):
         ,"title":"采购需求管理"
     }
     return render(request, 'inventory_demand.html', result)
+
+import json
+""" 表单数据验证+报错信息 """
+def form_item_check(context,type="nan"):
+    if context.strip()=="":
+        if type[:2] == "id":
+            return "请设置" + type[2:]
+        return "必填字段，内容不能为空"
+    need={"int":"整数","int+":"正整数","float":"数字","float+":"正数"}
+    if not type=="nan" and not type[:2]=="id":
+        ctx=context
+        if context[0]=="-":
+            ctx=context[1:]
+        if ctx.count(".")>1 or not ctx[0].isdigit() or not ctx.replace(".","").isdigit():
+            return "输入错误,请输入"+need[type]
+        if type[-1]=="+" and float(context)<=0:
+            return "输入错误,请输入"+need[type]
+    return True
+
 # 添加采购需求
 def demand_add(request):
     """添加采购需求"""
@@ -79,10 +98,23 @@ def demand_add(request):
     time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     r=request.POST
     id=request.session["info"]['id']
-    models.Caigouxuqiu.objects.create(demandid=did,price=r["price"],tcount=r['tcount']
-                                      ,status=0,createtime=time,createuserid_id=id,
-                                      facid_id=r['facid_id'],maid_id=r['maid_id'])
-    return JsonResponse({"status":True})
+    #设置表单数据校验
+    toCheck=[r['facid_id'],r['maid_id'],r['price'],r['tcount']] #校验字段
+    types=["id工厂编号","id物料编号","float+","int+"]             #校验类型
+    errors=[] #校验结果
+    returnStatus=True #是否通过所有校验
+    for idx,(cck,typ) in enumerate(zip(toCheck,types)):
+        result=form_item_check(cck,typ)
+        errors.append(result)
+        if not result==True:
+            returnStatus=False
+    res_dict=json.dumps({"status":returnStatus,"error":errors},ensure_ascii=False)
+    print(res_dict)
+    if returnStatus: #校验成功才执行插入
+        models.Caigouxuqiu.objects.create(demandid=did, price=r["price"], tcount=r['tcount']
+                                          , status=0, createtime=time, createuserid_id=id,
+                                          facid_id=r['facid_id'], maid_id=r['maid_id'])
+    return JsonResponse(res_dict,safe=False)
 
 @csrf_exempt
 def demand_verify(request):

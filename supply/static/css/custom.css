@@ -1,5 +1,11 @@
 /* Write your custom CSS here */
 
+/*错误提示*/
+.formError
+{
+    color=red;
+}
+
 /*待审核*/
 .table_status_0
 {

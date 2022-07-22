@@ -33,6 +33,7 @@
                                                             <option value="{{ s.id }}">{{ s.id }}</option>
                                                         {% endfor %}
                                                     </select>
+                                                    <a class="formError" id="facid_id_error"></a>
                                                 </div>
                                                 <div class="form-group">
                                                     <select class="form-control"  name="maid_id" id="maid_id">
@@ -41,12 +42,15 @@
                                                             <option value="{{ m.id }}" id="{{ m.id }}">{{ m.id }}</option>
                                                         {% endfor %}
                                                     </select>
+                                                    <a class="formError" id="maid_id_error"></a>
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="number"  class="form-control" placeholder="价格" name="price" id="price"required>
+                                                    <a class="formError" id="price_error"></a>
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="number"  class="form-control" placeholder="数量" name="tcount" id="tcount" required>
+                                                    <a class="formError" id="tcount_error"></a>
                                                 </div>
                                             </form>
 
@@ -160,11 +164,25 @@
                     data:$("#formAdd").serialize(),
                     dataType:"JSON",
                     success:function (res){
-                        if(res.status){
+                        var res_dict=JSON.parse(res);
+                        console.log(res_dict);
+                        if(res_dict.status){
                             $("#myd").modal('hide');
                             $("#formAdd")[0].reset();
                             alert("添加成功");
                             location.reload();
+                        }
+                        else{
+                            var ids=["#facid_id_error","#maid_id_error","#price_error","#tcount_error"];
+                            for(var i=0;i<ids.length;i++)
+                            {
+                                $(ids[i]).text("");
+                                if(res_dict.error[i]!=true)
+                                {
+                                    $(ids[i]).text(res_dict.error[i]);
+                                }
+                            }
+
                         }
                     }
                 })
