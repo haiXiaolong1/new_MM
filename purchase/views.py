@@ -124,7 +124,7 @@ def quote_evaluateByID(request):
 # 采购订单列表
 def purchase_list(request):
 
-    q=models.Caigoudan.objects.all()
+    q=models.Caigoudan.objects.filter(isdelete=0).all()
     result={
         "queryset":q
         ,"title":"采购订单管理"
@@ -332,3 +332,9 @@ def purchase_documents(request):
     }
 
     return render(request, 'purchase_documents.html', result)
+
+# 根据id逻辑删除已完成的采购订单，已删除的采购订单不再显示
+def purchase_delete(request):
+    id=request.GET.get("uid")
+    models.Caigoudan.objects.filter(purchaseid=id).update(isdelete=1)
+    return JsonResponse({"status":True})
