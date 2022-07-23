@@ -443,6 +443,7 @@ def purchase_documents(request):
             if qu.isreceived==1:
                 inid=qu.inquiryid_id
                 did=qu.inquiryid.demandid_id
+                quid=qu.quoteid
                 demand_list(list,did,quid,inid)
     elif quid:
         qu=models.Baojiadan.objects.filter(quoteid=quid).first()
