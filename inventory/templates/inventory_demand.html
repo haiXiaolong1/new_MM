@@ -144,7 +144,9 @@
 
 {% block js%}
     <script type="text/javascript">
+        alert("进入页面");
         var VERIFY_ID,DELETE_ID;
+        var showToast=localStorage.getItem("notify_show");
         $(document).ready(function() {
             $('li').removeClass('active-page');
             $('#inventory_demand').addClass('active-page');
@@ -152,6 +154,16 @@
             $('#inventory_ul').css('display','block');
             $('#inventory_ul li').addClass('animation');
 
+            if(showToast!=undefined){
+                if(showToast){
+                    if(showToast != "false"){
+                        $("#toast-type").text(localStorage.getItem("notify_type"));
+                        $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
+                        $("#toast-context").text(localStorage.getItem("notify_context"));
+                        $("#showtoast").trigger("click");
+                    }
+                }
+            }
 
             $("#btnAdd").click(function () {
                 $(".formError").text("");
@@ -170,8 +182,14 @@
                         if(res_dict.status){
                             $("#myd").modal('hide');
                             $("#formAdd")[0].reset();
-                            alert("添加成功");
-                            location.reload();
+                            // 此处页面响应顺序为：后端插入数据→页面reload→弹出信息提示床架成功
+                            // 故用localStorage暂存消息提醒状态和内容
+                            // 暂存信息在消息成功提醒后清空：notify_show设为false,其他remove
+                            localStorage.setItem("notify_show",true);
+                            localStorage.setItem("notify_tittle","创建成功");
+                            localStorage.setItem("notify_context","采购需求创建成功");
+                            localStorage.setItem("notify_type","success");
+                            location.reload()
                         }
                         else{
                             var ids=["#facid_id_error","#maid_id_error","#price_error","#tcount_error"];

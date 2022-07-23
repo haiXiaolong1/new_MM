@@ -1,15 +1,16 @@
     $(document).ready(function () {
 
         "use strict";
-
+        if(localStorage.getItem("notify_show")==false)
+        {return;}
         var i = -1;
         var toastCount = 0;
         var $toastlast;
 
         $('#showtoast').click(function () {
-            var shortCutFunction = "info";
-            var msg = "信息";
-            var title = "标题";
+            var shortCutFunction = localStorage.getItem("notify_type");
+            var msg = localStorage.getItem("notify_context");
+            var title = localStorage.getItem("notify_tittle");
             var toastIndex = toastCount++;
             var addClear = true;
 
@@ -32,12 +33,15 @@
             };
 
 
-            var $toast = toastr[shortCutFunction](msg, title); // Wire up an event handler to a button in the toast, if it exists
-            $toastlast = $toast;
+            toastr[shortCutFunction](msg, title); // Wire up an event handler to a button in the toast, if it exists
+            
+            alert("提示成功");
 
-            if (typeof $toast === 'undefined') {
-                return;
-            }
-
+            localStorage.setItem("notify_show",false);
+            localStorage.removeItem("notify_context");
+            localStorage.removeItem("notify_tittle");
+            localStorage.removeItem("notify_type");
+            alert("提示结束");
+            return;
         });
     });

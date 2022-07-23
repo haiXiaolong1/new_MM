@@ -169,6 +169,10 @@
         </div><!-- /Page Header -->
         <a class="table_status_2" style="display:none"></a>
         <a class="formError" style="display:none"></a>
+        <a class="my_hide_element" id="toast-type"></a>
+        <a class="my_hide_element" id="toast-tittle"></a>
+        <a class="my_hide_element" id="toast-context"></a>
+        <button id="showtoast" class="my_hide_element"></button>
         <!-- Page Inner -->
         {% block content %}
         {% endblock %}
@@ -207,6 +211,7 @@
 <script src={% static 'js/pages/ui-notifications.js' %}></script>
 <script type="text/javascript" language="JavaScript">
     $(document).ready(function() {
+
         $('#example').dataTable({
             "lengthMenu": [5,10, 15, 20],
             "language": {
