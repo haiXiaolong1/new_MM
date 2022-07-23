@@ -119,10 +119,11 @@
             <div class="search-form">
                 <form action="#" method="GET">
                     <div class="input-group">
-                        <input type="text" name="search" class="form-control search-input" placeholder="Type something...">
+                        <input type="text" name="search" class="form-control search-input" placeholder="搜索功能模块"  id="topSearch">
                         <span class="input-group-btn">
                                     <button class="btn btn-default" id="close-search" type="button"><i class="icon-close"></i></button>
-                                </span>
+                        </span>
+                        <input type="text" name="search" style="display: none">
                     </div>
                 </form>
             </div>
@@ -234,7 +235,64 @@
             $(this).addClass('active-page');
             console.log(this)
         })
+
+        $("#topSearch").keypress(function (even) {
+            if (even.which == 13) {
+                var name=$("#topSearch")[0].value
+                {#if(name=="维护物料"){#}
+                {#    top.location.href="/supply/mm/list"#}
+                {# }#}
+                switch (name){
+                    case "维护物料":
+                        top.location.href="/supply/mm/list";
+                        break;
+                    case "维护供应商":
+                        top.location.href="/supply/list";
+                        break;
+                    case "维护物料关系":
+                        top.location.href="/supply/material/list";
+                        break;
+                    case "维护报价单":
+                        top.location.href="/supply/quote/list";
+                        break;
+                    case "查看单据流":
+                        top.location.href="/purchase/documents/";
+                        break;
+                    case "创建询价单":
+                        top.location.href="/purchase/inquiry/create/";
+                        break;
+                    case "评估报价单":
+                        top.location.href="/purchase/quote/evaluate/";
+                        break;
+                    case "创建采购单":
+                        top.location.href="/purchase/list/";
+                        break;
+                    case "查看库存":
+                        top.location.href="/inventory/display/";
+                        break;
+                    case "采购需求管理":
+                        top.location.href="/inventory/demand/";
+                        break;
+                    case "暂存检查":
+                        top.location.href="/inventory/temp/";
+                        break;
+                    case "收货管理":
+                        top.location.href="/inventory/receive/";
+                        break;
+                    case "发票":
+                        top.location.href="/inventory/invoice/";
+                        break;
+
+                    default:break;
+
+                }
+            }
+        })
+
     });
+
+
+
 
 </script>
 {% block js %}
