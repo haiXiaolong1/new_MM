@@ -184,18 +184,7 @@ def purchase_createByQuote(request):
                                      quantitycheckinfo=-1)
     return JsonResponse({"status":True,"pid":puid})
 
-
-def purchase_documents(request):
-    """查看单据流"""
-    # 目前暂时只支持根据采购单号，后续再改，这里写的比较繁琐可以考虑优化
-    # 目前的想法是，前端传过来哪个编号就按哪个编号查，这样的话，下面的if puid就要做三遍
-    list=[]
-    q={}
-    # did=request.GET.get("did","")
-    puid=request.GET.get("puid","")
-    # quid=request.GET.get("quid","")
-    # if did:
-    #     q['demandid__contains']=did
+def documents(list,puid):
     if puid:
         # 采购单
         p=models.Caigoudan.objects.filter(purchaseid=puid).first()
@@ -320,13 +309,104 @@ def purchase_documents(request):
                 m["moreinfo"]=moreinfo
                 list.append(m)
 
-    # if quid:
-    #     q['maid__id__contains']=quid
+    return
+
+
+def purchase_documents(request):
+    """查看单据流"""
+    # 目前暂时只支持根据采购单号，后续再改，这里写的比较繁琐可以考虑优化
+    # 目前的想法是，前端传过来哪个编号就按哪个编号查，这样的话，下面的if puid就要做三遍
+    list=[]
+    q={}
+    puid=""
+    did=""
+    inid=""
+    quid=""
+    teid=""
+    wid=""
+    # did=request.GET.get("did","")
+    id=request.GET.get("puid","")
+    tp=id[:2]
+    if tp == "pu":
+        puid=id
+    if tp == "de":
+        did=id
+    if tp == "in":
+        inid=id
+    if tp == "qu":
+        quid=id
+    if tp == "te":
+        teid=id
+    if tp == "wa":
+        wid=id
+
+    print(tp)
+    # quid=request.GET.get("quid","")
+    # if did:
+    #     q['demandid__contains']=did
+    if puid:
+        documents(list,puid)
+    elif did:
+    #     请购单
+        d=models.Caigouxuqiu.objects.filter(demandid=did).first()
+        if d:
+            m={}
+            date=d.verifytime
+            name="请购单"
+            status=d.status-1
+            id=d.demandid
+            price=d.price
+            fid=d.facid_id
+            mid=d.maid_id
+            tcount=d.tcount
+            m["date"]=date
+            m["status"]=status
+            m["id"]=id
+            m["fid"]=fid
+            m["tcount"]=tcount
+            m["price"]=price
+            m["mid"]=mid
+            m["name"]=name
+            list.append(m)
+            #报价单
+            qu1=models.Baojiadan.objects.filter(inquiryid__demandid_id=did).filter(isreceived=1).first()
+            qu2=models.Baojiadan.objects.filter(inquiryid__demandid_id=did).filter(isreceived=3).first()
+            if not qu1 and not  qu2:
+                inq=models.Xunjiadan.objects.filter(demandid_id=did).filter()
+            if qu1:
+                inq=models.Xunjiadan.objects.filter(demandid_id=did).filter()
+            if qu2:
+                inq=models.Xunjiadan.objects.filter(demandid_id=did).filter()
+                quid=models.Caigoudan.objects.filter(quoteid_id=qu2.quoteid).first().purchaseid
+                list=[]
+                documents(list,quid)
+
+    elif inid:
+        inq=models.Xunjiadan.objects.filter(inquiryid=inid).first()
+        qu=models.Baojiadan.objects.filter(inquiryid=inq).first()
+        if qu:
+            if qu.isreceived==3:
+                quid=models.Caigoudan.objects.filter(quoteid=qu).first().purchaseid
+                documents(list,quid)
+    elif quid:
+        qu=models.Baojiadan.objects.filter(quoteid=quid).first()
+        if qu:
+            if qu.isreceived==3:
+                quid=models.Caigoudan.objects.filter(quoteid=qu).first().purchaseid
+                documents(list,quid)
+    elif teid:
+        te=models.Zanshoudan.objects.filter(temid=teid).first()
+        if te:
+            puid=te.purchaseid_id
+            documents(list,puid)
+    elif wid:
+        wa=models.Rukudan.objects.filter(id=wid).first()
+        if wa:
+            puid=wa.temid.purchaseid_id
+            documents(list,puid)
     result={
         "list":list,
-        # "did":did,
-        # "quid":quid,
-        "puid":puid
+        "puid":id
         ,"title":"查看单据流"
     }
 
