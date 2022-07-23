@@ -132,6 +132,7 @@
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
                                 location.reload();
+                                EDIT_ID=undefined;
                             }
                             else{
                             $("#quote_error").text(res.error[0]);}
@@ -157,7 +158,6 @@
 
                     })
                 }
-                EDIT_ID=undefined;
             })
 
             {#动态增加点击事件#}
