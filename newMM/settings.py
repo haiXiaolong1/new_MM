@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'supply',
     'inventory',
     'purchase',
-    'supply.templatetags'
+    'supply.templatetags',
+    'account'
 ]
 
 MIDDLEWARE = [
