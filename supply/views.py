@@ -222,9 +222,5 @@ def quote_edit(request):
     """根据报价单号修改报价"""
     quid=request.GET.get("quid")
     quote=request.POST.get("quote")
-    toCheck = [quote]
-    types = ["float+"]
-    res = form_check(toCheck, types)
-    if res['status']:
-        models.Baojiadan.objects.filter(quoteid=quid).update(quote=quote)
-    return JsonResponse(json.dumps(res,ensure_ascii=False),safe=False)
+    models.Baojiadan.objects.filter(quoteid=quid).update(quote=quote)
+    return JsonResponse({"status":True})
