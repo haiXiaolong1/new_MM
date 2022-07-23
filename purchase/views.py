@@ -310,12 +310,64 @@ def documents(list,puid):
                 list.append(m)
 
     return
-
+def demand_list(list,did,quid,inid):
+    # 请购单
+    d=models.Caigouxuqiu.objects.filter(demandid=did).first()
+    m={}
+    date=d.verifytime
+    name="请购单"
+    status=d.status-1
+    id=d.demandid
+    price=d.price
+    fid=d.facid_id
+    mid=d.maid_id
+    tcount=d.tcount
+    m["date"]=date
+    m["status"]=status
+    m["id"]=id
+    m["fid"]=fid
+    m["tcount"]=tcount
+    m["price"]=price
+    m["mid"]=mid
+    m["name"]=name
+    list.append(m)
+    # 询价单
+    i=models.Xunjiadan.objects.filter(inquiryid=inid).first()
+    if i:
+        m={}
+        date=i.createtime
+        name="询价单"
+        id=i.inquiryid
+        m["date"]=date
+        m["id"]=id
+        m["fid"]=fid
+        m["tcount"]=tcount
+        m["mid"]=mid
+        m['bid']=i.bussid.name
+        m["name"]=name
+        list.append(m)
+    # 报价单
+    q=models.Baojiadan.objects.filter(quoteid=quid).first()
+    if q:
+        m={}
+        date=q.createtime
+        name="报价单"
+        status=q.isreceived-2
+        id=q.quoteid
+        quote=q.quote
+        sid=q.supplyid_id
+        m["date"]=date
+        m["status"]=status
+        m["id"]=id
+        m["tcount"]=tcount
+        m["quote"]=quote
+        m["mid"]=mid
+        m['sid']=sid
+        m["name"]=name
+        list.append(m)
 
 def purchase_documents(request):
     """查看单据流"""
-    # 目前暂时只支持根据采购单号，后续再改，这里写的比较繁琐可以考虑优化
-    # 目前的想法是，前端传过来哪个编号就按哪个编号查，这样的话，下面的if puid就要做三遍
     list=[]
     q={}
     puid=""
@@ -324,21 +376,20 @@ def purchase_documents(request):
     quid=""
     teid=""
     wid=""
-    # did=request.GET.get("did","")
-    id=request.GET.get("puid","")
-    tp=id[:2]
+    nid=request.GET.get("id","")
+    tp=nid[:2]
     if tp == "pu":
-        puid=id
+        puid=nid
     if tp == "de":
-        did=id
+        did=nid
     if tp == "in":
-        inid=id
+        inid=nid
     if tp == "qu":
-        quid=id
+        quid=nid
     if tp == "te":
-        teid=id
+        teid=nid
     if tp == "wa":
-        wid=id
+        wid=nid
 
     print(tp)
     # quid=request.GET.get("quid","")
@@ -367,16 +418,17 @@ def purchase_documents(request):
             m["price"]=price
             m["mid"]=mid
             m["name"]=name
-            list.append(m)
             #报价单
             qu1=models.Baojiadan.objects.filter(inquiryid__demandid_id=did).filter(isreceived=1).first()
             qu2=models.Baojiadan.objects.filter(inquiryid__demandid_id=did).filter(isreceived=3).first()
             if not qu1 and not  qu2:
-                inq=models.Xunjiadan.objects.filter(demandid_id=did).filter()
+                list.append(m)
             if qu1:
                 inq=models.Xunjiadan.objects.filter(demandid_id=did).filter()
+                inid=inq.first().inquiryid
+                quid=models.Baojiadan.objects.filter(inquiryid_id=inid).first().quoteid
+                demand_list(list,did,quid,inid)
             if qu2:
-                inq=models.Xunjiadan.objects.filter(demandid_id=did).filter()
                 quid=models.Caigoudan.objects.filter(quoteid_id=qu2.quoteid).first().purchaseid
                 list=[]
                 documents(list,quid)
@@ -386,14 +438,22 @@ def purchase_documents(request):
         qu=models.Baojiadan.objects.filter(inquiryid=inq).first()
         if qu:
             if qu.isreceived==3:
-                quid=models.Caigoudan.objects.filter(quoteid=qu).first().purchaseid
-                documents(list,quid)
+                puid=models.Caigoudan.objects.filter(quoteid=qu).first().purchaseid
+                documents(list,puid)
+            if qu.isreceived==1:
+                inid=qu.inquiryid_id
+                did=qu.inquiryid.demandid_id
+                demand_list(list,did,quid,inid)
     elif quid:
         qu=models.Baojiadan.objects.filter(quoteid=quid).first()
         if qu:
             if qu.isreceived==3:
-                quid=models.Caigoudan.objects.filter(quoteid=qu).first().purchaseid
-                documents(list,quid)
+                puid=models.Caigoudan.objects.filter(quoteid=qu).first().purchaseid
+                documents(list,puid)
+            if qu.isreceived==1:
+                inid=qu.inquiryid_id
+                did=qu.inquiryid.demandid_id
+                demand_list(list,did,quid,inid)
     elif teid:
         te=models.Zanshoudan.objects.filter(temid=teid).first()
         if te:
@@ -406,7 +466,7 @@ def purchase_documents(request):
             documents(list,puid)
     result={
         "list":list,
-        "puid":id
+        "id":nid
         ,"title":"查看单据流"
     }
 
