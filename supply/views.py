@@ -222,5 +222,67 @@ def quote_edit(request):
     """根据报价单号修改报价"""
     quid=request.GET.get("quid")
     quote=request.POST.get("quote")
-    models.Baojiadan.objects.filter(quoteid=quid).update(quote=quote)
+    toCheck=[quote]
+    types=["float+"]
+    res=form_check(toCheck,types)
+    if res['status']:
+        models.Baojiadan.objects.filter(quoteid=quid).update(quote=quote)
+    return JsonResponse(json.dumps(res,ensure_ascii=False),safe=False)
+
+
+# 展示物料列表
+def mm_list(request):
+    qu=models.Wuliao.objects.all()
+    yu=models.Yuangong.objects.all()
+    id=[]
+    n=[]
+    for i in yu:
+        id.append(i.id)
+        n.append(i.username)
+    yuan=dict(zip(id,n))
+    return render(request,'create_material.html',{"queryset":qu,"yuangong":yuan,"title":"物料列表"})
+# 添加供应商
+def mm_add(request):
+    n=1000
+    if models.Wuliao.objects.first():
+        n=models.Wuliao.objects.all().order_by('-id').first().id[1:]
+    sid="m"+str(int(n)+1)#编号递增，这样计算避免删除后出现错误
+    #time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    o=request.POST
+    id=request.session["info"]['id']
+    models.Wuliao.objects.create(type=o['type'],salegroup=o['salegroup'],saleway=o['saleway']
+                                        ,id=sid,calcutype=o['calcutype'],desc=o['desc'])
+    print(request.POST)
+    return JsonResponse({"status":True})
+# 编辑供应商时返回供应商原始数据
+def mm_detail(request):
+    sid=request.GET.get("uid")
+    su=models.Wuliao.objects.filter(id=sid).values("type",'salegroup','saleway',"calcutype","desc").first()
+    if not su:
+        return JsonResponse({"status":False,"error":"数据不存在"})
+    return JsonResponse({"supply":su,"status":True})
+
+# 保存编辑供应商的最新数据
+def mm_edit(request):
+    id=request.GET.get("uid")
+    uid=request.session["info"]['id']
+    # 用户ID
+    o=request.POST
+    #time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    models.Wuliao.objects.filter(id=id).update(type=o['type'],salegroup=o['salegroup'],saleway=o['saleway']
+                                        ,calcutype=o['calcutype'],desc=o['desc'])
+
+    return JsonResponse({"status":True})
+
+# 删除供应商
+def mm_delete(request):
+    id=request.GET.get("uid")
+    '''
+    s=models.Wuliao.objects.filter(supplyid_id=id).first()
+    # 先判断是否有关联关系，如果有则不能删除，目前没有
+    if s:
+        return JsonResponse({"status":False})
+    '''
+    models.Wuliao.objects.filter(id=id).delete()
     return JsonResponse({"status":True})
