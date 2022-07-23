@@ -19,7 +19,7 @@
                 debug: false,
                 newestOnTop: false,
                 progressBar: false,
-                positionClass: "toast-bottom-full-width",
+                positionClass: "toast-top-right",
                 preventDuplicates: true,
                 onclick: null,
                 showDuration: 300,

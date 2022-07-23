@@ -90,6 +90,17 @@
             $('#purchase_ul').css('display','block');
             $('#purchase_ul li').addClass('animation');
 
+            var showToast=localStorage.getItem("notify_show");
+            if(showToast!=undefined){
+                if(showToast){
+                    if(showToast != "false"){
+                        $("#toast-type").text(localStorage.getItem("notify_type"));
+                        $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
+                        $("#toast-context").text(localStorage.getItem("notify_context"));
+                        $("#showtoast").triggerHandler("click");
+                    }
+                }
+            }
 
             $("#btnSave").click(function () {
                 $.ajax({
@@ -101,7 +112,10 @@
                         if(res.status){
                             $("#myd").modal('hide');
                             $("#formAdd")[0].reset();
-                            alert("创建成功，采购订单号"+res.pid);
+                            localStorage.setItem("notify_show",true);
+                            localStorage.setItem("notify_tittle","提示");
+                            localStorage.setItem("notify_context","创建成功，采购订单号"+res.pid);
+                            localStorage.setItem("notify_type","success");
                             window.history.back(-1);
                             location.reload();
                         }

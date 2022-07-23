@@ -118,6 +118,18 @@
             $('#supply_ul').css('display','block');
             $('#supply_ul li').addClass('animation');
 
+            var showToast=localStorage.getItem("notify_show");
+            if(showToast!=undefined){
+                if(showToast){
+                    if(showToast != "false"){
+                        $("#toast-type").text(localStorage.getItem("notify_type"));
+                        $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
+                        $("#toast-context").text(localStorage.getItem("notify_context"));
+                        $("#showtoast").triggerHandler("click");
+                    }
+                }
+            }
+
             $("#btnSave").click(function () {
                 if(!EDIT_ID){
                     $.ajax({
@@ -128,7 +140,10 @@
                         success:function (res){
                             res=JSON.parse(res);
                             if(res.status){
-                                alert("报价成功")
+                                localStorage.setItem("notify_show",true);
+                                localStorage.setItem("notify_tittle","提示");
+                                localStorage.setItem("notify_context","报价成功");
+                                localStorage.setItem("notify_type","success");
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
                                 location.reload();
@@ -148,6 +163,10 @@
                         success:function (res){
                             res=JSON.parse(res);
                             if(res.status){
+                                localStorage.setItem("notify_show",true);
+                                localStorage.setItem("notify_tittle","提示");
+                                localStorage.setItem("notify_context","修改报价成功");
+                                localStorage.setItem("notify_type","success");
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
                                 location.reload();
@@ -185,6 +204,10 @@
                         dataType:"JSON",
                         success:function (res){
                             if(res.status){
+                                localStorage.setItem("notify_show",true);
+                                localStorage.setItem("notify_tittle","提示");
+                                localStorage.setItem("notify_context","成功删除报价单");
+                                localStorage.setItem("notify_type","info");
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID=undefined;
                                 location.reload();
