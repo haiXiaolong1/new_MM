@@ -58,16 +58,8 @@
         <div class="page-sidebar-inner">
             <div class="page-sidebar-menu">
                 <ul class="accordion-menu">
-                    {% if request.session.info.office == "管理员" %}
-                    <li class="topli" id="admin">
-                        <a href="javascript:void(0);">
-                            <i class="menu-icon icon-inbox" ></i><span>管理员</span><i class="accordion-icon fa fa-angle-left"></i>
-                        </a>
-                        <ul class="sub-menu" id="admin_ul">
-                            <li id="admin_li"><a href="/admin/list">账户管理</a></li>
-                        </ul>
-                    </li>
-                    {% endif %}
+
+
                     <li class="topli" id="supply">
                         <a href="javascript:void(0);">
                             <i class="menu-icon icon-people"></i><span>供应商管理</span><i class="accordion-icon fa fa-angle-left"></i>
@@ -101,7 +93,20 @@
                             <li id="inventory_receive"><a href="/inventory/receive/">收货管理</a></li>
                             <li id="inventory_invoice"><a href="/inventory/invoice/">发票</a></li>
                         </ul>
+                    {% if request.session.info.office == "管理员" %}
                     </li>
+                        <li class="topli" id="account">
+                        <a href="javascript:void(0);">
+                            <i class="menu-icon icon-command"></i><span>用户管理</span><i class="accordion-icon fa fa-angle-left"></i>
+                        </a>
+                        <ul class="sub-menu" id="account_ul">
+                            <li class="subMenu" id="account_documents"><a href="/account/list/">查看用户</a></li>
+                            <li class="subMenu" id="account_create_inquiry"><a href="/purchase/inquiry/create/">创建用户</a></li>
+                            <li class="subMenu" id="account_e_quote"><a href="/purchase/quote/evaluate/">评估报价单</a></li>
+                            <li class="subMenu" id="account_list"><a href="/purchase/list/">创建采购单</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
