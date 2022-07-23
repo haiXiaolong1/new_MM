@@ -21,4 +21,5 @@ urlpatterns = [
     path('logout/', views.logout),
     path('purchase/',include('purchase.urls')),
     path('inventory/',include('inventory.urls')),
+    path('account/',include('account.urls')),
 ]
