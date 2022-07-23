@@ -24,7 +24,7 @@ def trans(val,mark):
     if mark==False:
         return val
     if mark=="status":
-        if str(val)==1:
+        if str(val)=="1":
             return "已完成"
         else:
             return "未完成"
@@ -86,12 +86,12 @@ def obj_document(arg):
     patterns=dict(zip(names,[qgd,xjd,bjd,cgd,zsd,rkd]))
     p=patterns[arg["name"]]
     result=[]
-    print("【{}】-{}".format(arg["name"],arg))
+    # print("【{}】-{}".format(arg["name"],arg))
     for idx,k in enumerate(p["items"]):
         d={"name":p["tittles"][idx],
            "context":trans(arg[k],p["mark"][idx]),
            "class":"document_flow_"+p["classes"][idx],
            "text":p["texts"][idx]}
-        print(d)
+        # print(d)
         result.append(d)
     return result
