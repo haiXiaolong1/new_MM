@@ -24,7 +24,7 @@ def trans(val,mark):
     if mark==False:
         return val
     if mark=="status":
-        if str(val)==1:
+        if str(val)=="1":
             return "已完成"
         else:
             return "未完成"
