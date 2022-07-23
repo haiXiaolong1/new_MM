@@ -22,23 +22,25 @@ def obj_document(arg):
     arg=dict(arg)
     names=["请购单","询价单","报价单","采购单","暂收单","入库单"]
     qgd={
-        "items":[],"tittles":[],
-        "classes":[],
-        "texts":[],
-        "foreign":[],
+        "items":["id","status","fid","mid","tcount","price"],
+        "tittles":["请购单号","订单状态","工厂编号","物料编号","请购数量","预期单价"],
+        "classes":["full","full","full","full","full","full"],
+        "texts":[""]*5+["元"],
+        "foreign":[False]*6,
     }
     xjd={
-        "items":[],"tittles":[],
-        "classes":[],
-        "texts":[],
-        "foreign":[],
+        "items":["id","fid","mid","bid","tcount"],
+        "tittles":["询价单号","工厂编号","物料编号","请购客户","请购数量"],
+        "classes":["full","full","full","full","full"],
+        "texts":[""]*5,
+        "foreign":[False]*5,
     }
     bjd={
-        "items":[],
-        "tittles":[],
-        "classes":[],
-        "texts":[],
-        "foreign":[],
+        "items":["id","status","sid","mid","tcount","quote"],
+        "tittles":["报价单号","订单状态","供应商编号","物料编号","报价数量","报价价格"],
+        "classes":["full","full","full","full","full","full"],
+        "texts":[""]*5+["元"],
+        "foreign":[False]*6,
     }
     cgd={
         "items":["id","status","fid","sid","mid","tcount","price"],
@@ -48,76 +50,48 @@ def obj_document(arg):
         "foreign":[False]*7,
     }
     zsd={
-        "items":[],"tittles":[],
-        "classes":[],
-        "texts":[],
-        "foreign":[],
+        "items":["id","status","fid","sid","mid","tcount","moreinfo"],
+        "tittles":["暂收单号","订单状态","工厂编号","供应商编号","物料编号","暂收数量","备注"],
+        "classes":["full","full","full","full","full","full","full"],
+        "texts":[""]*7,
+        "foreign":[False]*7,
     }
     rkd={
-        "items":[],"tittles":[],
-        "classes":[],
-        "texts":[],
-        "foreign":[],
+        "items":["id","status","fid","sid","mid","tcount","moreinfo"],
+        "tittles":["入库单号","订单状态","工厂编号","供应商编号","物料编号","暂收数量","备注"],
+        "classes":["full","full","full","full","full","full","full"],
+        "texts":[""]*7,
+        "foreign":[False]*7,
     }
     patterns=dict(zip(names,[qgd,xjd,bjd,cgd,zsd,rkd]))
     p=patterns[arg["name"]]
     result=[]
+    print("【{}】-{}".format(arg["name"],arg))
     for idx,k in enumerate(p["items"]):
         d={"name":p["tittles"][idx],"context":arg[k],
            "class":"document_flow_"+p["classes"][idx],
            "text":p["texts"][idx]}
         print(d)
         result.append(d)
-    print(result)
     return result
 
 """
-{'name': 'date', 'context': datetime.datetime(2022, 7, 22, 13, 47, 26), 'class': 'try', 'text': '占位'},
- {'name': 'status', 'context': 1, 'class': 'try', 'text': '占位'}, 
- {'name': 'id', 'context': 'pu10000001', 'class': 'try', 'text': '占位'}, 
- {'name': 'fid', 'context': 'f1003', 'class': 'try', 'text': '占位'},
- {'name': 'tcount', 'context': 12.0, 'class': 'try', 'text': '占位'}, 
- {'name': 'price', 'context': 12.0, 'class': 'try', 'text': '占位'}, 
- {'name': 'mid', 'context':'m1002', 'class': 'try', 'text': '占位'}, 
- {'name': 'sid', 'context': 's10000001', 'class': 'try', 'text': '占位'}, 
- {'name': 'name', 'context': '采购单', 'class': 'try', 'text': '占位'}
-"""
+【采购单】-{'date': datetime.datetime(2022, 7, 22, 13, 47, 26), 'status': 1, 'id': 'pu10000001', 'fid': 'f1003', 'tcount': 12.0, 'price': 12.0, 'mid': 'm1002',': 's10000001', 'name': '采购单'}
+【请购单】-{'date': datetime.datetime(2022, 7, 22, 13, 6, 15), 
+'status': 1, 'id': 'de10000003', 'fid': 'f1003', 'tcount': 12.0, 
+'price': 1.0, 'mid': 'm1002', ' 's10000001', 'name': '请购单'}
+【询价单】-{'date': datetime.datetime(2022, 7, 22, 13, 10, 6), 
+'id': 'in10000001', 'fid': 'f1003', 'tcount': 12.0, 'mid': 'm1002', 
+'bid': '新世纪', 'name': '询价单'}
+【报价单】-{'date': datetime.datetime(2022, 7, 22, 13, 38, 43), 
+'status': 1, 'id': 'qu10000002', 'tcount': 12.0, 
+'quote': 12.0, 'mid': 'm1002', 'sid': 's10000001', 'name': '报价单'}
+【暂收单】-{'status': 1, 'date': datetime.datetime(2022, 7, 22, 13, 52, 52), 
+'id': 'te10000003', 'fid': 'f1003', 'tcount': 12.0, 'moreinfo': '',
+ 'mid': 'm1002'd': 's10000001', 'name': '暂收单'}
+【入库单】-{'date': datetime.datetime(2022, 7, 22, 13, 53, 39), 
+'status': 1, 'id': 'wa10000006', 'fid': 'f1003', 
+'tcount': 12.0, 'price': 12.0, 'mid': 'm1002',
+': 's10000001', 'name': '入库单', 'rcount': 12.0, 'moreinfo': '无'}
 
-"""
-{% if obj.status %}
-<p>
-    状态：
-    {% if obj.status == 1%}
-        已完成
-    {% else %}
-        未完成
-    {% endif %}
-</p>
-{% endif %}
-<p>{{ obj.name }}号：{{ obj.id }}</p>
-<p>物料编号：{{ obj.mid }}</p>
-{% if obj.fid %}
-<p>工厂编号：{{ obj.fid }}</p>
-{% endif %}
-{% if obj.price %}
-<p>价格：{{ obj.price }}</p>
-{% endif %}
-{% if obj.quote %}
-<p>报价：{{ obj.quote }}</p>
-{% endif %}
-{% if obj.tcount %}
-<p>数量：{{ obj.tcount }}</p>
-{% endif %}
-{% if obj.rcount %}
-<p>实际入库数量：{{ obj.rcount }}</p>
-{% endif %}
-{% if obj.moreinfo %}
-<p>备注信息：{{ obj.moreinfo }}</p>
-{% endif %}
-{% if obj.bid %}
-<p>询价公司名：{{ obj.bid }}</p>
-{% endif %}
-{% if obj.sid %}
-<p>供应商编号：{{ obj.sid }}</p>
-{% endif %}
 """
