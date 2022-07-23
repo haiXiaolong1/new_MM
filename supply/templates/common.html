@@ -125,6 +125,9 @@
                         </span>
                         <input type="text" name="search" style="display: none">
                     </div>
+                    <div style="float: left;margin-left: 25px;color: grey;background-color: #f7f9fa;width: 200px" id="tips">
+
+                    </div>
                 </form>
             </div>
             <nav class="navbar navbar-default">
@@ -288,7 +291,21 @@
                 }
             }
         })
+        $("#topSearch").on('input',function (e) {
+            var s=["维护物料","维护供应商","维护物料关系","维护报价单","创建采购单","查看库存",
+                "采购需求管理","暂存检查","收货管理","发票"]
+            var v=$("#topSearch")[0].value;
+            p="<br>";
+            $("#tips").empty()
+            for (i in s){
+                if(s[i].indexOf(v)!=-1){
+                    $("#tips").append(s[i]);
+                    $("#tips").append(p);
+                }
+            }
 
+
+        })
     });
 
 
