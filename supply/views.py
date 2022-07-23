@@ -152,7 +152,7 @@ def material_add(request):
         models.Gongyingguanxi.objects.create(createtime=time,updatetime=time,
                                              createid_id=id,updateid_id=id,
                                              supplyid_id=sid,materialid_id=mid)
-    return JsonResponse(json.dumps(res,ensure_ascii=False),safe=False)
+    return JsonResponse(res)
 
 # 编辑供应关系时展示原始数据
 def material_detail(request):
@@ -176,8 +176,13 @@ def material_edit(request):
     # 如果未作改动依旧显示成功
     if isexist and (i.first().materialid_id!=mid or i.first().supplyid_id!=sid):
         return JsonResponse({"status":True,"isexist":True})
-    i.update(supplyid_id=sid,materialid_id=mid,updatetime=time,updateid_id=uid)
-    return JsonResponse({"status":True,"isexist":False})
+    toCheck = [sid, mid]
+    types = ['id供应商编号', 'id物料编号']
+    res = form_check(toCheck, types)
+    res["isexist"]=False
+    if res["status"]:
+        i.update(supplyid_id=sid,materialid_id=mid,updatetime=time,updateid_id=uid)
+    return JsonResponse(res)
 
 
 
