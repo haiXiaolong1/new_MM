@@ -390,11 +390,6 @@ def purchase_documents(request):
         teid=nid
     if tp == "wa":
         wid=nid
-
-    print(tp)
-    # quid=request.GET.get("quid","")
-    # if did:
-    #     q['demandid__contains']=did
     if puid:
         documents(list,puid)
     elif did:
