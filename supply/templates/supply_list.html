@@ -150,18 +150,7 @@
             $("#btnSave").click(function () {
 
                 if(!EDIT_ID){
-                    if(!$("#name").val())
-                    {
-                        alert("供应商名称不能为空")
-                        return;
-                    }
-                    else if(!$("#address").val())
-                    {
-                        alert("供应商地址不能为空")
-                        return;
-                    }
-                    else {
-                        $.ajax({
+                    $.ajax({
                             url:"/supply/add/",
                             type:"post",
                             data:$("#formAdd").serialize(),
@@ -187,23 +176,9 @@
                                     }
                                 }
                             }
-
                         })
-                    }
-
                 }else {
-                    if(!$("#name").val())
-                    {
-                        alert("供应商名称不能为空")
-                        return;
-                    }
-                    else if(!$("#address").val())
-                    {
-                        alert("供应商地址不能为空")
-                        return;
-                    }
-                    else {
-                        $.ajax({
+                    $.ajax({
                             url:"/supply/edit/"+"?uid="+EDIT_ID,
                             type:"post",
                             data:$("#formAdd").serialize(),
@@ -216,8 +191,7 @@
                                 }
                             }
                         })
-                        EDIT_ID=undefined;
-                    }
+                    EDIT_ID=undefined;
                 }
 
 
