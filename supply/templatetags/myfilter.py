@@ -1,4 +1,5 @@
 from django import template
+
 register = template.Library()
 
 @register.filter(name="front_add")
@@ -17,81 +18,80 @@ def table_status(arg,val):
     #d['']={0:,1:,2:}#单对应
     return "table_status_{}".format(d[val][arg])
 
+from ..models import Gongchang,Gongyingshang,Wuliao
+
+def trans(val,mark):
+    if mark==False:
+        return val
+    if mark=="status":
+        if str(val)==1:
+            return "已完成"
+        else:
+            return "未完成"
+    if mark=="mid":
+        return Wuliao.objects.filter(id=val).first().desc
+    if mark == "fid":
+        return Gongchang.objects.filter(id=val).first().address
+    if mark=="sid":
+        return Gongyingshang.objects.filter(id=val).first().name
+
+
+
 @register.filter(name="obj_document")
 def obj_document(arg):
     arg=dict(arg)
     names=["请购单","询价单","报价单","采购单","暂收单","入库单"]
     qgd={
-        "items":["id","status","fid","mid","tcount","price"],
-        "tittles":["请购单号","订单状态","工厂编号","物料编号","请购数量","预期单价"],
-        "classes":["full","full","full","full","full","full"],
-        "texts":[""]*5+["元"],
-        "foreign":[False]*6,
+        "items":["id","status","fid","fid","mid","mid","tcount","price"],
+        "tittles":["请购单号","订单状态","工厂编号","工厂地址","物料编号","物料描述","请购数量","预期单价"],
+        "classes":["full","full","full","full","full","full","full","full"],
+        "texts":[""]*7+["元"],
+        "mark":[False,"status",False,"fid",False,"mid",False,False]
     }
     xjd={
-        "items":["id","fid","mid","bid","tcount"],
-        "tittles":["询价单号","工厂编号","物料编号","请购客户","请购数量"],
-        "classes":["full","full","full","full","full"],
-        "texts":[""]*5,
-        "foreign":[False]*5,
+        "items":["id","fid","fid","mid","mid","bid","tcount"],
+        "tittles":["询价单号","工厂编号","工厂地址","物料编号","物料描述","请购客户","请购数量"],
+        "classes":["full","full","full","full","full","full","full"],
+        "texts":[""]*7,
+        "mark":[False,False,"fid",False,"mid",False,False,False]
     }
     bjd={
-        "items":["id","status","sid","mid","tcount","quote"],
-        "tittles":["报价单号","订单状态","供应商编号","物料编号","报价数量","报价价格"],
-        "classes":["full","full","full","full","full","full"],
-        "texts":[""]*5+["元"],
-        "foreign":[False]*6,
+        "items":["id","status","sid","sid","mid","mid","tcount","quote"],
+        "tittles":["报价单号","订单状态","供应商编号","供应商","物料编号","物料描述","报价数量","报价价格"],
+        "classes":["full","full","full","full","full","full","full","full"],
+        "texts":[""]*7+["元"],
+        "mark":[False,"status",False,"sid",False,"mid",False,False],
     }
     cgd={
-        "items":["id","status","fid","sid","mid","tcount","price"],
-        "tittles":["采购单号","订单状态","工厂编号","供应商编号","物料编号","采购数量","采购价格"],
-        "classes":["full","full","full","full","full","full","full"],
-        "texts":[""]*6+["元"],
-        "foreign":[False]*7,
+        "items":["id","status","fid","fid","sid","sid","mid","mid","tcount","price"],
+        "tittles":["采购单号","订单状态","工厂编号","工厂地址","供应商编号","供应商","物料编号","物料描述","采购数量","采购价格"],
+        "classes":["full","full","full","full","full","full","full","full","full","full"],
+        "texts":[""]*9+["元"],
+        "mark":[False,"status",False,"fid",False,"sid",False,"mid",False,False]
     }
     zsd={
-        "items":["id","status","fid","sid","mid","tcount","moreinfo"],
-        "tittles":["暂收单号","订单状态","工厂编号","供应商编号","物料编号","暂收数量","备注"],
-        "classes":["full","full","full","full","full","full","full"],
-        "texts":[""]*7,
-        "foreign":[False]*7,
+        "items":["id","status","fid","fid","sid","sid","mid","mid","tcount","moreinfo"],
+        "tittles":["暂收单号","订单状态","工厂编号","工厂地址","供应商编号","供应商","物料编号","物料描述","暂收数量","备注"],
+        "classes":["full","full","full","full","full","full","full","full","full","full"],
+        "texts":[""]*11,
+        "mark":[False,"status",False,"fid",False,"sid",False,"mid",False,False]
     }
     rkd={
-        "items":["id","status","fid","sid","mid","tcount","moreinfo"],
-        "tittles":["入库单号","订单状态","工厂编号","供应商编号","物料编号","暂收数量","备注"],
-        "classes":["full","full","full","full","full","full","full"],
-        "texts":[""]*7,
-        "foreign":[False]*7,
+        "items":["id","status","fid","fid","sid","sid","mid","mid","tcount","moreinfo"],
+        "tittles":["入库单号","订单状态","工厂编号","工厂地址","供应商编号","供应商","物料编号","物料描述","暂收数量","备注"],
+        "classes":["full","full","full","full","full","full","full","full","full","full"],
+        "texts":[""]*10,
+        "mark":[False,"status",False,"fid",False,"sid",False,"mid",False,False]
     }
     patterns=dict(zip(names,[qgd,xjd,bjd,cgd,zsd,rkd]))
     p=patterns[arg["name"]]
     result=[]
     print("【{}】-{}".format(arg["name"],arg))
     for idx,k in enumerate(p["items"]):
-        d={"name":p["tittles"][idx],"context":arg[k],
+        d={"name":p["tittles"][idx],
+           "context":trans(arg[k],p["mark"][idx]),
            "class":"document_flow_"+p["classes"][idx],
            "text":p["texts"][idx]}
         print(d)
         result.append(d)
     return result
-
-"""
-【采购单】-{'date': datetime.datetime(2022, 7, 22, 13, 47, 26), 'status': 1, 'id': 'pu10000001', 'fid': 'f1003', 'tcount': 12.0, 'price': 12.0, 'mid': 'm1002',': 's10000001', 'name': '采购单'}
-【请购单】-{'date': datetime.datetime(2022, 7, 22, 13, 6, 15), 
-'status': 1, 'id': 'de10000003', 'fid': 'f1003', 'tcount': 12.0, 
-'price': 1.0, 'mid': 'm1002', ' 's10000001', 'name': '请购单'}
-【询价单】-{'date': datetime.datetime(2022, 7, 22, 13, 10, 6), 
-'id': 'in10000001', 'fid': 'f1003', 'tcount': 12.0, 'mid': 'm1002', 
-'bid': '新世纪', 'name': '询价单'}
-【报价单】-{'date': datetime.datetime(2022, 7, 22, 13, 38, 43), 
-'status': 1, 'id': 'qu10000002', 'tcount': 12.0, 
-'quote': 12.0, 'mid': 'm1002', 'sid': 's10000001', 'name': '报价单'}
-【暂收单】-{'status': 1, 'date': datetime.datetime(2022, 7, 22, 13, 52, 52), 
-'id': 'te10000003', 'fid': 'f1003', 'tcount': 12.0, 'moreinfo': '',
- 'mid': 'm1002'd': 's10000001', 'name': '暂收单'}
-【入库单】-{'date': datetime.datetime(2022, 7, 22, 13, 53, 39), 
-'status': 1, 'id': 'wa10000006', 'fid': 'f1003', 
-'tcount': 12.0, 'price': 12.0, 'mid': 'm1002',
-': 's10000001', 'name': '入库单', 'rcount': 12.0, 'moreinfo': '无'}
-
-"""
