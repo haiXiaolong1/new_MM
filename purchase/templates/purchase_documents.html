@@ -38,42 +38,10 @@
                                     </div> <!-- cd-timeline-img -->
                                     <div class="cd-timeline-content">
                                         <h4>{{ obj.name }}</h4>
-                                        {% if obj.status %}
-                                            <p>
-                                                状态：
-                                                {% if obj.status == 1%}
-                                                    已完成
-                                                {% else %}
-                                                    未完成
-                                                {% endif %}
-                                            </p>
-                                        {% endif %}
-                                        <p>{{ obj.name }}号：{{ obj.id }}</p>
-                                        <p>物料编号：{{ obj.mid }}</p>
-                                        {% if obj.fid %}
-                                            <p>工厂编号：{{ obj.fid }}</p>
-                                        {% endif %}
-                                        {% if obj.price %}
-                                            <p>价格：{{ obj.price }}</p>
-                                        {% endif %}
-                                        {% if obj.quote %}
-                                            <p>报价：{{ obj.quote }}</p>
-                                        {% endif %}
-                                        {% if obj.tcount %}
-                                            <p>数量：{{ obj.tcount }}</p>
-                                        {% endif %}
-                                        {% if obj.rcount %}
-                                            <p>实际入库数量：{{ obj.rcount }}</p>
-                                        {% endif %}
-                                        {% if obj.moreinfo %}
-                                            <p>备注信息：{{ obj.moreinfo }}</p>
-                                        {% endif %}
-                                        {% if obj.bid %}
-                                            <p>询价公司名：{{ obj.bid }}</p>
-                                        {% endif %}
-                                        {% if obj.sid %}
-                                            <p>供应商编号：{{ obj.sid }}</p>
-                                        {% endif %}
+                                        {% load myfilter %}
+                                        {% for i in obj|obj_document %}
+                                            <p class="{{i.class}}">{{i.name}}：{{i.context}}{{i.text}}</p>
+                                        {% endfor %}
                                         <span class="cd-date">{{ obj.date }}</span>
                                     </div> <!-- cd-timeline-content -->
                             </div><!-- cd-timeline-block -->
