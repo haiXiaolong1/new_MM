@@ -34,14 +34,11 @@
 
 
             toastr[shortCutFunction](msg, title); // Wire up an event handler to a button in the toast, if it exists
-            
-            alert("提示成功");
 
             localStorage.setItem("notify_show",false);
             localStorage.removeItem("notify_context");
             localStorage.removeItem("notify_tittle");
             localStorage.removeItem("notify_type");
-            alert("提示结束");
             return;
         });
     });

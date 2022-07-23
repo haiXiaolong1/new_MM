@@ -144,7 +144,6 @@
 
 {% block js%}
     <script type="text/javascript">
-        alert("进入页面");
         var VERIFY_ID,DELETE_ID;
         var showToast=localStorage.getItem("notify_show");
         $(document).ready(function() {
@@ -160,7 +159,7 @@
                         $("#toast-type").text(localStorage.getItem("notify_type"));
                         $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
                         $("#toast-context").text(localStorage.getItem("notify_context"));
-                        $("#showtoast").trigger("click");
+                        $("#showtoast").triggerHandler("click");
                     }
                 }
             }
