@@ -40,42 +40,40 @@ def form_check(toCheck,types):
 def check_message(request):
     return JsonResponse({"status": True,"newMessage":False,"ans":"没有新消息！"})
 
+import datetime
 def all_message():
-    message_flow=[[True,"","10","第一"],
-                  [False,"","20","第2"],
-                  [True,"","30","3"],
-                  [True,"","40","4th"],
-                  [False," active-user","50","5th"]]
-    flow1={"who":"部门经理","flow":message_flow}
-    froms=models.Xiaoxi.objects.filter(from_id='e0002').all()
-    tos=models.Xiaoxi.objects.filter(to_id='e0002').all()
-    res=[]
-    for i in forms:
-        res.append(i)
+    me,them='e0003','e0002'
+    who = models.Yuangong.objects.filter(id=them).first().username
+    tos=models.Xiaoxi.objects.filter(fromId=them,toId=me).all()
+    froms=models.Xiaoxi.objects.filter(fromId=me,toId=them).all()
+    message_flow=[]
+    for i in froms:
+        message_flow.append({"isThem":True,"time":i.time,"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     for i in tos:
-        res.append(i)
-    print(res)
+        message_flow.append({"isThem":False,"time":i.time,"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
+    message_flow=sorted(message_flow,key=lambda a: a["compare"])
+    flow1 = {"who": "部门经理", "flow": message_flow}
     return [flow1,flow1]
 
 def add_message(line):
     html_class="me"
     icon=""
-    if line[0]:
+    if line["isThem"]:
         html_class="them"
         icon='<div class="chat-bubble-img-container"><img src="http://via.placeholder.com/38x38" alt=""></div>'
     html_template=' <div class="chat-bubble {}">{}<div class="chat-bubble-text-container"><span class="chat-bubble-text">{}</span></div></div>'
-    html=html_template.format(html_class,icon,line[-1])
+    html=html_template.format(html_class,icon,line["text"])
     return html
 
 def group_by_time(f):
     flow=f["flow"]
-    start=int(flow[0][2])
-    interval=20
+    start=int(flow[0]["compare"])
+    interval=200000
     group=0
     groups={0:[]}
     for i in flow:
-        if int(i[2])-start>=interval:
-            start=int(i[2])
+        if int(i["compare"])-start>=interval:
+            start=i["compare"]
             group+=1
             groups[group]=[]
         groups[group].append(i)
@@ -83,7 +81,7 @@ def group_by_time(f):
 
 def add_group(group):
     time_template='<div class="chat-start-date">{}</div>'
-    time=time_template.format(group[0][2])
+    time=time_template.format(group[0]["time"].strftime("%m月%d日 %H:%M:%S"))
     for line in group:
         time+=add_message(line)
     return time

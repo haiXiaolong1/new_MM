@@ -218,15 +218,15 @@
                                     <span class="chat-title">新消息</span>
                                     {% for flow in request.session.messageFlow %}
                                     {% load myfilter %}
-                                    <a href="javascript:void(0);" class="{{flow.flow.0.1|message_flow_class}}"
+                                    <a href="javascript:void(0);" class="{{flow.flow.0.isThem|message_flow_class}}"
                                         data-sidebar-id="chat-right-sidebar">
                                         <div class="user-avatar">
                                             <img src="http://via.placeholder.com/40x40" alt="">
                                         </div>
                                         <div class="chat-info">
                                             <span class="chat-author">{{flow.who}}</span>
-                                            <span class="chat-text">{{flow.flow.0.3}}</span>
-                                            <span class="chat-time">{{flow.flow.0.2}}</span>
+                                            <span class="chat-text">{{flow.flow.0.text}}</span>
+                                            <span class="chat-time">{{flow.flow.0.time|date:"H:i"}}</span>
                                         </div>
                                     </a>
                                     {% endfor %}
@@ -493,7 +493,7 @@
                         }
                     }
                 })
-                setTimeout(checkMessage, 2000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
+                setTimeout(checkMessage, 100000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
             }
             setTimeout(checkMessage, 2000);
 
