@@ -204,6 +204,7 @@
 <script src={% static 'plugins/echarts.js' %}></script>
 <script src={% static 'js/pages/timeline.js' %}></script>
 <script src={% static 'plugins/toastr/toastr.min.js' %}></script>
+<script src={% static 'js/pages/ui-notifications.js' %}></script>
 <script type="text/javascript" language="JavaScript">
     $(document).ready(function() {
 
@@ -293,15 +294,21 @@
                 "创建采购单","查看库存", "采购需求管理","暂存检查","收货管理","发票"]
             var v=$("#topSearch")[0].value;
             p="<br>";
+            divstart="<a class='option' style='width: 100%;' >"
+            divend="</a>"
             $("#tips").empty()
             for (i in s){
                 if(s[i].indexOf(v)!=-1){
-                    $("#tips").append(s[i]);
+                    $("#tips").append(divstart+s[i]+divend);
                     $("#tips").append(p);
                 }
             }
 
 
+        })
+
+        $("#tips").on('click',".option",function () {
+            $("#topSearch").val($(this)[0].text)
         })
     });
 
