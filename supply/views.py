@@ -69,9 +69,7 @@ def all_message_by_user(request,me="e0002"):
         read[k]["name"]=models.Yuangong.objects.filter(id=k).first().username
     for k,v in unread.items():
         unread[k]["name"]=models.Yuangong.objects.filter(id=k).first().username
-    print(read)
-    print(unread)
-    return HttpResponse("success")
+    return {"read":read,"unread":unread}
 
 
 def all_message(me='e0003',them='e0002'):
@@ -156,7 +154,7 @@ def login(request):
     # 记录登录信息
     request.session["info"]={"name":ins.username,"id":ins.id,"issuper":ins.issuper
         ,"office":ins.office,"business":ins.businessid.name}
-    # request.session["messageFlow"] = all_message()
+    request.session["messageFlow"] = all_message_by_user(None,"e0002")
     return JsonResponse({"status":True})
 
 #登出功能

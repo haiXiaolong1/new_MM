@@ -46,6 +46,11 @@ class Xiaoxi(models.Model):
     toId = models.ForeignKey(to='Yuangong', to_field='id', related_name='to_id', on_delete=models.CASCADE)
     time = models.DateTimeField(blank=True, null=True)
     context = models.TextField(blank=True, null=True)
+    choices=(
+        (1,"已读"),
+        (0,"未读")
+    )
+    read = models.IntegerField(default=0,choices=choices)
 
 class Gongchang(models.Model):
     id = models.CharField(primary_key=True, max_length=40)
