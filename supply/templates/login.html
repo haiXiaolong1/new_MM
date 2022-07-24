@@ -64,21 +64,22 @@
             <div class="row">
                 <div class="col-sm-6 col-md-3 login-box">
                     <h4 class="login-title">用 户 登 录</h4>
-                    <form method="post">
+                    <form method="post" id="formAdd">
                         {% csrf_token %}
                         <div class="form-group">
                             <label for="exampleInputEmail1">用户名</label>
                             <input type="text" class="form-control" id="exampleInputEmail1" name="username">
+                            <a class="formError" id="username_error"></a>
                         </div>
                         <div class="form-group">
                             <label for="exampleInputPassword1">密码</label>
                             <input type="password" class="form-control" id="exampleInputPassword1" name="password">
+                            <a class="formError" id="password_error"></a>
                         </div>
                         <div class="log-button">
-                            <input type="submit" value="登录" class="btn btn-primary"                  >
+                            <input type="button" value="登录" class="btn btn-primary" id="btnLogin">
                             <br>
                         </div>
-
                     </form>
                 </div>
             </div>
@@ -94,5 +95,34 @@
 <script src={% static 'js/ecaps.min.js' %}></script>
 <script src={% static 'plugins/datatables/js/jquery.datatables.min.js' %}></script>
 <script src={% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
+<script type="text/javascript">
+    $(document).ready(function() {
+
+        $("#btnLogin").click(function () {
+
+            $("#username_error").text("")
+            $("#password_error").text("")
+                $.ajax({
+                    url:"/login/",
+                    type:"post",
+                    data:$("#formAdd").serialize(),
+                    dataType:"JSON",
+                    success:function (res){
+                        if(res.status){
+                            top.location.href = "/supply/list/";
+                        }
+                        else{
+                            $("#username_error").text(res.errors[0])
+                            $("#password_error").text(res.errors[1])
+                        }
+                    }
+                })
+
+        })
+
+    })
+
+
+</script>
 </body>
 </html>

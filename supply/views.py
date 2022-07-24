@@ -103,17 +103,28 @@ def login(request):
     username=request.POST.get("username")
     password=request.POST.get("password")
     ins=models.Yuangong.objects.filter(username=username).first()
-    if not ins :
-        return redirect('/login/')
-    if password==ins.password:
-        # 记录登录信息
-        request.session["info"]={"name":ins.username,"id":ins.id,"issuper":ins.issuper
-            ,"office":ins.office,"business":ins.businessid.name}
-        # request.session["messageFlow"] = all_message()
-        return redirect('/supply/list')
+    err=["",""]
+    if not str(username).strip():
+        err[0]="用户名不能为空"
+    if not str(password).strip():
+        err[1]="密码不能为空"
+    if err[0] or err[1]:
+        return JsonResponse({"status":False,"errors":err})
+    if not err[0] and not err[1] and not ins:
+        err[0]="用户名不存在"
+        return JsonResponse({"status":False,"errors":err})
+    if password!=ins.password:
+        err[0]="密码错误"
+        return JsonResponse({"status":False,"errors":err})
+
+    # 记录登录信息
+    request.session["info"]={"name":ins.username,"id":ins.id,"issuper":ins.issuper
+        ,"office":ins.office,"business":ins.businessid.name}
+    # request.session["messageFlow"] = all_message()
+    return JsonResponse({"status":True})
+
 #登出功能
 def logout(request):
-
     request.session.clear()
     return redirect('/login')
 # 展示供应商列表
