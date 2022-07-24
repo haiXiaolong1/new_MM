@@ -20,7 +20,7 @@ def inquiry_create(request):
     if mid:
         q['maid__id__contains']=mid
     # 根据条件进行模糊搜索，并返回结果集
-    queryset=models.Caigouxuqiu.objects.filter(**q).filter(isdelete=0).all()
+    queryset=models.Caigouxuqiu.objects.filter(**q).filter(isdelete=0,status__in=[0,1]).all()
     result={
         "queryset":queryset,
         "did":did,
@@ -32,9 +32,10 @@ def inquiry_create(request):
 
 def inquiry_createByid(request,did):
     """创建引用请购单的询价单"""
-    queryset=models.Gongyingguanxi.objects.filter().all()
+    # queryset=models.Gongyingguanxi.objects.filter().all()
+    # 优化显示，这里只显示对应物料的供应商
     demand=models.Caigouxuqiu.objects.filter(demandid=did).first()
-    # print(demand)
+    queryset=models.Gongyingguanxi.objects.filter(materialid_id=demand.maid_id).all()
     result={
         "queryset":queryset,
         "demand":demand
@@ -479,3 +480,9 @@ def quote_delete(request):
     id=request.GET.get("uid")
     models.Baojiadan.objects.filter(quoteid=id).update(isdelete=1)
     return JsonResponse({"status":True})
+
+
+def to_verify(request,did):
+    # 跳转到采购需求管理页面
+    print(did)
+    return redirect('/inventory/demand/'+did+"/")

@@ -57,11 +57,13 @@ def inventory_detail(request,uid):#路径传参要写进函数参数中
     return render(request, 'inventory_detail.html', result)
 
 # 采购需求列表
-def inventory_demand(request):
+def inventory_demand(request,did):
     """采购需求管理（请购单）"""
     material=models.Wuliao.objects.filter().all()
     factory=models.Gongchang.objects.filter().all()
-    caigou=models.Caigouxuqiu.objects.filter(isdelete=0).all()
+    caigou=models.Caigouxuqiu.objects.filter(demandid=did)
+    if did=="n":
+        caigou=models.Caigouxuqiu.objects.filter(isdelete=0).all()
     result={
         "material":material,
         "factory":factory,

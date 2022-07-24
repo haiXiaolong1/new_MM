@@ -71,10 +71,16 @@
                                             <td>{{ obj.createuserid.username }}</td>
                                             <td>{{ obj.verifyuserid.username }}</td>
                                             {#                                        判断是否是管理员，普通员工只能查看#}
-                                            {% if  request.session.info.issuper and obj.status == 1 %}
-                                                <td>
-                                                    <a class="btn btn-primary btn-xs btnCite" href="/purchase/inquiry/{{ obj.demandid }}/create/">引用</a>
-                                                </td>
+                                            {% if  request.session.info.issuper %}
+                                                {% if obj.status == 1 %}
+                                                    <td>
+                                                        <a class="btn btn-primary btn-xs btnCite" href="/purchase/inquiry/{{ obj.demandid }}/create/">引用</a>
+                                                    </td>
+                                                {% else %}
+                                                    <td>
+                                                        <a class="btn btn-info btn-xs btnVerify" href="/purchase/toVerify/{{ obj.demandid }}/">去审核</a>
+                                                    </td>
+                                                {% endif %}
 
                                             {% endif %}
                                         </tr>
