@@ -204,7 +204,6 @@
 <script src={% static 'plugins/echarts.js' %}></script>
 <script src={% static 'js/pages/timeline.js' %}></script>
 <script src={% static 'plugins/toastr/toastr.min.js' %}></script>
-<script src={% static 'js/pages/ui-notifications.js' %}></script>
 <script type="text/javascript" language="JavaScript">
     $(document).ready(function() {
 
@@ -243,9 +242,6 @@
         $("#topSearch").keypress(function (even) {
             if (even.which == 13) {
                 var name=$("#topSearch")[0].value
-                {#if(name=="维护物料"){#}
-                {#    top.location.href="/supply/mm/list"#}
-                {# }#}
                 switch (name){
                     case "维护物料":
                         top.location.href="/supply/mm/list";
