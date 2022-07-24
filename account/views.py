@@ -3,7 +3,7 @@ from django.shortcuts import render,HttpResponse
 # Create your views here.
 from supply import models
 from django.http import JsonResponse
-
+from django.views.decorators.csrf import csrf_exempt
 def ac_list(request):
     yu=models.Yuangong.objects.all()
     gs=models.Gongsi.objects.all()
@@ -19,20 +19,9 @@ def ac_add(request):
     o=request.POST
     isactive = o['isactive']
     issuper = o['issuper']
-    if isactive=="是":
-        isa = 1
-    else:
-        isa = 0
-    if issuper == "是":
-        isp = 1
-    else:
-        isp = 0
-
-    print(o["businessid_id"])
-    gs = models.Gongsi.objects.get(myid=o["businessid_id"])
-    print(gs)
+    bid=o["businessid_id"]
     models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password']
-                                        ,id=sid,isactive=isa,issuper=isp,businessid=gs)
+                                        ,id=sid,isactive=isactive,issuper=issuper,businessid_id=bid)
     # print(request.POST)
     return JsonResponse({"status":True})
 # 编辑用户时返回用户原始数据
@@ -56,14 +45,16 @@ def ac_edit(request):
 
     return JsonResponse({"status":True})
 
-# # 删除供应商
-# def ac_delete(request):
-#     id=request.GET.get("uid")
-#     '''
-#     s=models.Wuliao.objects.filter(supplyid_id=id).first()
-#     # 先判断是否有关联关系，如果有则不能删除，目前没有
-#     if s:
-#         return JsonResponse({"status":False})
-#     '''
-#     models.Wuliao.objects.filter(id=id).delete()
-#     return JsonResponse({"status":True})
+# 删除用户
+@csrf_exempt
+def ac_delete(request):
+    id=request.POST.get("uid")
+    gc=models.Gongyingshang.objects.filter(createnumberid_id=id).first()
+    gu=models.Gongyingshang.objects.filter(updatenumberid_id=id).first()
+    cc=models.Caigouxuqiu.objects.filter(createuserid_id=id).first()
+    cu=models.Caigouxuqiu.objects.filter(verifyuserid_id=id).first()
+    if gc or gu or cc or cu :
+        return JsonResponse({"status":False})
+    print(id)
+    models.Yuangong.objects.filter(id=id).delete()
+    return JsonResponse({"status":True})

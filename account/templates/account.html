@@ -150,7 +150,7 @@
                                     {% if  request.session.info.issuper %}
                                     <td>
                                         <button class="btn btn-primary btn-xs btnEdit" id="" uid="{{ obj.id }}">编辑</button>
-{#                                        <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>#}
+                                        <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>
                                     </td>
                                     {% endif %}
                                 </tr>
@@ -294,7 +294,7 @@
                                 {#员工禁用就行了，没必要删除#}
                                 localStorage.setItem("notify_show",true);
                                 localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","不能删除！");
+                                localStorage.setItem("notify_context","该用户关联有待处理订单，不能删除！");
                                 localStorage.setItem("notify_type","error");
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID=undefined;

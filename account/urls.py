@@ -5,6 +5,6 @@ urlpatterns = [
     path('ac/list/',views.ac_list),
     path('ac/add/',views.ac_add),
     path('ac/edit/',views.ac_edit),
-    # path('ac/delete/', views.ac_delete),
+    path('ac/delete/', views.ac_delete),
     path('ac/detail/',views.ac_detail),
 ]

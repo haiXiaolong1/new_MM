@@ -116,7 +116,9 @@ def login(request):
     if password!=ins.password:
         err[0]="密码错误"
         return JsonResponse({"status":False,"errors":err})
-
+    if not ins.isactive:
+        err[0]="账户已禁用"
+        return JsonResponse({"status":False,"errors":err})
     # 记录登录信息
     request.session["info"]={"name":ins.username,"id":ins.id,"issuper":ins.issuper
         ,"office":ins.office,"business":ins.businessid.name}
