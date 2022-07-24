@@ -16,9 +16,7 @@ def ac_add(request):
     num = str(int(n)+1)#编号递增，这样计算避免删除后出现错误
     cal = 4 - len(num)
     sid="e"+ "0"*cal +num
-    #time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     o=request.POST
-    id=request.session["info"]['id']
     isactive = o['isactive']
     issuper = o['issuper']
     if isactive=="是":
@@ -30,42 +28,42 @@ def ac_add(request):
     else:
         isp = 0
 
-    print(o["myid"])
-    gs = models.Gongsi.objects.get(myid=o["myid"])
+    print(o["businessid_id"])
+    gs = models.Gongsi.objects.get(myid=o["businessid_id"])
     print(gs)
     models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password']
                                         ,id=sid,isactive=isa,issuper=isp,businessid=gs)
-    print(request.POST)
+    # print(request.POST)
     return JsonResponse({"status":True})
-# 编辑供应商时返回供应商原始数据
+# 编辑用户时返回用户原始数据
 def ac_detail(request):
-    sid=request.GET.get("uid")
-    su=models.Wuliao.objects.filter(id=sid).values("type",'salegroup','saleway',"calcutype","desc").first()
-    if not su:
+    id=request.GET.get("uid")
+    ac=models.Yuangong.objects.filter(id=id).values("office",'password','username',"isactive","issuper","businessid_id").first()
+    if not ac:
         return JsonResponse({"status":False,"error":"数据不存在"})
-    return JsonResponse({"supply":su,"status":True})
+    return JsonResponse({"account":ac,"status":True})
 
-# 保存编辑供应商的最新数据
+# 保存编辑用户的最新数据
 def ac_edit(request):
     id=request.GET.get("uid")
-    uid=request.session["info"]['id']
-    # 用户ID
     o=request.POST
-    #time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    isactive = o['isactive']
+    issuper = o['issuper']
 
-    models.Wuliao.objects.filter(id=id).update(type=o['type'],salegroup=o['salegroup'],saleway=o['saleway']
-                                        ,calcutype=o['calcutype'],desc=o['desc'])
+    print(isactive)
+    models.Yuangong.objects.filter(id=id).update(office=o['office'],username=o['username'],password=o['password']
+                                                 ,isactive=isactive,issuper=issuper,businessid=o['businessid_id'])
 
     return JsonResponse({"status":True})
 
-# 删除供应商
-def ac_delete(request):
-    id=request.GET.get("uid")
-    '''
-    s=models.Wuliao.objects.filter(supplyid_id=id).first()
-    # 先判断是否有关联关系，如果有则不能删除，目前没有
-    if s:
-        return JsonResponse({"status":False})
-    '''
-    models.Wuliao.objects.filter(id=id).delete()
-    return JsonResponse({"status":True})
+# # 删除供应商
+# def ac_delete(request):
+#     id=request.GET.get("uid")
+#     '''
+#     s=models.Wuliao.objects.filter(supplyid_id=id).first()
+#     # 先判断是否有关联关系，如果有则不能删除，目前没有
+#     if s:
+#         return JsonResponse({"status":False})
+#     '''
+#     models.Wuliao.objects.filter(id=id).delete()
+#     return JsonResponse({"status":True})

@@ -54,8 +54,8 @@
                                                 <label>是否激活？</label>
                                                 <div>
                                                     <select  class="form-control" name="isactive" id="isactive">
-                                                        <option>是</option>
-                                                        <option>否</option>
+                                                        <option value="1">是</option>
+                                                        <option value="0">否</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -64,16 +64,14 @@
                                                 <label>是否管理员？</label>
                                                 <div>
                                                     <select  class="form-control" name="issuper" id="issuper">
-                                                        <option>是</option>
-                                                        <option>否</option>
+                                                        <option value="1">是</option>
+                                                        <option value="0">否</option>
                                                     </select>
                                                 </div>
                                             </div>
 
-
-
                                             <div class="form-group">
-                                                    <select class="form-control"  name="myid" id="myid">
+                                                    <select class="form-control"  name="businessid_id" id="businessid_id">
                                                         <option value >公司编号</option>
                                                         {% for s in gongsi %}
                                                             <option value="{{ s.myid }}">{{ s.myid }}</option>
@@ -152,7 +150,7 @@
                                     {% if  request.session.info.issuper %}
                                     <td>
                                         <button class="btn btn-primary btn-xs btnEdit" id="" uid="{{ obj.id }}">编辑</button>
-                                        <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>
+{#                                        <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>#}
                                     </td>
                                     {% endif %}
                                 </tr>
@@ -293,9 +291,10 @@
                                 location.reload();
                             }
                             else {
+                                {#员工禁用就行了，没必要删除#}
                                 localStorage.setItem("notify_show",true);
                                 localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","该物料有相关关系，不能删除！");
+                                localStorage.setItem("notify_context","不能删除！");
                                 localStorage.setItem("notify_type","error");
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID=undefined;
@@ -318,7 +317,7 @@
                     dataType: "JSON",
                     success:function (res) {
                         if(res.status){
-                            $.each(res.supply,function (name,value){
+                            $.each(res.account,function (name,value){
                                 $("#"+name).val(value);
                             })
                             $("#myModalLabel").text("编辑员工")

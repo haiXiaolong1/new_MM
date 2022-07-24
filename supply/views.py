@@ -109,7 +109,7 @@ def login(request):
         # 记录登录信息
         request.session["info"]={"name":ins.username,"id":ins.id,"issuper":ins.issuper
             ,"office":ins.office,"business":ins.businessid.name}
-        request.session["messageFlow"] = all_message()
+        # request.session["messageFlow"] = all_message()
         return redirect('/supply/list')
 #登出功能
 def logout(request):
