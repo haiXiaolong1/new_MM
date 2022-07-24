@@ -6,6 +6,14 @@ register = template.Library()
 def front_add(arg,val):
     return str(val)+str(arg)
 
+@register.filter(name="back_add")
+def back_add(arg,val):
+    return str(arg)+str(val)
+
+@register.filter(name="message_flow_class")
+def message_flow_class(arg):
+    return "right-sidebar-toggle chat-item unread"+str(arg)
+
 @register.filter(name="table_status")
 def table_status(arg,val):
     #CSS中样式： 0-黄色  1-蓝色  2-绿色  3-红色

@@ -1,7 +1,7 @@
 from django.shortcuts import render
 import random
 from datetime import datetime
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from supply import models
@@ -37,6 +37,61 @@ def form_check(toCheck,types):
     res_dict = {"status": returnStatus, "error": errors}
     return res_dict
 
+def check_message(request):
+    return JsonResponse({"status": True,"newMessage":False,"ans":"没有新消息！"})
+
+def all_message():
+    message_flow=[[True,"","10","第一"],
+                  [False,"","20","第2"],
+                  [True,"","30","3"],
+                  [True,"","40","4th"],
+                  [False," active-user","50","5th"]]
+    flow1={"who":"部门经理","flow":message_flow}
+    return [flow1,flow1]
+
+def add_message(line):
+    html_class="me"
+    icon=""
+    if line[0]:
+        html_class="them"
+        icon='<div class="chat-bubble-img-container"><img src="http://via.placeholder.com/38x38" alt=""></div>'
+    html_template=' <div class="chat-bubble {}">{}<div class="chat-bubble-text-container"><span class="chat-bubble-text">{}</span></div></div>'
+    html=html_template.format(html_class,icon,line[-1])
+    return html
+
+def group_by_time(f):
+    flow=f["flow"]
+    start=int(flow[0][2])
+    interval=20
+    group=0
+    groups={0:[]}
+    for i in flow:
+        if int(i[2])-start>=interval:
+            start=int(i[2])
+            group+=1
+            groups[group]=[]
+        groups[group].append(i)
+    return groups
+
+def add_group(group):
+    time_template='<div class="chat-start-date">{}</div>'
+    time=time_template.format(group[0][2])
+    for line in group:
+        time+=add_message(line)
+    return time
+
+def set_message_detail(request):
+    #flow=request.POST.get("flow")
+    flow=all_message()[0]
+    groups=group_by_time(flow)
+    out=""
+    for g in groups.values():
+        out+=add_group(g)
+    print(out)
+    return HttpResponse("success")
+
+
+
 # 登录功能
 def login(request):
     if request.method=="GET":
@@ -50,6 +105,7 @@ def login(request):
         # 记录登录信息
         request.session["info"]={"name":ins.username,"id":ins.id,"issuper":ins.issuper
             ,"office":ins.office,"business":ins.businessid.name}
+        request.session["messageFlow"] = all_message()
         return redirect('/supply/list')
 #登出功能
 def logout(request):

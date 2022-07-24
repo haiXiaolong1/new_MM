@@ -69,6 +69,3 @@ def ac_delete(request):
     '''
     models.Wuliao.objects.filter(id=id).delete()
     return JsonResponse({"status":True})
-
-def ac_check_message(request):
-    return JsonResponse({"status": True,"newMessage":False,"ans":"没有新消息！"})

@@ -174,6 +174,7 @@
                                         <li><a href="#">用户名：{{ request.session.info.name }}</a></li>
                                         <li><a href="#">职位：{{ request.session.info.office }}</a></li>
                                         <li><a href="#">公司：{{ request.session.info.business }}</a></li>
+                                        <li><a href="#">测试：{{ request.session.messageFlow }}</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a href="/logout">退出</a></li>
                                     </ul>
@@ -183,12 +184,15 @@
                     </div><!-- /.container-fluid -->
                 </nav>
             </div><!-- /Page Header -->
-            <a class="table_status_2" style="display:none"></a>
-            <a class="formError" style="display:none"></a>
-            <a class="my_hide_element" id="toast-type"></a>
-            <a class="my_hide_element" id="toast-tittle"></a>
-            <a class="my_hide_element" id="toast-context"></a>
-            <button id="showtoast" class="my_hide_element"></button>
+            <div>
+                <a class="table_status_2" style="display:none"></a>
+                <a class="formError" style="display:none"></a>
+                <a class="my_hide_element" id="toast-type"></a>
+                <a class="my_hide_element" id="toast-tittle"></a>
+                <a class="my_hide_element" id="toast-context"></a>
+                <button id="showtoast" class="my_hide_element"></button>
+                <button id="message_flow">信息</button>
+            </div>
             <!-- Page Inner -->
             {% block content %}
             {% endblock %}
@@ -213,7 +217,21 @@
                             <div role="tabpanel" class="tab-pane active" id="chat">
                                 <div class="chat-list">
                                     <span class="chat-title">新消息</span>
-                                    <a href="javascript:void(0);" class="right-sidebar-toggle chat-item unread"
+                                    {% for flow in request.session.messageFlow %}
+                                    {% load myfilter %}
+                                    <a href="javascript:void(0);" class="{{flow.flow.0.1|message_flow_class}}"
+                                        data-sidebar-id="chat-right-sidebar">
+                                        <div class="user-avatar">
+                                            <img src="http://via.placeholder.com/40x40" alt="">
+                                        </div>
+                                        <div class="chat-info">
+                                            <span class="chat-author">{{flow.who}}</span>
+                                            <span class="chat-text">{{flow.flow.0.3}}</span>
+                                            <span class="chat-time">{{flow.flow.0.2}}</span>
+                                        </div>
+                                    </a>
+                                    {% endfor %}
+                                    <a href="javascript:void(0);" class="right-sidebar-toggle chat-item unread" }}
                                         data-sidebar-id="chat-right-sidebar">
                                         <div class="user-avatar">
                                             <img src="http://via.placeholder.com/40x40" alt="">
@@ -462,7 +480,7 @@
             // 检查用户信息
             function checkMessage() {
                 $.ajax({
-                    url: "/account/checkMessage",
+                    url: "/supply/checkMessage",
                     type: "get",
                     data: {},
                     dataType: "JSON",
@@ -479,6 +497,25 @@
                 setTimeout(checkMessage, 2000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
             }
             setTimeout(checkMessage, 2000);
+
+            $('#message_flow').click(
+                function() {
+                    $.ajax({
+                    url: "/supply/allMessage",
+                    type: "get",
+                    data: {},
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            console.log(res.session);
+                            location.reload();
+                        }
+                        else {
+                        }
+                    }
+                })
+                }
+            );
 
         });
 
