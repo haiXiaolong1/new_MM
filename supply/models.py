@@ -41,6 +41,12 @@ class Yuangong(models.Model):
     class Meta:
         db_table = 'yuangong'
 
+class Xiaoxi(models.Model):
+    fromId = models.ForeignKey(to='Yuangong',to_field='id', related_name='from_id',on_delete=models.CASCADE)
+    toId = models.ForeignKey(to='Yuangong', to_field='id', related_name='to_id', on_delete=models.CASCADE)
+    time = models.DateTimeField(blank=True, null=True)
+    context = models.TextField(blank=True, null=True)
+
 class Gongchang(models.Model):
     id = models.CharField(primary_key=True, max_length=40)
     type = models.CharField(max_length=40, blank=True, null=True)
