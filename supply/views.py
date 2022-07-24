@@ -72,19 +72,19 @@ def all_message_by_user(request,me="e0002"):
     return {"read":read,"unread":unread}
 
 
-def all_message(me='e0003',them='e0002'):
-
+def all_message(them='e0003',me='e0002'):
+    print(them,me)
     who = models.Yuangong.objects.filter(id=them).first().username
-    tos=models.Xiaoxi.objects.filter(fromId=them,toId=me).all()
-    froms=models.Xiaoxi.objects.filter(fromId=me,toId=them).all()
+    froms=models.Xiaoxi.objects.filter(fromId=them,toId=me).all()
+    tos=models.Xiaoxi.objects.filter(fromId=me,toId=them).all()
     message_flow=[]
     for i in froms:
         message_flow.append({"isThem":True,"time":i.time.strftime("%m月%d日 %H:%M:%S"),"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     for i in tos:
         message_flow.append({"isThem":False,"time":i.time.strftime("%m月%d日 %H:%M:%S"),"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     message_flow=sorted(message_flow,key=lambda a: a["compare"])
-    flow1 = {"who": "部门经理", "flow": message_flow}
-    return [flow1,flow1]
+    flow = {"who": who, "flow": message_flow}
+    return flow
 
 def add_message(line):
     html_class="me"
@@ -118,15 +118,13 @@ def add_group(group):
     return time
 
 def set_message_detail(request):
-    #flow=request.POST.get("flow")
-    flow=all_message()[0]
+    yid=request.GET.get("yid")
+    flow=all_message(me='e0002',them=yid)
     groups=group_by_time(flow)
     out=""
     for g in groups.values():
         out+=add_group(g)
     return JsonResponse({"status":True,"message":out})
-
-
 
 # 登录功能
 def login(request):
