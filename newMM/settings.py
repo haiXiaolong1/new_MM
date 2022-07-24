@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'inventory',
     'purchase',
     'supply.templatetags',
-    'account'
+    'account',
+    'excel'
 ]
 
 MIDDLEWARE = [
@@ -84,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mmssm',
         'USER': 'root',
-        'PASSWORD':'ymysql',
+        'PASSWORD':'Tj215283#',
         'HOST':'localhost',
         'PORT':'3306',
     }
@@ -137,3 +138,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_COOKIE_AGE = 60 * 10 # 设置过期时间10分钟，默认为两周
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 设置关闭浏览器时失效
+
+# 配置django-excel
+FILE_UPLOAD_HANDLERS = (
+    "django_excel.ExcelMemoryFileUploadHandler",
+    "django_excel.TemporaryExcelFileUploadHandler",
+)
