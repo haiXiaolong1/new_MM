@@ -96,7 +96,7 @@
                             </a>
                             <ul class="sub-menu" id="inventory_ul">
                                 <li id="inventory_display"><a href="/inventory/display/">查看库存</a></li>
-                                <li id="inventory_demand"><a href="/inventory/demand/">采购需求管理</a></li>
+                                <li id="inventory_demand"><a href="/inventory/demand/n/">采购需求管理</a></li>
                                 <li id="inventory_temp"><a href="/inventory/temp/">暂存检查</a></li>
                                 <li id="inventory_receive"><a href="/inventory/receive/">收货管理</a></li>
                                 <li id="inventory_invoice"><a href="/inventory/invoice/">发票</a></li>
@@ -405,7 +405,7 @@
                             top.location.href = "/inventory/display/";
                             break;
                         case "采购需求管理":
-                            top.location.href = "/inventory/demand/";
+                            top.location.href = "/inventory/demand/n/";
                             break;
                         case "暂存检查":
                             top.location.href = "/inventory/temp/";
@@ -463,7 +463,7 @@
                 })
                 setTimeout(checkMessage, 100000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
             }
-            setTimeout(checkMessage, 2000);
+            // setTimeout(checkMessage, 2000);
 
             $('#message_flow').click(
                 function() {
@@ -491,9 +491,6 @@
                 console.log($(this).attr("yid"));
             })
         });
-
-
-
 
     </script>
     {% block js %}
