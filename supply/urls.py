@@ -25,8 +25,8 @@ urlpatterns = [
     path('mm/edit/', views.mm_edit),
     path('mm/delete/', views.mm_delete),
 
-    # path('checkMessage', views.check_message),
-    # # path('allMessage', views.all_message),
-    # path('setMessageDetail',views.set_message_detail),
+    path('checkMessage', views.check_message),
+    path('allMessage', views.all_message),
+    path('setMessageDetail',views.set_message_detail),
 
 ]

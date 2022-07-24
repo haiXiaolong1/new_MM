@@ -2,6 +2,7 @@ from django.shortcuts import render
 import random
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
+from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from supply import models
@@ -40,8 +41,41 @@ def form_check(toCheck,types):
 def check_message(request):
     return JsonResponse({"status": True,"newMessage":False,"ans":"没有新消息！"})
 
-def all_message():
-    me,them='e0003','e0002'
+def ambu_time(time):
+    now=int(datetime.now().strftime("%Y%m%d%H"))
+    com=int(time.strftime("%Y%m%d%H"))
+    if now-com>18:
+        return time.strftime("%m月%d日")
+    return time.strftime("%H:%M")
+
+def all_message_by_user(request,me="e0002"):
+    relevant=models.Xiaoxi.objects.filter(Q(fromId=me)|Q(toId=me)).all().order_by('time')
+    read={}
+    unread={}
+    for i in relevant:
+        other=i.toId_id
+        if other==me:
+            other=i.fromId_id
+        info={"id":other,"time":ambu_time(i.time),"text":i.context}
+        if(i.read==0):
+            try:
+                read.pop(other)
+            except:
+                None
+            unread[other]=info
+        else:
+            read[other]=info
+    for k,v in read.items():
+        read[k]["name"]=models.Yuangong.objects.filter(id=k).first().username
+    for k,v in unread.items():
+        unread[k]["name"]=models.Yuangong.objects.filter(id=k).first().username
+    print(read)
+    print(unread)
+    return HttpResponse("success")
+
+
+def all_message(me='e0003',them='e0002'):
+
     who = models.Yuangong.objects.filter(id=them).first().username
     tos=models.Xiaoxi.objects.filter(fromId=them,toId=me).all()
     froms=models.Xiaoxi.objects.filter(fromId=me,toId=them).all()
