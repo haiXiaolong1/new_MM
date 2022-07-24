@@ -174,7 +174,6 @@
                                         <li><a href="#">用户名：{{ request.session.info.name }}</a></li>
                                         <li><a href="#">职位：{{ request.session.info.office }}</a></li>
                                         <li><a href="#">公司：{{ request.session.info.business }}</a></li>
-                                        <li><a href="#">测试：{{ request.session.messageFlow }}</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a href="/logout">退出</a></li>
                                     </ul>
@@ -300,7 +299,7 @@
                     </div>
                     <div class="right-sidebar-content">
                         <div class="right-sidebar-chat slimscroll">
-                            <div class="chat-bubbles">
+                            <div class="chat-bubbles" id="setMessage">
                                 <div class="chat-start-date">消息日期时间</div>
                                 <div class="chat-bubble them">
                                     <div class="chat-bubble-img-container">
@@ -501,14 +500,13 @@
             $('#message_flow').click(
                 function() {
                     $.ajax({
-                    url: "/supply/allMessage",
+                    url: "/supply/setMessageDetail",
                     type: "get",
                     data: {},
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {
-                            console.log(res.session);
-                            location.reload();
+                            $("#setMessage")[0].innerHTML=res.message;
                         }
                         else {
                         }

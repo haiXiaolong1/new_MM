@@ -47,6 +47,14 @@ def all_message():
                   [True,"","40","4th"],
                   [False," active-user","50","5th"]]
     flow1={"who":"部门经理","flow":message_flow}
+    froms=models.Xiaoxi.objects.filter(from_id='e0002').all()
+    tos=models.Xiaoxi.objects.filter(to_id='e0002').all()
+    res=[]
+    for i in forms:
+        res.append(i)
+    for i in tos:
+        res.append(i)
+    print(res)
     return [flow1,flow1]
 
 def add_message(line):
@@ -87,8 +95,7 @@ def set_message_detail(request):
     out=""
     for g in groups.values():
         out+=add_group(g)
-    print(out)
-    return HttpResponse("success")
+    return JsonResponse({"status":True,"message":out})
 
 
 
