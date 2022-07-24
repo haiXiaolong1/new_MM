@@ -40,7 +40,6 @@ def form_check(toCheck,types):
 def check_message(request):
     return JsonResponse({"status": True,"newMessage":False,"ans":"没有新消息！"})
 
-import datetime
 def all_message():
     me,them='e0003','e0002'
     who = models.Yuangong.objects.filter(id=them).first().username
@@ -48,9 +47,9 @@ def all_message():
     froms=models.Xiaoxi.objects.filter(fromId=me,toId=them).all()
     message_flow=[]
     for i in froms:
-        message_flow.append({"isThem":True,"time":i.time,"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
+        message_flow.append({"isThem":True,"time":i.time.strftime("%m月%d日 %H:%M:%S"),"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     for i in tos:
-        message_flow.append({"isThem":False,"time":i.time,"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
+        message_flow.append({"isThem":False,"time":i.time.strftime("%m月%d日 %H:%M:%S"),"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     message_flow=sorted(message_flow,key=lambda a: a["compare"])
     flow1 = {"who": "部门经理", "flow": message_flow}
     return [flow1,flow1]
@@ -81,7 +80,7 @@ def group_by_time(f):
 
 def add_group(group):
     time_template='<div class="chat-start-date">{}</div>'
-    time=time_template.format(group[0]["time"].strftime("%m月%d日 %H:%M:%S"))
+    time=time_template.format(group[0]["time"])
     for line in group:
         time+=add_message(line)
     return time
