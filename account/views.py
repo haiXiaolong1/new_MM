@@ -7,7 +7,6 @@ from django.http import JsonResponse
 def ac_list(request):
     yu=models.Yuangong.objects.all()
     gs=models.Gongsi.objects.all()
-
     return render(request,'account.html',{"queryset":yu,"gongsi":gs,"title":"员工列表"})
 # 添加用户
 def ac_add(request):
@@ -71,3 +70,5 @@ def ac_delete(request):
     models.Wuliao.objects.filter(id=id).delete()
     return JsonResponse({"status":True})
 
+def ac_check_message(request):
+    return JsonResponse({"status": True,"newMessage":False,"ans":"没有新消息！"})
