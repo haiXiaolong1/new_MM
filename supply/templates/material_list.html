@@ -144,6 +144,7 @@
 
             $("#btnAdd").click(function () {
                 //将正在编辑的ID置空
+                $(".formError").text("");
                 EDIT_ID=undefined;
                 $("#myModalLabel").text("新建供应关系");
                 $("#formAdd")[0].reset();
@@ -176,7 +177,6 @@
                             }else {
                                 var ids=["#supplyid_id_error","#materialid_id_error"];
                                 console.log(res)
-                                alert(res.error)
                                 for(var i=0;i<ids.length;i++)
                                 {
                                     $(ids[i]).text("");
@@ -214,7 +214,6 @@
                                 EDIT_ID=undefined;
                             }
                             else{
-                                alert("?")
                                 var ids=["#supplyid_id_error","#materialid_id_error"];
                                 for(var i=0;i<ids.length;i++)
                                 {
@@ -294,6 +293,7 @@
                                 }
                                 console.log(res,options);
                             })
+                            $(".formError").text("");
                             $("#myModalLabel").text("编辑供应关系")
                             $("#myd").modal('show');
                         }else {

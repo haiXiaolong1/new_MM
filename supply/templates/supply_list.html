@@ -275,6 +275,7 @@
                             $.each(res.supply,function (name,value){
                                 $("#"+name).val(value);
                             })
+                            $(".formError").text("");
                             $("#myModalLabel").text("编辑供应商")
                             $("#myd").modal('show');
                         }else {
