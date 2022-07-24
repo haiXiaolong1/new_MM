@@ -138,7 +138,6 @@
                         data:$("#formAdd").serialize(),
                         dataType:"JSON",
                         success:function (res){
-                            res=JSON.parse(res);
                             if(res.status){
                                 localStorage.setItem("notify_show",true);
                                 localStorage.setItem("notify_tittle","提示");

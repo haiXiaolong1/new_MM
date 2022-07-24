@@ -142,8 +142,7 @@ def supply_add(request):
     if res['status']:
         models.Gongyingshang.objects.create(name=o['name'],address=o['address'],createtime=time
                                             ,id=sid,updatetime=time,createnumberid_id=id,updatenumberid_id=id)
-    # print(request.POST)
-    return JsonResponse(json.dumps(res,ensure_ascii=False),safe=False)
+    return JsonResponse(res)
 
 # 编辑供应商时返回供应商原始数据
 def supply_detail(request):
@@ -160,11 +159,14 @@ def supply_edit(request):
     # 用户ID
     s=request.POST
     time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-    models.Gongyingshang.objects.filter(id=id).update(name=s['name'],
+    toCheck=[s['name'],s['address']]
+    types=['nan','nan']
+    res=form_check(toCheck,types)
+    if res:
+        models.Gongyingshang.objects.filter(id=id).update(name=s['name'],
                                                       address=s['address'],updatetime=time,updatenumberid_id=uid)
 
-    return JsonResponse({"status":True})
+    return JsonResponse(res)
 
 # 删除供应商
 def supply_delete(request):
@@ -273,7 +275,7 @@ def quote_add(request):
                                                                   createtime=time,
                                                                   createuserid_id=id,
                                                                   isreceived=0)
-    return JsonResponse(json.dumps(res,ensure_ascii=False),safe=False)
+    return JsonResponse(res)
 
 
 def quote_detail(request):
