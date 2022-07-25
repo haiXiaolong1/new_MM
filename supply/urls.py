@@ -29,4 +29,5 @@ urlpatterns = [
     path('setMessageDetail', views.set_message_detail),
     path('setMessageList', views.url_set_message_list),
     path('sendTestMessage', views.send_test_message),
+    path('sendMessage', views.send_message),
 ]
