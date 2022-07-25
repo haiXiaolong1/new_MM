@@ -213,6 +213,7 @@
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="chat">
+                                {% if request.session.messageFlow.unread.items|length > 0 %}
                                 <div class="chat-list">
                                     <span class="chat-title" >新消息</span>
                                     {% for k,v in request.session.messageFlow.unread.items %}
@@ -230,6 +231,8 @@
                                     </a>
                                     {% endfor %}
                                 </div>
+                                {% endif %}
+                                {% if request.session.messageFlow.read.items|length > 0 %}
                                 <div class="chat-list">
                                     <span class="chat-title">已读消息</span>
                                     {% for k,v in request.session.messageFlow.read.items %}
@@ -245,9 +248,15 @@
                                         </div>
                                     </a>
                                     {% endfor %}
-                                    <a href="javascript:void(0);" class="load-more-messages" data-toggle="tooltip"
-                                        data-placement="bottom" title="Load More">&bull;&bull;&bull;加载更多</a>
+                                    <!-- <a href="javascript:void(0);" class="load-more-messages" data-toggle="tooltip"
+                                        data-placement="bottom" title="Load More">&bull;&bull;&bull;加载更多</a> -->
                                 </div>
+                                {% endif %}
+                                {% if request.session.messageFlow.unread.items|length == 0 and request.session.messageFlow.read.items|length == 0 %}
+                                <div class="chat-list">
+                                    <h4 class="noinfo_holder">暂无消息</h4>
+                                </div>
+                                {% endif %}
                             </div>
                             <!-- 这里删掉了settings -->
                         </div>
