@@ -493,3 +493,19 @@ def mm_delete(request):
     '''
     models.Wuliao.objects.filter(id=id).delete()
     return JsonResponse({"status": True})
+
+
+
+
+# Create your views here.
+from django.http import HttpResponseBadRequest
+from django import forms
+import django_excel as excel
+import json
+
+def supply_excel(request):
+    if request.method == "GET":
+        return render(request, 'supplyexcel.html')
+
+
+

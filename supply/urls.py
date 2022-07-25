@@ -1,6 +1,7 @@
 from django.urls import path, include
 from supply import views
 
+
 urlpatterns = [
     path('list/', views.supply_list),
     path('add/', views.supply_add),
@@ -29,4 +30,7 @@ urlpatterns = [
     path('setMessageDetail', views.set_message_detail),
     path('setMessageList', views.url_set_message_list),
     path('sendTestMessage', views.send_test_message),
+
+    path('supply_excel', views.supply_excel),
+
 ]
