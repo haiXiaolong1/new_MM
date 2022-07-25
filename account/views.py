@@ -18,7 +18,7 @@ def ac_add(request):
     sid="e"+ "0"*cal +num
     o=request.POST
     isactive = o['isactive']
-    issuper = o['issuper']
+    issuper = 0
     bid=o["businessid_id"]
     models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password']
                                         ,id=sid,isactive=isactive,issuper=issuper,businessid_id=bid)

@@ -69,15 +69,15 @@
                                                 </div>
                                             </div>
 
-                                            <div class="form-group">
-                                                <label>是否管理员？</label>
-                                                <div>
-                                                    <select  class="form-control" name="issuper" id="issuper">
-                                                        <option value="1">是</option>
-                                                        <option value="0">否</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+{#                                            <div class="form-group">#}
+{#                                                <label>是否管理员？</label>#}
+{#                                                <div>#}
+{#                                                    <select  class="form-control" name="issuper" id="issuper">#}
+{#                                                        <option value="1">是</option>#}
+{#                                                        <option value="0">否</option>#}
+{#                                                    </select>#}
+{#                                                </div>#}
+{#                                            </div>#}
 
                                             <div class="form-group">
                                                     <select class="form-control"  name="businessid_id" id="businessid_id">
@@ -130,7 +130,7 @@
                                     <th>账号</th>
                                     <th>密码</th>
                                     <th>是否激活？</th>
-                                    <th>是否管理员？</th>
+{#                                    <th>是否管理员？</th>#}
                                     <th>公司编号</th>
                                     {% if  request.session.info.issuper %}
                                     <th>操作</th>
@@ -149,11 +149,11 @@
                                     {% else %}
                                     <td>是 </td>
                                     {% endif %}
-                                    {% if obj.issuper == 0 %}
-                                    <td>否 </td>
-                                    {% else %}
-                                    <td>是 </td>
-                                    {% endif %}
+{#                                    {% if obj.issuper == 0 %}#}
+{#                                    <td>否 </td>#}
+{#                                    {% else %}#}
+{#                                    <td>是 </td>#}
+{#                                    {% endif %}#}
                                     <td>{{ obj.businessid_id }}</td>
                                     {#                                        判断是否是管理员，普通员工只能查看,可以优化，其他页面同样#}
                                     {% if  request.session.info.issuper %}
