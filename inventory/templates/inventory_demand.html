@@ -124,7 +124,7 @@
                                                         <button class="btn btn-danger btn-xs btnDelete" uid="{{ obj.demandid }}">删除</button>
                                                     {% elif obj.status == 1%}
                                                         <button class="btn btn-default btn-xs btnCom" uid="{{ obj.demandid }}">完成</button>
-                                                    {% else %}
+                                                    {% elif request.session.info.office != "3" %}
                                                         <button class="btn btn-primary btn-xs btnVerify" uid="{{ obj.demandid }}">确认</button>
                                                     {% endif %}
                                                 </td>
