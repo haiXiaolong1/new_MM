@@ -47,10 +47,12 @@
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" placeholder="姓名"
                                                            name="username" id="username" required>
+                                                    <a class="formError" id="name_error"></a>
                                                 </div>
                                                 <div class="form-group">
                                                     <input type="text" class="form-control" placeholder="密码"
                                                            name="password" id="password" required>
+                                                    <a class="formError" id="password_error"></a>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>职位</label>
@@ -82,7 +84,7 @@
                                                             <option value="{{ s.myid }}">{{ s.myid }}</option>
                                                         {% endfor %}
                                                     </select>
-
+                                                    <a class="formError" id="bid_error"></a>
                                                 </div>
 
                                             </form>
@@ -111,7 +113,8 @@
                                             <span>是否确定删除？</span>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="Delete" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
@@ -126,7 +129,7 @@
                                     <tr>
                                         <th>员工编号</th>
                                         <th>员工职位</th>
-                                        <th>账号</th>
+                                        <th>姓名</th>
                                         <th>密码</th>
                                         <th>是否激活？</th>
                                         {#                                    <th>是否管理员？</th>#}
@@ -148,23 +151,15 @@
                                             {% else %}
                                                 <td>是</td>
                                             {% endif %}
-                                            {#                                    {% if obj.issuper == 0 %}#}
-                                            {#                                    <td>否 </td>#}
-                                            {#                                    {% else %}#}
-                                            {#                                    <td>是 </td>#}
-                                            {#                                    {% endif %}#}
                                             <td>{{ obj.businessid_id }}</td>
-                                            {#                                        判断是否是管理员，普通员工只能查看,可以优化，其他页面同样#}
-                                            {% if  request.session.info.issuper %}
-                                                <td>
-                                                    <button class="btn btn-primary btn-xs btnEdit" id=""
-                                                            uid="{{ obj.id }}">编辑
-                                                    </button>
-                                                    <button class="btn btn-danger btn-xs btnDelete" id=""
-                                                            uid="{{ obj.id }}">删除
-                                                    </button>
-                                                </td>
-                                            {% endif %}
+                                            <td>
+                                                <button class="btn btn-primary btn-xs btnEdit" id=""
+                                                        uid="{{ obj.id }}">编辑
+                                                </button>
+                                                <button class="btn btn-danger btn-xs btnDelete" id=""
+                                                        uid="{{ obj.id }}">删除
+                                                </button>
+                                            </td>
                                         </tr>
                                     {% endfor %}
                                     </tbody>
@@ -205,70 +200,68 @@
             $("#btnAdd").click(function () {
                 //将正在编辑的ID置空
                 EDIT_ID = undefined;
+                $(".formError").text("");
                 $("#myModalLabel").text("新建员工");
                 $("#formAdd")[0].reset();
                 $("#myd").modal('show');
             })
             $("#btnSave").click(function () {
-
                 if (!EDIT_ID) {
-                    if (!$("#username").val()) {
-                        alert("员工账号不能为空")
-                        return;
-                    } else if (!$("#password").val()) {
-                        alert("员工密码不能为空")
-                        return;
-                    } else {
-                        $.ajax({
-                            url: "/account/ac/add/",
-                            type: "post",
-                            data: $("#formAdd").serialize(),
-                            dataType: "JSON",
-                            success: function (res) {
-                                if (res.status) {
-                                    {#验证是否为空#}
-                                    $("#formAdd")[0].reset();
-                                    $("#myd").modal('hide');
-                                    localStorage.setItem("notify_show", true);
-                                    localStorage.setItem("notify_tittle", "提示");
-                                    localStorage.setItem("notify_context", "员工添加成功");
-                                    localStorage.setItem("notify_type", "success");
-                                    location.reload();
+                    $.ajax({
+                        url: "/account/ac/add/",
+                        type: "post",
+                        data: $("#formAdd").serialize(),
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                {#验证是否为空#}
+                                $("#formAdd")[0].reset();
+                                $("#myd").modal('hide');
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "员工添加成功");
+                                localStorage.setItem("notify_type", "success");
+                                location.reload();
+                            }else {
+                                var ids = ["#name_error", "#password_error","#bid_error"];
+                                for (var i = 0; i < ids.length; i++) {
+                                    $(ids[i]).text("");
+                                    if (res.error[i] != true) {
+                                        $(ids[i]).text(res.error[i]);
+                                    }
                                 }
                             }
-
-                        })
-                    }
-
+                        }
+                    })
                 } else {
-                    if (!$("#username").val()) {
-                        alert("员工账号不能为空")
-                        return;
-                    } else if (!$("#password").val()) {
-                        alert("员工密码不能为空")
-                        return;
-                    } else {
-                        $.ajax({
-                            url: "/account/ac/edit/" + "?uid=" + EDIT_ID,
-                            type: "post",
-                            data: $("#formAdd").serialize(),
-                            dataType: "JSON",
-                            success: function (res) {
-                                if (res.status) {
-                                    $("#myd").modal('hide');
-                                    $("#formAdd")[0].reset();
-                                    localStorage.setItem("notify_show", true);
-                                    localStorage.setItem("notify_tittle", "提示");
-                                    localStorage.setItem("notify_context", "员工编辑成功");
-                                    localStorage.setItem("notify_type", "success");
-                                    location.reload();
+                    $.ajax({
+                        url: "/account/ac/edit/" + "?uid=" + EDIT_ID,
+                        type: "post",
+                        data: $("#formAdd").serialize(),
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#myd").modal('hide');
+                                $("#formAdd")[0].reset();
+                                EDIT_ID = undefined;
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "员工编辑成功");
+                                localStorage.setItem("notify_type", "success");
+                                location.reload();
+                            }else {
+                                var ids = ["#name_error", "#password_error","#bid_error"];
+                                for (var i = 0; i < ids.length; i++) {
+                                    $(ids[i]).text("");
+                                    if (res.error[i] != true) {
+                                        $(ids[i]).text(res.error[i]);
+                                    }
                                 }
                             }
-                        })
-                        EDIT_ID = undefined;
-                    }
-                }
+                        }
+                    })
 
+                }
 
             })
 
@@ -324,6 +317,7 @@
                                 $("#" + name).val(value);
                             })
                             $("#myModalLabel").text("编辑员工")
+                            $(".formError").text("");
                             $("#myd").modal('show');
                         } else {
 

@@ -2,6 +2,7 @@ from django.shortcuts import render,HttpResponse
 
 # Create your views here.
 from supply import models
+from  supply.views import form_check
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 def ac_list(request):
@@ -20,10 +21,13 @@ def ac_add(request):
     isactive = o['isactive']
     issuper = 0
     bid=o["businessid_id"]
-    models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password']
+    toCheck = [o['username'], o['password'],bid]
+    types = ['nan', 'nan','nan']
+    res = form_check(toCheck, types)
+    if res["status"]:
+        models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password']
                                         ,id=sid,isactive=isactive,issuper=issuper,businessid_id=bid)
-    # print(request.POST)
-    return JsonResponse({"status":True})
+    return JsonResponse(res)
 # 编辑用户时返回用户原始数据
 def ac_detail(request):
     id=request.GET.get("uid")
@@ -37,13 +41,16 @@ def ac_edit(request):
     id=request.GET.get("uid")
     o=request.POST
     isactive = o['isactive']
-    issuper = o['issuper']
-
-    print(isactive)
-    models.Yuangong.objects.filter(id=id).update(office=o['office'],username=o['username'],password=o['password']
+    issuper = 0
+    bid=o["businessid_id"]
+    toCheck = [o['username'], o['password'],bid]
+    types = ['nan', 'nan','nan']
+    res = form_check(toCheck, types)
+    if res["status"]:
+        models.Yuangong.objects.filter(id=id).update(office=o['office'],username=o['username'],password=o['password']
                                                  ,isactive=isactive,issuper=issuper,businessid=o['businessid_id'])
 
-    return JsonResponse({"status":True})
+    return JsonResponse(res)
 
 # 删除用户
 @csrf_exempt
