@@ -193,22 +193,22 @@ def login(request):
         return render(request,'login.html')
     username=request.POST.get("username")
     password=request.POST.get("password")
-    ins=models.Yuangong.objects.filter(username=username).first()
+    ins=models.Yuangong.objects.filter(id=username).first()
     err=["",""]
     if not str(username).strip():
-        err[0]="用户名不能为空"
+        err[0]="员工编号不能为空"
     if not str(password).strip():
         err[1]="密码不能为空"
     if err[0] or err[1]:
         return JsonResponse({"status":False,"errors":err})
     if not err[0] and not err[1] and not ins:
-        err[0]="用户名不存在"
+        err[0]="员工不存在"
         return JsonResponse({"status":False,"errors":err})
     if password!=ins.password:
         err[0]="密码错误"
         return JsonResponse({"status":False,"errors":err})
     if not ins.isactive:
-        err[0]="账户已禁用"
+        err[0]="该账户已禁用"
         return JsonResponse({"status":False,"errors":err})
     # 记录登录信息
     request.session["info"]={"name":ins.username,"id":ins.id,"issuper":ins.issuper
