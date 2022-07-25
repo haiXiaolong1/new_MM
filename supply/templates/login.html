@@ -2,20 +2,20 @@
 <!doctype html>
 <html lang="en">
 <head>
-<!-- Required meta tags -->
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-<!-- Bootstrap CSS -->
-<link rel="stylesheet" href={% static 'loginui/bootstrap.min.css' %}>
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href={% static 'loginui/bootstrap.min.css' %}>
 
-<!-- Loding font -->
-<link href="https://fonts.googleapis.com/css?family=Montserrat:300,700" rel="stylesheet">
+	<!-- Loding font -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,700" rel="stylesheet">
 
-<!-- Custom Styles -->
-<link rel="stylesheet" type="text/css" href={% static 'loginui/styles.css' %}>
+	<!-- Custom Styles -->
+	<link rel="stylesheet" type="text/css" href={% static 'loginui/styles.css' %}>
 
-<title>用户登录</title>
+	<title>用户登录</title>
 </head>
 <body>
 
@@ -23,59 +23,57 @@
 
 <div id="login-bg" class="container-fluid">
 
-  <div class="bg-img"></div>
-  <div class="bg-color"></div>
+	<div class="bg-img"></div>
+	<div class="bg-color"></div>
 </div>
 
 <!-- End Backgrounds -->
 
 <div class="container" id="login">
-	<div class="row justify-content-center">
-	<div class="col-lg-8">
-	  <div class="login">
+	<div class="row justify-content-center" >
+		<div class="col-lg-6">
+			<div class="login" style="height:110%">
 
-		<h2>用户登录</h2>
+				<h2>New MM</h2>
+				<h5>登录</h5>
 
-		<!-- Loging form -->
+				<!-- Loging form -->
 
-		<form method="post" id="formAdd">
-			{% csrf_token %}
-				<div class="form-group">
-				  <input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="员工编号" name="username">
-				  <a class="formError" id="username_error"></a>
-				</div>
+				<form method="post" id="formAdd" >
+					{% csrf_token %}
+					<div>
+						<input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="员工编号" name="username" >
+						<a class="formError" id="username_error"></a>
+					</div>
+					<br>
+					<div >
+						<input type="password" class="form-control" id="exampleInputPassword1" placeholder="密码" name="password">
+						<a class="formError" id="password_error"></a>
+					</div>
 
-				<div class="form-group">
-				  <input type="password" class="form-control" id="exampleInputPassword1" placeholder="密码" name="password">
-				  <a class="formError" id="password_error"></a>
-				</div>
+					<hr>
+					<button type="summit" class="btn-success btn" id="btnLogin" style="width:100%;margin: auto">登录</button>
 
-				  <div class="form-check">
-gi
+					<div class="form-check">
+						<label class="forgot-password"><a href="#">忘记密码？<a></label>
+					</div>
 
-
-				  <label class="forgot-password"><a href="#">忘记密码？<a></label>
-
-				</div>
-
-				<br>
-				<button type="summit" class="btn btn-lg btn-block btn-success" id="btnLogin">登录</button>
-			  </form>
-		 <!-- End Loging form -->
+				</form>
+				<!-- End Loging form -->
 
 
+			</div>
+		</div>
 	</div>
-	</div>
-</div>
-  <script src={% static 'plugins/jquery/jquery-3.1.0.min.js' %}></script>
-<script src={% static 'plugins/bootstrap/js/bootstrap.min.js' %}></script>
-<script src={% static 'plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}></script>
-<script src={% static 'plugins/uniform/js/jquery.uniform.standalone.js' %}></script>
-<script src={% static 'plugins/switchery/switchery.min.js' %}></script>
-<script src={% static 'js/ecaps.min.js' %}></script>
-<script src={% static 'plugins/datatables/js/jquery.datatables.min.js' %}></script>
-<script src={% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
-<script type="text/javascript">
+	<script src={% static 'plugins/jquery/jquery-3.1.0.min.js' %}></script>
+	<script src={% static 'plugins/bootstrap/js/bootstrap.min.js' %}></script>
+	<script src={% static 'plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}></script>
+	<script src={% static 'plugins/uniform/js/jquery.uniform.standalone.js' %}></script>
+	<script src={% static 'plugins/switchery/switchery.min.js' %}></script>
+	<script src={% static 'js/ecaps.min.js' %}></script>
+	<script src={% static 'plugins/datatables/js/jquery.datatables.min.js' %}></script>
+	<script src={% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
+	<script type="text/javascript">
     $(document).ready(function() {
 
         $("#btnLogin").click(function () {
