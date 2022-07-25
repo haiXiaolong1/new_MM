@@ -51,7 +51,7 @@
                                         <th>审核时间</th>
                                         <th>创建人</th>
                                         <th>审核人</th>
-                                        {% if  request.session.info.issuper %}
+                                        {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
                                             <th>操作</th>
                                         {% endif %}
                                     </tr>
@@ -71,7 +71,7 @@
                                             <td>{{ obj.createuserid.username }}</td>
                                             <td>{{ obj.verifyuserid.username }}</td>
                                             {#                                        判断是否是管理员，普通员工只能查看#}
-                                            {% if  request.session.info.issuper %}
+                                            {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
                                                 {% if obj.status == 1 %}
                                                     <td>
                                                         <a class="btn btn-primary btn-xs btnCite" href="/purchase/inquiry/{{ obj.demandid }}/create/">引用</a>
@@ -81,7 +81,6 @@
                                                         <a class="btn btn-info btn-xs btnVerify" href="/purchase/toVerify/{{ obj.demandid }}/">去审核</a>
                                                     </td>
                                                 {% endif %}
-
                                             {% endif %}
                                         </tr>
                                     {% endfor %}

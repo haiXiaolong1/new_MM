@@ -12,9 +12,11 @@
                         <div class="panel-heading clearfix">
                             <h4 class="panel-title">采购订单列表</h4>
                         </div>
+                        {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
                         <div>
                             <a type="button" class="btn btn-info" style="margin-bottom: 20px" href="/purchase/create/">创建新订单</a>
                         </div>
+                        {% endif %}
                         <div>
                             <!-- 对话框 -->
                             <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -48,7 +50,9 @@
                                         <th>价格</th>
                                         <th>数量</th>
                                         <th>送货截至日期</th>
+                                        {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
                                         <th>操作</th>
+                                        {% endif %}
                                     </tr>
                                     </thead>
                                     <tbody id="table">
@@ -63,11 +67,13 @@
                                                 <td>{{ obj.price }}</td>
                                                 <td>{{ obj.tcount }}</td>
                                                 <td>{{ obj.deadline|date:"Y-m-d"  }}</td>
-                                                <td>
+                                                {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
+                                                    <td>
                                                     {% if obj.iscomplete == 1 %}
                                                         <button class="btn btn-danger btn-xs btnDelete"  uid="{{ obj.purchaseid }}">删除</button>
                                                     {% endif %}
-                                                </td>
+                                                    </td>
+                                                {% endif %}
                                             </tr>
                                         {% endif %}
                                     {% endfor %}

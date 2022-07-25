@@ -77,7 +77,9 @@
                                         <th>状态</th>
                                         <th>报价</th>
                                         <th>有效期</th>
+                                        {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
                                         <th>操作</th>
+                                        {% endif %}
                                     </tr>
                                     </thead>
                                     <tbody id="table">
@@ -92,13 +94,15 @@
                                             <td><a class={{obj.isreceived|table_status:"bjd"}}>{{ obj.get_isreceived_display }}</a></td>
                                             <td>{{ obj.quote }}</td>
                                             <td>{{ obj.validitytime|date:"Y-m-d H:i:s"  }}</td>
-                                            <td>
-                                                {% if obj.isreceived == 0 %}
+                                            {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
+                                                <td>
+                                                {% if obj.isreceived == 0 and request.session.info.office != "2"%}
                                                     <button class="btn btn-primary btn-xs btnEva"  uid="{{ obj.quoteid }}">评估</button>
                                                 {% elif obj.isreceived == 3 or obj.isreceived == 2 %}
                                                     <button class="btn btn-danger btn-xs btnDelete"  uid="{{ obj.quoteid }}">删除</button>
                                                 {% endif %}
-                                            </td>
+                                                </td>
+                                            {% endif %}
                                         </tr>
                                         {% endif %}
                                     {% endfor %}
