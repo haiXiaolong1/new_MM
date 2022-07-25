@@ -172,6 +172,9 @@
                                         <span class="my-badge" id="messageRedPoint">111</span>
                                     </i>
                                 </a></li>
+                                <li><a href="javascript:void(0)" >
+                                    <button id="sendTestMessage">发送消息</button>
+                                </a></li>
                                 <li class="dropdown user-dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                         aria-haspopup="true" aria-expanded="false">{{ request.session.info.name }}</a>
@@ -430,27 +433,6 @@
                 $("#topSearch").val($(this)[0].text);
                 $("#topSearch").focus();
             })
-            // 检查用户信息
-            function checkMessage() {
-                var meid=$("#on-log-user").attr("yid");
-                $.ajax({
-                    url: "/supply/checkMessage",
-                    type: "get",
-                    data: {"yid":yid},
-                    dataType: "JSON",
-                    success: function (res) {
-                        if (res.status) {
-                            if (res.newMessage) {
-                                console.log(res.ans);
-                            }
-                        }
-                        else {
-                        }
-                    }
-                })
-                setTimeout(checkMessage, 100000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
-            }
-            // setTimeout(checkMessage, 2000);
             
             function setMessageList() {
                 var meid=$("#on-log-user").attr("yid");
@@ -475,10 +457,32 @@
             }
             setMessageList();
 
+            // 检查用户信息
+            function checkMessage() {
+                var meid = $("#on-log-user").attr("yid");
+                $.ajax({
+                    url: "/supply/checkMessage",
+                    type: "get",
+                    data: { "yid": meid },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            var pre = $("#messageRedPoint").text();
+                            if (res.count > pre) {
+                                setMessageList();
+                            }
+                        }
+                        else {
+                        }
+                    }
+                })
+                setTimeout(checkMessage, 1000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
+            }
+            setTimeout(checkMessage, 2000);
+
             $("#chat").on("click","a",function () {
                 var meid=$("#on-log-user").attr("yid");
                 var yid = $(this).attr("yid");
-                console.log(yid);
                 $.ajax({
                     url: "/supply/setMessageDetail",
                     type: "get",
@@ -494,6 +498,30 @@
                             {
                                 $("#chat-right-sidebar").toggleClass('visible');
                             }
+                        } else {
+                        }
+                    }
+                })
+            })
+
+            $("#sendTestMessage").click(function(){
+                var me=$("#on-log-user").attr("yid");
+                $.ajax({
+                    url: "/supply/sendTestMessage",
+                    type: "get",
+                    data: {"meid":me},
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            console.log("发信成功");
+                            // $("#setMessage")[0].innerHTML = res.message;
+                            // $('#chatDetailName').text(res.who);
+                            // $('#chatDetailTime').text(res.when);
+                            // setMessageList();
+                            // if($("#chat-right-sidebar").attr("class")=="page-right-sidebar")
+                            // {
+                            //     $("#chat-right-sidebar").toggleClass('visible');
+                            // }
                         } else {
                         }
                     }

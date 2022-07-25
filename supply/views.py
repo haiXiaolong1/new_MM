@@ -39,7 +39,9 @@ def form_check(toCheck,types):
     return res_dict
 
 def check_message(request):
-    return JsonResponse({"status": True,"newMessage":False,"ans":"没有新消息！"})
+    me=request.GET.get("yid")
+    cou=models.Xiaoxi.objects.filter(toId=me,read=0).count()
+    return JsonResponse({"status": True,"count":cou})
 
 def ambu_time(time):
     now=int(datetime.now().strftime("%Y%m%d%H"))
@@ -69,7 +71,7 @@ def all_message_by_user(request,me="e0002"):
         read[k]["name"]=models.Yuangong.objects.filter(id=k).first().username
     for k,v in unread.items():
         unread[k]["name"]=models.Yuangong.objects.filter(id=k).first().username
-    return {"read":read,"unread":unread}
+    return {"read":read,"unread":unread, "me":me}
 
 
 def all_message(them='e0003',me='e0002'):
@@ -147,7 +149,10 @@ def set_chart_group(flow):
     out += add_chart_group("已读消息", flow["read"])
     if len(flow["unread"])==0 and len(flow['read'])==0:
         out+=add_chart_group("暂无消息")
-    cou=len(flow["unread"].items())
+    cou=0
+    me=flow["me"]
+    for i in flow["unread"].keys():
+        cou+=models.Xiaoxi.objects.filter(fromId=i,toId=me,read=0).count()
     return {"out":out,"count":cou}
 
 def url_set_message_list(request):
@@ -174,6 +179,13 @@ def set_message_detail(request):
     for g in groups.values():
         out+=add_group(g)
     return JsonResponse({"status":True,"message":out,"who":who,"when":state,"setList":set_list,"count":cou})
+
+def send_test_message(request):
+    me=request.GET.get("meid")
+    gjr=models.Yuangong.objects.filter().exclude(id=me).first().id
+    models.Xiaoxi.objects.create(fromId_id=gjr,toId_id=me,context="骚扰"+str(random.randint(1,20)),time=datetime.now(),read=0)
+    return JsonResponse({"status":True})
+
 
 # 登录功能
 def login(request):
