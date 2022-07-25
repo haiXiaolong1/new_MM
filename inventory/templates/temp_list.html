@@ -83,7 +83,7 @@
                                         <th>质检状态</th>
                                         <th>量检状态</th>
                                         <th>暂存单号</th>
-                                        {% if  request.session.info.issuper %}
+                                        {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                             <th>操作</th>
                                         {% endif %}
                                     </tr>
@@ -105,7 +105,7 @@
                                               <td>{{ obj.temid }}</td>
                                             {% endif %}
                                             {#                                        判断是否是管理员，普通员工只能查看#}
-                                            {% if  request.session.info.issuper %}
+                                            {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                                 <td>
                                                     {% if obj.qualitycheckinfo == -1 %}
                                                         <button class="btn btn-primary btn-xs btnQuality" uid="{{ obj.purchaseid_id }}">质检</button>

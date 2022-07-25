@@ -76,7 +76,7 @@
                                         <th>备注信息</th>
                                         <th>入库时间</th>
                                         <th>入库单号</th>
-                                        {% if  request.session.info.issuper %}
+                                        {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                             <th>操作</th>
                                         {% endif %}
                                     </tr>
@@ -95,7 +95,7 @@
                                             <td>{{ obj.createtime|date:"Y-m-d H:i:s" }}</td>
                                             <td>{{ obj.id }}</td>
 {#                                        判断权限信息#}
-                                            {% if  request.session.info.issuper %}
+                                            {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                                 <td>
                                                     {% if obj.temid.isreceived == 0 %}
                                                         <button class="btn btn-primary btn-xs btnReceive" uid="{{ obj.temid_id }}">入库</button>

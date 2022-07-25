@@ -13,8 +13,9 @@
                             <h4 class="panel-title">采购需求列表</h4>
                         </div>
                         <div>
-
+                            {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                             <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加</button>
+                        {% endif %}
                             <!-- 新建对话框 -->
                             <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
@@ -97,7 +98,7 @@
                                         <th>审核时间</th>
                                         <th>创建人</th>
                                         <th>审核人</th>
-                                        {% if  request.session.info.issuper %}
+                                        {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                             <th>操作</th>
                                         {% endif %}
                                     </tr>
@@ -117,7 +118,7 @@
                                             <td>{{ obj.createuserid.username }}</td>
                                             <td>{{ obj.verifyuserid.username }}</td>
                                             {#                                        判断是否是管理员，普通员工只能查看#}
-                                            {% if  request.session.info.issuper %}
+                                            {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                                 <td>
                                                     {% if obj.status == 2 %}
                                                         <button class="btn btn-danger btn-xs btnDelete" uid="{{ obj.demandid }}">删除</button>

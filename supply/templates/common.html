@@ -66,7 +66,7 @@
                             <a href="javascript:void(0);">
                                 <i class="menu-icon icon-people"></i>
                                 <span>供应商管理</span>
-                                <iclass="accordion-icon fa fa-angle-left">
+                                <i class="accordion-icon fa fa-angle-left">
                                 </i>
                             </a>
                             <ul class="sub-menu" id="supply_ul">
@@ -177,7 +177,7 @@
                                         aria-haspopup="true" aria-expanded="false">{{ request.session.info.name }}</a>
                                     <ul class="dropdown-menu" id="on-log-user" yid="{{request.session.info.id}}">
                                         <li><a href="#">用户名：{{ request.session.info.name }}</a></li>
-                                        <li><a href="#">职位：{{ request.session.info.office }}</a></li>
+                                        <li><a href="#">职位：{{ request.session.info.officename }}</a></li>
                                         <li><a href="#">公司：{{ request.session.info.business }}</a></li>
                                         <li role="separator" class="divider"></li>
                                         <li><a href="/logout">退出</a></li>
