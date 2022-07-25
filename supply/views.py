@@ -119,7 +119,8 @@ def add_group(group):
 
 def set_message_detail(request):
     yid=request.GET.get("yid")
-    flow=all_message(me='e0002',them=yid)
+    me=request.GET.get("meid")
+    flow=all_message(me=me,them=yid)
     groups=group_by_time(flow)
     out=""
     for g in groups.values():
@@ -152,7 +153,7 @@ def login(request):
     # 记录登录信息
     request.session["info"]={"name":ins.username,"id":ins.id,"issuper":ins.issuper
         ,"office":ins.office,"business":ins.businessid.name}
-    request.session["messageFlow"] = all_message_by_user(None,"e0002")
+    request.session["messageFlow"] = all_message_by_user(None,ins.id)
     return JsonResponse({"status":True})
 
 #登出功能
