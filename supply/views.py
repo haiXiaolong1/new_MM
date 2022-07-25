@@ -117,16 +117,55 @@ def add_group(group):
         time+=add_message(line)
     return time
 
+def add_chart_item(k,v,unread):
+    template='<a href="javascript:void(0);" class="{}"'\
+             'data-sidebar-id="chat-right-sidebar" yid="{}">'\
+             '<div class="user-avatar"><img src="http://via.placeholder.com/40x40" alt=""></div>'\
+             '<div class="chat-info"><span class="chat-author">{}</span><span class="chat-text">{}</span><span class="chat-time">{}</span></div></a>'
+    clas="right-sidebar-toggle chat-item"
+    if unread:
+        clas="right-sidebar-toggle chat-item unread active-user"
+    return template.format(clas,k,v['name'],v['text'],v['time'])
+
+def add_chart_group(which,d):
+    template = '<div class="chat-list"><span class="chat-title">{}</span>{}</div>'
+    if which=="暂无消息":
+        return template.format(which,"")
+    if len(d)==0:
+        return ""
+    out=""
+    unread=False
+    if which=="新消息":
+        unread=True
+    for k,v in d.items():
+        out+=add_chart_item(k,v,unread)
+    return template.format(which,out)
+
+def set_chart_group(flow):
+    out=""
+    out+=add_chart_group("新消息",flow["unread"])
+    out += add_chart_group("已读消息", flow["read"])
+    if len(flow["unread"])==0 and len(flow['read'])==0:
+        out+=add_chart_group("暂无消息")
+    return out
+
 def set_message_detail(request):
     yid=request.GET.get("yid")
     me=request.GET.get("meid")
     who=models.Yuangong.objects.filter(id=yid).first().username
+    unread=models.Xiaoxi.objects.filter(toId=me,fromId=yid,read=0).all().count()
+    models.Xiaoxi.objects.filter(toId=me,fromId=yid).update(read=1)
+    models.Xiaoxi.objects.filter(fromId=me, toId=yid).update(read=1)
+    set_list=set_chart_group(all_message_by_user(None,me))
+    state="已读"
+    if unread>0:
+        state="{}条未读消息".format(unread)
     flow=all_message(me=me,them=yid)
     groups=group_by_time(flow)
     out=""
     for g in groups.values():
         out+=add_group(g)
-    return JsonResponse({"status":True,"message":out,"who":who,"when":"发信状态"})
+    return JsonResponse({"status":True,"message":out,"who":who,"when":state,"setList":set_list})
 
 # 登录功能
 def login(request):

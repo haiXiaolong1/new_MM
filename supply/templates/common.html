@@ -276,34 +276,6 @@
                     <div class="right-sidebar-content">
                         <div class="right-sidebar-chat slimscroll">
                             <div class="chat-bubbles" id="setMessage">
-                                <div class="chat-start-date">消息日期时间</div>
-                                <div class="chat-bubble them">
-                                    <div class="chat-bubble-img-container">
-                                        <img src="http://via.placeholder.com/38x38" alt="">
-                                    </div>
-                                    <div class="chat-bubble-text-container">
-                                        <span class="chat-bubble-text">他的消息</span>
-                                    </div>
-                                </div>
-                                <div class="chat-bubble me">
-                                    <div class="chat-bubble-text-container">
-                                        <span class="chat-bubble-text">我的消息</span>
-                                    </div>
-                                </div>
-                                <div class="chat-start-date">消息日期时间</div>
-                                <div class="chat-bubble me">
-                                    <div class="chat-bubble-text-container">
-                                        <span class="chat-bubble-text">我的消息</span>
-                                    </div>
-                                </div>
-                                <div class="chat-bubble them">
-                                    <div class="chat-bubble-img-container">
-                                        <img src="http://via.placeholder.com/38x38" alt="">
-                                    </div>
-                                    <div class="chat-bubble-text-container">
-                                        <span class="chat-bubble-text">他们的消息</span>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                         <div class="chat-write">
@@ -489,6 +461,11 @@
                             $("#setMessage")[0].innerHTML = res.message;
                             $('#chatDetailName').text(res.who);
                             $('#chatDetailTime').text(res.when);
+                            $("#chat")[0].innerHTML = res.setList;
+                            if($("#chat-right-sidebar").attr("class")=="page-right-sidebar")
+                            {
+                                $("#chat-right-sidebar").toggleClass('visible');
+                            }
                         } else {
                         }
                     }
