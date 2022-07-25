@@ -71,3 +71,8 @@
     background: #FFFFFF;
     color: #0070e0;
 }
+
+.noinfo_holder{
+    color: grey;
+    text-align: center;
+}
