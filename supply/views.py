@@ -66,7 +66,7 @@ def all_message_by_user(request, me="e0002"):
         if other == me:
             other = i.fromId_id
         info = {"id": other, "time": ambu_time(i.time), "text": i.context}
-        if (i.read == 0):
+        if (i.read == 0 and i.toId_id==me):
             try:
                 read.pop(other)
             except:
@@ -185,7 +185,6 @@ def set_message_detail(request):
     who = models.Yuangong.objects.filter(id=yid).first().username
     unread = models.Xiaoxi.objects.filter(toId=me, fromId=yid, read=0).all().count()
     models.Xiaoxi.objects.filter(toId=me, fromId=yid).update(read=1)
-    models.Xiaoxi.objects.filter(fromId=me, toId=yid).update(read=1)
     sett = set_chart_group(all_message_by_user(None, me))
     set_list = sett["out"]
     cou = sett["count"]
@@ -207,6 +206,12 @@ def send_test_message(request):
                                  time=datetime.now(), read=0)
     return JsonResponse({"status": True})
 
+def send_message(request):
+    me = request.GET.get("meid")
+    them = request.GET.get("yid")
+    text = request.GET.get("text")
+    models.Xiaoxi.objects.create(fromId_id=me, toId_id=them, context=text, time=datetime.now(), read=0)
+    return JsonResponse({"status": True})
 
 # 登录功能
 def login(request):

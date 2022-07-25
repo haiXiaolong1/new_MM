@@ -17,18 +17,16 @@
     <!-- Styles -->
     <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
     <link href={% static "plugins/bootstrap/css/bootstrap.min.css" %} rel="stylesheet">
-    <link href={% static 'plugins/datatables/css/jquery.datatables.min.css' %} rel="stylesheet" type="text/css"/>
+    <link href={% static 'plugins/datatables/css/jquery.datatables.min.css' %} rel="stylesheet" type="text/css" />
     <link href={% static 'plugins/datatables/css/jquery.datatables_themeroller.css' %} rel="stylesheet"
-          type="text/css"/>
-    <link href={% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %} rel="stylesheet" type="text/css"/>
+        type="text/css" />
+    <link href={% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %} rel="stylesheet" type="text/css" />
     <link href={% static 'plugins/font-awesome/css/font-awesome.min.css' %} rel="stylesheet">
     <link href={% static 'plugins/icomoon/style.css' %} rel="stylesheet">
-    <link href={% static 'plugins/uniform/css/default.css' %} rel="stylesheet"/>
-    <link href={% static 'plugins/switchery/switchery.min.css' %} rel="stylesheet"/>
+    <link href={% static 'plugins/uniform/css/default.css' %} rel="stylesheet" />
+    <link href={% static 'plugins/switchery/switchery.min.css' %} rel="stylesheet" />
     <link href={% static 'plugins/vertical-timeline/css/style.css' %} rel="stylesheet">
     <link href={% static 'plugins/toastr/toastr.min.css' %} rel="stylesheet">
-    <link href={% static 'plugins/dropzone/dropzone.min.css' %} rel="stylesheet">
-    <link href={% static 'plugins/plupload/js/jquery.plupload.queue/css/jquery.plupload.queue.css' %} rel="stylesheet" type="text/css"/>
     <!--    <link href={% static '' %} rel="stylesheet">-->
     <!-- Theme Styles -->
     <link rel="stylesheet" href={% static 'css/ecaps.min.css' %}>
@@ -50,62 +48,62 @@
 
 <body class="page-sidebar-fixed">
 
-<!-- Page Container -->
-<div class="page-container">
-    <!-- Page Sidebar -->
-    <div class="page-sidebar">
-        <a class="logo-box" href="">
-            <span>NEWMM</span>
-            <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
-            <i class="icon-close" id="sidebar-toggle-button-close"></i>
-        </a>
-        <div class="page-sidebar-inner">
-            <div class="page-sidebar-menu">
-                <ul class="accordion-menu">
+    <!-- Page Container -->
+    <div class="page-container">
+        <!-- Page Sidebar -->
+        <div class="page-sidebar">
+            <a class="logo-box" href="">
+                <span>NEWMM</span>
+                <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
+                <i class="icon-close" id="sidebar-toggle-button-close"></i>
+            </a>
+            <div class="page-sidebar-inner">
+                <div class="page-sidebar-menu">
+                    <ul class="accordion-menu">
 
 
-                    <li class="topli" id="supply">
-                        <a href="javascript:void(0);">
-                            <i class="menu-icon icon-people"></i>
-                            <span>供应商管理</span>
-                            <i class="accordion-icon fa fa-angle-left">
-                            </i>
-                        </a>
-                        <ul class="sub-menu" id="supply_ul">
-                            <li id="supply1"><a href="/supply/list">维护供应商</a></li>
-                            <li id="supply2"><a href="/supply/material/list">维护物料关系</a></li>
-                            <li id="supply3"><a href="/supply/quote/list">维护报价单</a></li>
-                        </ul>
-                    </li>
-                    <li class="topli" id="purchase">
-                        <a href="javascript:void(0);">
-                            <i class="menu-icon icon-command"></i><span>采购管理</span><i
-                                class="accordion-icon fa fa-angle-left"></i>
-                        </a>
-                        <ul class="sub-menu" id="purchase_ul">
-                            <li class="subMenu" id="purchase_documents"><a href="/purchase/documents/">查看单据流</a>
-                            </li>
-                            <li class="subMenu" id="purchase_create_inquiry"><a
-                                    href="/purchase/inquiry/create/">创建询价单</a></li>
-                            <li class="subMenu" id="purchase_e_quote"><a href="/purchase/quote/evaluate/">评估报价单</a>
-                            </li>
-                            <li class="subMenu" id="purchase_list"><a href="/purchase/list/">创建采购单</a></li>
-                        </ul>
-                    </li>
-                    <li class="topli" id="inventory">
-                        <a href="javascript:void(0);">
-                            <i class="menu-icon icon-home2"></i><span>库存管理</span><i
-                                class="accordion-icon fa fa-angle-left"></i>
-                        </a>
-                        <ul class="sub-menu" id="inventory_ul">
-                            <li id="inventory_display"><a href="/inventory/display/">查看库存</a></li>
-                            <li id="inventory_demand"><a href="/inventory/demand/n/">采购需求管理</a></li>
-                            <li id="inventory_temp"><a href="/inventory/temp/">暂存检查</a></li>
-                            <li id="inventory_receive"><a href="/inventory/receive/">收货管理</a></li>
-                            <li id="inventory_invoice"><a href="/inventory/invoice/">发票</a></li>
-                        </ul>
-                    </li>
-                    {% if request.session.info.office == "0" %}
+                        <li class="topli" id="supply">
+                            <a href="javascript:void(0);">
+                                <i class="menu-icon icon-people"></i>
+                                <span>供应商管理</span>
+                                <i class="accordion-icon fa fa-angle-left">
+                                </i>
+                            </a>
+                            <ul class="sub-menu" id="supply_ul">
+                                <li id="supply1"><a href="/supply/list">维护供应商</a></li>
+                                <li id="supply2"><a href="/supply/material/list">维护物料关系</a></li>
+                                <li id="supply3"><a href="/supply/quote/list">维护报价单</a></li>
+                            </ul>
+                        </li>
+                        <li class="topli" id="purchase">
+                            <a href="javascript:void(0);">
+                                <i class="menu-icon icon-command"></i><span>采购管理</span><i
+                                    class="accordion-icon fa fa-angle-left"></i>
+                            </a>
+                            <ul class="sub-menu" id="purchase_ul">
+                                <li class="subMenu" id="purchase_documents"><a href="/purchase/documents/">查看单据流</a>
+                                </li>
+                                <li class="subMenu" id="purchase_create_inquiry"><a
+                                        href="/purchase/inquiry/create/">创建询价单</a></li>
+                                <li class="subMenu" id="purchase_e_quote"><a href="/purchase/quote/evaluate/">评估报价单</a>
+                                </li>
+                                <li class="subMenu" id="purchase_list"><a href="/purchase/list/">创建采购单</a></li>
+                            </ul>
+                        </li>
+                        <li class="topli" id="inventory">
+                            <a href="javascript:void(0);">
+                                <i class="menu-icon icon-home2"></i><span>库存管理</span><i
+                                    class="accordion-icon fa fa-angle-left"></i>
+                            </a>
+                            <ul class="sub-menu" id="inventory_ul">
+                                <li id="inventory_display"><a href="/inventory/display/">查看库存</a></li>
+                                <li id="inventory_demand"><a href="/inventory/demand/n/">采购需求管理</a></li>
+                                <li id="inventory_temp"><a href="/inventory/temp/">暂存检查</a></li>
+                                <li id="inventory_receive"><a href="/inventory/receive/">收货管理</a></li>
+                                <li id="inventory_invoice"><a href="/inventory/invoice/">发票</a></li>
+                            </ul>
+                        </li>
+                        {% if request.session.info.office == "0" %}
                         <li class="topli" id="account">
                             <a href="javascript:void(0);">
                                 <i class="menu-icon icon-command"></i><span>权限管理</span><i
@@ -124,433 +122,457 @@
                                 <li class="subMenu" id="init_documents"><a href="/supply/mm/list">物料维护</a></li>
                             </ul>
                         </li>
-                    {% endif %}
-                </ul>
+                        {% endif %}
+                    </ul>
+                </div>
             </div>
-        </div>
-    </div><!-- /Page Sidebar -->
+        </div><!-- /Page Sidebar -->
 
-    <!-- Page Content -->
-    <div class="page-content">
-        <!-- Page Header -->
-        <div class="page-header">
-            <div class="search-form">
-                <form action="#" method="GET">
-                    <div class="input-group">
-                        <input type="text" name="search" class="form-control search-input" placeholder="搜索功能模块"
-                               id="topSearch">
-                        <span class="input-group-btn">
+        <!-- Page Content -->
+        <div class="page-content">
+            <!-- Page Header -->
+            <div class="page-header">
+                <div class="search-form">
+                    <form action="#" method="GET">
+                        <div class="input-group">
+                            <input type="text" name="search" class="form-control search-input" placeholder="搜索功能模块"
+                                id="topSearch">
+                            <span class="input-group-btn">
                                 <button class="btn btn-default" id="close-search" type="button"><i
                                         class="icon-close"></i></button>
                             </span>
-                        <input type="text" name="search" style="display: none">
-                    </div>
-                    <div style="float: left;margin-left: 25px;color: grey;background-color: #f7f9fa;width: 200px"
-                         id="tips">
-
-                    </div>
-                </form>
-            </div>
-            <nav class="navbar navbar-default">
-                <div class="container-fluid">
-                    <!-- Brand and toggle get grouped for better mobile display -->
-                    <div class="navbar-header">
-                        <div class="logo-sm">
-                            <a href="javascript:void(0)" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
-                            <a class="logo-box" href=""><span>webDemo</span></a>
+                            <input type="text" name="search" style="display: none">
                         </div>
-                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                                data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                            <i class="fa fa-angle-down"></i>
-                        </button>
-                    </div>
+                        <div style="float: left;margin-left: 25px;color: grey;background-color: #f7f9fa;width: 200px"
+                            id="tips">
 
-                    <!-- Collect the nav links, forms, and other content for toggling -->
-
-                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                        <ul class="nav navbar-nav">
-                            <li><a href="javascript:void(0)" id="collapsed-sidebar-toggle-button"><i
-                                    class="fa fa-bars"></i></a></li>
-                            <li><a href="javascript:void(0)" id="toggle-fullscreen"><i class="fa fa-expand"></i></a>
-                            </li>
-                            <li><a href="javascript:void(0)" id="search-button"><i class="fa fa-search"></i></a>
-                            </li>
-                        </ul>
-                        <ul class="nav navbar-nav navbar-right">
-                            <li><a href="javascript:void(0)" class="right-sidebar-toggle"
-                                   data-sidebar-id="main-right-sidebar">
-                                <i class="fa fa-envelope">
-                                    <span class="my-badge" id="messageRedPoint">111</span>
-                                </i>
-                            </a></li>
-                            <li><a href="javascript:void(0)">
-                                <button id="sendTestMessage">发送消息</button>
-                            </a></li>
-                            <li class="dropdown user-dropdown">
-                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                   aria-haspopup="true" aria-expanded="false">{{ request.session.info.name }}</a>
-                                <ul class="dropdown-menu" id="on-log-user" yid="{{ request.session.info.id }}">
-                                    <li><a href="#">用户名：{{ request.session.info.name }}</a></li>
-                                    <li><a href="#">职位：{{ request.session.info.officename }}</a></li>
-                                    <li><a href="#">公司：{{ request.session.info.business }}</a></li>
-                                    <li role="separator" class="divider"></li>
-                                    <li><a href="/logout">退出</a></li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </div><!-- /.navbar-collapse -->
-                </div><!-- /.container-fluid -->
-            </nav>
-        </div><!-- /Page Header -->
-        <div>
-            <a class="table_status_2" style="display:none"></a>
-            <a class="formError" style="display:none"></a>
-            <a class="my_hide_element" id="toast-type"></a>
-            <a class="my_hide_element" id="toast-tittle"></a>
-            <a class="my_hide_element" id="toast-context"></a>
-            <button id="showtoast" class="my_hide_element"></button>
-        </div>
-        <!-- Page Inner -->
-        {% block content %}
-        {% endblock %}
-        <!-- /Page Inner -->
-        <!-- 员工信息交互功能 -->
-        <div class="page-right-sidebar" id="main-right-sidebar">
-            <div class="page-right-sidebar-inner">
-                <div class="right-sidebar-top">
-                    <div class="right-sidebar-tabs">
-                        <!-- Nav tabs -->
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="active" id="chat-tab"><a href="#chat"
-                                                                                    aria-controls="chat" role="tab"
-                                                                                    data-toggle="tab">消息</a></li>
-                        </ul>
-                    </div>
-                    <a href="javascript:void(0)" class="right-sidebar-toggle right-sidebar-close"
-                       data-sidebar-id="main-right-sidebar"><i class="icon-close"></i></a>
+                        </div>
+                    </form>
                 </div>
-                <div class="right-sidebar-content">
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <div role="tabpanel" class="tab-pane active" id="chat">
-                            {% if request.session.messageFlow.unread.items|length > 0 %}
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <!-- Brand and toggle get grouped for better mobile display -->
+                        <div class="navbar-header">
+                            <div class="logo-sm">
+                                <a href="javascript:void(0)" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
+                                <a class="logo-box" href=""><span>webDemo</span></a>
+                            </div>
+                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                                data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                                <i class="fa fa-angle-down"></i>
+                            </button>
+                        </div>
+
+                        <!-- Collect the nav links, forms, and other content for toggling -->
+
+                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                            <ul class="nav navbar-nav">
+                                <li><a href="javascript:void(0)" id="collapsed-sidebar-toggle-button"><i
+                                            class="fa fa-bars"></i></a></li>
+                                <li><a href="javascript:void(0)" id="toggle-fullscreen"><i class="fa fa-expand"></i></a>
+                                </li>
+                                <li><a href="javascript:void(0)" id="search-button"><i class="fa fa-search"></i></a>
+                                </li>
+                            </ul>
+                            <ul class="nav navbar-nav navbar-right">
+                                <li><a href="javascript:void(0)" class="right-sidebar-toggle"
+                                        data-sidebar-id="main-right-sidebar">
+                                        <i class="fa fa-envelope">
+                                            <span class="my-badge" id="messageRedPoint">111</span>
+                                        </i>
+                                    </a></li>
+                                <li><a href="javascript:void(0)">
+                                        <button id="sendTestMessage">发送消息</button>
+                                    </a></li>
+                                <li class="dropdown user-dropdown">
+                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                        aria-haspopup="true" aria-expanded="false">{{ request.session.info.name }}</a>
+                                    <ul class="dropdown-menu" id="on-log-user" yid="{{ request.session.info.id }}">
+                                        <li><a href="#">用户名：{{ request.session.info.name }}</a></li>
+                                        <li><a href="#">职位：{{ request.session.info.officename }}</a></li>
+                                        <li><a href="#">公司：{{ request.session.info.business }}</a></li>
+                                        <li role="separator" class="divider"></li>
+                                        <li><a href="/logout">退出</a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </div><!-- /.navbar-collapse -->
+                    </div><!-- /.container-fluid -->
+                </nav>
+            </div><!-- /Page Header -->
+            <div>
+                <a class="table_status_2" style="display:none"></a>
+                <a class="formError" style="display:none"></a>
+                <a class="my_hide_element" id="toast-type"></a>
+                <a class="my_hide_element" id="toast-tittle"></a>
+                <a class="my_hide_element" id="toast-context"></a>
+                <button id="showtoast" class="my_hide_element"></button>
+            </div>
+            <!-- Page Inner -->
+            {% block content %}
+            {% endblock %}
+            <!-- /Page Inner -->
+            <!-- 员工信息交互功能 -->
+            <div class="page-right-sidebar" id="main-right-sidebar">
+                <div class="page-right-sidebar-inner">
+                    <div class="right-sidebar-top">
+                        <div class="right-sidebar-tabs">
+                            <!-- Nav tabs -->
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="active" id="chat-tab"><a href="#chat"
+                                        aria-controls="chat" role="tab" data-toggle="tab">消息</a></li>
+                            </ul>
+                        </div>
+                        <a href="javascript:void(0)" class="right-sidebar-toggle right-sidebar-close"
+                            data-sidebar-id="main-right-sidebar"><i class="icon-close"></i></a>
+                    </div>
+                    <div class="right-sidebar-content">
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="chat">
+                                {% if request.session.messageFlow.unread.items|length > 0 %}
                                 <div class="chat-list">
                                     <span class="chat-title">新消息</span>
                                     {% for k,v in request.session.messageFlow.unread.items %}
-                                        {% load myfilter %}
-                                        <a href="javascript:void(0);"
-                                           class="right-sidebar-toggle chat-item unread active-user"
-                                           data-sidebar-id="chat-right-sidebar" yid="{{ k }}">
-                                            <div class="user-avatar">
-                                                <img src="http://via.placeholder.com/40x40" alt="">
-                                            </div>
-                                            <div class="chat-info">
-                                                <span class="chat-author">{{ v.name }}</span>
-                                                <span class="chat-text">{{ v.text }}</span>
-                                                <span class="chat-time">{{ v.time }}</span>
-                                            </div>
-                                        </a>
+                                    {% load myfilter %}
+                                    <a href="javascript:void(0);"
+                                        class="right-sidebar-toggle chat-item unread active-user"
+                                        data-sidebar-id="chat-right-sidebar" yid="{{ k }}">
+                                        <div class="user-avatar">
+                                            <img src="http://via.placeholder.com/40x40" alt="">
+                                        </div>
+                                        <div class="chat-info">
+                                            <span class="chat-author">{{ v.name }}</span>
+                                            <span class="chat-text">{{ v.text }}</span>
+                                            <span class="chat-time">{{ v.time }}</span>
+                                        </div>
+                                    </a>
                                     {% endfor %}
                                 </div>
-                            {% endif %}
-                            {% if request.session.messageFlow.read.items|length > 0 %}
+                                {% endif %}
+                                {% if request.session.messageFlow.read.items|length > 0 %}
                                 <div class="chat-list">
                                     <span class="chat-title">已读消息</span>
                                     {% for k,v in request.session.messageFlow.read.items %}
-                                        <a href="javascript:void(0);" class="right-sidebar-toggle chat-item"
-                                           data-sidebar-id="chat-right-sidebar" yid="{{ k }}">
-                                            <div class="user-avatar">
-                                                <img src="http://via.placeholder.com/40x40" alt="">
-                                            </div>
-                                            <div class="chat-info">
-                                                <span class="chat-author">{{ v.name }}</span>
-                                                <span class="chat-text">{{ v.text }}</span>
-                                                <span class="chat-time">{{ v.time }}</span>
-                                            </div>
-                                        </a>
+                                    <a href="javascript:void(0);" class="right-sidebar-toggle chat-item"
+                                        data-sidebar-id="chat-right-sidebar" yid="{{ k }}">
+                                        <div class="user-avatar">
+                                            <img src="http://via.placeholder.com/40x40" alt="">
+                                        </div>
+                                        <div class="chat-info">
+                                            <span class="chat-author">{{ v.name }}</span>
+                                            <span class="chat-text">{{ v.text }}</span>
+                                            <span class="chat-time">{{ v.time }}</span>
+                                        </div>
+                                    </a>
                                     {% endfor %}
                                     <!-- <a href="javascript:void(0);" class="load-more-messages" data-toggle="tooltip"
                                         data-placement="bottom" title="Load More">&bull;&bull;&bull;加载更多</a> -->
                                 </div>
-                            {% endif %}
-                            {% if request.session.messageFlow.unread.items|length == 0 and request.session.messageFlow.read.items|length == 0 %}
+                                {% endif %}
+                                {% if request.session.messageFlow.unread.items|length == 0 and request.session.messageFlow.read.items|length == 0 %}
                                 <div class="chat-list">
                                     <h4 class="noinfo_holder">暂无消息</h4>
                                 </div>
-                            {% endif %}
+                                {% endif %}
+                            </div>
+                            <!-- 这里删掉了settings -->
                         </div>
-                        <!-- 这里删掉了settings -->
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="page-right-sidebar" id="chat-right-sidebar">
-            <div class="page-right-sidebar-inner">
-                <div class="right-sidebar-top">
-                    <div class="chat-top-info">
-                        <span class="chat-name" id="chatDetailName">发信人</span>
-                        <span class="chat-state" id="chatDetailTime">发信时间</span>
-                    </div>
-                    <a href="javascript:void(0)" class="right-sidebar-toggle chat-sidebar-close pull-right"
-                       data-sidebar-id="chat-right-sidebar"><i class="icon-keyboard_arrow_right"></i></a>
-                </div>
-                <div class="right-sidebar-content">
-                    <div class="right-sidebar-chat slimscroll">
-                        <div class="chat-bubbles" id="setMessage">
+            <div class="page-right-sidebar" id="chat-right-sidebar">
+                <div class="page-right-sidebar-inner">
+                    <div class="right-sidebar-top">
+                        <div class="chat-top-info">
+                            <span class="chat-name" id="chatDetailName">发信人</span>
+                            <span class="chat-state" id="chatDetailTime">发信时间</span>
                         </div>
+                        <a href="javascript:void(0)" class="right-sidebar-toggle chat-sidebar-close pull-right"
+                            data-sidebar-id="chat-right-sidebar"><i class="icon-keyboard_arrow_right"></i></a>
                     </div>
-                    <div class="chat-write">
-                        <form class="form-horizontal" action="javascript:void(0);">
-                            {% csrf_token %}
-                            <input type="text" class="form-control" placeholder="在这里输入新消息">
-                        </form>
+                    <div class="right-sidebar-content">
+                        <div class="right-sidebar-chat slimscroll">
+                            <div class="chat-bubbles" id="setMessage">
+                            </div>
+                        </div>
+                        <div class="chat-write">
+                            <div class="form-horizontal" action="javascript:void(0);">
+                                <input type="text" class="form-control my-left" id="textMessage" placeholder="在这里输入新消息">
+                                <button id="sendTextMessage">发送</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
 
-    </div><!-- /Page Content -->
-</div><!-- /Page Container -->
-
-
-<!-- Javascripts -->
-<script src={% static 'plugins/jquery/jquery-3.1.0.min.js' %}></script>
-<script src={% static 'plugins/bootstrap/js/bootstrap.min.js' %}></script>
-<script src={% static 'plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}></script>
-<script src={% static 'plugins/uniform/js/jquery.uniform.standalone.js' %}></script>
-<script src={% static 'plugins/switchery/switchery.min.js' %}></script>
-<script src={% static 'plugins/chartjs/chart.min.js' %}></script>
-<script src={% static 'plugins/d3/d3.min.js' %}></script>
-<script src={% static 'plugins/nvd3/nv.d3.min.js' %}></script>
-<script src={% static 'plugins/flot/jquery.flot.min.js' %}></script>
-<script src={% static 'plugins/flot/jquery.flot.time.min.js' %}></script>
-<script src={% static 'plugins/flot/jquery.flot.symbol.min.js' %}></script>
-<script src={% static 'plugins/flot/jquery.flot.resize.min.js' %}></script>
-<script src={% static 'plugins/flot/jquery.flot.tooltip.min.js' %}></script>
-<script src={% static 'plugins/flot/jquery.flot.pie.min.js' %}></script>
-<script src={% static 'plugins/jquery-validation/jquery.validate.min.js' %}></script>
-<script src={% static 'plugins/dropzone/dropzone.min.js' %}></script>
-<script src={% static 'plugins/plupload/js/plupload.full.min.js' %></script>
-<script src={% static 'plugins/plupload/js/jquery.plupload.queue/jquery.plupload.queue.min.js' %></script>
-
-<script src={% static 'js/pages/form-file-upload.js' %></script>
-
-<script src={% static 'js/pages/chart.js' %}></script>
-
-<script src={% static 'js/ecaps.min.js' %}></script>
+        </div><!-- /Page Content -->
+    </div><!-- /Page Container -->
 
 
-<script src={% static 'plugins/datatables/js/jquery.datatables.min.js' %}></script>
-<script src={% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
-<script src={% static 'plugins/echarts.js' %}></script>
-<script src={% static 'js/pages/timeline.js' %}></script>
-<script src={% static 'plugins/toastr/toastr.min.js' %}></script>
-<script src={% static 'js/pages/ui-notifications.js' %}></script>
-<script type="text/javascript" language="JavaScript">
-    $(document).ready(function () {
+    <!-- Javascripts -->
+    <script src={% static 'plugins/jquery/jquery-3.1.0.min.js' %}></script>
+    <script src={% static 'plugins/bootstrap/js/bootstrap.min.js' %}></script>
+    <script src={% static 'plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}></script>
+    <script src={% static 'plugins/uniform/js/jquery.uniform.standalone.js' %}></script>
+    <script src={% static 'plugins/switchery/switchery.min.js' %}></script>
+    <script src={% static 'plugins/chartjs/chart.min.js' %}></script>
+    <script src={% static 'plugins/d3/d3.min.js' %}></script>
+    <script src={% static 'plugins/nvd3/nv.d3.min.js' %}></script>
+    <script src={% static 'plugins/flot/jquery.flot.min.js' %}></script>
+    <script src={% static 'plugins/flot/jquery.flot.time.min.js' %}></script>
+    <script src={% static 'plugins/flot/jquery.flot.symbol.min.js' %}></script>
+    <script src={% static 'plugins/flot/jquery.flot.resize.min.js' %}></script>
+    <script src={% static 'plugins/flot/jquery.flot.tooltip.min.js' %}></script>
+    <script src={% static 'plugins/flot/jquery.flot.pie.min.js' %}></script>
+    <script src={% static 'plugins/jquery-validation/jquery.validate.min.js' %}></script>
+    {#
+    <script src={% static 'js/pages/chart.js' %}></script>
+    #}
+    <script src={% static 'js/ecaps.min.js' %}></script>
 
-        $('#example').dataTable({
-            "lengthMenu": [5, 10, 15, 20],
-            "language": {
-                "processing": "正在加载中......",
-                "lengthMenu": "每页显示 _MENU_ 条记录",
-                "zeroRecords": "对不起，查询不到相关数据！",
-                "emptyTable": "表中无数据存在！",
-                "info": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
-                "infoEmpty": "无搜索结果",
-                "infoFiltered": "(数据表中共为 _MAX_ 条记录)",
-                "search": "搜索",
-                "paginate": {
-                    "first": "首页",
-                    "previous": "上一页",
-                    "next": "下一页",
-                    "last": "末页"
+
+    <script src={% static 'plugins/datatables/js/jquery.datatables.min.js' %}></script>
+    <script src={% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
+    <script src={% static 'plugins/echarts.js' %}></script>
+    <script src={% static 'js/pages/timeline.js' %}></script>
+    <script src={% static 'plugins/toastr/toastr.min.js' %}></script>
+    <script src={% static 'js/pages/ui-notifications.js' %}></script>
+    <script type="text/javascript" language="JavaScript">
+        $(document).ready(function () {
+
+            $('#example').dataTable({
+                "lengthMenu": [5, 10, 15, 20],
+                "language": {
+                    "processing": "正在加载中......",
+                    "lengthMenu": "每页显示 _MENU_ 条记录",
+                    "zeroRecords": "对不起，查询不到相关数据！",
+                    "emptyTable": "表中无数据存在！",
+                    "info": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+                    "infoEmpty": "无搜索结果",
+                    "infoFiltered": "(数据表中共为 _MAX_ 条记录)",
+                    "search": "搜索",
+                    "paginate": {
+                        "first": "首页",
+                        "previous": "上一页",
+                        "next": "下一页",
+                        "last": "末页"
+                    }
+                } //多语言配置
+            });
+            $('.topli').click(
+                function () {
+                    $('.topli').removeClass('active-page');
+                    $(this).addClass('active-page');
+
                 }
-            } //多语言配置
-        });
-        $('.topli').click(
-            function () {
-                $('.topli').removeClass('active-page');
+            );
+            $('.subMenu').click(function () {
+                $('.subMenu').removeClass('active-page');
                 $(this).addClass('active-page');
+                console.log(this)
+            })
 
-            }
-        );
-        $('.subMenu').click(function () {
-            $('.subMenu').removeClass('active-page');
-            $(this).addClass('active-page');
-            console.log(this)
-        })
+            $("#topSearch").keypress(function (even) {
+                if (even.which == 13) {
+                    var name = $("#topSearch")[0].value
+                    switch (name) {
+                        case "维护物料":
+                            top.location.href = "/supply/mm/list";
+                            break;
+                        case "维护供应商":
+                            top.location.href = "/supply/list";
+                            break;
+                        case "维护物料关系":
+                            top.location.href = "/supply/material/list";
+                            break;
+                        case "维护报价单":
+                            top.location.href = "/supply/quote/list";
+                            break;
+                        case "查看单据流":
+                            top.location.href = "/purchase/documents/";
+                            break;
+                        case "创建询价单":
+                            top.location.href = "/purchase/inquiry/create/";
+                            break;
+                        case "评估报价单":
+                            top.location.href = "/purchase/quote/evaluate/";
+                            break;
+                        case "创建采购单":
+                            top.location.href = "/purchase/list/";
+                            break;
+                        case "查看库存":
+                            top.location.href = "/inventory/display/";
+                            break;
+                        case "采购需求管理":
+                            top.location.href = "/inventory/demand/n/";
+                            break;
+                        case "暂存检查":
+                            top.location.href = "/inventory/temp/";
+                            break;
+                        case "收货管理":
+                            top.location.href = "/inventory/receive/";
+                            break;
+                        case "发票":
+                            top.location.href = "/inventory/invoice/";
+                            break;
 
-        $("#topSearch").keypress(function (even) {
-            if (even.which == 13) {
-                var name = $("#topSearch")[0].value
-                switch (name) {
-                    case "维护物料":
-                        top.location.href = "/supply/mm/list";
-                        break;
-                    case "维护供应商":
-                        top.location.href = "/supply/list";
-                        break;
-                    case "维护物料关系":
-                        top.location.href = "/supply/material/list";
-                        break;
-                    case "维护报价单":
-                        top.location.href = "/supply/quote/list";
-                        break;
-                    case "查看单据流":
-                        top.location.href = "/purchase/documents/";
-                        break;
-                    case "创建询价单":
-                        top.location.href = "/purchase/inquiry/create/";
-                        break;
-                    case "评估报价单":
-                        top.location.href = "/purchase/quote/evaluate/";
-                        break;
-                    case "创建采购单":
-                        top.location.href = "/purchase/list/";
-                        break;
-                    case "查看库存":
-                        top.location.href = "/inventory/display/";
-                        break;
-                    case "采购需求管理":
-                        top.location.href = "/inventory/demand/n/";
-                        break;
-                    case "暂存检查":
-                        top.location.href = "/inventory/temp/";
-                        break;
-                    case "收货管理":
-                        top.location.href = "/inventory/receive/";
-                        break;
-                    case "发票":
-                        top.location.href = "/inventory/invoice/";
-                        break;
+                        default:
+                            break;
 
-                    default:
-                        break;
-
-                }
-            }
-        })
-        $("#topSearch").on('input', function (e) {
-            var s = ["维护物料", "维护供应商", "维护物料关系", "维护报价单", "查看单据流", "创建询价单", "评估报价单",
-                "创建采购单", "查看库存", "采购需求管理", "暂存检查", "收货管理", "发票"]
-            var v = $("#topSearch")[0].value;
-            p = "<br>";
-            divstart = "<a class='option' style='width: 100%;' >"
-            divend = "</a>"
-            $("#tips").empty()
-            for (i in s) {
-                if (s[i].indexOf(v) != -1) {
-                    $("#tips").append(divstart + s[i] + divend);
-                    $("#tips").append(p);
-                }
-            }
-
-
-        })
-
-        $("#tips").on('click', ".option", function () {
-            $("#topSearch").val($(this)[0].text);
-            $("#topSearch").focus();
-        })
-
-        function setMessageList() {
-            var meid = $("#on-log-user").attr("yid");
-            $.ajax({
-                url: "/supply/setMessageList",
-                type: "get",
-                data: {"meid": meid},
-                dataType: "JSON",
-                success: function (res) {
-                    if (res.status) {
-                        $("#chat")[0].innerHTML = res.setList;
-                        var pre = $("#messageRedPoint").text();
-                        $("#messageRedPoint").text(res.count);
-                        if ((res.count == 0 && pre != 0) || (res.count != 0 && pre == 0)) {
-                            $("#messageRedPoint").toggleClass("my-hiden");
-                        }
-                    } else {
                     }
                 }
             })
-        }
+            $("#topSearch").on('input', function (e) {
+                var s = ["维护物料", "维护供应商", "维护物料关系", "维护报价单", "查看单据流", "创建询价单", "评估报价单",
+                    "创建采购单", "查看库存", "采购需求管理", "暂存检查", "收货管理", "发票"]
+                var v = $("#topSearch")[0].value;
+                p = "<br>";
+                divstart = "<a class='option' style='width: 100%;' >"
+                divend = "</a>"
+                $("#tips").empty()
+                for (i in s) {
+                    if (s[i].indexOf(v) != -1) {
+                        $("#tips").append(divstart + s[i] + divend);
+                        $("#tips").append(p);
+                    }
+                }
 
-        setMessageList();
 
-        // 检查用户信息
-        function checkMessage() {
-            var meid = $("#on-log-user").attr("yid");
-            $.ajax({
-                url: "/supply/checkMessage",
-                type: "get",
-                data: {"yid": meid},
-                dataType: "JSON",
-                success: function (res) {
-                    if (res.status) {
-                        var pre = $("#messageRedPoint").text();
-                        if (res.count > pre) {
+            })
+
+            $("#tips").on('click', ".option", function () {
+                $("#topSearch").val($(this)[0].text);
+                $("#topSearch").focus();
+            })
+
+            function setMessageList() {
+                var meid = $("#on-log-user").attr("yid");
+                $.ajax({
+                    url: "/supply/setMessageList",
+                    type: "get",
+                    data: { "meid": meid },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            $("#chat")[0].innerHTML = res.setList;
+                            var pre = $("#messageRedPoint").text();
+                            $("#messageRedPoint").text(res.count);
+                            if ((res.count == 0 && pre != 0) || (res.count != 0 && pre == 0)) {
+                                $("#messageRedPoint").toggleClass("my-hiden");
+                            }
+                        } else {
+                        }
+                    }
+                })
+            }
+
+            setMessageList();
+
+            // 检查用户信息
+            function checkMessage() {
+                var meid = $("#on-log-user").attr("yid");
+                $.ajax({
+                    url: "/supply/checkMessage",
+                    type: "get",
+                    data: { "yid": meid },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            var pre = $("#messageRedPoint").text();
+                            if (res.count > pre) {
+                                setMessageList();
+                            }
+                        } else {
+                        }
+                    }
+                })
+                setTimeout(checkMessage, 1000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
+            }
+
+            // setTimeout(checkMessage, 2000);
+
+            $("#chat").on("click", "a", function () {
+                var meid = $("#on-log-user").attr("yid");
+                var yid = $(this).attr("yid");
+                $("#chatDetailName").attr("yid", yid);
+                $.ajax({
+                    url: "/supply/setMessageDetail",
+                    type: "get",
+                    data: { "yid": yid, "meid": meid },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            $("#setMessage")[0].innerHTML = res.message;
+                            $('#chatDetailName').text(res.who);
+                            $('#chatDetailTime').text(res.when);
                             setMessageList();
+                            if ($("#chat-right-sidebar").attr("class") == "page-right-sidebar") {
+                                $("#chat-right-sidebar").toggleClass('visible');
+                            }
+                        } else {
                         }
-                    } else {
                     }
-                }
+                })
             })
-            setTimeout(checkMessage, 1000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
-        }
 
-        setTimeout(checkMessage, 2000);
-
-        $("#chat").on("click", "a", function () {
-            var meid = $("#on-log-user").attr("yid");
-            var yid = $(this).attr("yid");
-            $.ajax({
-                url: "/supply/setMessageDetail",
-                type: "get",
-                data: {"yid": yid, "meid": meid},
-                dataType: "JSON",
-                success: function (res) {
-                    if (res.status) {
-                        $("#setMessage")[0].innerHTML = res.message;
-                        $('#chatDetailName').text(res.who);
-                        $('#chatDetailTime').text(res.when);
-                        setMessageList();
-                        if ($("#chat-right-sidebar").attr("class") == "page-right-sidebar") {
-                            $("#chat-right-sidebar").toggleClass('visible');
+            $("#sendTestMessage").click(function () {
+                var me = $("#on-log-user").attr("yid");
+                $.ajax({
+                    url: "/supply/sendTestMessage",
+                    type: "get",
+                    data: { "meid": me },
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            console.log("发信成功");
+                            setMessageList();
+                        } else {
                         }
-                    } else {
                     }
-                }
+                })
             })
-        })
 
-        $("#sendTestMessage").click(function () {
-            var me = $("#on-log-user").attr("yid");
-            $.ajax({
-                url: "/supply/sendTestMessage",
-                type: "get",
-                data: {"meid": me},
-                dataType: "JSON",
-                success: function (res) {
-                    if (res.status) {
-                        console.log("发信成功");
-                        // $("#setMessage")[0].innerHTML = res.message;
-                        // $('#chatDetailName').text(res.who);
-                        // $('#chatDetailTime').text(res.when);
-                        // setMessageList();
-                        // if($("#chat-right-sidebar").attr("class")=="page-right-sidebar")
-                        // {
-                        //     $("#chat-right-sidebar").toggleClass('visible');
-                        // }
-                    } else {
+            function addMessage() {
+                if ($('.right-sidebar-chat .chat-bubbles .chat-bubble:last-child').hasClass('me')) {
+                    $('<span class="chat-bubble-text">' + $("#textMessage").val() + '</span>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child span:last-child");
+                } else {
+                    $('<div class="chat-bubble me"><div class="chat-bubble-text-container"><span class="chat-bubble-text">' + $("#textMessage").val() + '</span></div></div>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child");
+                };
+                $("#textMessage").val('');
+                var scrollTo_int = $('.right-sidebar-chat').prop('scrollHeight') + 'px';
+                $('.right-sidebar-chat').slimscroll({
+                    allowPageScroll: true,
+                    scrollTo: scrollTo_int
+                });
+            };
+
+            // $(".chat-write form input").on('keypress', function (e) {
+            //         if ((e.which === 13)&&(!$(this).val().length === 0)) {
+            // 聊天窗口发信功能
+            function sendMessage() {
+                var me = $("#on-log-user").attr("yid");
+                var them = $("#chatDetailName").attr("yid");
+                var text = $("#textMessage").val();
+                $.ajax({
+                    url: "/supply/sendMessage",
+                    type: "get",
+                    data: { "meid": me, "yid": them, "text": text },
+                    dataType: "JSON",
+                    success: function (res) {
+                        addMessage();
                     }
-                }
-            })
-        })
-    });
+                })
+            }
 
-</script>
-{% block js %}
-{% endblock %}
+            $("#sendTextMessage").click(function () {
+                sendMessage();
+            })
+        });
+
+    </script>
+    {% block js %}
+    {% endblock %}
 </body>
 
 </html>
