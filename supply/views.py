@@ -147,22 +147,24 @@ def set_chart_group(flow):
     out += add_chart_group("已读消息", flow["read"])
     if len(flow["unread"])==0 and len(flow['read'])==0:
         out+=add_chart_group("暂无消息")
-    return out
+    cou=len(flow["unread"].items())
+    return {"out":out,"count":cou}
 
 def url_set_message_list(request):
     me = request.GET.get("meid")
-    set_list = set_chart_group(all_message_by_user(None, me))
-    return JsonResponse({"status": True, "setList": set_list})
+    sett = set_chart_group(all_message_by_user(None, me))
+    return JsonResponse({"status": True, "setList": sett["out"],"count":sett["count"]})
 
 def set_message_detail(request):
     yid=request.GET.get("yid")
     me=request.GET.get("meid")
-    print("!!!!!!!!!!!!111")
     who=models.Yuangong.objects.filter(id=yid).first().username
     unread=models.Xiaoxi.objects.filter(toId=me,fromId=yid,read=0).all().count()
     models.Xiaoxi.objects.filter(toId=me,fromId=yid).update(read=1)
     models.Xiaoxi.objects.filter(fromId=me, toId=yid).update(read=1)
-    set_list=set_chart_group(all_message_by_user(None,me))
+    sett=set_chart_group(all_message_by_user(None,me))
+    set_list=sett["out"]
+    cou=sett["count"]
     state="已读"
     if unread>0:
         state="{}条未读消息".format(unread)
@@ -171,7 +173,7 @@ def set_message_detail(request):
     out=""
     for g in groups.values():
         out+=add_group(g)
-    return JsonResponse({"status":True,"message":out,"who":who,"when":state,"setList":set_list})
+    return JsonResponse({"status":True,"message":out,"who":who,"when":state,"setList":set_list,"count":cou})
 
 # 登录功能
 def login(request):
