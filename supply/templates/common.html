@@ -458,7 +458,7 @@
                 $.ajax({
                     url: "/supply/checkMessage",
                     type: "get",
-                    data: {"yid":},
+                    data: {"yid":yid},
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {
