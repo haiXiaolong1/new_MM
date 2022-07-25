@@ -79,7 +79,7 @@ def all_message(them='e0003',me='e0002'):
     tos=models.Xiaoxi.objects.filter(fromId=me,toId=them).all()
     message_flow=[]
     for i in froms:
-        message_flow.append({"isThem":True,"time":i.time.strftime("%m月%d日 %H:%M:%S"),"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
+        message_flow.append({"isThem":True,"time":i.time.strftime("%m{m}%d{d} %H:%M:%S").format(m="月",d="日"),"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     for i in tos:
         message_flow.append({"isThem":False,"time":i.time.strftime("%m月%d日 %H:%M:%S"),"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     message_flow=sorted(message_flow,key=lambda a: a["compare"])

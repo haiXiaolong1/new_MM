@@ -113,7 +113,6 @@
                             </ul>
                         </li>
                         {% endif %}
-
                     </ul>
                 </div>
             </div>
@@ -216,7 +215,7 @@
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="chat">
                                 <div class="chat-list" id="unread-tittle">
-                                    <span class="chat-title">新消息</span>
+                                    <span class="chat-title" >新消息</span>
                                     {% for k,v in request.session.messageFlow.unread.items %}
                                     {% load myfilter %}
                                     <a href="javascript:void(0);" class="right-sidebar-toggle chat-item unread active-user"
@@ -232,8 +231,8 @@
                                     </a>
                                     {% endfor %}
                                 </div>
-                                <div class="chat-list" id="read-tittle">
-                                    <span class="chat-title">已读消息</span>
+                                <div class="chat-list">
+                                    <span class="chat-title" id="read-tittle">已读消息</span>
                                     {% for k,v in request.session.messageFlow.read.items %}
                                     <a href="javascript:void(0);" class="right-sidebar-toggle chat-item"
                                         data-sidebar-id="chat-right-sidebar" yid="{{k}}">
@@ -471,7 +470,7 @@
                     $.ajax({
                     url: "/supply/setMessageDetail",
                     type: "get",
-                    data: {"yid":'e0003'},
+                    data: {},
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {
@@ -484,38 +483,12 @@
                 }
             );
 
-            $("#unread-tittle").on("click","a",function () {
-                var yid=$(this).attr("yid");
-                $.ajax({
-                    url: "/supply/setMessageDetail",
-                    type: "get",
-                    data: {"yid":yid},
-                    dataType: "JSON",
-                    success: function (res) {
-                        if (res.status) {
-                            $("#setMessage")[0].innerHTML=res.message;
-                        }
-                        else {
-                        }
-                    }
-                })
+            $("#unread-tittle").on("hover","a",function () {
+                console.log($(this).attr("yid"));
             })
 
-            $("#read-tittle").on("click","a",function () {
-                var yid=$(this).attr("yid");
-                $.ajax({
-                    url: "/supply/setMessageDetail",
-                    type: "get",
-                    data: {"yid":yid},
-                    dataType: "JSON",
-                    success: function (res) {
-                        if (res.status) {
-                            $("#setMessage")[0].innerHTML=res.message;
-                        }
-                        else {
-                        }
-                    }
-                })
+            $("#read-tittle").on("hover","a",function () {
+                console.log($(this).attr("yid"));
             })
         });
 
