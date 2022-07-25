@@ -64,8 +64,10 @@
 
                         <li class="topli" id="supply">
                             <a href="javascript:void(0);">
-                                <i class="menu-icon icon-people"></i><span>供应商管理</span><i
-                                    class="accordion-icon fa fa-angle-left"></i>
+                                <i class="menu-icon icon-people"></i>
+                                <span>供应商管理</span>
+                                <iclass="accordion-icon fa fa-angle-left">
+                                </i>
                             </a>
                             <ul class="sub-menu" id="supply_ul">
                                 <li id="supply1"><a href="/supply/list">维护供应商</a></li>
@@ -165,8 +167,11 @@
                                 </li>
                             </ul>
                             <ul class="nav navbar-nav navbar-right">
-                                <li><a href="javascript:void(0)" class="right-sidebar-toggle"
-                                        data-sidebar-id="main-right-sidebar"><i class="fa fa-envelope"></i></a></li>
+                                <li><a href="javascript:void(0)" class="right-sidebar-toggle" data-sidebar-id="main-right-sidebar">
+                                    <i class="fa fa-envelope">
+                                        <span class="my-badge" id="messageRedPoint">111</span>
+                                    </i>
+                                </a></li>
                                 <li class="dropdown user-dropdown">
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
                                         aria-haspopup="true" aria-expanded="false">{{ request.session.info.name }}</a>
@@ -457,6 +462,12 @@
                     success: function (res) {
                         if (res.status) {
                             $("#chat")[0].innerHTML = res.setList;
+                            var pre=$("#messageRedPoint").text();
+                            $("#messageRedPoint").text(res.count);
+                            if((res.count==0 && pre!=0)||(res.count!=0&&pre==0))
+                            {
+                                $("#messageRedPoint").toggleClass("my-hiden");
+                            }
                         } else {
                         }
                     }
@@ -478,7 +489,7 @@
                             $("#setMessage")[0].innerHTML = res.message;
                             $('#chatDetailName').text(res.who);
                             $('#chatDetailTime').text(res.when);
-                            $("#chat")[0].innerHTML = res.setList;
+                            setMessageList();
                             if($("#chat-right-sidebar").attr("class")=="page-right-sidebar")
                             {
                                 $("#chat-right-sidebar").toggleClass('visible');

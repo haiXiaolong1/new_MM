@@ -76,3 +76,23 @@
     color: grey;
     text-align: center;
 }
+
+/* 消息提醒红点 */
+.my-badge{
+    display: inline;
+    min-width: 8px;
+    padding: 1px 5px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #fff;
+    line-height: 1;
+    vertical-align: super;
+    white-space: nowrap;
+    text-align: center;
+    background-color: #e41212;
+    border-radius: 10px;
+}
+
+.my-hiden{
+    display: none;
+}
