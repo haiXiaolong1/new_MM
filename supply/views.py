@@ -120,12 +120,13 @@ def add_group(group):
 def set_message_detail(request):
     yid=request.GET.get("yid")
     me=request.GET.get("meid")
+    who=models.Yuangong.objects.filter(id=yid).first().username
     flow=all_message(me=me,them=yid)
     groups=group_by_time(flow)
     out=""
     for g in groups.values():
         out+=add_group(g)
-    return JsonResponse({"status":True,"message":out})
+    return JsonResponse({"status":True,"message":out,"who":who,"when":"发信状态"})
 
 # 登录功能
 def login(request):

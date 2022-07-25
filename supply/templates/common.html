@@ -267,8 +267,8 @@
                 <div class="page-right-sidebar-inner">
                     <div class="right-sidebar-top">
                         <div class="chat-top-info">
-                            <span class="chat-name">发信人</span>
-                            <span class="chat-state">发信时间</span>
+                            <span class="chat-name" id="chatDetailName">发信人</span>
+                            <span class="chat-state" id="chatDetailTime">发信时间</span>
                         </div>
                         <a href="javascript:void(0)" class="right-sidebar-toggle chat-sidebar-close pull-right"
                             data-sidebar-id="chat-right-sidebar"><i class="icon-keyboard_arrow_right"></i></a>
@@ -308,6 +308,7 @@
                         </div>
                         <div class="chat-write">
                             <form class="form-horizontal" action="javascript:void(0);">
+                                {% csrf_token %}
                                 <input type="text" class="form-control" placeholder="在这里输入新消息">
                             </form>
                         </div>
@@ -486,6 +487,8 @@
                     success: function (res) {
                         if (res.status) {
                             $("#setMessage")[0].innerHTML = res.message;
+                            $('#chatDetailName').text(res.who);
+                            $('#chatDetailTime').text(res.when);
                         } else {
                         }
                     }
