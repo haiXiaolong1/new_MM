@@ -71,9 +71,8 @@
                             </a>
                             <ul class="sub-menu" id="supply_ul">
                                 <li id="supply1"><a href="/supply/list">维护供应商</a></li>
-                                <li id="supply2"><a href="/supply/mm/list">维护物料</a></li>
-                                <li id="supply3"><a href="/supply/material/list">维护物料关系</a></li>
-                                <li id="supply4"><a href="/supply/quote/list">维护报价单</a></li>
+                                <li id="supply2"><a href="/supply/material/list">维护物料关系</a></li>
+                                <li id="supply3"><a href="/supply/quote/list">维护报价单</a></li>
                             </ul>
                         </li>
                         <li class="topli" id="purchase">
@@ -105,13 +104,22 @@
                             </ul>
                         </li>
                         {% if request.session.info.office == "0" %}
-                            <li class="topli" id="account">
+                        <li class="topli" id="account">
                             <a href="javascript:void(0);">
                                 <i class="menu-icon icon-command"></i><span>权限管理</span><i
                                     class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul class="sub-menu" id="account_ul">
                                 <li class="subMenu" id="account_documents"><a href="/account/ac/list/">用户管理</a></li>
+                            </ul>
+                        </li>
+                        <li class="topli" id="init">
+                            <a href="javascript:void(0);">
+                                <i class="menu-icon icon-command"></i><span>基础设置</span><i
+                                    class="accordion-icon fa fa-angle-left"></i>
+                            </a>
+                            <ul class="sub-menu" id="init_ul">
+                                <li class="subMenu" id="init_documents"><a href="/supply/mm/list">物料维护</a></li>
                             </ul>
                         </li>
                         {% endif %}
