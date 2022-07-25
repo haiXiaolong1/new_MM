@@ -30,4 +30,6 @@ urlpatterns = [
     path('setMessageList', views.url_set_message_list),
     path('sendTestMessage', views.send_test_message),
     path('sendMessage', views.send_message),
+
+    path('supply_excel', views.supply_excel),
 ]
