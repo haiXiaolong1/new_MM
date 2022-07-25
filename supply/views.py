@@ -149,9 +149,15 @@ def set_chart_group(flow):
         out+=add_chart_group("暂无消息")
     return out
 
+def url_set_message_list(request):
+    me = request.GET.get("meid")
+    set_list = set_chart_group(all_message_by_user(None, me))
+    return JsonResponse({"status": True, "setList": set_list})
+
 def set_message_detail(request):
     yid=request.GET.get("yid")
     me=request.GET.get("meid")
+    print("!!!!!!!!!!!!111")
     who=models.Yuangong.objects.filter(id=yid).first().username
     unread=models.Xiaoxi.objects.filter(toId=me,fromId=yid,read=0).all().count()
     models.Xiaoxi.objects.filter(toId=me,fromId=yid).update(read=1)
@@ -194,6 +200,7 @@ def login(request):
     request.session["info"]={"name":ins.username,"id":ins.id,"issuper":ins.issuper
         ,"office":ins.office,"business":ins.businessid.name}
     request.session["messageFlow"] = all_message_by_user(None,ins.id)
+    print(request.session["messageFlow"])
     return JsonResponse({"status":True})
 
 #登出功能

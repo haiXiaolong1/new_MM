@@ -28,5 +28,5 @@ urlpatterns = [
     path('checkMessage', views.check_message),
     path('allMessage', views.all_message),
     path('setMessageDetail',views.set_message_detail),
-
+    path('setMessageList', views.url_set_message_list),
 ]
