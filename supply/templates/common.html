@@ -101,9 +101,9 @@
                                 <li id="inventory_receive"><a href="/inventory/receive/">收货管理</a></li>
                                 <li id="inventory_invoice"><a href="/inventory/invoice/">发票</a></li>
                             </ul>
-                            {% if request.session.info.office == "管理员" %}
                         </li>
-                        <li class="topli" id="account">
+                        {% if request.session.info.office == "0" %}
+                            <li class="topli" id="account">
                             <a href="javascript:void(0);">
                                 <i class="menu-icon icon-command"></i><span>权限管理</span><i
                                     class="accordion-icon fa fa-angle-left"></i>

@@ -24,7 +24,16 @@ class Wuliao(models.Model):
 
 class Yuangong(models.Model):
     id = models.CharField(primary_key=True, max_length=40)
-    office = models.CharField(max_length=20, blank=True, null=True)
+    choices=(
+        ("0","系统管理员"),
+        ("1","供应商员工"),
+        ("2","采购员工"),
+        ("3","库存员工"),
+        ("4","采购经理"),
+        ("5","库存经理"),
+        ("6","生产经理"),
+    )
+    office = models.CharField(max_length=20, blank=True, null=True,choices=choices)
     password = models.CharField(max_length=40, blank=True, null=True)
     username = models.CharField(max_length=40, blank=True, null=True)
     choices1=(

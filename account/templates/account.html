@@ -41,15 +41,24 @@
                                         <form method="post" id="formAdd">
                                             {% csrf_token %}
                                             <div class="form-group">
-                                                <input type="text"  class="form-control" placeholder="员工职位" name="office" id="office" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="text"  class="form-control" placeholder="账号" name="username" id="username" required>
+                                                <input type="text"  class="form-control" placeholder="姓名" name="username" id="username" required>
                                             </div>
                                             <div class="form-group">
                                                 <input type="text"  class="form-control" placeholder="密码" name="password" id="password" required>
                                             </div>
-
+                                            <div class="form-group">
+                                                <label>职位</label>
+                                                <div>
+                                                    <select  class="form-control" name="office" id="office">
+                                                        <option value="1">供应商员工</option>
+                                                        <option value="2">采购员工</option>
+                                                        <option value="3">库存员工</option>
+                                                        <option value="4">采购经理</option>
+                                                        <option value="5">库存经理</option>
+                                                        <option value="6">生产经理</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="form-group">
                                                 <label>是否激活？</label>
                                                 <div>
@@ -132,7 +141,7 @@
                                 {% for obj in queryset %}
                                 <tr>
                                     <td>{{ obj.id }}</td>
-                                    <td>{{ obj.office }}</td>
+                                    <td>{{ obj.get_office_display }}</td>
                                     <td>{{ obj.username }}</td>
                                     <td>{{ obj.password }}</td>
                                     {% if obj.isactive == 0 %}

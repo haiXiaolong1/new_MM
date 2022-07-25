@@ -26,8 +26,9 @@
                                 </div>
                             </div>
 
-
+                            {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
                             <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加</button>
+                            {% endif %}
                             <!-- 新建/编辑对话框 -->
 
                             <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -98,7 +99,7 @@
                                         <th>销售渠道</th>
                                         <th>计量方式</th>
                                         <th>描述</th>
-                                        {% if  request.session.info.issuper %}
+                                        {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
                                         <th>操作</th>
                                         {% endif %}
                                     </tr>
@@ -113,7 +114,7 @@
                                             <td>{{ obj.calcutype }}</td>
                                             <td>{{ obj.desc }}</td>
 {#                                        判断是否是管理员，普通员工只能查看,可以优化，其他页面同样#}
-                                            {% if  request.session.info.issuper %}
+                                            {% if   request.session.info.office == "1" or request.session.info.office == "0" %}
                                             <td>
                                                 <button class="btn btn-primary btn-xs btnEdit" id="" uid="{{ obj.id }}">编辑</button>
                                                 <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>

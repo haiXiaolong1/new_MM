@@ -91,7 +91,7 @@
                                         <th>修改时间</th>
                                         <th>创建人</th>
                                         <th>修改人</th>
-                                        {% if  request.session.info.issuper %}
+                                        {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
                                         <th>操作</th>
                                         {% endif %}
                                     </tr>
@@ -107,7 +107,7 @@
                                             <td>{{ obj.createnumberid.username }}</td>
                                             <td>{{ obj.updatenumberid.username }}</td>
 {#                                        判断是否是管理员，普通员工只能查看,可以优化，其他页面同样#}
-                                            {% if  request.session.info.issuper %}
+                                            {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
                                             <td>
                                                 <button class="btn btn-primary btn-xs btnEdit" id="" uid="{{ obj.id }}">编辑</button>
                                                 <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>

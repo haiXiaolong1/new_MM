@@ -13,17 +13,21 @@
                             <h4 class="panel-title">供应关系列表</h4>
                         </div>
                         <div>
+                            {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
 
                             <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加</button>
+                           {% endif %}
                             <!-- 新建/编辑对话框 -->
 
                             <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
+                                        {% if  request.session.info.office == 1 or request.session.info.office == 0 %}
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                                             <h4 class="modal-title" id="myModalLabel">新建供应关系</h4>
                                         </div>
+                                        {% endif %}
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
@@ -88,7 +92,9 @@
                                         <th>修改时间</th>
                                         <th>创建人</th>
                                         <th>修改人</th>
+                                        {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
                                         <th>操作</th>
+                                        {% endif %}
                                     </tr>
                                     </thead>
                                     <tbody id="table">
@@ -101,10 +107,12 @@
                                             <td>{{ obj.updatetime|date:"Y-m-d H:i:s" }}</td>
                                             <td>{{ obj.createid.username }}</td>
                                             <td>{{ obj.updateid.username }}</td>
+                                            {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
                                             <td>
                                                 <button class="btn btn-primary btn-xs btnEdit" id="" uid="{{ obj.id }}">编辑</button>
                                                 <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>
                                             </td>
+                                            {% endif %}
                                         </tr>
                                     {% endfor %}
                                     </tbody>

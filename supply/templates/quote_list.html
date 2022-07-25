@@ -68,7 +68,9 @@
                                         <th>公司编号</th>
                                         <th>报价</th>
                                         <th>有效期</th>
+                                        {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
                                         <th>操作</th>
+                                        {% endif %}
                                     </tr>
                                     </thead>
                                     <tbody id="table">
@@ -85,6 +87,7 @@
                                             <td>{{ obj.bussid_id }}</td>
                                             <td>{{ obj.quote }}</td>
                                             <td>{{ obj.validitytime|date:"Y-m-d H:i:s"  }}</td>
+                                            {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
                                             <td>
                                                 {% if obj.inquiryid_id == obj.quoteid %}
                                                     <button class="btn btn-primary btn-xs btnQuote"  uid="{{ obj.inquiryid_id }}">报价</button>
@@ -94,6 +97,7 @@
                                                     <button class="btn btn-danger btn-xs btnDelete"  uid="{{ obj.quoteid }}">删除</button>
                                                 {% endif %}
                                             </td>
+                                            {% endif %}
                                         </tr>
                                     {% endfor %}
                                     </tbody>
