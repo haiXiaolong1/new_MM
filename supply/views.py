@@ -45,7 +45,7 @@ def ambu_time(time):
     now=int(datetime.now().strftime("%Y%m%d%H"))
     com=int(time.strftime("%Y%m%d%H"))
     if now-com>18:
-        return time.strftime("%m月%d日")
+        return time.strftime("%m{m}%d{d}").format(m="月",d="日")
     return time.strftime("%H:%M")
 
 def all_message_by_user(request,me="e0002"):
@@ -81,7 +81,7 @@ def all_message(them='e0003',me='e0002'):
     for i in froms:
         message_flow.append({"isThem":True,"time":i.time.strftime("%m{m}%d{d} %H:%M:%S").format(m="月",d="日"),"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     for i in tos:
-        message_flow.append({"isThem":False,"time":i.time.strftime("%m月%d日 %H:%M:%S"),"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
+        message_flow.append({"isThem":False,"time":i.time.strftime("%m{m}%d{d} %H:%M:%S").format(m="月",d="日"),"text":i.context,"compare":int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     message_flow=sorted(message_flow,key=lambda a: a["compare"])
     flow = {"who": who, "flow": message_flow}
     return flow
