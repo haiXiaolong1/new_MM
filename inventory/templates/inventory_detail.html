@@ -34,7 +34,7 @@
                 </div>
                 <div class="col-md-6">
                     <div class="panel panel-white">
-                        <div class="panel-body " >
+                        <div class="panel-body ">
                             <div id="chart1" style="width: 100%;height:400px;"></div>
                         </div>
                     </div>
@@ -51,25 +51,25 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
         var EDIT_ID;
         var DELETE_ID;
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#inventory_display').addClass('active-page');
             $('#inventory').addClass('active-page').addClass('open');
-            $('#inventory_ul').css('display','block');
+            $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
 
             {#console.log({{datelist|safe}});#}
             {#图表#}
             var myChart = echarts.init(document.getElementById('chart1'));
-            var legenddata,xdata,sdata;
+            var legenddata, xdata, sdata;
             // 指定图表的配置项和数据
-            legenddata=['数量（计量单位：{{ now.maid.calcutype }}）'];
-            xdata=['在途库存','暂存库存','未限制使用库存','冻结库存'];
-            sdata=[
+            legenddata = ['数量（计量单位：{{ now.maid.calcutype }}）'];
+            xdata = ['在途库存', '暂存库存', '未限制使用库存', '冻结库存'];
+            sdata = [
                 {
                     'name': '数量（计量单位：{{ now.maid.calcutype }}）',
                     'type': 'bar',
@@ -78,13 +78,13 @@
             var option = {
                 title: {
                     text: '{{ now.maid_id }}库存信息',
-                    left:"center"
+                    left: "center"
 
                 },
                 tooltip: {},
                 legend: {
-                    data:legenddata ,
-                    bottom:0
+                    data: legenddata,
+                    bottom: 0
                 },
                 xAxis: {
                     data: xdata
@@ -97,11 +97,11 @@
             myChart.setOption(option);
 
             var myChart2 = echarts.init(document.getElementById('chart2'));
-            var legenddata2,xdata2,sdata2;
+            var legenddata2, xdata2, sdata2;
             // 指定图表的配置项和数据
-            legenddata2=['在途库存','暂存库存','未限制使用库存','冻结库存'];
-            xdata2={{ datelist|safe }};
-            sdata2=[
+            legenddata2 = ['在途库存', '暂存库存', '未限制使用库存', '冻结库存'];
+            xdata2 ={{ datelist|safe }};
+            sdata2 = [
                 {
                     'name': '在途库存',
                     'type': 'line',
@@ -126,13 +126,13 @@
             var option2 = {
                 title: {
                     text: '{{ now.maid_id }}库存历史信息',
-                    left:"center"
+                    left: "center"
 
                 },
                 tooltip: {},
                 legend: {
-                    data:legenddata2 ,
-                    bottom:0
+                    data: legenddata2,
+                    bottom: 0
                 },
                 xAxis: {
                     data: xdata2
@@ -150,22 +150,22 @@
             {#            "labels":{{ datelist|safe }},#}
             {#            "datasets":[#}
             {#                {"label":"在途库存",#}
-                            {#"borderColor":"rgb(99, 203, 137)",#}
+            {#"borderColor":"rgb(99, 203, 137)",#}
             {#                "data":{{ l1 }},#}
             {#                "fill":false,#}
             {#                "lineTension":0.1},#}
             {#                {"label":"暂存库存",#}
-                                {#"borderColor":"rgb(99, 203, 137)",#}
+            {#"borderColor":"rgb(99, 203, 137)",#}
             {#                    "data":{{ l2 }},#}
             {#                    "fill":false,#}
             {#                    "lineTension":0.1},#}
             {#                {"label":"未限制使用库存",#}
-                                {#"borderColor":"rgb(99, 203, 137)",#}
+            {#"borderColor":"rgb(99, 203, 137)",#}
             {#                    "data":{{ l3 }},#}
             {#                    "fill":false,#}
             {#                    "lineTension":0.1},#}
             {#                {"label":"冻结库存",#}
-                                {#"borderColor":"rgb(99, 203, 137)",#}
+            {#"borderColor":"rgb(99, 203, 137)",#}
             {#                    "data":{{ l4 }},#}
             {#                    "fill":false,#}
             {#                    "lineTension":0.1},#}

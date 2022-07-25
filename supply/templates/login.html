@@ -1,4 +1,3 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -23,11 +22,12 @@
     <link href={% static 'plugins/switchery/switchery.min.css' %} rel="stylesheet"/>
 
     <!-- Theme Styles -->
-    <link rel="stylesheet" href={% static 'css/ecaps.min.css' %} >
+    <link rel="stylesheet" href={% static 'css/ecaps.min.css' %}>
     <link href={% static 'css/custom.css' %} rel="stylesheet">
 
     <link href={% static 'plugins/datatables/css/jquery.datatables.min.css' %} rel="stylesheet" type="text/css"/>
-    <link href={% static 'plugins/datatables/css/jquery.datatables_themeroller.css' %} rel="stylesheet" type="text/css"/>
+    <link href={% static 'plugins/datatables/css/jquery.datatables_themeroller.css' %} rel="stylesheet"
+          type="text/css"/>
     <link href={% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %} rel="stylesheet" type="text/css"/>
 
     <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
@@ -37,18 +37,21 @@
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
     <style>
-        .log-button,.form-group{
+        .log-button, .form-group {
             width: 20%;
             margin-left: 40%;
         }
-        .login-box{
+
+        .login-box {
             width: 100%;
             padding-top: 10%;
         }
-        .login-title{
+
+        .login-title {
             margin-left: 45%;
         }
-        .btn{
+
+        .btn {
             width: 100%;
             margin-bottom: 20px;
             margin-top: 15px;
@@ -96,27 +99,26 @@
 <script src={% static 'plugins/datatables/js/jquery.datatables.min.js' %}></script>
 <script src={% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
 <script type="text/javascript">
-    $(document).ready(function() {
+    $(document).ready(function () {
 
         $("#btnLogin").click(function () {
 
             $("#username_error").text("")
             $("#password_error").text("")
-                $.ajax({
-                    url:"/login/",
-                    type:"post",
-                    data:$("#formAdd").serialize(),
-                    dataType:"JSON",
-                    success:function (res){
-                        if(res.status){
-                            top.location.href = "/supply/list/";
-                        }
-                        else{
-                            $("#username_error").text(res.errors[0])
-                            $("#password_error").text(res.errors[1])
-                        }
+            $.ajax({
+                url: "/login/",
+                type: "post",
+                data: $("#formAdd").serialize(),
+                dataType: "JSON",
+                success: function (res) {
+                    if (res.status) {
+                        top.location.href = "/supply/list/";
+                    } else {
+                        $("#username_error").text(res.errors[0])
+                        $("#password_error").text(res.errors[1])
                     }
-                })
+                }
+            })
 
         })
 

@@ -18,38 +18,44 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
                                             <h4 class="modal-title" id="myModalLabel">报价</h4>
                                         </div>
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
                                                 <div class="form-group">
-                                                    <input type="number"  class="form-control" placeholder="价格" name="quote" id="quote" required>
+                                                    <input type="number" class="form-control" placeholder="价格"
+                                                           name="quote" id="quote" required>
                                                     <a class="formError" id="quote_error"></a>
                                                 </div>
                                             </form>
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="btnSave" class="btn btn-success">保存</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" >删除报价单</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">删除报价单</h4>
                                         </div>
                                         <div class="modal-body">
                                             <span>是否确定删除？</span>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="Delete" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
@@ -69,7 +75,7 @@
                                         <th>报价</th>
                                         <th>有效期</th>
                                         {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
-                                        <th>操作</th>
+                                            <th>操作</th>
                                         {% endif %}
                                     </tr>
                                     </thead>
@@ -77,7 +83,7 @@
                                     {% for obj in queryset %}
                                         <tr>
                                             <td>
-                                                {% if obj.quoteid != obj.inquiryid_id%}
+                                                {% if obj.quoteid != obj.inquiryid_id %}
                                                     {{ obj.quoteid }}
                                                 {% endif %}
                                             </td>
@@ -86,17 +92,23 @@
                                             <td>{{ obj.supplyid_id }}</td>
                                             <td>{{ obj.bussid_id }}</td>
                                             <td>{{ obj.quote }}</td>
-                                            <td>{{ obj.validitytime|date:"Y-m-d H:i:s"  }}</td>
+                                            <td>{{ obj.validitytime|date:"Y-m-d H:i:s" }}</td>
                                             {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
-                                            <td>
-                                                {% if obj.inquiryid_id == obj.quoteid %}
-                                                    <button class="btn btn-primary btn-xs btnQuote"  uid="{{ obj.inquiryid_id }}">报价</button>
-                                                {% elif obj.isreceived == 0 %}
-                                                    <button class="btn btn-primary btn-xs btnEdit"  uid="{{ obj.quoteid }}">修改报价</button>
-                                                {% elif obj.isreceived != 1 %}
-                                                    <button class="btn btn-danger btn-xs btnDelete"  uid="{{ obj.quoteid }}">删除</button>
-                                                {% endif %}
-                                            </td>
+                                                <td>
+                                                    {% if obj.inquiryid_id == obj.quoteid %}
+                                                        <button class="btn btn-primary btn-xs btnQuote"
+                                                                uid="{{ obj.inquiryid_id }}">报价
+                                                        </button>
+                                                    {% elif obj.isreceived == 0 %}
+                                                        <button class="btn btn-primary btn-xs btnEdit"
+                                                                uid="{{ obj.quoteid }}">修改报价
+                                                        </button>
+                                                    {% elif obj.isreceived != 1 %}
+                                                        <button class="btn btn-danger btn-xs btnDelete"
+                                                                uid="{{ obj.quoteid }}">删除
+                                                        </button>
+                                                    {% endif %}
+                                                </td>
                                             {% endif %}
                                         </tr>
                                     {% endfor %}
@@ -112,20 +124,20 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
-        var QUOTE_ID,DELETE_ID,EDIT_ID;
-        $(document).ready(function() {
+        var QUOTE_ID, DELETE_ID, EDIT_ID;
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#supply3').addClass('active-page');
             $('#supply').addClass('active-page').addClass('open');
-            $('#supply_ul').css('display','block');
+            $('#supply_ul').css('display', 'block');
             $('#supply_ul li').addClass('animation');
 
-            var showToast=localStorage.getItem("notify_show");
-            if(showToast!=undefined){
-                if(showToast){
-                    if(showToast != "false"){
+            var showToast = localStorage.getItem("notify_show");
+            if (showToast != undefined) {
+                if (showToast) {
+                    if (showToast != "false") {
                         $("#toast-type").text(localStorage.getItem("notify_type"));
                         $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
                         $("#toast-context").text(localStorage.getItem("notify_context"));
@@ -135,47 +147,47 @@
             }
 
             $("#btnSave").click(function () {
-                if(!EDIT_ID){
+                if (!EDIT_ID) {
                     $.ajax({
-                        url:"/supply/quote/add/"+"?inid="+QUOTE_ID,
-                        type:"post",
-                        data:$("#formAdd").serialize(),
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","报价成功");
-                                localStorage.setItem("notify_type","success");
+                        url: "/supply/quote/add/" + "?inid=" + QUOTE_ID,
+                        type: "post",
+                        data: $("#formAdd").serialize(),
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "报价成功");
+                                localStorage.setItem("notify_type", "success");
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
                                 location.reload();
-                                EDIT_ID=undefined;
+                                EDIT_ID = undefined;
+                            } else {
+                                $("#quote_error").text(res.error[0]);
                             }
-                            else{
-                            $("#quote_error").text(res.error[0]);}
                         }
 
                     })
-                }else {
+                } else {
                     $.ajax({
-                        url:"/supply/quote/edit/"+"?quid="+EDIT_ID,
-                        type:"post",
-                        data:$("#formAdd").serialize(),
-                        dataType:"JSON",
-                        success:function (res){
-                            res=JSON.parse(res);
-                            if(res.status){
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","修改报价成功");
-                                localStorage.setItem("notify_type","success");
+                        url: "/supply/quote/edit/" + "?quid=" + EDIT_ID,
+                        type: "post",
+                        data: $("#formAdd").serialize(),
+                        dataType: "JSON",
+                        success: function (res) {
+                            res = JSON.parse(res);
+                            if (res.status) {
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "修改报价成功");
+                                localStorage.setItem("notify_type", "success");
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
                                 location.reload();
+                            } else {
+                                $("#quote_error").text(res.error[0]);
                             }
-                            else{
-                            $("#quote_error").text(res.error[0]);}
                         }
 
                     })
@@ -183,17 +195,17 @@
             })
 
             {#动态增加点击事件#}
-            $("#table").on('click','.btnQuote',function () {
+            $("#table").on('click', '.btnQuote', function () {
                 $("#quote_error").text("")
-                var curid=$(this).attr("uid");
-                QUOTE_ID=curid;
+                var curid = $(this).attr("uid");
+                QUOTE_ID = curid;
                 $("#myModalLabel").text("进行报价")
                 $("#formAdd")[0].reset();
                 $("#myd").modal('show');
             })
 
-            $("#table").on('click','.btnDelete',function () {
-                DELETE_ID=$(this).attr("uid");
+            $("#table").on('click', '.btnDelete', function () {
+                DELETE_ID = $(this).attr("uid");
                 $("#quote_error").text("")
                 $("#deleteModel").modal('show');
             })
@@ -201,43 +213,42 @@
             $("#Delete").click(
                 function () {
                     $.ajax({
-                        url:"/purchase/quote/delete/",
-                        type:"get",
-                        data:{uid:DELETE_ID},
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","成功删除报价单");
-                                localStorage.setItem("notify_type","info");
+                        url: "/purchase/quote/delete/",
+                        type: "get",
+                        data: {uid: DELETE_ID},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "成功删除报价单");
+                                localStorage.setItem("notify_type", "info");
                                 $("#deleteModel").modal('hide');
-                                DELETE_ID=undefined;
+                                DELETE_ID = undefined;
                                 location.reload();
-                            }
-                            else {
+                            } else {
                             }
                         }
                     })
                 }
             )
 
-            $("#table").on('click','.btnEdit',function () {
-                var curid=$(this).attr("uid");
+            $("#table").on('click', '.btnEdit', function () {
+                var curid = $(this).attr("uid");
                 $("#quote_error").text("")
-                EDIT_ID=curid;
+                EDIT_ID = curid;
                 $("#formAdd")[0].reset();
                 $.ajax({
-                    url:"/supply/quote/detail/",
+                    url: "/supply/quote/detail/",
                     type: "get",
-                    data:{uid:curid},
+                    data: {uid: curid},
                     dataType: "JSON",
-                    success:function (res) {
-                        if(res.status){
+                    success: function (res) {
+                        if (res.status) {
                             $("#quote").val(res.quote)
                             $("#myModalLabel").text("修改报价")
                             $("#myd").modal('show');
-                        }else {
+                        } else {
 
                         }
                     }

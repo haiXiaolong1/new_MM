@@ -38,7 +38,8 @@
                                             <td>{{ obj.inventoryfreeze }}</td>
                                             <td>{{ obj.updatetime|date:"Y-m-d H:i:s" }}</td>
                                             <td>
-                                                <a class="btn btn-primary btn-xs" href="/inventory/{{ obj.id }}/detail/">查看详情</a>
+                                                <a class="btn btn-primary btn-xs"
+                                                   href="/inventory/{{ obj.id }}/detail/">查看详情</a>
 
                                             </td>
                                         </tr>
@@ -55,15 +56,15 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
         var EDIT_ID;
         var DELETE_ID;
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#inventory_display').addClass('active-page');
             $('#inventory').addClass('active-page').addClass('open');
-            $('#inventory_ul').css('display','block');
+            $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
             {#图表#}
 

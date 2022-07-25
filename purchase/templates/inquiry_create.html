@@ -15,13 +15,16 @@
                         <div class="panel-body container">
                             <form method="get">
                                 <div class="col-md-2">
-                                    <input type="text" class="form-control" placeholder="输入请购单号" name="did" value="{{ did }}">
+                                    <input type="text" class="form-control" placeholder="输入请购单号" name="did"
+                                           value="{{ did }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" class="form-control" placeholder="输入工厂编号" name="fid" value="{{ fid }}">
+                                    <input type="text" class="form-control" placeholder="输入工厂编号" name="fid"
+                                           value="{{ fid }}">
                                 </div>
                                 <div class="col-md-2">
-                                    <input type="text" class="form-control" placeholder="输入物料编号" name="mid" value="{{ mid }}">
+                                    <input type="text" class="form-control" placeholder="输入物料编号" name="mid"
+                                           value="{{ mid }}">
                                 </div>
                                 <button class="btn btn-success" type="submit">搜索</button>
                             </form>
@@ -64,9 +67,11 @@
                                             <td>{{ obj.facid_id }}</td>
                                             <td>{{ obj.price }}</td>
                                             <td>{{ obj.tcount }}</td>
-                                             {% load myfilter %}
-                                            <td><a class={{obj.status|table_status:"cgxq"}}>{{ obj.get_status_display }}</a></td>
-                                            <td>{{ obj.createtime|date:"Y-m-d H:i:s"  }}</td>
+                                            {% load myfilter %}
+                                            <td>
+                                                <a class={{ obj.status|table_status:"cgxq" }}>{{ obj.get_status_display }}</a>
+                                            </td>
+                                            <td>{{ obj.createtime|date:"Y-m-d H:i:s" }}</td>
                                             <td>{{ obj.verifytime|date:"Y-m-d H:i:s" }}</td>
                                             <td>{{ obj.createuserid.username }}</td>
                                             <td>{{ obj.verifyuserid.username }}</td>
@@ -74,11 +79,13 @@
                                             {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
                                                 {% if obj.status == 1 %}
                                                     <td>
-                                                        <a class="btn btn-primary btn-xs btnCite" href="/purchase/inquiry/{{ obj.demandid }}/create/">引用</a>
+                                                        <a class="btn btn-primary btn-xs btnCite"
+                                                           href="/purchase/inquiry/{{ obj.demandid }}/create/">引用</a>
                                                     </td>
                                                 {% else %}
                                                     <td>
-                                                        <a class="btn btn-info btn-xs btnVerify" href="/purchase/toVerify/{{ obj.demandid }}/">去审核</a>
+                                                        <a class="btn btn-info btn-xs btnVerify"
+                                                           href="/purchase/toVerify/{{ obj.demandid }}/">去审核</a>
                                                     </td>
                                                 {% endif %}
                                             {% endif %}
@@ -95,19 +102,19 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
         var VERIFY_ID;
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#purchase_create_inquiry').addClass('active-page');
             $('#purchase').addClass('active-page').addClass('open');
-            $('#purchase_ul').css('display','block');
+            $('#purchase_ul').css('display', 'block');
             $('#purchase_ul li').addClass('animation');
 
             $('#search').dataTable({
-                "searching":false,
-                "lengthMenu": [5,10, 15, 20],
+                "searching": false,
+                "lengthMenu": [5, 10, 15, 20],
                 "language": {
                     "processing": "正在加载中......",
                     "lengthMenu": "每页显示 _MENU_ 条记录",

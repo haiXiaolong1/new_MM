@@ -15,36 +15,40 @@
                         <div>
                             {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
 
-                            <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加</button>
-                           {% endif %}
+                                <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加
+                                </button>
+                            {% endif %}
                             <!-- 新建/编辑对话框 -->
 
                             <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         {% if  request.session.info.office == 1 or request.session.info.office == 0 %}
-                                        <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" id="myModalLabel">新建供应关系</h4>
-                                        </div>
+                                            <div class="modal-header">
+                                                <button type="button" class="close" data-dismiss="modal"
+                                                        aria-label="Close"><span aria-hidden="true">&times;</span>
+                                                </button>
+                                                <h4 class="modal-title" id="myModalLabel">新建供应关系</h4>
+                                            </div>
                                         {% endif %}
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
                                                 <div class="form-group">
-                                                    <select class="form-control"  name="supplyid" id="supplyid_id">
+                                                    <select class="form-control" name="supplyid" id="supplyid_id">
                                                         <option value selected>供应商编号</option>
                                                         {% for s in supply %}
-                                                        <option value="{{ s.id }}">{{ s.id }}</option>
+                                                            <option value="{{ s.id }}">{{ s.id }}</option>
                                                         {% endfor %}
                                                     </select>
                                                     <span class="formError" id="supplyid_id_error"></span>
                                                 </div>
                                                 <div class="form-group">
-                                                    <select class="form-control"  name="materialid" id="materialid_id">
+                                                    <select class="form-control" name="materialid" id="materialid_id">
                                                         <option value selected>物料编号</option>
                                                         {% for m in material %}
-                                                            <option value="{{ m.id }}" id="{{ m.id }}">{{ m.id }}</option>
+                                                            <option value="{{ m.id }}"
+                                                                    id="{{ m.id }}">{{ m.id }}</option>
                                                         {% endfor %}
                                                     </select>
                                                     <a class="formError" id="materialid_id_error"></a>
@@ -53,7 +57,8 @@
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="btnSave" class="btn btn-success">保存</button>
                                         </div>
                                     </div>
@@ -61,18 +66,21 @@
                             </div>
 
                             {#                            删除对话框#}
-                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" >删除供应关系</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">删除供应关系</h4>
                                         </div>
                                         <div class="modal-body">
                                             <span>是否确定删除？</span>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="Delete" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
@@ -93,7 +101,7 @@
                                         <th>创建人</th>
                                         <th>修改人</th>
                                         {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
-                                        <th>操作</th>
+                                            <th>操作</th>
                                         {% endif %}
                                     </tr>
                                     </thead>
@@ -103,15 +111,19 @@
                                             <td>{{ obj.supplyid_id }}</td>
                                             <td>{{ obj.materialid_id }}</td>
                                             <td>{{ obj.materialid.desc }}</td>
-                                            <td>{{ obj.createtime|date:"Y-m-d H:i:s"  }}</td>
+                                            <td>{{ obj.createtime|date:"Y-m-d H:i:s" }}</td>
                                             <td>{{ obj.updatetime|date:"Y-m-d H:i:s" }}</td>
                                             <td>{{ obj.createid.username }}</td>
                                             <td>{{ obj.updateid.username }}</td>
                                             {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
-                                            <td>
-                                                <button class="btn btn-primary btn-xs btnEdit" id="" uid="{{ obj.id }}">编辑</button>
-                                                <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>
-                                            </td>
+                                                <td>
+                                                    <button class="btn btn-primary btn-xs btnEdit" id=""
+                                                            uid="{{ obj.id }}">编辑
+                                                    </button>
+                                                    <button class="btn btn-danger btn-xs btnDelete" id=""
+                                                            uid="{{ obj.id }}">删除
+                                                    </button>
+                                                </td>
                                             {% endif %}
                                         </tr>
                                     {% endfor %}
@@ -127,21 +139,21 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
         var EDIT_ID;
         var DELETE_ID;
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#supply2').addClass('active-page');
             $('#supply').addClass('active-page').addClass('open');
-            $('#supply_ul').css('display','block');
+            $('#supply_ul').css('display', 'block');
             $('#supply_ul li').addClass('animation');
 
-            var showToast=localStorage.getItem("notify_show");
-            if(showToast!=undefined){
-                if(showToast){
-                    if(showToast != "false"){
+            var showToast = localStorage.getItem("notify_show");
+            if (showToast != undefined) {
+                if (showToast) {
+                    if (showToast != "false") {
                         $("#toast-type").text(localStorage.getItem("notify_type"));
                         $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
                         $("#toast-context").text(localStorage.getItem("notify_context"));
@@ -153,81 +165,76 @@
             $("#btnAdd").click(function () {
                 //将正在编辑的ID置空
                 $(".formError").text("");
-                EDIT_ID=undefined;
+                EDIT_ID = undefined;
                 $("#myModalLabel").text("新建供应关系");
                 $("#formAdd")[0].reset();
                 $("#myd").modal('show');
             })
             $("#btnSave").click(function () {
 
-                if(!EDIT_ID){
+                if (!EDIT_ID) {
                     $.ajax({
-                        url:"/supply/material/add/",
-                        type:"post",
-                        data:$("#formAdd").serialize(),
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
+                        url: "/supply/material/add/",
+                        type: "post",
+                        data: $("#formAdd").serialize(),
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
-                                if(!res.isexist){
-                                    localStorage.setItem("notify_show",true);
-                                    localStorage.setItem("notify_tittle","提示");
-                                    localStorage.setItem("notify_context","供应关系添加成功");
-                                    localStorage.setItem("notify_type","success");
-                                }else {
-                                    localStorage.setItem("notify_show",true);
-                                    localStorage.setItem("notify_tittle","错误");
-                                    localStorage.setItem("notify_context","关系已存在，不能重复添加");
-                                    localStorage.setItem("notify_type","error");
+                                if (!res.isexist) {
+                                    localStorage.setItem("notify_show", true);
+                                    localStorage.setItem("notify_tittle", "提示");
+                                    localStorage.setItem("notify_context", "供应关系添加成功");
+                                    localStorage.setItem("notify_type", "success");
+                                } else {
+                                    localStorage.setItem("notify_show", true);
+                                    localStorage.setItem("notify_tittle", "错误");
+                                    localStorage.setItem("notify_context", "关系已存在，不能重复添加");
+                                    localStorage.setItem("notify_type", "error");
                                 }
                                 location.reload();
-                            }else {
-                                var ids=["#supplyid_id_error","#materialid_id_error"];
+                            } else {
+                                var ids = ["#supplyid_id_error", "#materialid_id_error"];
                                 console.log(res)
-                                for(var i=0;i<ids.length;i++)
-                                {
+                                for (var i = 0; i < ids.length; i++) {
                                     $(ids[i]).text("");
-                                    if(res.error[i]!=true)
-                                    {
+                                    if (res.error[i] != true) {
                                         $(ids[i]).text(res.error[i]);
                                     }
-                                 }
+                                }
                             }
                         }
 
                     })
-                }else {
+                } else {
                     $.ajax({
-                        url:"/supply/material/edit/"+"?uid="+EDIT_ID,
-                        type:"post",
-                        data:$("#formAdd").serialize(),
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
+                        url: "/supply/material/edit/" + "?uid=" + EDIT_ID,
+                        type: "post",
+                        data: $("#formAdd").serialize(),
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
-                                if(!res.isexist){
-                                    localStorage.setItem("notify_show",true);
-                                    localStorage.setItem("notify_tittle","提示");
-                                    localStorage.setItem("notify_context","修改保存成功");
-                                    localStorage.setItem("notify_type","success");
-                                }else {
-                                    localStorage.setItem("notify_show",true);
-                                    localStorage.setItem("notify_tittle","提示");
-                                    localStorage.setItem("notify_context","关系已存在，不能重复添加");
-                                    localStorage.setItem("notify_type","error");
+                                if (!res.isexist) {
+                                    localStorage.setItem("notify_show", true);
+                                    localStorage.setItem("notify_tittle", "提示");
+                                    localStorage.setItem("notify_context", "修改保存成功");
+                                    localStorage.setItem("notify_type", "success");
+                                } else {
+                                    localStorage.setItem("notify_show", true);
+                                    localStorage.setItem("notify_tittle", "提示");
+                                    localStorage.setItem("notify_context", "关系已存在，不能重复添加");
+                                    localStorage.setItem("notify_type", "error");
                                 }
                                 location.reload();
-                                EDIT_ID=undefined;
-                            }
-                            else{
-                                var ids=["#supplyid_id_error","#materialid_id_error"];
-                                for(var i=0;i<ids.length;i++)
-                                {
+                                EDIT_ID = undefined;
+                            } else {
+                                var ids = ["#supplyid_id_error", "#materialid_id_error"];
+                                for (var i = 0; i < ids.length; i++) {
                                     $(ids[i]).text("");
-                                    if(res.error[i]!=true)
-                                    {
+                                    if (res.error[i] != true) {
                                         $(ids[i]).text(res.error[i]);
                                     }
                                 }
@@ -241,30 +248,30 @@
 
             })
 
-          //  $(".btnDelete").click(function (){
+            //  $(".btnDelete").click(function (){
 //
             //舍弃静态设置点击事件
-           // })
+            // })
             {#动态增加点击事件#}
-            $("#table").on('click','.btnDelete',function () {
-                DELETE_ID=$(this).attr("uid");
+            $("#table").on('click', '.btnDelete', function () {
+                DELETE_ID = $(this).attr("uid");
                 $("#deleteModel").modal('show');
             })
             $("#Delete").click(
                 function () {
                     $.ajax({
-                        url:"/supply/delete/",
-                        type:"get",
-                        data:{uid:DELETE_ID},
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
+                        url: "/supply/delete/",
+                        type: "get",
+                        data: {uid: DELETE_ID},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
                                 $("#deleteModel").modal('hide');
-                                DELETE_ID=undefined;
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","删除成功");
-                                localStorage.setItem("notify_type","success");
+                                DELETE_ID = undefined;
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "删除成功");
+                                localStorage.setItem("notify_type", "success");
                                 location.reload();
                             }
                         }
@@ -279,32 +286,32 @@
             })
 
              */
-        {#动态事件#}
-            $("#table").on('click','.btnEdit',function () {
-                var curid=$(this).attr("uid");
-                EDIT_ID=curid;
+            {#动态事件#}
+            $("#table").on('click', '.btnEdit', function () {
+                var curid = $(this).attr("uid");
+                EDIT_ID = curid;
                 $("#formAdd")[0].reset();
                 $.ajax({
-                    url:"/supply/material/detail/",
+                    url: "/supply/material/detail/",
                     type: "get",
-                    data:{uid:curid},
+                    data: {uid: curid},
                     dataType: "JSON",
-                    success:function (res) {
-                        if(res.status){
+                    success: function (res) {
+                        if (res.status) {
                             console.log(res);
-                            $.each(res.sm,function (name,value){
-                                var options=$("#"+name)[0];
-                                for(i=0;i<options.length;i++){
-                                    options[i].selected=false;
-                                    if(options[i].value==value)
+                            $.each(res.sm, function (name, value) {
+                                var options = $("#" + name)[0];
+                                for (i = 0; i < options.length; i++) {
+                                    options[i].selected = false;
+                                    if (options[i].value == value)
                                         options[i].selected = true;
                                 }
-                                console.log(res,options);
+                                console.log(res, options);
                             })
                             $(".formError").text("");
                             $("#myModalLabel").text("编辑供应关系")
                             $("#myd").modal('show');
-                        }else {
+                        } else {
 
                         }
                     }

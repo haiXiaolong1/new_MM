@@ -14,15 +14,10 @@
                         </div>
                         <div class="panel-body container">
                             <form method="get">
-{#                                <div class="col-md-2">#}
-{#                                    <input type="text" class="form-control" placeholder="输入请购单号" name="did" value="{{ did }}">#}
-{#                                </div>#}
                                 <div class="col-md-3">
-                                    <input type="text" class="form-control" placeholder="输入单据号" name="id" value="{{ id }}">
+                                    <input type="text" class="form-control" placeholder="输入单据号" name="id"
+                                           value="{{ id }}">
                                 </div>
-{#                                <div class="col-md-2">#}
-{#                                    <input type="text" class="form-control" placeholder="输入报价编号" name="quid" value="{{ quid }}">#}
-{#                                </div>#}
                                 <button class="btn btn-success" type="submit">搜索</button>
                             </form>
                         </div>
@@ -32,7 +27,7 @@
                     <section id="cd-timeline" class="cd-container">
                         {% for obj in list %}
                             {% if obj.id != "暂未创建" %}
-                            <div class="cd-timeline-block">
+                                <div class="cd-timeline-block">
                                     <div class="cd-timeline-img cd-success">
                                         <i class="fa fa-tag"></i>
                                     </div> <!-- cd-timeline-img -->
@@ -40,11 +35,11 @@
                                         <h4>{{ obj.name }}</h4>
                                         {% load myfilter %}
                                         {% for i in obj|obj_document %}
-                                            <p class="{{i.class}}">{{i.name}}：{{i.context}}{{i.text}}</p>
+                                            <p class="{{ i.class }}">{{ i.name }}：{{ i.context }}{{ i.text }}</p>
                                         {% endfor %}
                                         <span class="cd-date">{{ obj.date }}</span>
                                     </div> <!-- cd-timeline-content -->
-                            </div><!-- cd-timeline-block -->
+                                </div><!-- cd-timeline-block -->
                             {% endif %}
                         {% endfor %}
                     </section>
@@ -54,14 +49,14 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
         var VERIFY_ID;
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#purchase_documents').addClass('active-page');
             $('#purchase').addClass('active-page').addClass('open');
-            $('#purchase_ul').css('display','block');
+            $('#purchase_ul').css('display', 'block');
             $('#purchase_ul li').addClass('animation');
         })
 

@@ -1,4 +1,3 @@
-
 {% extends 'common.html' %}
 {% load static %}
 {% block content %}
@@ -14,14 +13,15 @@
                             <h4 class="panel-title">发票详情</h4>
                         </div>
                         <div class="col-md-12 text-right" style="padding-right:0;">
-                            <button type="button" class="btn btn-default" id="printBtn"><i class="fa fa-print"></i> 打印</button>
+                            <button type="button" class="btn btn-default" id="printBtn"><i class="fa fa-print"></i> 打印
+                            </button>
                         </div>
                         <!--startprint-->
                         <div class="panel-body" id="invoicePdf" style="background-color: #FFFFFF">
                             <div class="col-md-4" style="padding-left:0;">
                                 <h3 class="m-b-md m-t-xxs"><b>{{ invoice.supplyid.name }}</b></h3>
                                 <address>
-                                    {{ invoice.supplyid_id}}<br>
+                                    {{ invoice.supplyid_id }}<br>
                                     中国
                                 </address>
                             </div>
@@ -32,7 +32,7 @@
                                 <hr>
                                 <p>
                                     <strong>Invoice to</strong><br>
-                                    {{ invoice.purchaseid.quoteid.bussid.name}} {{ invoice.purchaseid.quoteid.bussid.postcode }}<br>
+                                    {{ invoice.purchaseid.quoteid.bussid.name }} {{ invoice.purchaseid.quoteid.bussid.postcode }}<br>
                                     {{ invoice.purchaseid.quoteid.bussid.address }}<br>
                                     电话: {{ invoice.purchaseid.quoteid.bussid.telephone }}<br>
                                 </p>
@@ -53,15 +53,15 @@
                                         <td>{{ invoice.purchaseid.quoteid.maid_id }}</td>
                                         <td>{{ invoice.purchaseid.maid.desc }}</td>
                                         <td>{{ invoice.purchaseid.tcount }}</td>
-                                        <td>{{invoice.purchaseid.maid.calcutype}}</td>
-                                        <td>{{invoice.purchaseid.price}}</td>
+                                        <td>{{ invoice.purchaseid.maid.calcutype }}</td>
+                                        <td>{{ invoice.purchaseid.price }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
                             </div>
-                            <div class="col-md-8" style="padding-left:0;  " >
+                            <div class="col-md-8" style="padding-left:0;  ">
                                 <h4>Thank you!</h4>
-                                <p>{{invoice.moreinfo}}</p>
+                                <p>{{ invoice.moreinfo }}</p>
                                 <img src={% static 'images/money.png' %} height="150" class="m-t-lg" alt="">
                             </div>
                             <div class="col-md-4" style="padding-right:0;">
@@ -70,7 +70,7 @@
                                     <h2 class="no-m">{{ invoice.money }}</h2>
                                     <hr>
                                     <h4 class="no-m m-t-sm">运费</h4>
-                                    <h2 class="no-m">{{invoice.fee}}</h2>
+                                    <h2 class="no-m">{{ invoice.fee }}</h2>
                                     <hr>
                                     <h4 class="no-m m-t-md text-success">总计</h4>
                                     <h1 class="no-m text-success">{{ invoice.totalmoney }}</h1>
@@ -89,18 +89,18 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
         var RECEIVE_ID;
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#inventory_invoice').addClass('active-page');
             $('#inventory').addClass('active-page').addClass('open');
-            $('#inventory_ul').css('display','block');
+            $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
 
             $('#printBtn').click(function () {
-                if(confirm("您确认下载该PDF文件吗?")){
+                if (confirm("您确认下载该PDF文件吗?")) {
                     {#var pdf = new jsPDF('p','pt','a4');#}
                     {#// 设置打印比例 越大打印越小#}
                     {#pdf.internal.scaleFactor = 1;#}
@@ -112,14 +112,14 @@
                     {#pdf.addHTML(printHtml,15, 15, options,function() {#}
                     {#    pdf.save('目标.pdf');#}
                     {# });#}
-                    let bdhtml=window.document.body.innerHTML;
-                    let sprnstr="<!--startprint-->"; //开始打印标识字符串有17个字符
-                    let eprnstr="<!--endprint-->"; //结束打印标识字符串
-                    let prnhtml=bdhtml.substr(bdhtml.indexOf(sprnstr)+17); //从开始打印标识之后的内容
-                    prnhtml=prnhtml.substring(0,prnhtml.indexOf(eprnstr)); //截取开始标识和结束标识之间的内容
-                    window.document.body.innerHTML=prnhtml; //把需要打印的指定内容赋给body.innerHTML
+                    let bdhtml = window.document.body.innerHTML;
+                    let sprnstr = "<!--startprint-->"; //开始打印标识字符串有17个字符
+                    let eprnstr = "<!--endprint-->"; //结束打印标识字符串
+                    let prnhtml = bdhtml.substr(bdhtml.indexOf(sprnstr) + 17); //从开始打印标识之后的内容
+                    prnhtml = prnhtml.substring(0, prnhtml.indexOf(eprnstr)); //截取开始标识和结束标识之间的内容
+                    window.document.body.innerHTML = prnhtml; //把需要打印的指定内容赋给body.innerHTML
                     window.print(); //调用浏览器的打印功能打印指定区域
-                    window.document.body.innerHTML=bdhtml;//重新给页面内容赋值；
+                    window.document.body.innerHTML = bdhtml;//重新给页面内容赋值；
                     return false;
                 }
             })

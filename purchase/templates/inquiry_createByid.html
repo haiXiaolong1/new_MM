@@ -21,22 +21,28 @@
                                         </div>
                                         <div class="panel-body">
                                             <div class="col-md-4">
-                                                <span>物料编号</span><input type="text" class="form-control"  name="mid" value="{{ demand.maid_id }}" disabled>
+                                                <span>物料编号</span><input type="text" class="form-control" name="mid"
+                                                                        value="{{ demand.maid_id }}" disabled>
                                             </div>
                                             <div class="col-md-4">
-                                                <span>工厂编号</span><input type="text" class="form-control"  name="fid" disabled value="{{ demand.facid_id }}">
+                                                <span>工厂编号</span><input type="text" class="form-control" name="fid"
+                                                                        disabled value="{{ demand.facid_id }}">
                                             </div>
                                             <div class="col-md-4">
-                                                <span>数量</span><input type="number" class="form-control"  name="mid" disabled value="{{ demand.tcount }}">
+                                                <span>数量</span><input type="number" class="form-control" name="mid"
+                                                                      disabled value="{{ demand.tcount }}">
                                             </div>
                                             <div class="col-md-6" style="margin-top: 20px">
-                                                <label>有效期：</label><input type="datetime-local" class="form-control"  id="date" placeholder="输入供应商编号" value="">
+                                                <label>有效期：</label><input type="datetime-local" class="form-control"
+                                                                          id="date" placeholder="输入供应商编号" value="">
                                             </div>
                                             <div class="col-md-4" style="margin-top: 20px">
-                                                <label>供应商：</label><input type="text" class="form-control"  id="sid" placeholder="输入供应商编号" value="">
+                                                <label>供应商：</label><input type="text" class="form-control" id="sid"
+                                                                          placeholder="输入供应商编号" value="">
                                             </div>
                                             <div class="col-md-2" style="margin-top: 25px">
-                                                <label> </label><button class="btn btn-success" type="button" id="createBtn">创建</button>
+                                                <label> </label>
+                                                <button class="btn btn-success" type="button" id="createBtn">创建</button>
                                             </div>
                                         </div>
                                     </div>
@@ -46,7 +52,8 @@
                                         </div>
                                         <div class="panel-body">
                                             <div class="table-responsive">
-                                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                                <table id="example" class="display table"
+                                                       style="width: 100%; cellspacing: 0;">
                                                     <thead>
                                                     <tr>
                                                         <th>供应商编号</th>
@@ -102,20 +109,20 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
         var VERIFY_ID;
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#purchase_create_inquiry').addClass('active-page');
             $('#purchase').addClass('active-page').addClass('open');
-            $('#purchase_ul').css('display','block');
+            $('#purchase_ul').css('display', 'block');
             $('#purchase_ul li').addClass('animation');
 
-            var showToast=localStorage.getItem("notify_show");
-            if(showToast!=undefined){
-                if(showToast){
-                    if(showToast != "false"){
+            var showToast = localStorage.getItem("notify_show");
+            if (showToast != undefined) {
+                if (showToast) {
+                    if (showToast != "false") {
                         $("#toast-type").text(localStorage.getItem("notify_type"));
                         $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
                         $("#toast-context").text(localStorage.getItem("notify_context"));
@@ -125,19 +132,19 @@
             }
 
             $('#createBtn').click(function () {
-                var date=$("#date")[0].value;
-                var sid=$("#sid")[0].value;
+                var date = $("#date")[0].value;
+                var sid = $("#sid")[0].value;
                 $.ajax({
-                    url:"/purchase/create/qui/"+"?did="+"{{ demand.demandid }}",
-                    type:"post",
-                    data:{"date":date,"sid":sid},
-                    dataType:"JSON",
-                    success:function (res){
-                        if(res.status){
-                            localStorage.setItem("notify_show",true);
-                            localStorage.setItem("notify_tittle","提示");
-                            localStorage.setItem("notify_context","创建成功，询价单号:"+res.inid);
-                            localStorage.setItem("notify_type","success");
+                    url: "/purchase/create/qui/" + "?did=" + "{{ demand.demandid }}",
+                    type: "post",
+                    data: {"date": date, "sid": sid},
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            localStorage.setItem("notify_show", true);
+                            localStorage.setItem("notify_tittle", "提示");
+                            localStorage.setItem("notify_context", "创建成功，询价单号:" + res.inid);
+                            localStorage.setItem("notify_type", "success");
                             location.reload();
                         }
                     }

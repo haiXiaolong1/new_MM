@@ -1,7 +1,6 @@
-from django.shortcuts import render,HttpResponse
+from django.shortcuts import render, HttpResponse
 
 # Create your views here.
-
 
 
 from django.http import HttpResponseBadRequest
@@ -27,7 +26,7 @@ class TestDjangoExcelUpload(View):
         form = UploadFileForm(request.POST, request.FILES)
         if form.is_valid():
             filehandle = request.FILES['file']
-            sheet = filehandle.get_sheet()#对准
+            sheet = filehandle.get_sheet()  # 对准
             print(json.dumps(sheet.to_array()))
             return excel.make_response(filehandle.get_sheet(), "csv")
         else:

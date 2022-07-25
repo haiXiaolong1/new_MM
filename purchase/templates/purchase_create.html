@@ -18,7 +18,8 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
                                             <h4 class="modal-title" id="myModalLabel">创建采购订单</h4>
                                         </div>
                                         <div class="modal-body">
@@ -27,13 +28,15 @@
 
                                                 <div class="form-group col-md-7">
                                                     <label>选择送货截止日期</label>
-                                                    <input type="date"  class="form-control"  name="deadline" id="deadline" required>
+                                                    <input type="date" class="form-control" name="deadline"
+                                                           id="deadline" required>
                                                 </div>
                                             </form>
 
                                         </div>
                                         <div class="modal-footer" style="margin-top: 40px">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="btnSave" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
@@ -61,9 +64,11 @@
                                                 <td>{{ obj.maid_id }}</td>
                                                 <td>{{ obj.supplyid_id }}</td>
                                                 <td>{{ obj.quote }}</td>
-                                                <td>{{ obj.validitytime|date:"Y-m-d H:i:s"  }}</td>
+                                                <td>{{ obj.validitytime|date:"Y-m-d H:i:s" }}</td>
                                                 <td>
-                                                    <button class="btn btn-primary btn-xs btnCreate"  uid="{{ obj.quoteid }}">创建</button>
+                                                    <button class="btn btn-primary btn-xs btnCreate"
+                                                            uid="{{ obj.quoteid }}">创建
+                                                    </button>
                                                 </td>
                                             </tr>
                                         {% endif %}
@@ -80,20 +85,20 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
         var QUOTE_ID;
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#purchase_list').addClass('active-page');
             $('#purchase').addClass('active-page').addClass('open');
-            $('#purchase_ul').css('display','block');
+            $('#purchase_ul').css('display', 'block');
             $('#purchase_ul li').addClass('animation');
 
-            var showToast=localStorage.getItem("notify_show");
-            if(showToast!=undefined){
-                if(showToast){
-                    if(showToast != "false"){
+            var showToast = localStorage.getItem("notify_show");
+            if (showToast != undefined) {
+                if (showToast) {
+                    if (showToast != "false") {
                         $("#toast-type").text(localStorage.getItem("notify_type"));
                         $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
                         $("#toast-context").text(localStorage.getItem("notify_context"));
@@ -104,31 +109,31 @@
 
             $("#btnSave").click(function () {
                 $.ajax({
-                    url:"/purchase/createByQuote/"+"?quid="+QUOTE_ID,
-                    type:"post",
-                    data:$("#formAdd").serialize(),
-                    dataType:"JSON",
-                    success:function (res){
-                        if(res.status){
+                    url: "/purchase/createByQuote/" + "?quid=" + QUOTE_ID,
+                    type: "post",
+                    data: $("#formAdd").serialize(),
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
                             $("#myd").modal('hide');
                             $("#formAdd")[0].reset();
-                            localStorage.setItem("notify_show",true);
-                            localStorage.setItem("notify_tittle","提示");
-                            localStorage.setItem("notify_context","创建成功，采购订单号"+res.pid);
-                            localStorage.setItem("notify_type","success");
+                            localStorage.setItem("notify_show", true);
+                            localStorage.setItem("notify_tittle", "提示");
+                            localStorage.setItem("notify_context", "创建成功，采购订单号" + res.pid);
+                            localStorage.setItem("notify_type", "success");
                             window.history.back(-1);
                             location.reload();
                         }
                     }
 
                 })
-                EDIT_ID=undefined;
+                EDIT_ID = undefined;
             })
 
             {#动态增加点击事件#}
-            $("#table").on('click','.btnCreate',function () {
-                var curid=$(this).attr("uid");
-                QUOTE_ID=curid;
+            $("#table").on('click', '.btnCreate', function () {
+                var curid = $(this).attr("uid");
+                QUOTE_ID = curid;
                 $("#formAdd")[0].reset();
                 $("#myd").modal('show');
             })

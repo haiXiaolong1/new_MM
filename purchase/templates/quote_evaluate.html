@@ -18,7 +18,8 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
                                             <h4 class="modal-title" id="myModalLabel">评估报价单</h4>
                                         </div>
                                         <div class="modal-body">
@@ -26,38 +27,43 @@
                                                 {% csrf_token %}
 
                                                 <div class="form-group col-md-7">
-                                                    <select class="form-control"  name="isreceived" id="isreceived">
+                                                    <select class="form-control" name="isreceived" id="isreceived">
                                                         <option value="0" selected>评估</option>
                                                         <option value="1">接受</option>
                                                         <option value="2">拒绝</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-check form-switch col-md-5">
-                                                    <input class="form-check-input " type="checkbox" id="mySwitch" name="isall" value="1">
+                                                    <input class="form-check-input " type="checkbox" id="mySwitch"
+                                                           name="isall" value="1">
                                                     <label class="form-check-label" for="mySwitch">同时拒绝其他报价单</label>
                                                 </div>
                                             </form>
 
                                         </div>
                                         <div class="modal-footer" style="margin-top: 40px">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="btnSave" class="btn btn-success">保存</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" >删除报价单</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">删除报价单</h4>
                                         </div>
                                         <div class="modal-body">
                                             <span>是否确定删除？</span>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="Delete" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
@@ -78,32 +84,38 @@
                                         <th>报价</th>
                                         <th>有效期</th>
                                         {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
-                                        <th>操作</th>
+                                            <th>操作</th>
                                         {% endif %}
                                     </tr>
                                     </thead>
                                     <tbody id="table">
                                     {% for obj in queryset %}
                                         {% if obj.quoteid != obj.inquiryid_id %}
-                                        <tr>
-                                            <td>{{ obj.quoteid }}</td>
-                                            <td>{{ obj.inquiryid.demandid.demandid }}</td>
-                                            <td>{{ obj.maid_id }}</td>
-                                            <td>{{ obj.supplyid_id }}</td>
-                                             {% load myfilter %}
-                                            <td><a class={{obj.isreceived|table_status:"bjd"}}>{{ obj.get_isreceived_display }}</a></td>
-                                            <td>{{ obj.quote }}</td>
-                                            <td>{{ obj.validitytime|date:"Y-m-d H:i:s"  }}</td>
-                                            {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
+                                            <tr>
+                                                <td>{{ obj.quoteid }}</td>
+                                                <td>{{ obj.inquiryid.demandid.demandid }}</td>
+                                                <td>{{ obj.maid_id }}</td>
+                                                <td>{{ obj.supplyid_id }}</td>
+                                                {% load myfilter %}
                                                 <td>
-                                                {% if obj.isreceived == 0 and request.session.info.office != "2"%}
-                                                    <button class="btn btn-primary btn-xs btnEva"  uid="{{ obj.quoteid }}">评估</button>
-                                                {% elif obj.isreceived == 3 or obj.isreceived == 2 %}
-                                                    <button class="btn btn-danger btn-xs btnDelete"  uid="{{ obj.quoteid }}">删除</button>
-                                                {% endif %}
+                                                    <a class={{ obj.isreceived|table_status:"bjd" }}>{{ obj.get_isreceived_display }}</a>
                                                 </td>
-                                            {% endif %}
-                                        </tr>
+                                                <td>{{ obj.quote }}</td>
+                                                <td>{{ obj.validitytime|date:"Y-m-d H:i:s" }}</td>
+                                                {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
+                                                    <td>
+                                                        {% if obj.isreceived == 0 and request.session.info.office != "2" %}
+                                                            <button class="btn btn-primary btn-xs btnEva"
+                                                                    uid="{{ obj.quoteid }}">评估
+                                                            </button>
+                                                        {% elif obj.isreceived == 3 or obj.isreceived == 2 %}
+                                                            <button class="btn btn-danger btn-xs btnDelete"
+                                                                    uid="{{ obj.quoteid }}">删除
+                                                            </button>
+                                                        {% endif %}
+                                                    </td>
+                                                {% endif %}
+                                            </tr>
                                         {% endif %}
                                     {% endfor %}
                                     </tbody>
@@ -118,20 +130,20 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
-        var QUOTE_ID,DELETE_ID;
-        $(document).ready(function() {
+        var QUOTE_ID, DELETE_ID;
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#purchase_e_quote').addClass('active-page');
             $('#purchase').addClass('active-page').addClass('open');
-            $('#purchase_ul').css('display','block');
+            $('#purchase_ul').css('display', 'block');
             $('#purchase_ul li').addClass('animation');
 
-            var showToast=localStorage.getItem("notify_show");
-            if(showToast!=undefined){
-                if(showToast){
-                    if(showToast != "false"){
+            var showToast = localStorage.getItem("notify_show");
+            if (showToast != undefined) {
+                if (showToast) {
+                    if (showToast != "false") {
                         $("#toast-type").text(localStorage.getItem("notify_type"));
                         $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
                         $("#toast-context").text(localStorage.getItem("notify_context"));
@@ -142,57 +154,56 @@
 
             $("#btnSave").click(function () {
                 $.ajax({
-                    url:"/purchase/quote/evaluateByID/"+"?quid="+QUOTE_ID,
-                    type:"post",
-                    data:$("#formAdd").serialize(),
-                    dataType:"JSON",
-                    success:function (res){
-                        if(res.status){
+                    url: "/purchase/quote/evaluateByID/" + "?quid=" + QUOTE_ID,
+                    type: "post",
+                    data: $("#formAdd").serialize(),
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
                             $("#myd").modal('hide');
                             $("#formAdd")[0].reset();
-                            localStorage.setItem("notify_show",true);
-                            localStorage.setItem("notify_tittle","提示");
-                            localStorage.setItem("notify_context","评估完成-【具体状态】");
-                            localStorage.setItem("notify_type","info");
+                            localStorage.setItem("notify_show", true);
+                            localStorage.setItem("notify_tittle", "提示");
+                            localStorage.setItem("notify_context", "评估完成-【具体状态】");
+                            localStorage.setItem("notify_type", "info");
                             location.reload();
                         }
                     }
 
                 })
-                EDIT_ID=undefined;
+                EDIT_ID = undefined;
             })
 
             {#动态增加点击事件#}
-            $("#table").on('click','.btnEva',function () {
-                var curid=$(this).attr("uid");
-                QUOTE_ID=curid;
+            $("#table").on('click', '.btnEva', function () {
+                var curid = $(this).attr("uid");
+                QUOTE_ID = curid;
                 $("#formAdd")[0].reset();
                 $("#myd").modal('show');
             })
 
-            $("#table").on('click','.btnDelete',function () {
-                DELETE_ID=$(this).attr("uid");
+            $("#table").on('click', '.btnDelete', function () {
+                DELETE_ID = $(this).attr("uid");
                 $("#deleteModel").modal('show');
             })
 
             $("#Delete").click(
                 function () {
                     $.ajax({
-                        url:"/purchase/quote/delete/",
-                        type:"get",
-                        data:{uid:DELETE_ID},
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
+                        url: "/purchase/quote/delete/",
+                        type: "get",
+                        data: {uid: DELETE_ID},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
                                 $("#deleteModel").modal('hide');
-                                DELETE_ID=undefined;
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","报价单删除成功");
-                                localStorage.setItem("notify_type","success");
+                                DELETE_ID = undefined;
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "报价单删除成功");
+                                localStorage.setItem("notify_type", "success");
                                 location.reload();
-                            }
-                            else {
+                            } else {
                             }
                         }
                     })

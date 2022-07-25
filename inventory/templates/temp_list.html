@@ -17,7 +17,8 @@
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
                                             <h4 class="modal-title" id="myModalLabel"></h4>
                                         </div>
                                         <div class="modal-body">
@@ -28,14 +29,16 @@
                                                         <div class="controls">
                                                             <label id="myLa">质检结果</label><br>
                                                             <label>
-                                                                <input type="radio" name="check" value="1" checked /> 通过
+                                                                <input type="radio" name="check" value="1" checked/> 通过
                                                             </label><br><br>
                                                             <label>
-                                                                <input type="radio" name="check" value="0" /> 不通过
+                                                                <input type="radio" name="check" value="0"/> 不通过
                                                             </label>
                                                         </div>
                                                         <div class="form-group" style="margin-top: 15px">
-                                                            <textarea class="input-large form-control" name="moreinfo" id="message" rows="3" placeholder="情况说明"></textarea>
+                                                            <textarea class="input-large form-control" name="moreinfo"
+                                                                      id="message" rows="3"
+                                                                      placeholder="情况说明"></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -44,25 +47,29 @@
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="btnSave" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             {#                            删除对话框#}
-                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" >删除暂存单</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">删除暂存单</h4>
                                         </div>
                                         <div class="modal-body">
                                             <span>是否确定删除？</span>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="Delete" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
@@ -96,25 +103,35 @@
                                             <td>{{ obj.purchaseid.facid_id }}</td>
                                             <td>{{ obj.purchaseid.price }}</td>
                                             <td>{{ obj.purchaseid.tcount }}</td>
-                                             {% load myfilter %}
-                                            <td><a class={{obj.qualitycheckinfo|table_status:"zsd-jc"}}>{{ obj.get_qualitycheckinfo_display }}</a></td>
-                                            <td><a class={{obj.quantitycheckinfo|table_status:"zsd-jc"}}>{{ obj.get_quantitycheckinfo_display }}</a></td>
+                                            {% load myfilter %}
+                                            <td>
+                                                <a class={{ obj.qualitycheckinfo|table_status:"zsd-jc" }}>{{ obj.get_qualitycheckinfo_display }}</a>
+                                            </td>
+                                            <td>
+                                                <a class={{ obj.quantitycheckinfo|table_status:"zsd-jc" }}>{{ obj.get_quantitycheckinfo_display }}</a>
+                                            </td>
                                             {% if obj.temid == obj.purchaseid_id %}
                                                 <td><a class="table_status_0">未检收</a></td>
                                             {% else %}
-                                              <td>{{ obj.temid }}</td>
+                                                <td>{{ obj.temid }}</td>
                                             {% endif %}
                                             {#                                        判断是否是管理员，普通员工只能查看#}
                                             {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                                 <td>
                                                     {% if obj.qualitycheckinfo == -1 %}
-                                                        <button class="btn btn-primary btn-xs btnQuality" uid="{{ obj.purchaseid_id }}">质检</button>
+                                                        <button class="btn btn-primary btn-xs btnQuality"
+                                                                uid="{{ obj.purchaseid_id }}">质检
+                                                        </button>
                                                     {% endif %}
                                                     {% if obj.quantitycheckinfo == -1 %}
-                                                        <button class="btn btn-primary btn-xs btnQuantity" uid="{{ obj.purchaseid_id }}">量检</button>
+                                                        <button class="btn btn-primary btn-xs btnQuantity"
+                                                                uid="{{ obj.purchaseid_id }}">量检
+                                                        </button>
                                                     {% endif %}
                                                     {% if obj.quantitycheckinfo != -1 and obj.qualitycheckinfo != -1 %}
-                                                        <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.purchaseid_id }}">删除</button>
+                                                        <button class="btn btn-danger btn-xs btnDelete" id=""
+                                                                uid="{{ obj.purchaseid_id }}">删除
+                                                        </button>
                                                     {% endif %}
                                                 </td>
                                             {% endif %}
@@ -132,20 +149,20 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
-        var QUANTITY_ID,QUALITY_ID,DELETE_ID;
-        $(document).ready(function() {
+        var QUANTITY_ID, QUALITY_ID, DELETE_ID;
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#inventory_temp').addClass('active-page');
             $('#inventory').addClass('active-page').addClass('open');
-            $('#inventory_ul').css('display','block');
+            $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
 
-            var showToast=localStorage.getItem("notify_show");
-            if(showToast!=undefined){
-                if(showToast){
-                    if(showToast != "false"){
+            var showToast = localStorage.getItem("notify_show");
+            if (showToast != undefined) {
+                if (showToast) {
+                    if (showToast != "false") {
                         $("#toast-type").text(localStorage.getItem("notify_type"));
                         $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
                         $("#toast-context").text(localStorage.getItem("notify_context"));
@@ -155,85 +172,85 @@
             }
 
             $("#btnSave").click(function () {
-                if (QUALITY_ID){
+                if (QUALITY_ID) {
                     $.ajax({
-                        url:"/inventory/quality/check/"+"?puid="+QUALITY_ID,
-                        type:"post",
-                        data:$("#formAdd").serialize(),
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
+                        url: "/inventory/quality/check/" + "?puid=" + QUALITY_ID,
+                        type: "post",
+                        data: $("#formAdd").serialize(),
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","检查成功-质检状态：【】");
-                                localStorage.setItem("notify_type","success");
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "检查成功-质检状态：【】");
+                                localStorage.setItem("notify_type", "success");
                                 location.reload();
                             }
                         }
                     })
 
-                    QUALITY_ID=undefined;
+                    QUALITY_ID = undefined;
                 }
-                if(QUANTITY_ID){
+                if (QUANTITY_ID) {
                     $.ajax({
-                        url:"/inventory/quantity/check/"+"?puid="+QUANTITY_ID,
-                        type:"post",
-                        data:$("#formAdd").serialize(),
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
+                        url: "/inventory/quantity/check/" + "?puid=" + QUANTITY_ID,
+                        type: "post",
+                        data: $("#formAdd").serialize(),
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","检查成功-量检状态：【】");
-                                localStorage.setItem("notify_type","success");
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "检查成功-量检状态：【】");
+                                localStorage.setItem("notify_type", "success");
                                 location.reload();
                             }
                         }
                     })
 
-                    QUANTITY_ID=undefined;
+                    QUANTITY_ID = undefined;
                 }
 
             })
 
-            $("#table").on('click','.btnQuantity',function () {
-                QUANTITY_ID=$(this).attr("uid");
+            $("#table").on('click', '.btnQuantity', function () {
+                QUANTITY_ID = $(this).attr("uid");
                 $("#formAdd")[0].reset();
                 $("#myModalLabel").text("数量检查");
                 $("#myLa").text("量检结果");
                 $("#myd").modal('show');
             })
-            $("#table").on('click','.btnQuality',function () {
-                QUALITY_ID=$(this).attr("uid");
+            $("#table").on('click', '.btnQuality', function () {
+                QUALITY_ID = $(this).attr("uid");
                 $("#formAdd")[0].reset();
                 $("#myModalLabel").text("质量检查");
                 $("#myLa").text("质检结果");
                 $("#myd").modal('show');
             })
 
-            $("#table").on('click','.btnDelete',function () {
-                DELETE_ID=$(this).attr("uid");
+            $("#table").on('click', '.btnDelete', function () {
+                DELETE_ID = $(this).attr("uid");
                 $("#deleteModel").modal('show');
             })
             $("#Delete").click(
                 function () {
                     $.ajax({
-                        url:"/inventory/temp/delete/",
-                        type:"get",
-                        data:{uid:DELETE_ID},
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
+                        url: "/inventory/temp/delete/",
+                        type: "get",
+                        data: {uid: DELETE_ID},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
                                 $("#deleteModel").modal('hide');
-                                DELETE_ID=undefined;
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","暂存单删除成功");
-                                localStorage.setItem("notify_type","success");
+                                DELETE_ID = undefined;
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "暂存单删除成功");
+                                localStorage.setItem("notify_type", "success");
                                 location.reload();
                             }
                         }

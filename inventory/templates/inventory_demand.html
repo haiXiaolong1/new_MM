@@ -14,21 +14,23 @@
                         </div>
                         <div>
                             {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
-                            <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加</button>
-                        {% endif %}
+                                <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加
+                                </button>
+                            {% endif %}
                             <!-- 新建对话框 -->
                             <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
                                             <h4 class="modal-title" id="myModalLabel">新建采购需求</h4>
                                         </div>
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
                                                 <div class="form-group">
-                                                    <select class="form-control"  name="facid_id" id="facid_id">
+                                                    <select class="form-control" name="facid_id" id="facid_id">
                                                         <option value selected>工厂编号</option>
                                                         {% for s in factory %}
                                                             <option value="{{ s.id }}">{{ s.id }}</option>
@@ -37,45 +39,52 @@
                                                     <a class="formError" id="facid_id_error"></a>
                                                 </div>
                                                 <div class="form-group">
-                                                    <select class="form-control"  name="maid_id" id="maid_id">
+                                                    <select class="form-control" name="maid_id" id="maid_id">
                                                         <option value selected>物料编号</option>
                                                         {% for m in material %}
-                                                            <option value="{{ m.id }}" id="{{ m.id }}">{{ m.id }}</option>
+                                                            <option value="{{ m.id }}"
+                                                                    id="{{ m.id }}">{{ m.id }}</option>
                                                         {% endfor %}
                                                     </select>
                                                     <a class="formError" id="maid_id_error"></a>
                                                 </div>
                                                 <div class="form-group">
-                                                    <input type="number"  class="form-control" placeholder="价格" name="price" id="price"required>
+                                                    <input type="number" class="form-control" placeholder="价格"
+                                                           name="price" id="price" required>
                                                     <a class="formError" id="price_error"></a>
                                                 </div>
                                                 <div class="form-group">
-                                                    <input type="number"  class="form-control" placeholder="数量" name="tcount" id="tcount" required>
+                                                    <input type="number" class="form-control" placeholder="数量"
+                                                           name="tcount" id="tcount" required>
                                                     <a class="formError" id="tcount_error"></a>
                                                 </div>
                                             </form>
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="btnSave" class="btn btn-success">保存</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
-                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
                                         <div class="modal-header">
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                            <h4 class="modal-title" >删除采购需求</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">删除采购需求</h4>
                                         </div>
                                         <div class="modal-body">
                                             <span>是否确定删除？</span>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
                                             <button type="submit" id="Delete" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
@@ -112,8 +121,10 @@
                                             <td>{{ obj.price }}</td>
                                             <td>{{ obj.tcount }}</td>
                                             {% load myfilter %}
-                                            <td><a class={{obj.status|table_status:"cgxq"}}>{{ obj.get_status_display }}</a></td>
-                                            <td>{{ obj.createtime|date:"Y-m-d H:i:s"  }}</td>
+                                            <td>
+                                                <a class={{ obj.status|table_status:"cgxq" }}>{{ obj.get_status_display }}</a>
+                                            </td>
+                                            <td>{{ obj.createtime|date:"Y-m-d H:i:s" }}</td>
                                             <td>{{ obj.verifytime|date:"Y-m-d H:i:s" }}</td>
                                             <td>{{ obj.createuserid.username }}</td>
                                             <td>{{ obj.verifyuserid.username }}</td>
@@ -121,11 +132,17 @@
                                             {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                                 <td>
                                                     {% if obj.status == 2 %}
-                                                        <button class="btn btn-danger btn-xs btnDelete" uid="{{ obj.demandid }}">删除</button>
-                                                    {% elif obj.status == 1%}
-                                                        <button class="btn btn-default btn-xs btnCom" uid="{{ obj.demandid }}">完成</button>
+                                                        <button class="btn btn-danger btn-xs btnDelete"
+                                                                uid="{{ obj.demandid }}">删除
+                                                        </button>
+                                                    {% elif obj.status == 1 %}
+                                                        <button class="btn btn-default btn-xs btnCom"
+                                                                uid="{{ obj.demandid }}">完成
+                                                        </button>
                                                     {% elif request.session.info.office != "3" %}
-                                                        <button class="btn btn-primary btn-xs btnVerify" uid="{{ obj.demandid }}">确认</button>
+                                                        <button class="btn btn-primary btn-xs btnVerify"
+                                                                uid="{{ obj.demandid }}">确认
+                                                        </button>
                                                     {% endif %}
                                                 </td>
                                             {% endif %}
@@ -143,20 +160,20 @@
     </div>
 {% endblock %}
 
-{% block js%}
+{% block js %}
     <script type="text/javascript">
-        var VERIFY_ID,DELETE_ID;
-        var showToast=localStorage.getItem("notify_show");
-        $(document).ready(function() {
+        var VERIFY_ID, DELETE_ID;
+        var showToast = localStorage.getItem("notify_show");
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#inventory_demand').addClass('active-page');
             $('#inventory').addClass('active-page').addClass('open');
-            $('#inventory_ul').css('display','block');
+            $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
 
-            if(showToast!=undefined){
-                if(showToast){
-                    if(showToast != "false"){
+            if (showToast != undefined) {
+                if (showToast) {
+                    if (showToast != "false") {
                         $("#toast-type").text(localStorage.getItem("notify_type"));
                         $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
                         $("#toast-context").text(localStorage.getItem("notify_context"));
@@ -172,32 +189,29 @@
             })
             $("#btnSave").click(function () {
                 $.ajax({
-                    url:"/inventory/demand/add/",
-                    type:"post",
-                    data:$("#formAdd").serialize(),
-                    dataType:"JSON",
-                    success:function (res){
-                        var res_dict=JSON.parse(res);
+                    url: "/inventory/demand/add/",
+                    type: "post",
+                    data: $("#formAdd").serialize(),
+                    dataType: "JSON",
+                    success: function (res) {
+                        var res_dict = JSON.parse(res);
                         console.log(res_dict);
-                        if(res_dict.status){
+                        if (res_dict.status) {
                             $("#myd").modal('hide');
                             $("#formAdd")[0].reset();
                             // 此处页面响应顺序为：后端插入数据→页面reload→弹出信息提示床架成功
                             // 故用localStorage暂存消息提醒状态和内容
                             // 暂存信息在消息成功提醒后清空：notify_show设为false,其他remove
-                            localStorage.setItem("notify_show",true);
-                            localStorage.setItem("notify_tittle","提示");
-                            localStorage.setItem("notify_context","采购需求创建成功");
-                            localStorage.setItem("notify_type","success");
+                            localStorage.setItem("notify_show", true);
+                            localStorage.setItem("notify_tittle", "提示");
+                            localStorage.setItem("notify_context", "采购需求创建成功");
+                            localStorage.setItem("notify_type", "success");
                             location.reload()
-                        }
-                        else{
-                            var ids=["#facid_id_error","#maid_id_error","#price_error","#tcount_error"];
-                            for(var i=0;i<ids.length;i++)
-                            {
+                        } else {
+                            var ids = ["#facid_id_error", "#maid_id_error", "#price_error", "#tcount_error"];
+                            for (var i = 0; i < ids.length; i++) {
                                 $(ids[i]).text("");
-                                if(res_dict.error[i]!=true)
-                                {
+                                if (res_dict.error[i] != true) {
                                     $(ids[i]).text(res_dict.error[i]);
                                 }
                             }
@@ -206,49 +220,48 @@
                 })
             })
 
-            $("#table").on('click','.btnVerify',function () {
-                VERIFY_ID=$(this).attr("uid");
+            $("#table").on('click', '.btnVerify', function () {
+                VERIFY_ID = $(this).attr("uid");
 
                 $.ajax({
-                    url:"/inventory/demand/verify/",
-                    type:"post",
-                    data:{"did":VERIFY_ID},
-                    dataType:"JSON",
-                    success:function (res){
-                        if(res.status){
-                            localStorage.setItem("notify_show",true);
-                            localStorage.setItem("notify_tittle","提示");
-                            localStorage.setItem("notify_context","采购需求审核成功");
-                            localStorage.setItem("notify_type","success");
+                    url: "/inventory/demand/verify/",
+                    type: "post",
+                    data: {"did": VERIFY_ID},
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            localStorage.setItem("notify_show", true);
+                            localStorage.setItem("notify_tittle", "提示");
+                            localStorage.setItem("notify_context", "采购需求审核成功");
+                            localStorage.setItem("notify_type", "success");
                             location.reload();
                         }
                     }
                 })
             })
 
-            $("#table").on('click','.btnDelete',function () {
-                DELETE_ID=$(this).attr("uid");
+            $("#table").on('click', '.btnDelete', function () {
+                DELETE_ID = $(this).attr("uid");
                 $("#deleteModel").modal('show');
             })
 
             $("#Delete").click(
                 function () {
                     $.ajax({
-                        url:"/inventory/demand/delete/",
-                        type:"get",
-                        data:{uid:DELETE_ID},
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
+                        url: "/inventory/demand/delete/",
+                        type: "get",
+                        data: {uid: DELETE_ID},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
                                 $("#deleteModel").modal('hide');
-                                DELETE_ID=undefined;
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","采购需求已删除");
-                                localStorage.setItem("notify_type","info");
+                                DELETE_ID = undefined;
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "采购需求已删除");
+                                localStorage.setItem("notify_type", "info");
                                 location.reload();
-                            }
-                            else {
+                            } else {
                             }
                         }
                     })

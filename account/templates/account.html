@@ -1,196 +1,199 @@
 {% extends 'common.html' %}
 
 {% block content %}
-<div class="page-inner">
-    <div class="page-title">
-        <h3 class="breadcrumb-header">权限管理</h3>
-    </div>
-    <div id="main-wrapper">
-        <div class="row">
-            <div class="col-md-12">
-                <div class="panel panel-white">
-                    <div class="panel-heading clearfix">
-                        <h4 class="panel-title">员工列表</h4>
-                    </div>
-                    <div>
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">权限管理</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title">员工列表</h4>
+                        </div>
+                        <div>
 
-                        {#                            提示框#}
-                        <div class="modal fade" id="alertModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="alert alert-success alert-dismissible" role="alert">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <span id="alertText"> </span>
+                            {#                            提示框#}
+                            <div class="modal fade" id="alertModel" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="alert alert-success alert-dismissible" role="alert">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <span id="alertText"> </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
 
-                        <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加</button>
-                        <!-- 新建/编辑对话框 -->
+                            <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加
+                            </button>
+                            <!-- 新建/编辑对话框 -->
 
-                        <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" id="myModalLabel">新建员工账号</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form method="post" id="formAdd">
-                                            {% csrf_token %}
-                                            <div class="form-group">
-                                                <input type="text"  class="form-control" placeholder="姓名" name="username" id="username" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <input type="text"  class="form-control" placeholder="密码" name="password" id="password" required>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>职位</label>
-                                                <div>
-                                                    <select  class="form-control" name="office" id="office">
-                                                        <option value="1">供应商员工</option>
-                                                        <option value="2">采购员工</option>
-                                                        <option value="3">库存员工</option>
-                                                        <option value="4">采购经理</option>
-                                                        <option value="5">库存经理</option>
-                                                        <option value="6">生产经理</option>
-                                                    </select>
+                            <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">新建员工账号</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" id="formAdd">
+                                                {% csrf_token %}
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="姓名"
+                                                           name="username" id="username" required>
                                                 </div>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>是否激活？</label>
-                                                <div>
-                                                    <select  class="form-control" name="isactive" id="isactive">
-                                                        <option value="1">是</option>
-                                                        <option value="0">否</option>
-                                                    </select>
+                                                <div class="form-group">
+                                                    <input type="text" class="form-control" placeholder="密码"
+                                                           name="password" id="password" required>
                                                 </div>
-                                            </div>
-
-{#                                            <div class="form-group">#}
-{#                                                <label>是否管理员？</label>#}
-{#                                                <div>#}
-{#                                                    <select  class="form-control" name="issuper" id="issuper">#}
-{#                                                        <option value="1">是</option>#}
-{#                                                        <option value="0">否</option>#}
-{#                                                    </select>#}
-{#                                                </div>#}
-{#                                            </div>#}
-
-                                            <div class="form-group">
-                                                    <select class="form-control"  name="businessid_id" id="businessid_id">
-                                                        <option value >公司编号</option>
+                                                <div class="form-group">
+                                                    <label>职位</label>
+                                                    <div>
+                                                        <select class="form-control" name="office" id="office">
+                                                            <option value="1">供应商员工</option>
+                                                            <option value="2">采购员工</option>
+                                                            <option value="3">库存员工</option>
+                                                            <option value="4">采购经理</option>
+                                                            <option value="5">库存经理</option>
+                                                            <option value="6">生产经理</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label>是否激活？</label>
+                                                    <div>
+                                                        <select class="form-control" name="isactive" id="isactive">
+                                                            <option value="1">是</option>
+                                                            <option value="0">否</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <select class="form-control" name="businessid_id"
+                                                            id="businessid_id">
+                                                        <option value>公司编号</option>
                                                         {% for s in gongsi %}
                                                             <option value="{{ s.myid }}">{{ s.myid }}</option>
                                                         {% endfor %}
                                                     </select>
 
-                                            </div>
+                                                </div>
 
-                                        </form>
+                                            </form>
 
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                        <button type="submit" id="btnSave" class="btn btn-success">保存</button>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
+                                            <button type="submit" id="btnSave" class="btn btn-success">保存</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        {#                            删除对话框#}
-                        <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                                        <h4 class="modal-title" >删除员工</h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <span>是否确定删除？</span>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
-                                        <button type="submit" id="Delete" class="btn btn-success">确定</button>
+                            {#                            删除对话框#}
+                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">删除员工</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <span>是否确定删除？</span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                                            <button type="submit" id="Delete" class="btn btn-success">确定</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                    </div>
-                    <div class="panel-body">
-                        <div class="table-responsive">
-                            <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
-                                <thead>
-                                <tr>
-                                    <th>员工编号</th>
-                                    <th>员工职位</th>
-                                    <th>账号</th>
-                                    <th>密码</th>
-                                    <th>是否激活？</th>
-{#                                    <th>是否管理员？</th>#}
-                                    <th>公司编号</th>
-                                    {% if  request.session.info.issuper %}
-                                    <th>操作</th>
-                                    {% endif %}
-                                </tr>
-                                </thead>
-                                <tbody id="table">
-                                {% for obj in queryset %}
-                                <tr>
-                                    <td>{{ obj.id }}</td>
-                                    <td>{{ obj.get_office_display }}</td>
-                                    <td>{{ obj.username }}</td>
-                                    <td>{{ obj.password }}</td>
-                                    {% if obj.isactive == 0 %}
-                                    <td>否 </td>
-                                    {% else %}
-                                    <td>是 </td>
-                                    {% endif %}
-{#                                    {% if obj.issuper == 0 %}#}
-{#                                    <td>否 </td>#}
-{#                                    {% else %}#}
-{#                                    <td>是 </td>#}
-{#                                    {% endif %}#}
-                                    <td>{{ obj.businessid_id }}</td>
-                                    {#                                        判断是否是管理员，普通员工只能查看,可以优化，其他页面同样#}
-                                    {% if  request.session.info.issuper %}
-                                    <td>
-                                        <button class="btn btn-primary btn-xs btnEdit" id="" uid="{{ obj.id }}">编辑</button>
-                                        <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>
-                                    </td>
-                                    {% endif %}
-                                </tr>
-                                {% endfor %}
-                                </tbody>
-                            </table>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th>员工编号</th>
+                                        <th>员工职位</th>
+                                        <th>账号</th>
+                                        <th>密码</th>
+                                        <th>是否激活？</th>
+                                        {#                                    <th>是否管理员？</th>#}
+                                        <th>公司编号</th>
+                                        {% if  request.session.info.issuper %}
+                                            <th>操作</th>
+                                        {% endif %}
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table">
+                                    {% for obj in queryset %}
+                                        <tr>
+                                            <td>{{ obj.id }}</td>
+                                            <td>{{ obj.get_office_display }}</td>
+                                            <td>{{ obj.username }}</td>
+                                            <td>{{ obj.password }}</td>
+                                            {% if obj.isactive == 0 %}
+                                                <td>否</td>
+                                            {% else %}
+                                                <td>是</td>
+                                            {% endif %}
+                                            {#                                    {% if obj.issuper == 0 %}#}
+                                            {#                                    <td>否 </td>#}
+                                            {#                                    {% else %}#}
+                                            {#                                    <td>是 </td>#}
+                                            {#                                    {% endif %}#}
+                                            <td>{{ obj.businessid_id }}</td>
+                                            {#                                        判断是否是管理员，普通员工只能查看,可以优化，其他页面同样#}
+                                            {% if  request.session.info.issuper %}
+                                                <td>
+                                                    <button class="btn btn-primary btn-xs btnEdit" id=""
+                                                            uid="{{ obj.id }}">编辑
+                                                    </button>
+                                                    <button class="btn btn-danger btn-xs btnDelete" id=""
+                                                            uid="{{ obj.id }}">删除
+                                                    </button>
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-        </div><!-- Row -->
-    </div><!-- Main Wrapper -->
-</div>
+            </div><!-- Row -->
+        </div><!-- Main Wrapper -->
+    </div>
 {% endblock %}
 
-{% block js%}
-<script type="text/javascript">
+{% block js %}
+    <script type="text/javascript">
         var EDIT_ID;
         var DELETE_ID;
-        $(document).ready(function() {
+        $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#account_documents').addClass('active-page');
             $('#account').addClass('active-page').addClass('open');
-            $('#account_ul').css('display','block');
+            $('#account_ul').css('display', 'block');
             $('#account_ul li').addClass('animation');
 
-            var showToast=localStorage.getItem("notify_show");
-            if(showToast!=undefined){
-                if(showToast){
-                    if(showToast != "false"){
+            var showToast = localStorage.getItem("notify_show");
+            if (showToast != undefined) {
+                if (showToast) {
+                    if (showToast != "false") {
                         $("#toast-type").text(localStorage.getItem("notify_type"));
                         $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
                         $("#toast-context").text(localStorage.getItem("notify_context"));
@@ -201,39 +204,35 @@
 
             $("#btnAdd").click(function () {
                 //将正在编辑的ID置空
-                EDIT_ID=undefined;
+                EDIT_ID = undefined;
                 $("#myModalLabel").text("新建员工");
                 $("#formAdd")[0].reset();
                 $("#myd").modal('show');
             })
             $("#btnSave").click(function () {
 
-                if(!EDIT_ID){
-                    if(!$("#username").val())
-                    {
+                if (!EDIT_ID) {
+                    if (!$("#username").val()) {
                         alert("员工账号不能为空")
                         return;
-                    }
-                    else if(!$("#password").val())
-                    {
+                    } else if (!$("#password").val()) {
                         alert("员工密码不能为空")
                         return;
-                    }
-                    else {
+                    } else {
                         $.ajax({
-                            url:"/account/ac/add/",
-                            type:"post",
-                            data:$("#formAdd").serialize(),
-                            dataType:"JSON",
-                            success:function (res){
-                                if(res.status){
+                            url: "/account/ac/add/",
+                            type: "post",
+                            data: $("#formAdd").serialize(),
+                            dataType: "JSON",
+                            success: function (res) {
+                                if (res.status) {
                                     {#验证是否为空#}
                                     $("#formAdd")[0].reset();
                                     $("#myd").modal('hide');
-                                    localStorage.setItem("notify_show",true);
-                                    localStorage.setItem("notify_tittle","提示");
-                                    localStorage.setItem("notify_context","员工添加成功");
-                                    localStorage.setItem("notify_type","success");
+                                    localStorage.setItem("notify_show", true);
+                                    localStorage.setItem("notify_tittle", "提示");
+                                    localStorage.setItem("notify_context", "员工添加成功");
+                                    localStorage.setItem("notify_type", "success");
                                     location.reload();
                                 }
                             }
@@ -241,72 +240,67 @@
                         })
                     }
 
-                }else {
-                   if(!$("#username").val())
-                    {
+                } else {
+                    if (!$("#username").val()) {
                         alert("员工账号不能为空")
                         return;
-                    }
-                    else if(!$("#password").val())
-                    {
+                    } else if (!$("#password").val()) {
                         alert("员工密码不能为空")
                         return;
-                    }
-                    else {
+                    } else {
                         $.ajax({
-                            url:"/account/ac/edit/"+"?uid="+EDIT_ID,
-                            type:"post",
-                            data:$("#formAdd").serialize(),
-                            dataType:"JSON",
-                            success:function (res){
-                                if(res.status){
+                            url: "/account/ac/edit/" + "?uid=" + EDIT_ID,
+                            type: "post",
+                            data: $("#formAdd").serialize(),
+                            dataType: "JSON",
+                            success: function (res) {
+                                if (res.status) {
                                     $("#myd").modal('hide');
                                     $("#formAdd")[0].reset();
-                                    localStorage.setItem("notify_show",true);
-                                    localStorage.setItem("notify_tittle","提示");
-                                    localStorage.setItem("notify_context","员工编辑成功");
-                                    localStorage.setItem("notify_type","success");
+                                    localStorage.setItem("notify_show", true);
+                                    localStorage.setItem("notify_tittle", "提示");
+                                    localStorage.setItem("notify_context", "员工编辑成功");
+                                    localStorage.setItem("notify_type", "success");
                                     location.reload();
                                 }
                             }
                         })
-                        EDIT_ID=undefined;
+                        EDIT_ID = undefined;
                     }
                 }
 
 
             })
 
-            $("#table").on('click','.btnDelete',function () {
-                DELETE_ID=$(this).attr("uid");
+            $("#table").on('click', '.btnDelete', function () {
+                DELETE_ID = $(this).attr("uid");
                 $("#deleteModel").modal('show');
             })
 
             $("#Delete").click(
                 function () {
                     $.ajax({
-                        url:"/account/ac/delete/",
-                        type:"post",
-                        data:{uid:DELETE_ID},
-                        dataType:"JSON",
-                        success:function (res){
-                            if(res.status){
+                        url: "/account/ac/delete/",
+                        type: "post",
+                        data: {uid: DELETE_ID},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
                                 $("#deleteModel").modal('hide');
-                                DELETE_ID=undefined;
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","成功删除员工");
-                                localStorage.setItem("notify_type","success");
+                                DELETE_ID = undefined;
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "成功删除员工");
+                                localStorage.setItem("notify_type", "success");
                                 location.reload();
-                            }
-                            else {
+                            } else {
                                 {#员工禁用就行了，没必要删除#}
-                                localStorage.setItem("notify_show",true);
-                                localStorage.setItem("notify_tittle","提示");
-                                localStorage.setItem("notify_context","该用户关联有待处理订单，不能删除！");
-                                localStorage.setItem("notify_type","error");
+                                localStorage.setItem("notify_show", true);
+                                localStorage.setItem("notify_tittle", "提示");
+                                localStorage.setItem("notify_context", "该用户关联有待处理订单，不能删除！");
+                                localStorage.setItem("notify_type", "error");
                                 $("#deleteModel").modal('hide');
-                                DELETE_ID=undefined;
+                                DELETE_ID = undefined;
                                 location.reload();
                             }
                         }
@@ -315,23 +309,23 @@
             )
 
 
-            $("#table").on('click','.btnEdit',function () {
-                var curid=$(this).attr("uid");
-                EDIT_ID=curid;
+            $("#table").on('click', '.btnEdit', function () {
+                var curid = $(this).attr("uid");
+                EDIT_ID = curid;
                 $("#formAdd")[0].reset();
                 $.ajax({
-                    url:"/account/ac/detail/",
+                    url: "/account/ac/detail/",
                     type: "get",
-                    data:{uid:curid},
+                    data: {uid: curid},
                     dataType: "JSON",
-                    success:function (res) {
-                        if(res.status){
-                            $.each(res.account,function (name,value){
-                                $("#"+name).val(value);
+                    success: function (res) {
+                        if (res.status) {
+                            $.each(res.account, function (name, value) {
+                                $("#" + name).val(value);
                             })
                             $("#myModalLabel").text("编辑员工")
                             $("#myd").modal('show');
-                        }else {
+                        } else {
 
                         }
                     }
