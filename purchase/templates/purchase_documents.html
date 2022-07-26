@@ -22,12 +22,13 @@
                     </div>
                 </div>
             </div>
+            {% if progressShow %}
             <div class="col-md-12">
-                <div id="doucumentProgressBar">
+                <div id="doucumentProgressBar" progress="{{progress}}">
                     <!-- 进度条 -->
                     <div class="progress progress-md">
                         <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
-                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 25%">
+                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="theBar">
                             <span class="sr-only">25% Complete</span>
 
                         </div>
@@ -35,38 +36,37 @@
                     <!-- 五个圆 -->
                         <span style="left:0%;background:#5893df"></span>
                         <span style="left:8%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;background:#5893df"></span>
-                        <span style="left:16%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;background:#5893df"></span>
-                        <span style="left:25%;"></span>
-                        <span style="left:33%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;"></span>
-                        <span style="left:41%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;"></span>
-                        <span style="left:49%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;"></span>
-                        <span style="left:58%"></span>
-                        <span style="left:66%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;"></span>
-                        <span style="left:74%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;"></span>
-                        <span style="left:83%"></span>
-                        <span style="left:91%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;"></span>
-                        <span style="left:100%"></span>
+                        <span style="left:16%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.0}}"></span>
+                        <span style="left:25%;{{style.1}}"></span>
+                        <span style="left:33%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.2}}"></span>
+                        <span style="left:41%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.3}}"></span>
+                        <span style="left:49%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.4}}"></span>
+                        <span style="left:58%;{{style.5}}"></span>
+                        <span style="left:66%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.6}}"></span>
+                        <span style="left:74%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.7}}"></span>
+                        <span style="left:83%;{{style.8}}"></span>
+                        <span style="left:91%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.9}}"></span>
+                        <span style="left:100%;{{style.10}}"></span>
                     <div id="doucumentProgressText">
-                        <span style="left:0%">物料需求</span>
-                        <span style="left:25%">创建请购</span>
-                        <span style="left:58%">采购订单</span>
-                        <span style="left:83%">订单入库</span>
-                        <span style="left:100%">生成发票</span>
+                        <span style="left:0%;">物料需求</span>
+                        <span style="left:25%;">创建请购</span>
+                        <span style="left:58%;">采购订单</span>
+                        <span style="left:83%;">订单入库</span>
+                        <span style="left:100%;">生成发票</span>
                     </div>
                     <div id="doucumentProgressSubText">
                         <span style="left:8%">创建采购需求</span>
-                        <span style="left:16%">审核采购需求</span>
+                        <span style="left:16%">审核需求</span>
                         <span style="left:33%">创建询价单</span>
                         <span style="left:41%">接收报价单</span>
                         <span style="left:49%">评估报价单</span>
-                        <span style="left:66%">到货暂存</span>
-                        <span style="left:74%">物料质检<br/>物料量检</span>
-                        <span style="left:91%">生成发票</span>
+                        <span style="left:66%">{{textFirst}}</span>
+                        <span style="left:74%">{{textSecond}}</span>
+                        <span style="left:91%">订单完成</span>
                     </div>
                 </div>
-
-
             </div>
+            {% endif %}
             <div class="col-md-12" id="documents">
                 <section id="cd-timeline" class="cd-container">
                     {% for obj in list %}
@@ -102,8 +102,14 @@
         $('#purchase').addClass('active-page').addClass('open');
         $('#purchase_ul').css('display', 'block');
         $('#purchase_ul li').addClass('animation');
+
+        function resetProgressBar(){
+            var progress=$("#doucumentProgressBar").attr("progress");
+            $("#theBar").attr("style","width:"+String((Number(progress)+2)/12*100)+"%");
+        }
+
+        resetProgressBar();
+
     })
-
-
 </script>
 {% endblock %}

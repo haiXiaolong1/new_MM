@@ -519,15 +519,29 @@ def purchase_documents(request):
     if document_state=="采0请1询X报1暂X":  #区分三种质检情况
         zsd=models.Zanshoudan.objects.filter(temid=list[0]["id"]).first()
         document_state+="质{}量{}".format(zsd.qualitycheckinfo,zsd.quantitycheckinfo)
-    document_state_dict={"采1请1询X报1暂1入1":10,"采1请1询X报1暂0入0":9,
-                         "采0请1询X报1入-1入-1":8,"采0请1询X报1暂X质1量-1":7,
+    document_state_dict={"采1请1询X报1暂1入1发X":10,"采1请1询X报1暂0入0":8,
+                         "采0请1询X报1入-1入-1":7,"采0请1询X报1暂X质1量-1":6,
                          "采0请1询X报1暂X质-1量1":6,"采0请1询X报1暂X质-1量-1":5,
-                         "请1询X报-1":4,"请1报1":3,"请1报0":2,"请0":1,"请-1":0}
+                         "请1询X报-1":4,"请1报1":3,"请1报0":2,"请0":1,"请-1":-1,"":-2}
+    active="background:#5893df"
+    style=[""]*11
+    progress=document_state_dict[document_state]
+    for i in range(progress+1):
+        style[i]=active
+    textFirst="货物质检"
+    textSecond="货物量检"
+    if document_state=="采0请1询X报1暂X质-1量1":
+        textFirst,textSecond=textSecond,textFirst
+    progressShow=(len(list)>0)
     result = {
         "list": list,
         "id": nid,
         "title": "查看单据流",
-        "progress":document_state_dict(document_state)
+        "progress":progress,
+        "style":style,
+        "textFirst":textFirst,
+        "textSecond":textSecond,
+        "progressShow":progressShow,
     }
     return render(request, 'purchase_documents.html', result)
 
