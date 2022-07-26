@@ -293,29 +293,30 @@ def documents(list, puid):
                 list.append(m)
             # 入库单
             r = models.Rukudan.objects.filter(temid_id=tid).first()
-            if r.id == tid:
-                m["name"] = "入库单"
-                m["id"] = "暂未创建"
-                list.append(m)
-            else:
-                m = {}
-                date = r.createtime
-                name = "入库单"
-                id = r.id
-                rcount = r.receivecount
-                moreinfo = r.moreinfo
-                m["date"] = date
-                m["status"] = status
-                m["id"] = id
-                m["fid"] = fid
-                m["tcount"] = tcount
-                m["price"] = p.price
-                m["mid"] = mid
-                m['sid'] = sid
-                m["name"] = name
-                m["rcount"] = rcount
-                m["moreinfo"] = moreinfo
-                list.append(m)
+            if r:
+                if r.id == tid:
+                    m["name"] = "入库单"
+                    m["id"] = "暂未创建"
+                    list.append(m)
+                else:
+                    m = {}
+                    date = r.createtime
+                    name = "入库单"
+                    id = r.id
+                    rcount = r.receivecount
+                    moreinfo = r.moreinfo
+                    m["date"] = date
+                    m["status"] = status
+                    m["id"] = id
+                    m["fid"] = fid
+                    m["tcount"] = tcount
+                    m["price"] = p.price
+                    m["mid"] = mid
+                    m['sid'] = sid
+                    m["name"] = name
+                    m["rcount"] = rcount
+                    m["moreinfo"] = moreinfo
+                    list.append(m)
 
     return
 
