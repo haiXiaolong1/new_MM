@@ -146,6 +146,12 @@
                             localStorage.setItem("notify_context", "创建成功，询价单号:" + res.inid);
                             localStorage.setItem("notify_type", "success");
                             location.reload();
+                        }else{
+                            localStorage.setItem("notify_show", true);
+                            localStorage.setItem("notify_tittle", "提示");
+                            localStorage.setItem("notify_context",  res.errors[0]);
+                            localStorage.setItem("notify_type", "error");
+                            location.reload();
                         }
                     }
 
