@@ -41,14 +41,16 @@ class TestDjangoExcelUpload(View):
         else:
             return HttpResponse("出错了")
 
-
+import time
 # ex:/assetinfo/test_django_excel_download
 class TestDjangoExcelDownload(View):
     """测试使用django-excel下载文件"""
 
-    def get(self):
-        sheet = excel.pe.Sheet([[1, 2], [3, 4]])
-        return excel.make_response(sheet, "xlsx")
+    def get(self, request):
+        sheet = excel.pe.Sheet([["供应商名称name", "供应商地址address"]])
+        name = "供应商上传批量模板"
+        ts = int(time.time())
+        return excel.make_response(sheet, "xlsx",file_name=name+str(ts))
 
 
 def add_supply_axu(data_each,request):
