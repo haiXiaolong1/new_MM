@@ -97,6 +97,7 @@ def form_item_check(context, type="nan"):
 
 # 添加采购需求
 def demand_add(request):
+    print(1)
     """添加采购需求"""
     print(1)
     n = 10000000

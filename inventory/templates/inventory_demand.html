@@ -193,7 +193,6 @@
                     data: $("#formAdd").serialize(),
                     dataType: "JSON",
                     success: function (res) {
-                        alert(1)
                         if (res.status) {
                             $("#myd").modal('hide');
                             $("#formAdd")[0].reset();
