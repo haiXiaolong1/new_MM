@@ -53,8 +53,7 @@
         <!-- Page Sidebar -->
         <div class="page-sidebar">
             <a class="logo-box" href="">
-                <span>NEWMM</span>
-                <i class="icon-radio_button_unchecked" id="fixed-sidebar-toggle-button"></i>
+                <span style="font-size:x-large">NEWMM</span>
                 <i class="icon-close" id="sidebar-toggle-button-close"></i>
             </a>
             <div class="page-sidebar-inner">
@@ -65,61 +64,64 @@
                         <li class="topli" id="supply">
                             <a href="javascript:void(0);">
                                 <i class="menu-icon icon-people"></i>
-                                <span>供应商管理</span>
+                                <span style="font-size: large"><strong>供应商管理</strong></span>
                                 <i class="accordion-icon fa fa-angle-left">
                                 </i>
                             </a>
-                            <ul class="sub-menu" id="supply_ul">
-                                <li id="supply1"><a href="/supply/list">维护供应商</a></li>
-                                <li id="supply2"><a href="/supply/material/list">维护物料关系</a></li>
-                                <li id="supply3"><a href="/supply/quote/list">维护报价单</a></li>
+                            <ul class="sub-menu" id="supply_ul" >
+                                <li id="supply1" ><a href="/supply/list" style="font-size:medium">维护供应商</a></li>
+                                <li id="supply2"><a href="/supply/material/list" style="font-size:medium">维护物料关系</a></li>
+                                <li id="supply3"><a href="/supply/quote/list" style="font-size:medium">维护报价单</a></li>
                             </ul>
                         </li>
                         <li class="topli" id="purchase">
                             <a href="javascript:void(0);">
-                                <i class="menu-icon icon-command"></i><span>采购管理</span><i
+                                <i class="menu-icon glyphicon glyphicon-shopping-cart"></i>
+                                <span style="font-size: large"><strong>采购管理</strong></span><i
                                     class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul class="sub-menu" id="purchase_ul">
-                                <li class="subMenu" id="purchase_documents"><a href="/purchase/documents/">查看单据流</a>
+                                <li class="subMenu" id="purchase_documents"><a href="/purchase/documents/" style="font-size:medium">查看单据流</a>
                                 </li>
                                 <li class="subMenu" id="purchase_create_inquiry"><a
-                                        href="/purchase/inquiry/create/">创建询价单</a></li>
-                                <li class="subMenu" id="purchase_e_quote"><a href="/purchase/quote/evaluate/">评估报价单</a>
+                                        href="/purchase/inquiry/create/" style="font-size:medium">创建询价单</a></li>
+                                <li class="subMenu" id="purchase_e_quote"><a href="/purchase/quote/evaluate/" style="font-size:medium">评估报价单</a>
                                 </li>
-                                <li class="subMenu" id="purchase_list"><a href="/purchase/list/">创建采购单</a></li>
+                                <li class="subMenu" id="purchase_list"><a href="/purchase/list/" style="font-size:medium">创建采购单</a></li>
                             </ul>
                         </li>
                         <li class="topli" id="inventory">
                             <a href="javascript:void(0);">
-                                <i class="menu-icon icon-home2"></i><span>库存管理</span><i
+                                <i class="menu-icon icon-home2"></i>
+                                <span style="font-size: large"><strong>库存管理</strong></span><i
                                     class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul class="sub-menu" id="inventory_ul">
-                                <li id="inventory_display"><a href="/inventory/display/">查看库存</a></li>
-                                <li id="inventory_demand"><a href="/inventory/demand/n/">采购需求管理</a></li>
-                                <li id="inventory_temp"><a href="/inventory/temp/">暂存检查</a></li>
-                                <li id="inventory_receive"><a href="/inventory/receive/">收货管理</a></li>
-                                <li id="inventory_invoice"><a href="/inventory/invoice/">发票</a></li>
+                                <li id="inventory_display"><a href="/inventory/display/" style="font-size:medium">查看库存</a></li>
+                                <li id="inventory_demand"><a href="/inventory/demand/n/" style="font-size:medium">采购需求管理</a></li>
+                                <li id="inventory_temp"><a href="/inventory/temp/" style="font-size:medium">暂存检查</a></li>
+                                <li id="inventory_receive"><a href="/inventory/receive/" style="font-size:medium">收货管理</a></li>
+                                <li id="inventory_invoice"><a href="/inventory/invoice/" style="font-size:medium">发票</a></li>
                             </ul>
                         </li>
                         {% if request.session.info.office == "0" %}
                         <li class="topli" id="account">
                             <a href="javascript:void(0);">
-                                <i class="menu-icon icon-command"></i><span>权限管理</span><i
+                                <i class="menu-icon icon-command"></i><span style="font-size: large"><strong>权限管理</strong></span><i
                                     class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul class="sub-menu" id="account_ul">
-                                <li class="subMenu" id="account_documents"><a href="/account/ac/list/">用户管理</a></li>
+                                <li class="subMenu" id="account_documents"><a href="/account/ac/list/" style="font-size:medium">用户管理</a></li>
                             </ul>
                         </li>
                         <li class="topli" id="init">
                             <a href="javascript:void(0);">
-                                <i class="menu-icon icon-command"></i><span>基础设置</span><i
+                                <i class="menu-icon glyphicon glyphicon-wrench"></i>
+                                <span style="font-size: large"><strong>基础设置</strong></span><i
                                     class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul class="sub-menu" id="init_ul">
-                                <li class="subMenu" id="init_documents"><a href="/supply/mm/list">物料维护</a></li>
+                                <li class="subMenu" id="init_documents"><a href="/supply/mm/list" style="font-size: medium">物料维护</a></li>
                             </ul>
                         </li>
                         {% endif %}
@@ -182,11 +184,16 @@
                                         </i>
                                     </a></li>
                                 <li><a href="javascript:void(0)">
-                                        <button id="sendTestMessage">发送消息</button>
+                                        <button  id="sendTestMessage" class="btn btn-link">
+                                           <span class="glyphicon glyphicon-send" ></span> 发送消息
+                                            </button>
                                     </a></li>
                                 <li class="dropdown user-dropdown">
+
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                        aria-haspopup="true" aria-expanded="false">{{ request.session.info.name }}</a>
+                                        aria-haspopup="true" aria-expanded="false" style="font-size: medium;margin-top: 5px">
+                                        {{ request.session.info.name }}</a>
+
                                     <ul class="dropdown-menu" id="on-log-user" yid="{{ request.session.info.id }}">
                                         <li><a href="#">用户名：{{ request.session.info.name }}</a></li>
                                         <li><a href="#">职位：{{ request.session.info.officename }}</a></li>
