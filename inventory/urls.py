@@ -8,9 +8,10 @@ urlpatterns = [
     path("temp/", views.inventory_temp),
     path("temp/delete/", views.inventory_delete),
 
-    path("demand/add/", views.demand_add),
-    path("demand/verify/", views.demand_verify),
-    path("demand/delete/", views.demand_delete),
+    path("demand/add/n/", views.demand_add),
+    path("demand/verify/n/", views.demand_verify),
+    # path("demand/delete/", views.demand_delete),
+    path("demand/delete/n/", views.demand_delete),
 
     path("quality/check/", views.quality_check),
     path("quantity/check/", views.quantity_check),

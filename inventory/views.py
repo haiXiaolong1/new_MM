@@ -74,7 +74,6 @@ def inventory_demand(request, did):
     return render(request, 'inventory_demand.html', result)
 
 
-import json
 
 """ 表单数据验证+报错信息 """
 
@@ -99,6 +98,7 @@ def form_item_check(context, type="nan"):
 # 添加采购需求
 def demand_add(request):
     """添加采购需求"""
+    print(1)
     n = 10000000
     if models.Caigouxuqiu.objects.all().first():
         n = models.Caigouxuqiu.objects.all().order_by('-demandid').first().demandid[2:]
@@ -116,13 +116,12 @@ def demand_add(request):
         errors.append(result)
         if not result == True:
             returnStatus = False
-    res_dict = json.dumps({"status": returnStatus, "error": errors}, ensure_ascii=False)
-    print(res_dict)
+    print(returnStatus)
     if returnStatus:  # 校验成功才执行插入
         models.Caigouxuqiu.objects.create(demandid=did, price=r["price"], tcount=r['tcount']
                                           , status=0, createtime=time, createuserid_id=id,
                                           facid_id=r['facid_id'], maid_id=r['maid_id'])
-    return JsonResponse(res_dict, safe=False)
+    return JsonResponse({"status": returnStatus, "error": errors})
 
 
 @csrf_exempt

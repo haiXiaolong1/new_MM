@@ -59,12 +59,11 @@
                                                     <a class="formError" id="tcount_error"></a>
                                                 </div>
                                             </form>
-
                                         </div>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">取消
                                             </button>
-                                            <button type="submit" id="btnSave" class="btn btn-success">保存</button>
+                                            <button type="button" id="btnSave" class="btn btn-success">保存</button>
                                         </div>
                                     </div>
                                 </div>
@@ -189,14 +188,13 @@
             })
             $("#btnSave").click(function () {
                 $.ajax({
-                    url: "/inventory/demand/add/",
+                    url: "/inventory/demand/add/n/",
                     type: "post",
                     data: $("#formAdd").serialize(),
                     dataType: "JSON",
                     success: function (res) {
-                        var res_dict = JSON.parse(res);
-                        console.log(res_dict);
-                        if (res_dict.status) {
+                        alert(1)
+                        if (res.status) {
                             $("#myd").modal('hide');
                             $("#formAdd")[0].reset();
                             // 此处页面响应顺序为：后端插入数据→页面reload→弹出信息提示床架成功
@@ -211,8 +209,8 @@
                             var ids = ["#facid_id_error", "#maid_id_error", "#price_error", "#tcount_error"];
                             for (var i = 0; i < ids.length; i++) {
                                 $(ids[i]).text("");
-                                if (res_dict.error[i] != true) {
-                                    $(ids[i]).text(res_dict.error[i]);
+                                if (res.error[i] != true) {
+                                    $(ids[i]).text(res.error[i]);
                                 }
                             }
                         }
@@ -224,9 +222,9 @@
                 VERIFY_ID = $(this).attr("uid");
 
                 $.ajax({
-                    url: "/inventory/demand/verify/",
+                    url: "/inventory/demand/verify/n/",
                     type: "post",
-                    data: {"did": VERIFY_ID},
+                    data: {"did": VERIFY_ID,"csrfmiddlewaretoken":'{{ csrf_token }}'},
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {
@@ -248,7 +246,7 @@
             $("#Delete").click(
                 function () {
                     $.ajax({
-                        url: "/inventory/demand/delete/",
+                        url: "/inventory/demand/delete/n/",
                         type: "get",
                         data: {uid: DELETE_ID},
                         dataType: "JSON",
