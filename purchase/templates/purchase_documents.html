@@ -1,68 +1,91 @@
 {% extends 'common.html' %}
 
 {% block content %}
-    <div class="page-inner">
-        <div class="page-title">
-            <h3 class="breadcrumb-header">查看单据流</h3>
-        </div>
-        <div id="main-wrapper">
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="panel panel-white">
-                        <div class="panel-heading clearfix">
-                            <h4 class="panel-title">查询单据流</h4>
-                        </div>
-                        <div class="panel-body container">
-                            <form method="get">
-                                <div class="col-md-3">
-                                    <input type="text" class="form-control" placeholder="输入单据号" name="id"
-                                           value="{{ id }}">
-                                </div>
-                                <button class="btn btn-success" type="submit">搜索</button>
-                            </form>
+<div class="page-inner">
+    <div class="page-title">
+        <h3 class="breadcrumb-header">查看单据流</h3>
+    </div>
+    <div id="main-wrapper">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-white">
+                    <div class="panel-heading clearfix">
+                        <h4 class="panel-title">查询单据流</h4>
+                    </div>
+                    <div class="panel-body container">
+                        <form method="get">
+                            <div class="col-md-3">
+                                <input type="text" class="form-control" placeholder="输入单据号" name="id" value="{{ id }}">
+                            </div>
+                            <button class="btn btn-success" type="submit">搜索</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12">
+                <div id="doucumentProgressBar">
+                    <!-- 进度条 -->
+                    <div class="progress progress-md">
+                        <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
+                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 25%">
+                            <span class="sr-only">25% Complete</span>
 
                         </div>
+                    </div>
+                    <!-- 五个圆 -->
+                        <span style="left:0%;background:#5893df"></span>
+                        <span style="left:25%" class="progressActive"></span>
+                        <span style="left:50%"></span>
+                        <span style="left:75%"></span>
+                        <span style="left:100%"></span>
+                    <div id="doucumentProgressText">
+                        <span style="left:0%">请购</span>
+                        <span style="left:25%">报价</span>
+                        <span style="left:50%">采购</span>
+                        <span style="left:75%">入库</span>
+                        <span style="left:100%">发票</span>
                     </div>
                 </div>
 
 
-                <div class="col-md-12" id="documents">
-                    <section id="cd-timeline" class="cd-container">
-                        {% for obj in list %}
-                            {% if obj.id != "暂未创建" %}
-                                <div class="cd-timeline-block">
-                                    <div class="cd-timeline-img cd-success">
-                                        <i class="fa fa-tag"></i>
-                                    </div> <!-- cd-timeline-img -->
-                                    <div class="cd-timeline-content">
-                                        <h4>{{ obj.name }}</h4>
-                                        {% load myfilter %}
-                                        {% for i in obj|obj_document %}
-                                            <p class="{{ i.class }}">{{ i.name }}：{{ i.context }}{{ i.text }}</p>
-                                        {% endfor %}
-                                        <span class="cd-date">{{ obj.date }}</span>
-                                    </div> <!-- cd-timeline-content -->
-                                </div><!-- cd-timeline-block -->
-                            {% endif %}
-                        {% endfor %}
-                    </section>
-                </div>
-            </div><!-- Row -->
-        </div><!-- Main Wrapper -->
-    </div>
+            </div>
+            <div class="col-md-12" id="documents">
+                <section id="cd-timeline" class="cd-container">
+                    {% for obj in list %}
+                    {% if obj.id != "暂未创建" %}
+                    <div class="cd-timeline-block">
+                        <div class="cd-timeline-img cd-success">
+                            <i class="fa fa-tag"></i>
+                        </div> <!-- cd-timeline-img -->
+                        <div class="cd-timeline-content">
+                            <h4>{{ obj.name }}</h4>
+                            {% load myfilter %}
+                            {% for i in obj|obj_document %}
+                            <p class="{{ i.class }}">{{ i.name }}：{{ i.context }}{{ i.text }}</p>
+                            {% endfor %}
+                            <span class="cd-date">{{ obj.date }}</span>
+                        </div> <!-- cd-timeline-content -->
+                    </div><!-- cd-timeline-block -->
+                    {% endif %}
+                    {% endfor %}
+                </section>
+            </div>
+        </div><!-- Row -->
+    </div><!-- Main Wrapper -->
+</div>
 {% endblock %}
 
 {% block js %}
-    <script type="text/javascript">
-        var VERIFY_ID;
-        $(document).ready(function () {
-            $('li').removeClass('active-page');
-            $('#purchase_documents').addClass('active-page');
-            $('#purchase').addClass('active-page').addClass('open');
-            $('#purchase_ul').css('display', 'block');
-            $('#purchase_ul li').addClass('animation');
-        })
+<script type="text/javascript">
+    var VERIFY_ID;
+    $(document).ready(function () {
+        $('li').removeClass('active-page');
+        $('#purchase_documents').addClass('active-page');
+        $('#purchase').addClass('active-page').addClass('open');
+        $('#purchase_ul').css('display', 'block');
+        $('#purchase_ul li').addClass('animation');
+    })
 
 
-    </script>
+</script>
 {% endblock %}
