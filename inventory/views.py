@@ -99,7 +99,6 @@ def form_item_check(context, type="nan"):
 def demand_add(request):
     print(1)
     """添加采购需求"""
-    print(1)
     n = 10000000
     if models.Caigouxuqiu.objects.all().first():
         n = models.Caigouxuqiu.objects.all().order_by('-demandid').first().demandid[2:]
