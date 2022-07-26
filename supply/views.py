@@ -240,7 +240,6 @@ def login(request):
     request.session["info"] = {"name": ins.username, "id": ins.id, "issuper": ins.issuper
         , "office": ins.office, "business": ins.businessid.name, "officename": ins.get_office_display()}
     request.session["messageFlow"] = all_message_by_user(None, ins.id)
-    print(ins.get_office_display())
     return JsonResponse({"status": True})
 
 

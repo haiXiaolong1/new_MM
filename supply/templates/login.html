@@ -42,20 +42,20 @@
 				<form method="post" id="formAdd" >
 					{% csrf_token %}
 					<div>
-						<input type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="员工编号" name="username" >
-						<a class="formError" id="username_error"></a>
+						<input type="text" class="form-control" id="exampleInputEmail1" placeholder="员工编号" name="username" >
+						<a class="formError" id="username_error" style="color: red;text-align: left"></a>
 					</div>
 					<br>
 					<div >
 						<input type="password" class="form-control" id="exampleInputPassword1" placeholder="密码" name="password">
-						<a class="formError" id="password_error"></a>
+						<a class="formError" id="password_error" style="color: red;text-align: left"></a>
 					</div>
 
 					<hr>
-					<button type="summit" class="btn-success btn" id="btnLogin" style="width:100%;margin: auto">登录</button>
+					<button type="button" class="btn-success btn" id="btnLogin" style="width:100%;margin: auto">登录</button>
 
 					<div class="form-check">
-						<label class="forgot-password"><a href="#">忘记密码？<a></label>
+						<label class="forgot-password"><a href="#">忘记密码？</a></label>
 					</div>
 
 				</form>
@@ -87,6 +87,7 @@
                     dataType:"JSON",
                     success:function (res){
                         if(res.status){
+                            alert("成功")
                             top.location.href = "/supply/list/";
                         }
                         else{
@@ -100,5 +101,6 @@
 
     })
 </script>
+</div>
 </body>
 </html>

@@ -160,7 +160,7 @@ input:checked + .slider {
 }
 
 input:focus + .slider {
-  box-shadow: 0 0 1px ##00B72E;
+  box-shadow: 0 0 1px #00B72E;
 }
 
 input:checked + .slider:before {
@@ -169,7 +169,9 @@ input:checked + .slider:before {
   transform: translateX(30px);
 }
 
-
+.formError{
+	color: red;
+}
 
 /* Media queries */
 
