@@ -59,6 +59,16 @@ def create_qui(request):
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id = request.session["info"]['id']
     user = models.Yuangong.objects.filter(id=id).first()
+    err=[]
+    mid=models.Caigouxuqiu.objects.filter(demandid=did).first().maid_id
+    r=models.Gongyingguanxi.objects.filter(materialid_id=mid,supplyid_id=sid)
+    if not r :
+        err.append("该供应商不存在此供应关系")
+        return JsonResponse({"status": False, "errors": err})
+    s=models.Xunjiadan.objects.filter(demandid_id=did,supplyid_id=sid,maid_id=mid)
+    if s:
+        err.append("已经向该供应商发出了询价单")
+        return JsonResponse({"status": False, "errors": err})
     models.Xunjiadan.objects.create(inquiryid=inid, tcount=d.tcount, validitytime=date,
                                     createtime=time, bussid_id=user.businessid_id, createuserid_id=id,
                                     demandid_id=did, maid_id=d.maid_id, supplyid_id=sid
@@ -318,6 +328,25 @@ def documents(list, puid):
                     m["moreinfo"] = moreinfo
                     list.append(m)
 
+                #发票
+                iv=models.Fapiao.objects.filter(purchaseid_id=puid).first()
+                if iv:
+                    m = {}
+                    date = iv.createtime
+                    name = "发票"
+                    id = iv.invoiceid
+                    moreinfo = iv.moreinfo
+                    m["date"] = date
+                    m["id"] = id
+                    m["tcount"] = tcount
+                    m["fee"] = iv.fee
+                    m["totalmoney"]=iv.totalmoney
+                    m["mid"] = mid
+                    m['sid'] = sid
+                    m["name"] = name
+                    m["moreinfo"] = moreinfo
+                    list.append(m)
+
     return
 
 
@@ -497,5 +526,4 @@ def quote_delete(request):
 
 def to_verify(request, did):
     # 跳转到采购需求管理页面
-    print(did)
     return redirect('/inventory/demand/' + did + "/")

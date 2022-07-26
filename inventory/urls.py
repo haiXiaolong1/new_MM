@@ -10,7 +10,6 @@ urlpatterns = [
 
     path("demand/add/n/", views.demand_add),
     path("demand/verify/n/", views.demand_verify),
-    # path("demand/delete/", views.demand_delete),
     path("demand/delete/n/", views.demand_delete),
 
     path("quality/check/", views.quality_check),
