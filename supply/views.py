@@ -56,7 +56,8 @@ def ambu_time(time):
         return time.strftime("%m{m}%d{d}").format(m="月", d="日")
     return time.strftime("%H:%M")
 
-
+#返回登录用户的消息列表，按已读未读分组
+#消息列表：所有聊天对象的最后一条消息+人名+格式化时间
 def all_message_by_user(request, me="e0002"):
     relevant = models.Xiaoxi.objects.filter(Q(fromId=me) | Q(toId=me)).all().order_by('time')
     read = {}
@@ -80,7 +81,7 @@ def all_message_by_user(request, me="e0002"):
         unread[k]["name"] = models.Yuangong.objects.filter(id=k).first().username
     return {"read": read, "unread": unread, "me": me}
 
-
+# 找到一对聊天对象的所有消息流
 def all_message(them='e0003', me='e0002'):
     print(them, me)
     who = models.Yuangong.objects.filter(id=them).first().username
@@ -90,16 +91,16 @@ def all_message(them='e0003', me='e0002'):
     for i in froms:
         message_flow.append(
             {"isThem": True, "time": i.time.strftime("%m{m}%d{d} %H:%M:%S").format(m="月", d="日"), "text": i.context,
-             "compare": int(i.time.strftime("%Y%m%d%H%M%S%f"))})
+             "compare": int(i.time.strftime("%Y%m%d%H%M"))})
     for i in tos:
         message_flow.append(
             {"isThem": False, "time": i.time.strftime("%m{m}%d{d} %H:%M:%S").format(m="月", d="日"), "text": i.context,
-             "compare": int(i.time.strftime("%Y%m%d%H%M%S%f"))})
+             "compare": int(i.time.strftime("%Y%m%d%H%M"))})
     message_flow = sorted(message_flow, key=lambda a: a["compare"])
     flow = {"who": who, "flow": message_flow}
     return flow
 
-
+#生成页面中一条消息的html
 def add_message(line):
     html_class = "me"
     icon = ""
@@ -110,16 +111,17 @@ def add_message(line):
     html = html_template.format(html_class, icon, line["text"])
     return html
 
-
+#按时间对消息分组，一段时间内的消息归进一组，显示一个时间戳
 def group_by_time(f):
     flow = f["flow"]
     start = int(flow[0]["compare"])
-    interval = 200000
+    interval = 3 #同一时间组发送时间差上限  分钟
     group = 0
     groups = {0: []}
     for i in flow:
+        print(int(i["compare"])-start)
         if int(i["compare"]) - start >= interval:
-            start = i["compare"]
+            start = int(i["compare"])
             group += 1
             groups[group] = []
         groups[group].append(i)

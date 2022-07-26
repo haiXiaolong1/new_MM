@@ -68,9 +68,10 @@
                                 <i class="accordion-icon fa fa-angle-left">
                                 </i>
                             </a>
-                            <ul class="sub-menu" id="supply_ul" >
-                                <li id="supply1" ><a href="/supply/list" style="font-size:medium">维护供应商</a></li>
-                                <li id="supply2"><a href="/supply/material/list" style="font-size:medium">维护物料关系</a></li>
+                            <ul class="sub-menu" id="supply_ul">
+                                <li id="supply1"><a href="/supply/list" style="font-size:medium">维护供应商</a></li>
+                                <li id="supply2"><a href="/supply/material/list" style="font-size:medium">维护物料关系</a>
+                                </li>
                                 <li id="supply3"><a href="/supply/quote/list" style="font-size:medium">维护报价单</a></li>
                             </ul>
                         </li>
@@ -81,13 +82,16 @@
                                     class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul class="sub-menu" id="purchase_ul">
-                                <li class="subMenu" id="purchase_documents"><a href="/purchase/documents/" style="font-size:medium">查看单据流</a>
+                                <li class="subMenu" id="purchase_documents"><a href="/purchase/documents/"
+                                        style="font-size:medium">查看单据流</a>
                                 </li>
-                                <li class="subMenu" id="purchase_create_inquiry"><a
-                                        href="/purchase/inquiry/create/" style="font-size:medium">创建询价单</a></li>
-                                <li class="subMenu" id="purchase_e_quote"><a href="/purchase/quote/evaluate/" style="font-size:medium">评估报价单</a>
+                                <li class="subMenu" id="purchase_create_inquiry"><a href="/purchase/inquiry/create/"
+                                        style="font-size:medium">创建询价单</a></li>
+                                <li class="subMenu" id="purchase_e_quote"><a href="/purchase/quote/evaluate/"
+                                        style="font-size:medium">评估报价单</a>
                                 </li>
-                                <li class="subMenu" id="purchase_list"><a href="/purchase/list/" style="font-size:medium">创建采购单</a></li>
+                                <li class="subMenu" id="purchase_list"><a href="/purchase/list/"
+                                        style="font-size:medium">创建采购单</a></li>
                             </ul>
                         </li>
                         <li class="topli" id="inventory">
@@ -97,21 +101,28 @@
                                     class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul class="sub-menu" id="inventory_ul">
-                                <li id="inventory_display"><a href="/inventory/display/" style="font-size:medium">查看库存</a></li>
-                                <li id="inventory_demand"><a href="/inventory/demand/n/" style="font-size:medium">采购需求管理</a></li>
-                                <li id="inventory_temp"><a href="/inventory/temp/" style="font-size:medium">暂存检查</a></li>
-                                <li id="inventory_receive"><a href="/inventory/receive/" style="font-size:medium">收货管理</a></li>
-                                <li id="inventory_invoice"><a href="/inventory/invoice/" style="font-size:medium">发票</a></li>
+                                <li id="inventory_display"><a href="/inventory/display/"
+                                        style="font-size:medium">查看库存</a></li>
+                                <li id="inventory_demand"><a href="/inventory/demand/n/"
+                                        style="font-size:medium">采购需求管理</a></li>
+                                <li id="inventory_temp"><a href="/inventory/temp/" style="font-size:medium">暂存检查</a>
+                                </li>
+                                <li id="inventory_receive"><a href="/inventory/receive/"
+                                        style="font-size:medium">收货管理</a></li>
+                                <li id="inventory_invoice"><a href="/inventory/invoice/" style="font-size:medium">发票</a>
+                                </li>
                             </ul>
                         </li>
                         {% if request.session.info.office == "0" %}
                         <li class="topli" id="account">
                             <a href="javascript:void(0);">
-                                <i class="menu-icon icon-command"></i><span style="font-size: large"><strong>权限管理</strong></span><i
+                                <i class="menu-icon icon-command"></i><span
+                                    style="font-size: large"><strong>权限管理</strong></span><i
                                     class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul class="sub-menu" id="account_ul">
-                                <li class="subMenu" id="account_documents"><a href="/account/ac/list/" style="font-size:medium">用户管理</a></li>
+                                <li class="subMenu" id="account_documents"><a href="/account/ac/list/"
+                                        style="font-size:medium">用户管理</a></li>
                             </ul>
                         </li>
                         <li class="topli" id="init">
@@ -121,7 +132,8 @@
                                     class="accordion-icon fa fa-angle-left"></i>
                             </a>
                             <ul class="sub-menu" id="init_ul">
-                                <li class="subMenu" id="init_documents"><a href="/supply/mm/list" style="font-size: medium">物料维护</a></li>
+                                <li class="subMenu" id="init_documents"><a href="/supply/mm/list"
+                                        style="font-size: medium">物料维护</a></li>
                             </ul>
                         </li>
                         {% endif %}
@@ -184,14 +196,15 @@
                                         </i>
                                     </a></li>
                                 <li><a href="javascript:void(0)">
-                                        <button  id="sendTestMessage" class="btn btn-link">
-                                           <span class="glyphicon glyphicon-send" ></span> 发送消息
-                                            </button>
+                                        <button id="sendTestMessage" class="btn btn-link">
+                                            <span class="glyphicon glyphicon-send"></span> 发送消息
+                                        </button>
                                     </a></li>
                                 <li class="dropdown user-dropdown">
 
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                        aria-haspopup="true" aria-expanded="false" style="font-size: medium;margin-top: 5px">
+                                        aria-haspopup="true" aria-expanded="false"
+                                        style="font-size: medium;margin-top: 5px">
                                         {{ request.session.info.name }}</a>
 
                                     <ul class="dropdown-menu" id="on-log-user" yid="{{ request.session.info.id }}">
@@ -277,7 +290,7 @@
                                         data-placement="bottom" title="Load More">&bull;&bull;&bull;加载更多</a> -->
                                 </div>
                                 {% endif %}
-                                {% if request.session.messageFlow.unread.items|length == 0 and request.session.messageFlow.read.items|length == 0 %}
+                                {% if request.session.messageFlow.unread.items|length == 0 and  request.session.messageFlow.read.items|length == 0 %}
                                 <div class="chat-list">
                                     <h4 class="noinfo_holder">暂无消息</h4>
                                 </div>
@@ -305,7 +318,8 @@
                         </div>
                         <div class="chat-write">
                             <div class="form-horizontal" action="javascript:void(0);">
-                                <input type="text" class="form-control my-left" id="textMessage" placeholder="在这里输入新消息">
+                                <input type="text" class="form-control my-left" id="textMessage" autocomplete="off"
+                                    placeholder="在这里输入新消息">
                                 <button id="sendTextMessage">发送</button>
                             </div>
                         </div>
@@ -503,9 +517,16 @@
             // 调用时间：进入和刷新页面时，间隔调用时
             // setTimeout(checkMessage, 2000);
 
+            function myScrollDown() {
+                var scrollTo_int = $('.right-sidebar-chat').prop('scrollHeight') + 'px';
+                $('.right-sidebar-chat').slimscroll({
+                    allowPageScroll: true,
+                    scrollTo: scrollTo_int
+                });
+            }
+
             // 打开第二层右侧边栏-消息窗口
             // 获取聊天对象id,后台生成消息窗口的html段落,刷新第二层边栏内容
-            // 未完成:进入后自动滑到底部,后台生成的html没有正确按时间分组
             $("#chat").on("click", "a", function () {
                 var meid = $("#on-log-user").attr("yid");
                 var yid = $(this).attr("yid");
@@ -523,6 +544,7 @@
                             setMessageList();
                             if ($("#chat-right-sidebar").attr("class") == "page-right-sidebar") {
                                 $("#chat-right-sidebar").toggleClass('visible');
+                                myScrollDown();
                             }
                         } else {
                         }
@@ -551,7 +573,7 @@
             // 第二层右边栏:点击"发送"按钮触发
             // 将当前聊天框里的内容发送到窗口
             // 窗口内采取添加html段落的方法,退出窗口后由后台生成
-            // 未完成:检测消息不为空,去掉input元素记录的历史输入,发送按钮样式设计,发送时间未显示
+            // 未完成:发送按钮样式设计
             function addMessage() {
                 if ($('.right-sidebar-chat .chat-bubbles .chat-bubble:last-child').hasClass('me')) {
                     $('<span class="chat-bubble-text">' + $("#textMessage").val() + '</span>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child span:last-child");
@@ -559,30 +581,37 @@
                     $('<div class="chat-bubble me"><div class="chat-bubble-text-container"><span class="chat-bubble-text">' + $("#textMessage").val() + '</span></div></div>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child");
                 };
                 $("#textMessage").val('');
-                var scrollTo_int = $('.right-sidebar-chat').prop('scrollHeight') + 'px';
-                $('.right-sidebar-chat').slimscroll({
-                    allowPageScroll: true,
-                    scrollTo: scrollTo_int
-                });
+                myScrollDown();
             };
 
-            // $(".chat-write form input").on('keypress', function (e) {
-            //         if ((e.which === 13)&&(!$(this).val().length === 0)) {
             // 聊天窗口发信功能
             function sendMessage() {
+                console.log("send");
                 var me = $("#on-log-user").attr("yid");
                 var them = $("#chatDetailName").attr("yid");
-                var text = $("#textMessage").val();
-                $.ajax({
-                    url: "/supply/sendMessage",
-                    type: "get",
-                    data: { "meid": me, "yid": them, "text": text },
-                    dataType: "JSON",
-                    success: function (res) {
-                        addMessage();
-                    }
-                })
+                var text = $("#textMessage").val().length;
+                if (text != 0) {
+                    $.ajax({
+                        url: "/supply/sendMessage",
+                        type: "get",
+                        data: { "meid": me, "yid": them, "text": text },
+                        dataType: "JSON",
+                        success: function (res) {
+                            addMessage();
+                        }
+                    })
+                }
+                else {
+                    $("#textMessage").val('');
+                }
             }
+
+            $("#textMessage").on('keyup', function (e) {
+                console.log(e.which);
+                if ((e.which === 13) && (!$("#textMessage").val().length == 0)) {
+                    sendMessage();
+                }
+            })
 
             // 将内容添加到窗口
             $("#sendTextMessage").click(function () {
