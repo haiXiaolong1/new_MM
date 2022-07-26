@@ -328,6 +328,25 @@ def documents(list, puid):
                     m["moreinfo"] = moreinfo
                     list.append(m)
 
+                #发票
+                iv=models.Fapiao.objects.filter(purchaseid_id=puid).first()
+                if iv:
+                    m = {}
+                    date = iv.createtime
+                    name = "发票"
+                    id = iv.invoiceid
+                    moreinfo = iv.moreinfo
+                    m["date"] = date
+                    m["id"] = id
+                    m["tcount"] = tcount
+                    m["fee"] = iv.fee
+                    m["totalmoney"]=iv.totalmoney
+                    m["mid"] = mid
+                    m['sid'] = sid
+                    m["name"] = name
+                    m["moreinfo"] = moreinfo
+                    list.append(m)
+
     return
 
 

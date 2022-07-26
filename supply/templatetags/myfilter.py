@@ -48,7 +48,7 @@ def trans(val,mark):
 @register.filter(name="obj_document")
 def obj_document(arg):
     arg=dict(arg)
-    names=["请购单","询价单","报价单","采购单","暂收单","入库单"]
+    names=["请购单","询价单","报价单","采购单","暂收单","入库单","发票"]
     qgd={
         "items":["id","status","fid","fid","mid","mid","tcount","price"],
         "tittles":["请购单号","订单状态","工厂编号","工厂地址","物料编号","物料描述","请购数量","预期单价"],
@@ -84,6 +84,13 @@ def obj_document(arg):
         "texts":[""]*11,
         "mark":[False,"status",False,"fid",False,"sid",False,"mid",False,False]
     }
+    fp={
+        "items":["id","sid","sid","mid","mid","fee","totalmoney","tcount","moreinfo"],
+        "tittles":["发票单号","供应商编号","供应商","物料编号","物料描述","运费","总金额","交易数量","备注"],
+        "classes":["full","full","full","full","full","full","full","full","full"],
+        "texts":[""]*9,
+        "mark":[False,False,"sid",False,"mid",False,False,False,False]
+    }
     rkd={
         "items":["id","status","fid","fid","sid","sid","mid","mid","tcount","moreinfo"],
         "tittles":["入库单号","订单状态","工厂编号","工厂地址","供应商编号","供应商","物料编号","物料描述","暂收数量","备注"],
@@ -91,15 +98,13 @@ def obj_document(arg):
         "texts":[""]*10,
         "mark":[False,"status",False,"fid",False,"sid",False,"mid",False,False]
     }
-    patterns=dict(zip(names,[qgd,xjd,bjd,cgd,zsd,rkd]))
+    patterns=dict(zip(names,[qgd,xjd,bjd,cgd,zsd,rkd,fp]))
     p=patterns[arg["name"]]
     result=[]
-    # print("【{}】-{}".format(arg["name"],arg))
     for idx,k in enumerate(p["items"]):
         d={"name":p["tittles"][idx],
            "context":trans(arg[k],p["mark"][idx]),
            "class":"document_flow_"+p["classes"][idx],
            "text":p["texts"][idx]}
-        # print(d)
         result.append(d)
     return result
