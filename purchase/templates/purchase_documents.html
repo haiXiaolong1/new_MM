@@ -34,19 +34,27 @@
                         </div>
                     </div>
                     <!-- 五个圆 -->
-                        <span style="left:0%;background:#5893df"></span>
-                        <span style="left:8%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;background:#5893df"></span>
-                        <span style="left:16%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.0}}"></span>
-                        <span style="left:25%;{{style.1}}"></span>
-                        <span style="left:33%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.2}}"></span>
-                        <span style="left:41%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.3}}"></span>
-                        <span style="left:49%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.4}}"></span>
-                        <span style="left:58%;{{style.5}}"></span>
-                        <span style="left:66%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.6}}"></span>
-                        <span style="left:74%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.7}}"></span>
-                        <span style="left:83%;{{style.8}}"></span>
-                        <span style="left:91%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.9}}"></span>
-                        <span style="left:100%;{{style.10}}"></span>
+                    <span style="left:0%;background:#5893df"></span>
+                    <span
+                        style="left:8%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;background:#5893df"></span>
+                    <span
+                        style="left:16%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.0}}"></span>
+                    <span style="left:25%;{{style.1}}"></span>
+                    <span
+                        style="left:33%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.2}}"></span>
+                    <span
+                        style="left:41%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.3}}"></span>
+                    <span
+                        style="left:49%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.4}}"></span>
+                    <span style="left:58%;{{style.5}}"></span>
+                    <span
+                        style="left:66%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.6}}"></span>
+                    <span
+                        style="left:74%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.7}}"></span>
+                    <span style="left:83%;{{style.8}}"></span>
+                    <span
+                        style="left:91%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.9}}"></span>
+                    <span style="left:100%;{{style.10}}"></span>
                     <div id="doucumentProgressText">
                         <span style="left:0%;">物料需求</span>
                         <span style="left:25%;">创建请购</span>
@@ -103,13 +111,30 @@
         $('#purchase_ul').css('display', 'block');
         $('#purchase_ul li').addClass('animation');
 
-        function resetProgressBar(){
-            var progress=$("#doucumentProgressBar").attr("progress");
-            $("#theBar").attr("style","width:"+String((Number(progress)+2)/12*100)+"%");
+        function resetProgressBar() {
+            var progress = $("#doucumentProgressBar").attr("progress");
+            $("#theBar").attr("style", "width:" + String((Number(progress) + 2) / 12 * 100) + "%");
         }
 
         resetProgressBar();
 
+        // var fixmeTop = $('#doucumentProgressBar').offset().top;       // get initial position of the element
+
+        // $(window).scroll(function () {                  // assign scroll event listener
+        //     var currentScroll = $(window).scrollTop(); // get current position
+        //     if (currentScroll >= fixmeTop) {           // apply position: fixed if you
+        //         $('#doucumentProgressBar').css({                      // scroll to that element or below it
+        //             position: 'fixed',
+        //             top: '0',
+        //             left: '0'
+        //         });
+        //     } else {                                   // apply position: static
+        //         $('#doucumentProgressBar').css({                      // if you scroll above it
+        //             position: 'relative',
+        //             margin:"10px 20% 0px 0px",
+        //         });
+        //     }
+        // });
     })
 </script>
 {% endblock %}
