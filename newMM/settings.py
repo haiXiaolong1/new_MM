@@ -80,7 +80,7 @@ WSGI_APPLICATION = 'newMM.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mmnew',
+        'NAME': 'mmssm',
         'USER': 'root',
         'PASSWORD': 'Tj215283#',
         'HOST': 'localhost',
