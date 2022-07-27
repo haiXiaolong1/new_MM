@@ -23,7 +23,7 @@
                 </div>
             </div>
             {% if progressShow %}
-            <div class="col-md-12">
+            <div class="col-md-12" style="position:sticky;" id="barContainer">
                 <div id="doucumentProgressBar" progress="{{progress}}">
                     <!-- 进度条 -->
                     <div class="progress progress-md">
@@ -118,23 +118,84 @@
 
         resetProgressBar();
 
-        // var fixmeTop = $('#doucumentProgressBar').offset().top;       // get initial position of the element
+        function barReset() {
+            var ele = document.getElementById('pageHeader');
+            var targetWidth = parseInt(window.getComputedStyle(ele).width.slice(0, -2));
+            var con = document.getElementById('barContainer');
+            var top = parseInt(window.getComputedStyle(con).height.slice(0, -2));
+            var left = parseInt(window.getComputedStyle(con).width.slice(0, -2));
+            $('#doucumentProgressBar').css({                      // scroll to that element or below it
+                left: String(left*-0.02)+'px', top:String(top*0.5)+'px',
+                position: 'relative',
+            });
+        }
+        barReset();
 
-        // $(window).scroll(function () {                  // assign scroll event listener
-        //     var currentScroll = $(window).scrollTop(); // get current position
-        //     if (currentScroll >= fixmeTop) {           // apply position: fixed if you
-        //         $('#doucumentProgressBar').css({                      // scroll to that element or below it
-        //             position: 'fixed',
-        //             top: '0',
-        //             left: '0'
-        //         });
-        //     } else {                                   // apply position: static
-        //         $('#doucumentProgressBar').css({                      // if you scroll above it
-        //             position: 'relative',
-        //             margin:"10px 20% 0px 0px",
-        //         });
-        //     }
-        // });
+        function getPos(sele) {
+            var elContent = document.querySelector(sele).getBoundingClientRect();
+            var scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+            var scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+            var x = elContent.x + scrollX;
+            var y = elContent.y + scrollY;
+            console.log(x,y);
+            return {"x":x,"y":y};
+        }
+
+        function barPosFresh(setTop,setLeft){
+            $('#doucumentProgressBar').css({
+                    top:setTop,
+                    left:setLeft
+                });
+        }
+
+        function barSizeFresh(){
+            var ele = document.getElementById('pageHeader');
+            var targetWidth = parseInt(window.getComputedStyle(ele).width.slice(0, -2));
+            $('#doucumentProgressBar').css({
+                    width: String(targetWidth * 0.8) + 'px',
+                });
+        }
+
+        $("#sidebar-toggle-button").click( function() {
+            barSizeFresh();
+        }
+        )
+
+        $("#sidebar-toggle-button-close").click( function() {
+            barSizeFresh();
+        }
+        )
+
+        $("#collapsed-sidebar-toggle-button").click( function() {
+            barSizeFresh();
+        }
+        )
+
+        var barFixed=false;
+        var fixmeTop = $('#doucumentProgressBar').offset().top-90;
+        $(window).scroll(function () { 
+            var currentScroll = $(window).scrollTop(); // get current position
+            var ele = document.getElementById('pageHeader');
+            var fixedHeight = parseInt(window.getComputedStyle(ele).height.slice(0, -2));
+            var pos=getPos('#barContainer');
+            var con = document.getElementById('barContainer');
+            var setleft = parseInt(window.getComputedStyle(con).width.slice(0, -2));
+            if ((currentScroll + fixedHeight) >= fixmeTop && !barFixed) {
+                barFixed=true;
+                $('#doucumentProgressBar').css({                      // scroll to that element or below it
+                    position: 'fixed',
+                    'z-index':'9999'
+                });
+                var setTop = String(fixedHeight+40) + 'px';
+                var setLeft = String(pos.x+(setleft*-0.008))+'px';
+                barPosFresh(setTop,setLeft);
+                barSizeFresh();
+            } else{if(currentScroll + fixedHeight < fixmeTop && barFixed){
+                barFixed=false;
+                barReset();
+                barSizeFresh();
+            }}
+        });
     })
 </script>
 {% endblock %}

@@ -145,7 +145,7 @@
         <!-- Page Content -->
         <div class="page-content">
             <!-- Page Header -->
-            <div class="page-header" style="position: sticky;width: 100%;top:0">
+            <div class="page-header" style="position: sticky;width: 100%;top:0" id="pageHeader">
                 <div class="search-form">
                     <form action="#" method="GET">
                         <div class="input-group">
@@ -167,7 +167,7 @@
                     <div class="container-fluid">
                         <!-- Brand and toggle get grouped for better mobile display -->
                         <div class="navbar-header">
-                            <div class="logo-sm">
+                            <div class="logo-sm" >
                                 <a href="javascript:void(0)" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
                                 <a class="logo-box" href=""><span>webDemo</span></a>
                             </div>
@@ -562,7 +562,6 @@
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {
-                            console.log("发信成功");
                             setMessageList();
                         } else {
                         }
@@ -586,7 +585,6 @@
 
             // 聊天窗口发信功能
             function sendMessage() {
-                console.log("send");
                 var me = $("#on-log-user").attr("yid");
                 var them = $("#chatDetailName").attr("yid");
                 var text = $("#textMessage").val().length;
@@ -606,8 +604,8 @@
                 }
             }
 
+            // 支持回车发信
             $("#textMessage").on('keyup', function (e) {
-                console.log(e.which);
                 if ((e.which === 13) && (!$("#textMessage").val().length == 0)) {
                     sendMessage();
                 }
