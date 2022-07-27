@@ -375,15 +375,16 @@
             }
             resetNotify();
 
-            function Notification(type, context, tittle) {
+            function Notification(type, context, tittle, position) {
                 var addClear = true;
-
+                var pos="toast-"+position;
+                console.log(pos);
                 toastr.options = {
                     closeButton: true,
                     debug: false,
                     newestOnTop: false,
                     progressBar: false,
-                    positionClass: "toast-top-center",
+                    positionClass: pos,
                     preventDuplicates: true,
                     onclick: null,
                     showDuration: 300,
@@ -400,9 +401,10 @@
                 return;
             }
 
-            $("#showtoast").click(function(){
-                Notification(1,"1","1");
-            })
+            // Notification测试函数
+            // $("#showtoast").click(function(){
+            //     Notification(1,"1","1");
+            // })
 
             function notify(){
                 var much=$("#notifySave").attr("ns");
@@ -411,7 +413,8 @@
                     var type=$("#toast-type-"+String(i)).text();
                     var tittle=$("#toast-tittle-"+String(i)).text();
                     var context=$("#toast-context-"+String(i)).text();
-                    Notification(type,context,tittle);
+                    var position=$("#toast-position-"+String(i)).text();
+                    Notification(type,context,tittle,position);
                     // $("#showtoast").triggerHandler("click");
                 }
             }

@@ -167,7 +167,7 @@ def set_chart_group(flow):
     out += add_chart_group("新消息", flow["unread"])
     out += add_chart_group("已读消息", flow["read"])
     if len(flow["unread"]) == 0 and len(flow['read']) == 0:
-        out += add_chart_group("暂无消息")
+        out += add_chart_group("暂无消息",None)
     cou = 0
     me = flow["me"]
     for i in flow["unread"].keys():

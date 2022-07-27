@@ -50,6 +50,13 @@ def inquiry_createByid(request, did):
 def create_qui(request):
     did = request.GET.get("did")
     date = request.POST.get("date")
+    if date.strip()=="":
+        request.session["notify"] = [dict(id=0, tittle="错误", context="请填写询价有效期", type="error", position="top-center")]
+        return JsonResponse({"status": False})
+    print(date)
+    if (datetime.strptime(date,'%Y-%m-%dT%H:%M') -datetime.now()).days<0:
+        request.session["notify"] = [dict(id=0, tittle="错误", context="有效期不应早于当前日期！", type="error", position="top-center")]
+        return JsonResponse({"status": False})
     sid = request.POST.get("sid")
     d = models.Caigouxuqiu.objects.filter(demandid=did).first()
     n = 10000000
@@ -59,16 +66,15 @@ def create_qui(request):
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id = request.session["info"]['id']
     user = models.Yuangong.objects.filter(id=id).first()
-    err=[]
     mid=models.Caigouxuqiu.objects.filter(demandid=did).first().maid_id
     r=models.Gongyingguanxi.objects.filter(materialid_id=mid,supplyid_id=sid)
-    if not r :
-        err.append("该供应商不存在此供应关系")
-        return JsonResponse({"status": False, "errors": err})
+    if not r:
+        request.session["notify"] = [dict(id=0, tittle="错误", context="该供应商不提供此物料",type="error", position="top-center")]
+        return JsonResponse({"status": False})
     s=models.Xunjiadan.objects.filter(demandid_id=did,supplyid_id=sid,maid_id=mid)
     if s:
-        err.append("已经向该供应商发出了询价单")
-        return JsonResponse({"status": False, "errors": err})
+        request.session["notify"] = [dict(id=0, tittle="错误", context="已经向该供应商发出询价单",type="error", position="top-center")]
+        return JsonResponse({"status": False})
     models.Xunjiadan.objects.create(inquiryid=inid, tcount=d.tcount, validitytime=date,
                                     createtime=time, bussid_id=user.businessid_id, createuserid_id=id,
                                     demandid_id=did, maid_id=d.maid_id, supplyid_id=sid
@@ -80,6 +86,7 @@ def create_qui(request):
     models.Baojiadan.objects.create(inquiryid_id=inid, tcount=d.tcount, validitytime=date,
                                     bussid_id=user.businessid_id, maid_id=d.maid_id,
                                     supplyid_id=sid, quoteid=inid)
+    request.session["notify"] = [dict(id=0, tittle="提示", context="询价单 {} 创建成功！".format(inid), type="success", position="top-center")]
     return JsonResponse({"status": True, "inid": inid})
 
 

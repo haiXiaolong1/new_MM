@@ -117,7 +117,6 @@ def demand_add(request):
         if not result == True:
             returnStatus = False
     print(returnStatus)
-    notify=[]
     if returnStatus:  # 校验成功才执行插入
         models.Caigouxuqiu.objects.create(demandid=did, price=r["price"], tcount=r['tcount']
                                           , status=0, createtime=time, createuserid_id=id,
@@ -125,10 +124,9 @@ def demand_add(request):
         # 自动发信功能
         # 1，确认员工身份，是管理员或库存经理则不发信  否则 向本公司的库存经理发信
         me = models.Yuangong.objects.filter(id=id).first()
-        send = False
         message = []
         notify = []
-        if me.office != 5 and me.issuper == 0:
+        if me.office != "5" and me.isactive==1 and me.issuper == 0:
             wl=models.Wuliao.objects.filter(id=r['maid_id']).first()
             message.append("【系统自动发信】")
             message.append("待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核>>"
@@ -136,10 +134,10 @@ def demand_add(request):
             to = models.Yuangong.objects.filter(businessid=me.businessid, office=5).first()
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
-            notify.append(dict(id=0,tittle="提示", context="采购需求创建成功！", type="success", position="Top Center"))
-            notify.append(dict(id=1,tittle="系统消息", context="已向{}发送采购需求审核申请".format(to.username), type="info", position="Top Right"))
+            notify.append(dict(id=0,tittle="提示", context="采购需求创建成功！", type="success", position="top-center"))
+            notify.append(dict(id=1,tittle="系统消息", context="已向{}发送采购需求审核申请".format(to.username), 
+                               type="info", position="top-center"))
             request.session["notify"]=notify
-            print(request.session.keys())
     return JsonResponse({"status": returnStatus, "error": errors})
 
 
@@ -149,8 +147,26 @@ def demand_verify(request):
     did = request.POST.get("did")
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id = request.session["info"]['id']
-    models.Caigouxuqiu.objects.filter(demandid=did).update(verifytime=time,
-                                                           verifyuserid_id=id, status=1)
+    cgd = models.Caigouxuqiu.objects.filter(demandid=did)
+    cgd.update(verifytime=time,verifyuserid_id=id, status=1)
+    # 自动发信功能
+    # 1，确认员工身份，是管理员则不发信 否则 向采购需求对应的员工发信
+    me = models.Yuangong.objects.filter(id=id).first()
+    message = []
+    notify = []
+    if me.office != "0" and me.isactive == 1 and me.issuper == 0:
+        cgxq = cgd.first()
+        wl = models.Wuliao.objects.filter(id=cgxq.maid_id).first()
+        message.append("【系统自动发信】")
+        message.append("采购需求单{}<br\>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"
+                       .format(did,wl.desc,wl.id,cgxq.tcount,cgxq.price,wl.calcutype))
+        to = models.Yuangong.objects.filter(id=cgxq.createuserid_id).first()
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
+        notify.append(dict(id=0, tittle="提示", context="采购需求审核成功！", type="success", position="top-center"))
+        notify.append(dict(id=1, tittle="系统消息", context="已向{}发送采购需求审核回执".format(to.username),
+                           type="info", position="top-center"))
+        request.session["notify"] = notify
     return JsonResponse({"status": True})
 
 
@@ -327,6 +343,9 @@ def demand_delete(request):
     """删除已完成的采购需求"""
     id = request.GET.get("uid")
     models.Caigouxuqiu.objects.filter(demandid=id).update(isdelete=1)
+    notify = []
+    notify.append(dict(id=0, tittle="提示", context="采购需求删除成功！", type="success", position="top-center"))
+    request.session["notify"] = notify
     return JsonResponse({"status": True})
 
 
