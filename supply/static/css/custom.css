@@ -63,6 +63,22 @@
     visibility:none;
 }
 
+
+/* 单据流 */
+.document_flow_full{
+    width:100%;
+    float: left;
+    margin: 5px 0px;
+}
+
+.document_flow_half{
+    width:50%;
+    float: left;
+    margin: 5px 0px;
+}
+
+
+
 .option{
     cursor: pointer;
 }

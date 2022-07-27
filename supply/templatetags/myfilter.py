@@ -52,49 +52,50 @@ def obj_document(arg):
     qgd={
         "items":["id","status","fid","fid","mid","mid","tcount","price"],
         "tittles":["请购单号","订单状态","工厂编号","工厂地址","物料编号","物料描述","请购数量","预期单价"],
-        "classes":["full","full","full","full","full","full","full","full"],
+        # "classes":["full"]*8,
+        "classes":["half"]*8,
         "texts":[""]*7+["元"],
         "mark":[False,"status",False,"fid",False,"mid",False,False]
     }
     xjd={
         "items":["id","fid","fid","mid","mid","bid","tcount"],
         "tittles":["询价单号","工厂编号","工厂地址","物料编号","物料描述","请购客户","请购数量"],
-        "classes":["full","full","full","full","full","full","full"],
+        "classes":["full"]+["half"]*6,
         "texts":[""]*7,
         "mark":[False,False,"fid",False,"mid",False,False,False]
     }
     bjd={
         "items":["id","status","sid","sid","mid","mid","tcount","quote"],
         "tittles":["报价单号","订单状态","供应商编号","供应商","物料编号","物料描述","报价数量","报价价格"],
-        "classes":["full","full","full","full","full","full","full","full"],
+        "classes":["half"]*8,
         "texts":[""]*7+["元"],
         "mark":[False,"status",False,"sid",False,"mid",False,False],
     }
     cgd={
         "items":["id","status","fid","fid","sid","sid","mid","mid","tcount","price"],
         "tittles":["采购单号","订单状态","工厂编号","工厂地址","供应商编号","供应商","物料编号","物料描述","采购数量","采购价格"],
-        "classes":["full","full","full","full","full","full","full","full","full","full"],
+        "classes":["half"]*10,
         "texts":[""]*9+["元"],
         "mark":[False,"status",False,"fid",False,"sid",False,"mid",False,False]
     }
     zsd={
         "items":["id","status","fid","fid","sid","sid","mid","mid","tcount","moreinfo"],
         "tittles":["暂收单号","订单状态","工厂编号","工厂地址","供应商编号","供应商","物料编号","物料描述","暂收数量","备注"],
-        "classes":["full","full","full","full","full","full","full","full","full","full"],
+        "classes":["half"]*9+["full"]*2,
         "texts":[""]*11,
         "mark":[False,"status",False,"fid",False,"sid",False,"mid",False,False]
     }
     fp={
         "items":["id","sid","sid","mid","mid","fee","totalmoney","tcount","moreinfo"],
         "tittles":["发票单号","供应商编号","供应商","物料编号","物料描述","运费","总金额","交易数量","备注"],
-        "classes":["full","full","full","full","full","full","full","full","full"],
-        "texts":[""]*9,
+        "classes":["full"]+["half"]*6+["full"]*2,
+        "texts":[""]*10,
         "mark":[False,False,"sid",False,"mid",False,False,False,False]
     }
     rkd={
         "items":["id","status","fid","fid","sid","sid","mid","mid","tcount","moreinfo"],
         "tittles":["入库单号","订单状态","工厂编号","工厂地址","供应商编号","供应商","物料编号","物料描述","暂收数量","备注"],
-        "classes":["full","full","full","full","full","full","full","full","full","full"],
+        "classes":["half"]*8+["full"]*2,
         "texts":[""]*10,
         "mark":[False,"status",False,"fid",False,"sid",False,"mid",False,False]
     }
