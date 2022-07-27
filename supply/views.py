@@ -423,6 +423,21 @@ def quote_add(request):
                                                                   createtime=time,
                                                                   createuserid_id=id,
                                                                   isreceived=0)
+        notify,message=[],[]
+        me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
+        yg = models.Yuangong.objects.filter(isactive=1,businessid_id=me.businessid_id,office="2").first()
+        xjd = models.Xunjiadan.objects.filter(inquiryid=inid).first()
+        qgd = models.Caigouxuqiu.objects.filter(demandid=xjd.demandid_id).first()
+        wl = models.Wuliao.objects.filter(id=qgd.maid_id).first()
+        gys = models.Gongyingshang.objects.filter(id=xjd.supplyid_id).first()
+        notify.append(dict(id=0, tittle="提示", context="报价单 {} 创建成功".format(qid), type="success", position="top-center"))
+        notify.append(dict(id=1, tittle="系统消息", context="向 {}-{} 发信提示已报价".format(yg.get_office_display(),yg.username), type="info", position="top-center"))
+        request.session["notify"] =notify
+        message.append("【系统消息】")
+        message.append("供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价>>"
+                       .format(gys.name,gys.id,xjd.inquiryid,qid,qgd.price,wl.calcutype,quote,wl.calcutype))
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
     return JsonResponse(res)
 
 
