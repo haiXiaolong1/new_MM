@@ -127,6 +127,7 @@ def quote_evaluateByID(request):
     quid = request.GET.get("quid")
     isrece = request.POST.get("isreceived")
     isall = request.POST.get("isall")
+    state_dict={1: "接受",0: "待评估",2: "拒绝"}
     if isall == "1":
         did = models.Baojiadan.objects.filter(quoteid=quid).first().inquiryid.demandid_id
         c = models.Baojiadan.objects.filter(inquiryid__demandid_id=did).update(isreceived=2)
@@ -134,7 +135,7 @@ def quote_evaluateByID(request):
 
     # 将本个报价单状态进行修改
     models.Baojiadan.objects.filter(quoteid=quid).update(isreceived=isrece)
-    return JsonResponse({"status": True})
+    return JsonResponse({"status": True,"state":state_dict[int(isrece)]})
 
 
 # 采购订单列表

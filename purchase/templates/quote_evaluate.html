@@ -164,7 +164,7 @@
                             $("#formAdd")[0].reset();
                             localStorage.setItem("notify_show", true);
                             localStorage.setItem("notify_tittle", "提示");
-                            localStorage.setItem("notify_context", "评估完成-【具体状态】");
+                            localStorage.setItem("notify_context", "评估完成-"+res.state);
                             localStorage.setItem("notify_type", "info");
                             location.reload();
                         }
