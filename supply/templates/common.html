@@ -200,6 +200,7 @@
                                             <span class="glyphicon glyphicon-send"></span> 发送消息
                                         </button>
                                     </a></li>
+                                    <button id="showtoast">123</button>
                                 <li class="dropdown user-dropdown">
 
                                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
@@ -220,13 +221,21 @@
                     </div><!-- /.container-fluid -->
                 </nav>
             </div><!-- /Page Header -->
-            <div>
+            
+            <div class="my_hide_element">
                 <a class="table_status_2" style="display:none"></a>
                 <a class="formError" style="display:none"></a>
                 <a class="my_hide_element" id="toast-type"></a>
                 <a class="my_hide_element" id="toast-tittle"></a>
                 <a class="my_hide_element" id="toast-context"></a>
-                <button id="showtoast" class="my_hide_element"></button>
+                <div id="notifySave" class="my_hiden_element" ns={{request.session.notify|length}}>
+                    {% for i in request.session.notify %}
+                    <a class="my_hide_element" id="toast-type-{{i.id}}">{{i.type}}</a>
+                    <a class="my_hide_element" id="toast-tittle-{{i.id}}">{{i.tittle}}</a>
+                    <a class="my_hide_element" id="toast-context-{{i.id}}">{{i.context}}</a>
+                    <a class="my_hide_element" id="toast-position-{{i.id}}">{{i.position}}</a>
+                    {% endfor %}
+                </div>
             </div>
             <!-- Page Inner -->
             {% block content %}
@@ -361,6 +370,57 @@
     <script src={% static 'js/pages/ui-notifications.js' %}></script>
     <script type="text/javascript" language="JavaScript">
         $(document).ready(function () {
+
+            function resetNotify(){
+                $.ajax({
+                    url: "/supply/deleteNotify",
+                    type: "get",
+                    dataType: "JSON",
+                })
+            }
+            resetNotify();
+
+            function Notification(type, context, tittle) {
+                var addClear = true;
+
+                toastr.options = {
+                    closeButton: true,
+                    debug: false,
+                    newestOnTop: false,
+                    progressBar: false,
+                    positionClass: "toast-top-center",
+                    preventDuplicates: true,
+                    onclick: null,
+                    showDuration: 300,
+                    hideDuration: 1000,
+                    timeOut: 4000,
+                    extendedTimeOut: 3000,
+                    showEasing: "swing",
+                    hideEasing: "linear",
+                    showMethod: "fadeIn",
+                    hideMethod: "slideUp",
+                };
+
+                var $toast = toastr[type](context, tittle); // Wire up an event handler to a button in the toast, if it exists
+                return;
+            }
+
+            $("#showtoast").click(function(){
+                Notification(1,"1","1");
+            })
+
+            function notify(){
+                var much=$("#notifySave").attr("ns");
+                for(let i=parseInt(much)-1;i>=0;i--)
+                {
+                    var type=$("#toast-type-"+String(i)).text();
+                    var tittle=$("#toast-tittle-"+String(i)).text();
+                    var context=$("#toast-context-"+String(i)).text();
+                    Notification(type,context,tittle);
+                    // $("#showtoast").triggerHandler("click");
+                }
+            }
+            notify();
 
             $('#example').dataTable({
                 "lengthMenu": [5, 10, 15, 20],
@@ -510,7 +570,7 @@
                         }
                     }
                 })
-                setTimeout(checkMessage, 1000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
+                // setTimeout(checkMessage, 1000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
             }
 
             // 设置检测间隔，开发阶段可不启用

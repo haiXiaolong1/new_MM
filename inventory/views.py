@@ -117,10 +117,29 @@ def demand_add(request):
         if not result == True:
             returnStatus = False
     print(returnStatus)
+    notify=[]
     if returnStatus:  # 校验成功才执行插入
         models.Caigouxuqiu.objects.create(demandid=did, price=r["price"], tcount=r['tcount']
                                           , status=0, createtime=time, createuserid_id=id,
                                           facid_id=r['facid_id'], maid_id=r['maid_id'])
+        # 自动发信功能
+        # 1，确认员工身份，是管理员或库存经理则不发信  否则 向本公司的库存经理发信
+        me = models.Yuangong.objects.filter(id=id).first()
+        send = False
+        message = []
+        notify = []
+        if me.office != 5 and me.issuper == 0:
+            wl=models.Wuliao.objects.filter(id=r['maid_id']).first()
+            message.append("【系统自动发信】")
+            message.append("待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核>>"
+                           .format(wl.desc,wl.id,r['tcount'],r['price'],wl.calcutype))
+            to = models.Yuangong.objects.filter(businessid=me.businessid, office=5).first()
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
+            notify.append(dict(id=0,tittle="提示", context="采购需求创建成功！", type="success", position="Top Center"))
+            notify.append(dict(id=1,tittle="系统消息", context="已向{}发送采购需求审核申请".format(to.username), type="info", position="Top Right"))
+            request.session["notify"]=notify
+            print(request.session.keys())
     return JsonResponse({"status": returnStatus, "error": errors})
 
 

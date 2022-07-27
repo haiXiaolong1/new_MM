@@ -31,5 +31,7 @@ urlpatterns = [
     path('sendTestMessage', views.send_test_message),
     path('sendMessage', views.send_message),
 
+    path('deleteNotify',views.delete_notify),
+
     path('supply_excel', views.supply_excel),
 ]

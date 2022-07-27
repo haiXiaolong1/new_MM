@@ -215,6 +215,14 @@ def send_message(request):
     models.Xiaoxi.objects.create(fromId_id=me, toId_id=them, context=text, time=datetime.now(), read=0)
     return JsonResponse({"status": True})
 
+def delete_notify(request):
+    try:
+        request.session.pop("notify")
+        print(request.session.keys())
+    except:
+        None
+    return JsonResponse({"status": True})
+
 # 登录功能
 def login(request):
     if request.method == "GET":

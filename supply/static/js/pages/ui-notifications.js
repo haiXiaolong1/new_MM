@@ -1,14 +1,14 @@
     $(document).ready(function () {
 
         "use strict";
-        if(localStorage.getItem("notify_show")==false)
-        {return;}
+        // if(localStorage.getItem("notify_show")==false)
+        // {return;}
         var i = -1;
         var toastCount = 0;
         var $toastlast;
 
         $('#showtoast').click(function () {
-            var shortCutFunction = localStorage.getItem("notify_type");
+            var shortCutFunction = "success";
             var msg = localStorage.getItem("notify_context");
             var title = localStorage.getItem("notify_tittle");
             var toastIndex = toastCount++;
@@ -32,8 +32,8 @@
                 hideMethod: "slideUp",
             };
 
-
-            toastr[shortCutFunction](msg, title); // Wire up an event handler to a button in the toast, if it exists
+            console.log(1);
+            var $toast = toastr[shortCutFunction](msg, title); // Wire up an event handler to a button in the toast, if it exists
 
             localStorage.setItem("notify_show",false);
             localStorage.removeItem("notify_context");
