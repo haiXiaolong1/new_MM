@@ -411,7 +411,6 @@ def demand_list(list, did, quid, inid):
 def purchase_documents(request):
     """查看单据流"""
     list = []
-    q = {}
     puid = ""
     did = ""
     inid = ""
