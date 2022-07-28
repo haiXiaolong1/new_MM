@@ -2620,12 +2620,12 @@ th {
 /* Page Right Sidebar */
 
 .page-right-sidebar {
-    width: 231px;
+    width: 300px;
     background: #fff;
     border-left: 1px solid #efefef;
     height: 100%;
     min-height: 100%;
-    right: -231px;
+    right: -300px;
     top: 0;
     z-index: 42;
     position: fixed;
@@ -2802,7 +2802,7 @@ th {
     float: left;
     overflow: hidden;
     padding: 13px 0;
-    width: 100px;
+    width: 50%;
 }
 
 .chat-list .chat-item .chat-info span.chat-author {
