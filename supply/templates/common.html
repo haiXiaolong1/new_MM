@@ -379,6 +379,7 @@
                 var addClear = true;
                 var pos="toast-"+position;
                 console.log(pos);
+                console.log("类型"+type+"标题"+tittle+"内容"+context);
                 toastr.options = {
                     closeButton: true,
                     debug: false,
@@ -396,7 +397,6 @@
                     showMethod: "fadeIn",
                     hideMethod: "slideUp",
                 };
-
                 var $toast = toastr[type](context, tittle); // Wire up an event handler to a button in the toast, if it exists
                 return;
             }

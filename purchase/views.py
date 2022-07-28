@@ -150,13 +150,48 @@ def quote_evaluateByID(request):
     isrece = request.POST.get("isreceived")
     isall = request.POST.get("isall")
     state_dict={1: "接受",0: "待评估",2: "拒绝"}
+    bjd = models.Baojiadan.objects.filter(quoteid=quid).first()
+    did = bjd.inquiryid.demandid_id
+    c = models.Baojiadan.objects.filter(inquiryid__demandid_id=did).exclude(quoteid=quid)
     if isall == "1":
-        did = models.Baojiadan.objects.filter(quoteid=quid).first().inquiryid.demandid_id
-        c = models.Baojiadan.objects.filter(inquiryid__demandid_id=did).update(isreceived=2)
+        c.update(isreceived=2)
         # 查询出同一个请购单下的其他所有报价单，并且将其拒绝
-
     # 将本个报价单状态进行修改
-    models.Baojiadan.objects.filter(quoteid=quid).update(isreceived=isrece)
+    bjd = models.Baojiadan.objects.filter(quoteid=quid)
+    bjd.update(isreceived=isrece)
+    bjd = bjd.first()
+    # 系统自动发信
+    me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
+    buss = me.businessid
+    inv_yg = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="3").first()
+    pur_yg = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="3").first()
+    qgd = models.Caigouxuqiu.objects.filter(demandid=did).first()
+    wl = qgd.maid
+    gys = bjd.supplyid
+    message = []
+    message.append("【系统自动发信】<br/>报价反馈信息")
+    message.append("询价单-{}<br/>询价物料:{}({})<br/>询价数量:{}  预期报价:{}元/{}"
+                   .format(bjd.inquiryid_id, wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
+    situation="报价评估情况:"
+    for bj in c:
+        situation+="<br/>{}({}) {}元/{} 状态[{}]".format(bj.supplyid.name,bj.supplyid_id,bj.quote,wl.calcutype,bj.get_isreceived_display())
+    situation+="<br/><hr><br/>{}({}) {}元/{} 状态[{}]".format(bjd.supplyid.name,bjd.supplyid_id,bjd.quote,wl.calcutype,bjd.get_isreceived_display())
+    message.append(situation)
+    for m in message:
+        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
+        if isrece==1:
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
+    if isrece==1:
+        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(),
+                                     context="请在报价有效期({}) 内创建采购订单>>".format(bjd.inquiryid.validitytime.strftime("%Y年%m月%d日 %H:%M")),
+                                     read=0)
+    notify=[]
+    notify.append(dict(id=0, tittle="提示", context="报价单 {} 评估成功！".format(quid), type="success", position="top-center"))
+    notify.append(dict(id=1, context="向 {}-{} 发信反馈报价评估情况".format(inv_yg.get_office_display(), inv_yg.username)
+                       , tittle="系统消息", type="info", position="top-center"))
+    notify.append(dict(id=2, context="向 {}-{} 发信报价评估情况，并提示创建采购订单".format(pur_yg.get_office_display(), pur_yg.username)
+                       , tittle="系统消息", type="info", position="top-center"))
+    request.session["notify"] = notify
     return JsonResponse({"status": True,"state":state_dict[int(isrece)]})
 
 
