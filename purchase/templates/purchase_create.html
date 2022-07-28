@@ -30,6 +30,7 @@
                                                     <label>选择送货截止日期</label>
                                                     <input type="date" class="form-control" name="deadline"
                                                            id="deadline" required>
+                                                    <a class="formError" id="date_error"></a>
                                                 </div>
                                             </form>
 
@@ -105,8 +106,9 @@
                         if (res.status) {
                             $("#myd").modal('hide');
                             $("#formAdd")[0].reset();
-                            window.history.back(-1);
                             location.reload();
+                        }else {
+                            $("#date_error").text(res.error);
                         }
                     }
 

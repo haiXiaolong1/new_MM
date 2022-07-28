@@ -195,6 +195,11 @@ def purchase_createByQuote(request):
     """根据报价单创建采购订单"""
     quid = request.GET.get("quid")
     deadline = request.POST.get("deadline")
+    if not deadline:
+        return JsonResponse({"status": False, "error": "请填写截止日期"})
+    if (datetime.strptime(deadline,"%Y-%m-%d")-datetime.now()).days<=0:
+        return JsonResponse({"status": False, "error": "截止日期不能早于今天"})
+
     # 修改报价单的状态
     quote = models.Baojiadan.objects.filter(quoteid=quid)
     quote.update(isreceived=3)
