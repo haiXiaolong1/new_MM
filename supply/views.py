@@ -260,7 +260,7 @@ def logout(request):
 
 # 展示供应商列表
 def supply_list(request):
-    qu = models.Gongyingshang.objects.all()
+    qu = models.Gongyingshang.objects.order_by('createtime')
     yu = models.Yuangong.objects.all()
     id = []
     n = []
