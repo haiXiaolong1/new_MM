@@ -2620,12 +2620,12 @@ th {
 /* Page Right Sidebar */
 
 .page-right-sidebar {
-    width: 300px;
+    width: 360px;
     background: #fff;
     border-left: 1px solid #efefef;
     height: 100%;
     min-height: 100%;
-    right: -300px;
+    right: -360px;
     top: 0;
     z-index: 42;
     position: fixed;
@@ -2934,7 +2934,7 @@ th {
 }
 
 .chat-bubble .chat-bubble-text-container {
-    max-width: 60%;
+    max-width: 90%;
     display: block;
 }
 
