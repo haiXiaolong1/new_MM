@@ -323,6 +323,10 @@ def receive_add(request):
     mid = t.first().maid_id
     pid = t.first().temid.purchaseid_id
     receivecount = request.POST.get("receivecount")
+    if not receivecount:
+        return JsonResponse({"status": False,"error":"实际入库数量不能为空"})
+    if float(receivecount) < 0:
+        return JsonResponse({"status": False,"error":"实际入库数量不能为负数"})
     pcount = t.first().purcount
     moreinfo = request.POST.get("moreinfo")
     id = request.session["info"]['id']
@@ -395,8 +399,11 @@ def invoice_add(request):
     t = models.Rukudan.objects.filter(temid_id=tid)
     pid = t.first().temid.purchaseid_id
     sid = t.first().temid.purchaseid.supplyid_id
-    print(sid)
     fee = request.POST.get("receivecount")
+    if not fee:
+        return JsonResponse({"status": False,"error":"运费不能为空"})
+    if float(fee)<0:
+        return JsonResponse({"status": False,"error":"运费不能为负数"})
     pcount = t.first().purcount
     price = t.first().temid.purchaseid.price
     id = request.session["info"]['id']
