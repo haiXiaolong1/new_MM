@@ -100,7 +100,13 @@
                                             <td>{{ obj.receivecount }}</td>
                                             <td>{{ obj.moreinfo }}</td>
                                             <td>{{ obj.createtime|date:"Y-m-d H:i:s" }}</td>
-                                            <td>{{ obj.id }}</td>
+                                            <td>
+                                                {% if obj.temid_id != obj.id %}
+                                                {{ obj.id }}
+                                                {% else %}
+                                                    暂无
+                                                {% endif %}
+                                            </td>
                                             {#                                        判断权限信息#}
                                             {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                                 <td>

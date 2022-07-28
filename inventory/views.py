@@ -184,6 +184,31 @@ def ischeck(request, pid):
     """判断是否检查完成"""
     z = models.Zanshoudan.objects.filter(purchaseid_id=pid)
     flag = False
+    # 先判断是否有检查不通过
+    if z.first().qualitycheckinfo == 0 or z.first().quantitycheckinfo == 0 :
+        n = 10000000
+        createtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        if models.Zanshoudan.objects.all().first():
+            n = models.Zanshoudan.objects.all().order_by('-temid').first().temid[2:]
+        zid = "te" + str(int(n) + 1)
+        z.update(temid=zid, isreceived=0, createtime=createtime)
+        # 更新库存信息,此情况下，库存为冻结库存
+        fid = z.first().purchaseid.facid_id
+        mid = z.first().maid_id
+        tcount = z.first().tcount
+        w = models.Gongchangkucun.objects.filter(facid_id=fid, maid_id=mid).order_by("-updatetime").first()
+        if w:
+            models.Gongchangkucun.objects.create(facid_id=fid, maid_id=mid, inventorytemp= w.inventorytemp
+                                                 , inventoryonroad=w.inventoryonroad - tcount,
+                                                 inventoryfreeze=w.inventoryfreeze+tcount, inventoryunrest=w.inventoryunrest
+                                                 , updatetime=createtime)
+        else:
+            models.Gongchangkucun.objects.create(facid_id=fid, maid_id=mid, inventorytemp=0
+                                                 , inventoryonroad=0,
+                                                 inventoryfreeze=tcount, inventoryunrest=0
+                                                 , updatetime=createtime)
+        flag=False
+        return flag
     # 质检量检均完成后，才算完成
     if z.first().quantitycheckinfo != -1 and z.first().qualitycheckinfo != -1:
         n = 10000000
