@@ -128,10 +128,10 @@ def demand_add(request):
         notify = []
         if me.office != "5" and me.isactive==1 and me.issuper == 0:
             wl=models.Wuliao.objects.filter(id=r['maid_id']).first()
-            message.append("【系统自动发信】")
-            message.append("待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核>>"
+            message.append("【系统自动发信】<br/>申请审核")
+            message.append("待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a href='/inventory/demand/n/'>>></a>"
                            .format(wl.desc,wl.id,r['tcount'],r['price'],wl.calcutype))
-            to = models.Yuangong.objects.filter(businessid=me.businessid, office=5).first()
+            to = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
             notify.append(dict(id=0,tittle="提示", context="采购需求创建成功！", type="success", position="top-center"))
@@ -158,14 +158,25 @@ def demand_verify(request):
         cgxq = cgd.first()
         wl = models.Wuliao.objects.filter(id=cgxq.maid_id).first()
         message.append("【系统自动发信】")
-        message.append("采购需求单{}<br\>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"
+        message.append("采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"
                        .format(did,wl.desc,wl.id,cgxq.tcount,cgxq.price,wl.calcutype))
         to = models.Yuangong.objects.filter(id=cgxq.createuserid_id).first()
+        if me.id!=to.id:
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
+        message[1]="新增已审核采购需求：<br/>采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"\
+            .format(did,wl.desc,wl.id,cgxq.tcount,cgxq.price,wl.calcutype)
+        message.append("请尽快前往创建询价单<a href='/purchase/inquiry/create/'>>></a>")
+        pur_yg = models.Yuangong.objects.filter(businessid=me.businessid,isactive=1,office="2").first()
         for m in message:
-            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
         notify.append(dict(id=0, tittle="提示", context="采购需求审核成功！", type="success", position="top-center"))
-        notify.append(dict(id=1, tittle="系统消息", context="已向{}发送采购需求审核回执".format(to.username),
-                           type="info", position="top-center"))
+        notify.append(dict(id=1, tittle="系统消息", context="已向 {}-{} 发送采购需求审核回执"
+                           .format(to.get_office_display(), to.username),
+                 type="info", position="top-center"))
+        notify.append(dict(id=2, tittle="系统消息", context="已向 {}-{} 发送询价单创建提示"
+                           .format(pur_yg.get_office_display(), pur_yg.username),
+                 type="info", position="top-center"))
         request.session["notify"] = notify
     return JsonResponse({"status": True})
 
@@ -180,7 +191,7 @@ def inventory_temp(request):
     return render(request, 'temp_list.html', {"queryset": q, "title": "暂存管理"})
 
 
-def ischeck(request, pid):
+def ischeck(request, pid, notify):
     """判断是否检查完成"""
     z = models.Zanshoudan.objects.filter(purchaseid_id=pid)
     flag = False
@@ -237,37 +248,62 @@ def ischeck(request, pid):
         models.Rukudan.objects.create(id=zid, purcount=tcount, createusersid_id=id, facid_id=fid,
                                       maid_id=mid, temid_id=zid)
         flag = True
-    return flag
+        #系统自动发信
+        me=models.Yuangong.objects.filter(id=id).first()
+        zcd=z.first()
+        cgd=zcd.purchaseid
+        yg=cgd.createuserid
+        gys=cgd.supplyid
+        fac=cgd.facid
+        wl=cgd.maid
+        jl=models.Yuangong.objects.filter(businessid=me.businessid,isactive=1,office="5").first()
+        notify.append(dict(id=1, tittle="提示", context="暂存单 {} 通过【质检】及【量检】".format(zcd.temid), type="success", position="top-center"))
+        notify.append(dict(id=2, tittle="系统消息", context="向 {}-{} 发信反馈暂存单检查完成".format(yg.get_office_display(), yg.username),
+                           type="info", position="top-center"))
+        notify.append(dict(id=3, tittle="系统消息", context="已提示 {}-{} 前往创建入库单".format(jl.get_office_display(), jl.username),type="info", position="top-center"))
+        message = []
+        message.append("【系统消息】<br/>暂存单通过检查")
+        message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购订单:{}<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
+                       .format(gys.name,gys.id,fac.type,fac.address,cgd.purchaseid,wl.desc,wl.id,cgd.tcount,wl.calcutype,cgd.price,wl.calcutype))
+        message.append("入库前物料检查情况：<br/>量检通过-质检通过<br/>备注：<br/>{}".format(zcd.moreinfo))
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
+        message.append("请核验物料入库数量并创建入库单<a href='/inventory/receive/'>>></a>".format())
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
+    return notify
+
 
 
 def quality_check(request):
     """质检"""
-
     puid = request.GET.get("puid")
     q = request.POST.get("check")
     info = request.POST.get("moreinfo")
+    state_dict = {"0": "不通过", "1": "通过"}
     z = models.Zanshoudan.objects.filter(purchaseid_id=puid)
     if z.first().moreinfo:
         info = info + z.first().moreinfo
     z.update(qualitycheckinfo=q, moreinfo=info)
-
-    ischeck(request, puid)
-    state_dict={"0":"不通过","1":"通过"}
-    return JsonResponse({"status": True,'state':state_dict[q]})
-
+    notify = [dict(id=0, tittle="系统消息", type="success", position="top-center",
+                   context="暂存单质检成功，质检状态【{}】".format(state_dict[q]))]
+    request.session["notify"] = ischeck(request, puid, notify)
+    return JsonResponse({"status": True})
 
 def quantity_check(request):
     """量检"""
     puid = request.GET.get("puid")
     q = request.POST.get("check")
     info = request.POST.get("moreinfo")
+    state_dict={"0":"不通过","1":"通过"}
     z = models.Zanshoudan.objects.filter(purchaseid_id=puid)
     if z.first().moreinfo:
         info = info + z.first().moreinfo
     z.update(quantitycheckinfo=q, moreinfo=info)
-    ischeck(request, puid)
-    state_dict={"0":"不通过","1":"通过"}
-    return JsonResponse({"status": True,'state':state_dict[q]})
+    notify = [dict(id=0, tittle="系统消息", type="success", position="top-center",
+                   context="暂存单量检成功，量检状态【{}】".format(state_dict[q]))]
+    request.session["notify"] = ischeck(request, puid, notify)
+    return JsonResponse({"status": True})
 
 
 # 展示入库单
@@ -318,6 +354,31 @@ def receive_add(request):
     models.Zanshoudan.objects.filter(temid=tid).update(isreceived=1)
     models.Caigoudan.objects.filter(purchaseid=pid).update(iscomplete=1)
 
+    notify, message = [], []
+    me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
+    yg = models.Yuangong.objects.filter(isactive=1, businessid_id=me.businessid_id, office="3").first()
+    jl = models.Yuangong.objects.filter(isactive=1, businessid_id=me.businessid_id, office="6").first()
+    zcd = models.Zanshoudan.objects.filter(temid=tid).first()
+    cgd = zcd.purchaseid
+    gys = cgd.supplyid
+    fac = cgd.facid
+    wl = cgd.maid
+    notify.append(dict(id=0, tittle="提示", context="入库单 {} 创建成功".format(zcd.temid), type="success", position="top-center"))
+    notify.append(dict(id=1, tittle="系统消息", context="向 {}-{} 发信反馈入库完成".format(yg.get_office_display(), yg.username),
+                       type="info", position="top-center"))
+    notify.append(dict(id=2, tittle="系统消息", context="向 {}-{} 发信反馈物料需求入库完成".format(jl.get_office_display(), jl.username),
+                       type="info",position="top-center"))
+    message = []
+    message.append("【系统消息】<br/>物料需求成功入库")
+    message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
+                   .format(gys.name, gys.id, fac.type, fac.address, wl.desc, wl.id, cgd.tcount,wl.calcutype, cgd.price, wl.calcutype))
+    message.append("物料检查情况：<br/>量检通过-质检通过<br/>备注：<br/>{}".format(zcd.moreinfo))
+    message.append("物料入库情况：<br/>入库数量:{}{}<br/>备注：<br/>{}".format(receivecount,wl.calcutype,moreinfo))
+    message.append("查看订单单据流<a href='/purchase/documents/'>>></a>")
+    for m in message:
+        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
+        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
+    request.session["notify"]=notify
     return JsonResponse({"status": True})
 
 
@@ -378,13 +439,17 @@ def demand_delete(request):
 def inventory_delete(request):
     """删除已完成的暂存单"""
     id = request.GET.get("uid")
-
     models.Zanshoudan.objects.filter(purchaseid_id=id).update(isdelete=1)
+    notify=[dict(id=0,tittle="系统消息", type="success", position="top-center",
+                 context="暂存单删除成功")]
+    request.session["notify"]=notify
     return JsonResponse({"status": True})
-
 
 def receive_delete(request):
     """删除已完成的入库单"""
     id = request.GET.get("uid")
     models.Rukudan.objects.filter(temid_id=id).update(isdelete=1)
+    notify=[dict(id=0,tittle="系统消息", type="success", position="top-center",
+                 context="入库单删除成功")]
+    request.session["notify"]=notify
     return JsonResponse({"status": True})

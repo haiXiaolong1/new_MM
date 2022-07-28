@@ -118,17 +118,17 @@
                                             {#                                        判断是否是管理员，普通员工只能查看#}
                                             {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                                 <td>
-                                                    {% if obj.qualitycheckinfo == -1 and obj.quantitycheckinfo != 0 %}
+                                                    {% if obj.qualitycheckinfo == -1 %}
                                                         <button class="btn btn-primary btn-xs btnQuality"
                                                                 uid="{{ obj.purchaseid_id }}">质检
                                                         </button>
                                                     {% endif %}
-                                                    {% if obj.quantitycheckinfo == -1 and obj.qualitycheckinfo != 0 %}
+                                                    {% if obj.quantitycheckinfo == -1 %}
                                                         <button class="btn btn-primary btn-xs btnQuantity"
                                                                 uid="{{ obj.purchaseid_id }}">量检
                                                         </button>
                                                     {% endif %}
-                                                    {% if obj.quantitycheckinfo != -1 and obj.qualitycheckinfo != -1 or obj.qualitycheckinfo == 0 or obj.quantitycheckinfo == 0%}
+                                                    {% if obj.quantitycheckinfo != -1 and obj.qualitycheckinfo != -1 %}
                                                         <button class="btn btn-danger btn-xs btnDelete" id=""
                                                                 uid="{{ obj.purchaseid_id }}">删除
                                                         </button>
@@ -159,18 +159,6 @@
             $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
 
-            var showToast = localStorage.getItem("notify_show");
-            if (showToast != undefined) {
-                if (showToast) {
-                    if (showToast != "false") {
-                        $("#toast-type").text(localStorage.getItem("notify_type"));
-                        $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
-                        $("#toast-context").text(localStorage.getItem("notify_context"));
-                        $("#showtoast").triggerHandler("click");
-                    }
-                }
-            }
-
             $("#btnSave").click(function () {
                 if (QUALITY_ID) {
                     $.ajax({
@@ -182,10 +170,6 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "检查成功-质检状态【"+res.state+"】");
-                                localStorage.setItem("notify_type", "success");
                                 location.reload();
                             }
                         }
@@ -203,10 +187,6 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "检查成功-量检状态【"+res.state+"】");
-                                localStorage.setItem("notify_type", "success");
                                 location.reload();
                             }
                         }
@@ -247,10 +227,6 @@
                             if (res.status) {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "暂存单删除成功");
-                                localStorage.setItem("notify_type", "success");
                                 location.reload();
                             }
                         }
