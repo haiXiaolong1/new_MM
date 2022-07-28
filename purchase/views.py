@@ -53,7 +53,6 @@ def create_qui(request):
     if date.strip()=="":
         request.session["notify"] = [dict(id=0, tittle="错误", context="请填写询价有效期", type="error", position="top-center")]
         return JsonResponse({"status": False})
-    print(date)
     if (datetime.strptime(date,'%Y-%m-%dT%H:%M') -datetime.now()).days<0:
         request.session["notify"] = [dict(id=0, tittle="错误", context="有效期不应早于当前日期！", type="error", position="top-center")]
         return JsonResponse({"status": False})
@@ -105,39 +104,13 @@ def create_qui(request):
     return JsonResponse({"status": True, "inid": inid})
 
 
-# 报价单列表
-def quote_list(request):
-    """进行报价"""
-    q = models.Baojiadan.objects.all()
-
-    return render(request, 'quote_list.html', {"queryset": q, "title": "报价单列表"})
-
-
-# 新增报价单
-def quote_add(request):
-    """报价完成"""
-    inid = request.GET.get("inid")
-    quote = request.POST.get("quote")
-    n = 10000000
-    if models.Baojiadan.objects.all().first():
-        n = models.Baojiadan.objects.all().order_by('-quoteid').first().quoteid[2:]
-    qid = "qu" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
-    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    id = request.session["info"]['id']
-    # 真正生成供应商的报价单
-    models.Baojiadan.objects.filter(inquiryid_id=inid).update(quote=quote,
-                                                              quoteid=qid,
-                                                              createtime=time,
-                                                              createuserid_id=id,
-                                                              isreceived=0)
-    return JsonResponse({"status": True})
-
-
 # 评估报价单页面
 def quote_evaluate(request):
-    q = models.Baojiadan.objects.filter(isdelete=0).all()
+    m=models.Baojiadan.objects.filter(isreceived=0).filter(validitytime__gte=datetime.now())
+    q = models.Baojiadan.objects.filter(isdelete=0).filter(isreceived__gte=1)
+    # 返回有效期内的待评估报价单和已完成被拒绝的报价单
     result = {
-        "queryset": q
+        "queryset": q.union(m)
         , "title": "评估报价单"
     }
     return render(request, 'quote_evaluate.html', result)
@@ -208,7 +181,8 @@ def purchase_list(request):
 
 # 创建采购订单
 def purchase_create(request):
-    q = models.Baojiadan.objects.all()
+    q = models.Baojiadan.objects.filter(validitytime__gte=datetime.now())
+    # 只返回有效期内的报价单
     result = {
         "queryset": q
         , "title": "创建采购订单"
