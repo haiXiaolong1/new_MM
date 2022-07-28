@@ -184,7 +184,7 @@
                                 $("#formAdd")[0].reset();
                                 localStorage.setItem("notify_show", true);
                                 localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "检查成功-质检状态：【】");
+                                localStorage.setItem("notify_context", "检查成功-质检状态【"+res.state+"】");
                                 localStorage.setItem("notify_type", "success");
                                 location.reload();
                             }
@@ -205,7 +205,7 @@
                                 $("#formAdd")[0].reset();
                                 localStorage.setItem("notify_show", true);
                                 localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "检查成功-量检状态：【】");
+                                localStorage.setItem("notify_context", "检查成功-量检状态【"+res.state+"】");
                                 localStorage.setItem("notify_type", "success");
                                 location.reload();
                             }

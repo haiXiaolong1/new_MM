@@ -227,8 +227,8 @@ def quality_check(request):
     z.update(qualitycheckinfo=q, moreinfo=info)
 
     ischeck(request, puid)
-
-    return JsonResponse({"status": True})
+    state_dict={"0":"不通过","1":"通过"}
+    return JsonResponse({"status": True,'state':state_dict[q]})
 
 
 def quantity_check(request):
@@ -241,7 +241,8 @@ def quantity_check(request):
         info = info + z.first().moreinfo
     z.update(quantitycheckinfo=q, moreinfo=info)
     ischeck(request, puid)
-    return JsonResponse({"status": True})
+    state_dict={"0":"不通过","1":"通过"}
+    return JsonResponse({"status": True,'state':state_dict[q]})
 
 
 # 展示入库单

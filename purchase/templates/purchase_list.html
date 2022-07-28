@@ -105,18 +105,6 @@
             $('#purchase_ul').css('display', 'block');
             $('#purchase_ul li').addClass('animation');
 
-            var showToast = localStorage.getItem("notify_show");
-            if (showToast != undefined) {
-                if (showToast) {
-                    if (showToast != "false") {
-                        $("#toast-type").text(localStorage.getItem("notify_type"));
-                        $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
-                        $("#toast-context").text(localStorage.getItem("notify_context"));
-                        $("#showtoast").triggerHandler("click");
-                    }
-                }
-            }
-
             {#动态增加点击事件#}
             $("#table").on('click', '.btnDelete', function () {
                 DELETE_ID = $(this).attr("uid");
@@ -134,10 +122,6 @@
                             if (res.status) {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "采购订单删除成功");
-                                localStorage.setItem("notify_type", "success");
                                 location.reload();
                             } else {
                             }
