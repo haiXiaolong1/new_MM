@@ -137,7 +137,7 @@ def quote_evaluateByID(request):
     me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
     buss = me.businessid
     inv_yg = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="3").first()
-    pur_yg = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="3").first()
+    pur_yg = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="2").first()
     qgd = models.Caigouxuqiu.objects.filter(demandid=did).first()
     wl = qgd.maid
     gys = bjd.supplyid
@@ -206,7 +206,8 @@ def purchase_createByQuote(request):
     createtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id = request.session["info"]['id']
     tcount = quote.first().tcount
-    fid = quote.first().inquiryid.demandid.facid_id
+    ff = quote.first().inquiryid.demandid.facid
+    fid=ff.id
     mid = quote.first().maid_id
     sid = quote.first().supplyid_id
     price = quote.first().quote
@@ -231,6 +232,29 @@ def purchase_createByQuote(request):
     models.Zanshoudan.objects.create(temid=puid, tcount=tcount, maid_id=mid,
                                      purchaseid_id=puid, qualitycheckinfo=-1,
                                      quantitycheckinfo=-1)
+    # 系统自动发信
+    me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
+    buss = me.businessid
+    inv_yg = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="3").first()
+    pur_jl = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="4").first()
+    message = []
+    message.append("【系统自动发信】<br/>采购订单反馈信息")
+    print(deadline)
+    message.append("引用报价单-{}<br/>创建采购订单={}<br/>发往工厂:{}({})<br/>收货截至期限：{}"
+                   .format(quid,puid,ff.type,ff.address,datetime.strptime(deadline,"%Y-%m-%d").strftime("%Y年%m月%d日")))
+    for m in message:
+        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
+        if me.office!="4":
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
+    models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(),
+                                 context="请在追踪供应商送货进度，在截止期限前将货物暂存>>", read=0)
+    notify=[]
+    notify.append(dict(id=0, tittle="提示", context="采购订单 {} 创建成功！".format(puid), type="success", position="top-center"))
+    notify.append(dict(id=1, context="向 {}-{} 发信反馈采购订单情况".format(pur_jl.get_office_display(), pur_jl.username)
+                       , tittle="系统消息", type="info", position="top-center"))
+    notify.append(dict(id=2, context="向 {}-{} 发信并提追踪送货进度".format(inv_yg.get_office_display(), inv_yg.username)
+                       , tittle="系统消息", type="info", position="top-center"))
+    request.session["notify"] = notify
     return JsonResponse({"status": True, "pid": puid})
 
 
@@ -581,6 +605,9 @@ def purchase_documents(request):
 def purchase_delete(request):
     id = request.GET.get("uid")
     models.Caigoudan.objects.filter(purchaseid=id).update(isdelete=1)
+    notify=[]
+    notify.append(dict(id=0, tittle="提示", context="采购订单 {} 删除成功！".format(id), type="success", position="top-center"))
+    request.session["notify"] = notify
     return JsonResponse({"status": True})
 
 
@@ -588,6 +615,9 @@ def purchase_delete(request):
 def quote_delete(request):
     id = request.GET.get("uid")
     models.Baojiadan.objects.filter(quoteid=id).update(isdelete=1)
+    notify=[]
+    notify.append(dict(id=0, tittle="提示", context="报价单 {} 删除成功！".format(id), type="success", position="top-center"))
+    request.session["notify"] = notify
     return JsonResponse({"status": True})
 
 
