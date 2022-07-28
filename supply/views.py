@@ -218,7 +218,6 @@ def send_message(request):
 def delete_notify(request):
     try:
         request.session.pop("notify")
-        print(request.session.keys())
     except:
         None
     return JsonResponse({"status": True})
@@ -399,9 +398,12 @@ def material_edit(request):
 
 def quote_list(request):
     """进行报价"""
-    q = models.Baojiadan.objects.filter(isdelete=0)
-
-    return render(request, 'quote_list.html', {"queryset": q, "title": "报价单管理"})
+    time = datetime.now()
+    m=models.Baojiadan.objects.filter(quote=None).filter(validitytime__gte=time)
+    q = models.Baojiadan.objects.filter(isdelete=0).filter(quote__isnull=False)
+    print(m.union(q))
+    # 仅显示有效期内的报价单
+    return render(request, 'quote_list.html', {"queryset": m.union(q), "title": "报价单管理"})
 
 
 def quote_add(request):
