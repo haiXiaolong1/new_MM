@@ -1,5 +1,6 @@
 from django.shortcuts import render
 import random
+import re
 from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
@@ -144,7 +145,7 @@ def add_chart_item(k, v, unread):
     clas = "right-sidebar-toggle chat-item"
     if unread:
         clas = "right-sidebar-toggle chat-item unread active-user"
-    return template.format(clas, k, v['name'], v['text'], v['time'])
+    return template.format(clas, k, v['name'], re.sub(r"<a.*?</a>",'',v['text']), v['time'])
 
 
 def add_chart_group(which, d):
