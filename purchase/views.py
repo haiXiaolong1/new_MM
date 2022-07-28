@@ -84,7 +84,7 @@ def create_qui(request):
     message.append("向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
                    .format(gys.name, gys.id, qgd.demandid, inid))
     message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}<br/>请于询价有效期内获取供应商报价反馈，并填入系统"
-                   .format(wl.desc,wl.id,qgd.tcount,qgd.price,wl.calcutype,datetime.strptime(date,'%Y-%m-%dT%H:%M').strftime("%Y年%m月%d日 %H:%M")))
+                   .format(wl.desc,wl.id,qgd.tcount,qgd.price,wl.calcutype,datetime.strptime(date,'%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")))
     to = models.Yuangong.objects.filter(businessid_id=me.businessid_id,office="1").first()
     for m in message:
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
