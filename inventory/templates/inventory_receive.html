@@ -28,6 +28,7 @@
                                                 <div class="form-group">
                                                     <input type="number" class="form-control" placeholder="实际入库数量"
                                                            name="receivecount" id="receivecount" required>
+                                                    <a class="formError" id="count_error"></a>
                                                 </div>
                                                 <div class="form-group" style="margin-top: 15px" id="moreinfo">
                                                     <textarea class="input-large form-control" name="moreinfo"
@@ -37,8 +38,7 @@
 
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
-                                            </button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                                             <button type="submit" id="btnSave" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
@@ -58,8 +58,7 @@
                                             <span>是否确定删除？</span>
                                         </div>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
-                                            </button>
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
                                             <button type="submit" id="Delete" class="btn btn-success">确定</button>
                                         </div>
                                     </div>
@@ -160,11 +159,14 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
+                                RECEIVE_ID = undefined;
                                 location.reload();
+                            }else {
+                                $("#count_error").text(res.error);
                             }
                         }
                     })
-                    RECEIVE_ID = undefined;
+
                     // {#    ID重新赋值为空#}
                 }
                 if (INVOICE_ID) {
@@ -182,10 +184,13 @@
                                 // localStorage.setItem("notify_context", "生成发票成功，发票单号：" + res.id);
                                 // localStorage.setItem("notify_type", "success");
                                 location.reload();
+                                INVOICE_ID = undefined;
+                            }else {
+                                $("#count_error").text(res.error);
                             }
                         }
                     })
-                    INVOICE_ID = undefined;
+
                 }
             })
 
@@ -194,6 +199,7 @@
                 $("#myModalLabel").text("入库确认");
                 $("#receivecount")[0].setAttribute("placeholder", "实际入库数量");
                 $("#formAdd")[0].reset();
+                $("#count_error").text("");
                 $("#myd").modal('show');
             })
             $("#table").on('click', '.btnInvoice', function () {
@@ -201,6 +207,7 @@
                 $("#myModalLabel").text("生成发票");
                 $("#receivecount")[0].setAttribute("placeholder", "请输入运费");
                 $("#formAdd")[0].reset();
+                $("#count_error").text("");
                 $("#myd").modal('show');
             })
             $("#table").on('click', '.btnDelete', function () {
