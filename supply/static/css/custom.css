@@ -189,3 +189,15 @@ aft{
     top: 81px;
     left: 40px;
 }
+def{
+    left: -5%;
+    position: relative;
+    width: 593.6px;
+}
+
+aft{
+    width: 593.6px;
+    position: fixed;
+    top: 81px;
+    left: 40px;
+}
