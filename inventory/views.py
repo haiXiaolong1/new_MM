@@ -385,7 +385,7 @@ def receive_add(request):
                    .format(gys.name, gys.id, fac.type, fac.address, wl.desc, wl.id, cgd.tcount,wl.calcutype, cgd.price, wl.calcutype))
     message.append("物料检查情况：<br/>量检通过-质检通过<br/>备注：<br/>{}".format(zcd.moreinfo))
     message.append("物料入库情况：<br/>入库数量:{}{}<br/>备注：<br/>{}".format(receivecount,wl.calcutype,moreinfo))
-    message.append("查看订单单据流<a href='/purchase/documents/'>>></a>")
+    message.append("查看订单单据流<a href='/purchase/documents/?id={}'>>></a>".format(cgd.purchaseid))
     for m in message:
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
