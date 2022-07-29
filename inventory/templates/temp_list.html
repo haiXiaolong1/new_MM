@@ -118,17 +118,17 @@
                                             {#                                        判断是否是管理员，普通员工只能查看#}
                                             {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
                                                 <td>
-                                                    {% if obj.qualitycheckinfo == -1 %}
+                                                    {% if obj.qualitycheckinfo == -1 and obj.quantitycheckinfo != 0  %}
                                                         <button class="btn btn-primary btn-xs btnQuality"
                                                                 uid="{{ obj.purchaseid_id }}">质检
                                                         </button>
                                                     {% endif %}
-                                                    {% if obj.quantitycheckinfo == -1 %}
+                                                    {% if obj.quantitycheckinfo == -1 and obj.qualitycheckinfo != 0  %}
                                                         <button class="btn btn-primary btn-xs btnQuantity"
                                                                 uid="{{ obj.purchaseid_id }}">量检
                                                         </button>
                                                     {% endif %}
-                                                    {% if obj.quantitycheckinfo != -1 and obj.qualitycheckinfo != -1 %}
+                                                    {% if obj.quantitycheckinfo != -1 and obj.qualitycheckinfo != -1  or obj.qualitycheckinfo == 0 or obj.quantitycheckinfo == 0 %}
                                                         <button class="btn btn-danger btn-xs btnDelete" id=""
                                                                 uid="{{ obj.purchaseid_id }}">删除
                                                         </button>

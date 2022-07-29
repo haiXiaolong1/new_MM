@@ -84,7 +84,7 @@ def create_qui(request):
     message.append("向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
                    .format(gys.name, gys.id, qgd.demandid, inid))
     message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
-                   .format(wl.desc,wl.id,qgd.tcount,qgd.price,wl.calcutype,datetime.strptime(date,'%Y-%m-%dT%H:%M').strftime("%Y年%m月%d日 %H:%M")))
+                   .format(wl.desc,wl.id,qgd.tcount,qgd.price,wl.calcutype,datetime.strptime(date,'%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")))
     pur_jl = models.Yuangong.objects.filter(businessid_id=me.businessid_id,office="5").first()
     inv_yg = models.Yuangong.objects.filter(businessid_id=me.businessid_id,office="1").first()
     for m in message:
@@ -167,7 +167,7 @@ def quote_evaluateByID(request):
     if isrece==1:
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(),
                                      context="请在报价有效期({}) 内创建采购订单<a href='/purchase/list/'>>></a>"
-                                     .format(bjd.inquiryid.validitytime.strftime("%Y年%m月%d日 %H:%M")),read=0)
+                                     .format(bjd.inquiryid.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")),read=0)
     notify=[]
     notify.append(dict(id=0, tittle="提示", context="报价单 {} 评估成功！".format(quid), type="success", position="top-center"))
     notify.append(dict(id=1, context="向 {}-{} 发信反馈报价评估情况".format(inv_yg.get_office_display(), inv_yg.username)
@@ -256,7 +256,7 @@ def purchase_createByQuote(request):
     message.append("【系统自动发信】<br/>采购订单反馈信息")
     print(deadline)
     message.append("引用报价单-{}<br/>创建采购订单={}<br/>发往工厂:{}({})<br/>收货截至期限：{}"
-                   .format(quid,puid,ff.type,ff.address,datetime.strptime(deadline,"%Y-%m-%d").strftime("%Y年%m月%d日")))
+                   .format(quid,puid,ff.type,ff.address,datetime.strptime(deadline,"%Y-%m-%d").strftime("%Y{}%m{}%d{}").format("年","月","日")))
     for m in message:
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
         if me.office!="4":

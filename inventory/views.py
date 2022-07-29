@@ -187,7 +187,7 @@ def inventory_temp(request):
     # 首先查到所有待暂存的采购订单
 
     q = models.Zanshoudan.objects.filter(isdelete=0).all()
-
+    print(q)
     return render(request, 'temp_list.html', {"queryset": q, "title": "暂存管理"})
 
 
@@ -207,6 +207,10 @@ def ischeck(request, pid, notify):
         fid = z.first().purchaseid.facid_id
         mid = z.first().maid_id
         tcount = z.first().tcount
+        if z.first().qualitycheckinfo:
+            notify.append(dict(id=1, tittle="提示", context="暂存单 {} 量检不通过，转为冻结库存".format(zid), type="error", position="top-center"))
+        if not z.first().qualitycheckinfo:
+            notify.append(dict(id=1, tittle="提示", context="暂存单 {} 质检不通过，转为冻结库存".format(zid), type="error", position="top-center"))
         w = models.Gongchangkucun.objects.filter(facid_id=fid, maid_id=mid).order_by("-updatetime").first()
         if w:
             models.Gongchangkucun.objects.create(facid_id=fid, maid_id=mid, inventorytemp= w.inventorytemp
@@ -218,8 +222,7 @@ def ischeck(request, pid, notify):
                                                  , inventoryonroad=0,
                                                  inventoryfreeze=tcount, inventoryunrest=0
                                                  , updatetime=createtime)
-        flag=False
-        return flag
+        return notify
     # 质检量检均完成后，才算完成
     if z.first().quantitycheckinfo != -1 and z.first().qualitycheckinfo != -1:
         n = 10000000
