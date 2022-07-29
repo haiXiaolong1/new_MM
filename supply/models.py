@@ -208,6 +208,7 @@ class Caigoudan(models.Model):
     deadline = models.DateTimeField(blank=True, null=True)
     choices = (
         (1, "是"),
+        (-1,"库存冻结"),
         (0, "否")
     )
     iscomplete = models.IntegerField(blank=True, choices=choices, null=True)
@@ -236,6 +237,7 @@ class Zanshoudan(models.Model):
     )
     quantitycheckinfo = models.IntegerField(blank=True, null=True, choices=choices2)
     choices3 = (
+        (-1, "已冻结"),
         (1, "已入库"),
         (0, "未入库"),
         (2, "已入库")

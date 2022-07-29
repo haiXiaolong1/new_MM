@@ -207,6 +207,10 @@ def ischeck(request, pid, notify):
         fid = z.first().purchaseid.facid_id
         mid = z.first().maid_id
         tcount = z.first().tcount
+        # 更新采购单和暂存单的状态为冻结状态
+        models.Zanshoudan.objects.filter(temid=zid).update(isreceived=-1)
+        models.Caigoudan.objects.filter(purchaseid=pid).update(iscomplete=-1)
+
         if z.first().qualitycheckinfo:
             notify.append(dict(id=1, tittle="提示", context="暂存单 {} 量检不通过，转为冻结库存".format(zid), type="error", position="top-center"))
         if not z.first().qualitycheckinfo:

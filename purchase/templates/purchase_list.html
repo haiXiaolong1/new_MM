@@ -73,7 +73,7 @@
                                                 <td>{{ obj.deadline|date:"Y-m-d" }}</td>
                                                 {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
                                                     <td>
-                                                        {% if obj.iscomplete == 1 %}
+                                                        {% if obj.iscomplete != 0 %}
                                                             <button class="btn btn-danger btn-xs btnDelete"
                                                                     uid="{{ obj.purchaseid }}">删除
                                                             </button>

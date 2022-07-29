@@ -595,6 +595,7 @@ def purchase_documents(request):
                          "请1询X报-1":4,"请1报1":3,"请1报0":2,"请0":1,"请-1":-1,"":-2}
     active="background:#5893df"
     style=[""]*11
+    print(document_state)
     progress=document_state_dict[document_state]
     for i in range(progress+1):
         style[i]=active
