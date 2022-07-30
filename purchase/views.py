@@ -91,7 +91,7 @@ def create_qui(request):
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
     models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(),
-                                 context="请于询价有效期内获取供应商报价反馈，并填入系统<a href='/supply/quote/list/'>>></a>", read=0)
+                                 context='请于询价有效期内获取供应商报价反馈<br/>并填入系统<a class="chat_link" href="/supply/quote/list/">>></a>', read=0)
     notify=[]
     notify.append(dict(id=0, tittle="提示", context="询价单 {} 创建成功！".format(inid),
                        type="success", position="top-center"))
@@ -143,37 +143,37 @@ def quote_evaluateByID(request):
     bjd = models.Baojiadan.objects.filter(quoteid=quid)
     bjd.update(isreceived=isrece)
     bjd = bjd.first()
-    # 系统自动发信
-    me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
-    buss = me.businessid
-    inv_yg = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="3").first()
-    pur_yg = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="2").first()
-    qgd = models.Caigouxuqiu.objects.filter(demandid=did).first()
-    wl = qgd.maid
-    message = []
-    message.append("【系统自动发信】<br/>报价反馈信息")
-    message.append("询价单-{}<br/>询价物料:{}({})<br/>询价数量:{}  预期报价:{}元/{}"
-                   .format(bjd.inquiryid_id, wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
-    situation="报价评估情况:"
-    for bj in c:
-        situation+="<br/>{}({}) {}元/{} 状态[{}]".format(bj.supplyid.name,bj.supplyid_id,bj.quote,wl.calcutype,bj.get_isreceived_display())
-    situation+="<br/><hr><br/>{}({}) {}元/{} 状态[{}]".format(bjd.supplyid.name,bjd.supplyid_id,bjd.quote,wl.calcutype,bjd.get_isreceived_display())
-    message.append(situation)
-    for m in message:
-        if not isrece==0:
-            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
-        if isrece==1:
-            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
-    if isrece==1:
-        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(),
-                                     context="请在报价有效期({}) 内创建采购订单<a href='/purchase/list/'>>></a>"
-                                     .format(bjd.inquiryid.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")),read=0)
     notify=[]
     notify.append(dict(id=0, tittle="提示", context="报价单 {} 评估成功！".format(quid), type="success", position="top-center"))
-    notify.append(dict(id=1, context="向 {}-{} 发信反馈报价评估情况".format(inv_yg.get_office_display(), inv_yg.username)
-                       , tittle="系统消息", type="info", position="top-center"))
-    notify.append(dict(id=2, context="向 {}-{} 发信报价评估情况，并提示创建采购订单".format(pur_yg.get_office_display(), pur_yg.username)
-                       , tittle="系统消息", type="info", position="top-center"))
+    if isrece=="1":
+        # 系统自动发信
+        me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
+        buss = me.businessid
+        inv_yg = models.Yuangong.objects.filter(businessid=buss, isactive=1, office="3").first()
+        pur_yg = models.Yuangong.objects.filter(businessid=buss, isactive=1, office="2").first()
+        qgd = models.Caigouxuqiu.objects.filter(demandid=did).first()
+        wl = qgd.maid
+        message = []
+        message.append("【系统自动发信】<br/>报价反馈信息")
+        message.append("询价单-{}<br/>询价物料:{}({})<br/>询价数量:{}  预期报价:{}元/{}"
+                       .format(bjd.inquiryid_id, wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
+        situation = "报价评估情况:"
+        for bj in c:
+            situation += '<br/>{}({}) {}元/{} <a class="chat_status_{}">{}</a>'\
+                .format(bj.supplyid.name, bj.supplyid_id, bj.quote, wl.calcutype,bj.isreceived,bj.get_isreceived_display())
+        situation += '<hr>{}({}) {}元/{} <a class="chat_status_{}">{}</a>'\
+            .format(bjd.supplyid.name, bjd.supplyid_id, bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
+        message.append(situation)
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
+        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(),
+                                     context='请在报价有效期({}) 内创建采购订单<a class="chat_link" href="/purchase/list/">>></a>'
+                                     .format(bjd.inquiryid.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年", "月","日")),read=0)
+        notify.append(dict(id=1, context="向 {}-{} 发信反馈报价评估情况".format(inv_yg.get_office_display(), inv_yg.username)
+                           , tittle="系统消息", type="info", position="top-center"))
+        notify.append(dict(id=2, context="向 {}-{} 发信报价评估情况，并提示创建采购订单".format(pur_yg.get_office_display(), pur_yg.username)
+                           , tittle="系统消息", type="info", position="top-center"))
     request.session["notify"] = notify
     return JsonResponse({"status": True,"state":state_dict[int(isrece)]})
 
@@ -262,7 +262,7 @@ def purchase_createByQuote(request):
         if me.office!="4":
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
     models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(),
-                                 context="请在追踪供应商送货进度，在截止期限前将货物暂存<a href='/inventory/temp/'>>></a>", read=0)
+                                 context='请在追踪供应商送货进度<br/>在截止期限前将货物暂存<a class="chat_link" href="/inventory/temp/">>></a>', read=0)
     notify=[]
     notify.append(dict(id=0, tittle="提示", context="采购订单 {} 创建成功！".format(puid), type="success", position="top-center"))
     notify.append(dict(id=1, context="向 {}-{} 发信反馈采购订单情况".format(pur_jl.get_office_display(), pur_jl.username)
