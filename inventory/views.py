@@ -417,8 +417,9 @@ def invoice_add(request):
     bid = t.first().temid.purchaseid.quoteid.bussid
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     totalcount = pcount
-    money = float(totalcount) * float(price)
+    money = round(float(totalcount) * float(price),2)
     totalmoney = money + float(fee)
+    totalmoney=round(totalmoney,2)
     moreinfo = request.POST.get("moreinfo")
 
     n = 10000000
