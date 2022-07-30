@@ -284,6 +284,15 @@ def supply_add(request):
     toCheck = [o['name'], o['address']]
     types = ['nan', 'nan']
     res = form_check(toCheck, types)
+    l1=len(o['name'])
+    l2=len(o['address'])
+    print(res)
+    if l1>20:
+        res['error'][0]='供应商名称不能超过20个字符'
+        res['status']=False
+    if l2>20:
+        res['error'][0]='供应商地址不能超过20个字符'
+        res['status']=False
     if res['status']:
         models.Gongyingshang.objects.create(name=o['name'], address=o['address'], createtime=time
                                             , id=sid, updatetime=time, createnumberid_id=id, updatenumberid_id=id)

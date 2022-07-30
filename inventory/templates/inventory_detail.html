@@ -47,13 +47,15 @@
                     </div>
                 </div>
             </div><!-- Row -->
-            <div class="row">
+            <div class="col-md-12" style="padding: 0">
                 <div class="panel panel-white">
                     <div class="panel-body">
                         <div class="panel-heading clearfix">
-                            <h4 class="panel-body" ><strong>{{ now.facid_id }}库存占比情况</strong></h4>
+                            <h4 class="panel-body"><strong>{{ now.maid_id }}库存占比情况</strong></h4>
                         </div>
-                        <div id="flot3"><svg></svg></div>
+                        <div id="flot3">
+                            <svg></svg>
+                        </div>
                     </div>
                 </div>
             </div><!-- Row -->
@@ -71,8 +73,6 @@
             $('#inventory').addClass('active-page').addClass('open');
             $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
-
-            {#console.log({{datelist|safe}});#}
             {#图表#}
             var myChart = echarts.init(document.getElementById('chart1'));
             var legenddata, xdata, sdata;
@@ -100,10 +100,9 @@
                     data: xdata
                 },
                 yAxis: {},
+                color:['#0070E0','#F1C205','green','red'],
                 series: sdata//后台获取
             };
-            // 使用刚指定的配置项和数据显示图表。
-            {#console.log(option)#}
             myChart.setOption(option);
 
             var myChart2 = echarts.init(document.getElementById('chart2'));
@@ -148,86 +147,59 @@
                     data: xdata2
                 },
                 yAxis: {},
+                color:['#0070E0','#F1C205','#63cb89','red'],
                 series: sdata2//后台获取
+
             };
             // 使用刚指定的配置项和数据显示图表。
             myChart2.setOption(option2);
-var flot3 = echarts.init(document.getElementById('flot3'));
+            var flot3 = echarts.init(document.getElementById('flot3'));
 
-var flot3 = function () {
-        var data = [{
-            label: "在途库存",
-            data: {{now.inventoryonroad}},
-            color: "#0070E0",
-        }, {
-            label: "暂存库存",
-            data:{{now.inventorytemp}} ,
-            color: "#F1C205",
-        }, {
-            label: "未限制使用库存",
-            data:{{now.inventoryunrest}} ,
-            color:"#A20",
-        },{
-            label: "冻结库存",
-            data: {{now.inventoryfreeze}},
-            color: "#171515",
-        }];
-        var options = {
-            series: {
-                pie: {
-                    show: true
-                }
-            },
-            legend: {
-                labelFormatter: function(label, series){
-                    return '<span class="pie-chart-legend">'+label+'</span>';
-                }
-            },
-            grid: {
-                hoverable: true
-            },
-            tooltip: true,
-            tooltipOpts: {
-                content: "%p.0%, %s",
-                shifts: {
-                    x: 20,
-                    y: 0
-                },
-                defaultTheme: false
-            }
-        };
-        $.plot($("#flot3"), data, options);
-    };
-flot3().setOption(options);
-            {#new Chart(document.getElementById("chart3"),#}
-            {#    {"type":"line",#}
-            {#        "data":{#}
-            {#            "labels":{{ datelist|safe }},#}
-            {#            "datasets":[#}
-            {#                {"label":"在途库存",#}
-            {#"borderColor":"rgb(99, 203, 137)",#}
-            {#                "data":{{ l1 }},#}
-            {#                "fill":false,#}
-            {#                "lineTension":0.1},#}
-            {#                {"label":"暂存库存",#}
-            {#"borderColor":"rgb(99, 203, 137)",#}
-            {#                    "data":{{ l2 }},#}
-            {#                    "fill":false,#}
-            {#                    "lineTension":0.1},#}
-            {#                {"label":"未限制使用库存",#}
-            {#"borderColor":"rgb(99, 203, 137)",#}
-            {#                    "data":{{ l3 }},#}
-            {#                    "fill":false,#}
-            {#                    "lineTension":0.1},#}
-            {#                {"label":"冻结库存",#}
-            {#"borderColor":"rgb(99, 203, 137)",#}
-            {#                    "data":{{ l4 }},#}
-            {#                    "fill":false,#}
-            {#                    "lineTension":0.1},#}
-            {#            ]},#}
-            {#        "options":{}#}
-            {#    });#}
-
+            var flot3 = function () {
+                var data = [{
+                    label: "在途库存",
+                    data: {{now.inventoryonroad}},
+                    color: "#0070E0",
+                }, {
+                    label: "暂存库存",
+                    data:{{now.inventorytemp}},
+                    color: "#F1C205",
+                }, {
+                    label: "未限制使用库存",
+                    data:{{now.inventoryunrest}},
+                    color: "#63cb89",
+                }, {
+                    label: "冻结库存",
+                    data: {{now.inventoryfreeze}},
+                    color: "red",
+                }];
+                var options = {
+                    series: {
+                        pie: {
+                            show: true
+                        }
+                    },
+                    legend: {
+                        labelFormatter: function (label, series) {
+                            return '<span class="pie-chart-legend">' + label + '</span>';
+                        }
+                    },
+                    grid: {
+                        hoverable: true
+                    },
+                    tooltip: true,
+                    tooltipOpts: {
+                        content: "%p.0%, %s",
+                        shifts: {
+                            x: 20,
+                            y: 0
+                        },
+                        defaultTheme: false
+                    }
+                };
+                $.plot($("#flot3"), data, options);
+            };
+            flot3().setOption(options);
 
         })
 
