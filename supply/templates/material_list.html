@@ -23,14 +23,12 @@
                             <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
                                 <div class="modal-dialog">
                                     <div class="modal-content">
-                                        {% if  request.session.info.office == 1 or request.session.info.office == 0 %}
                                             <div class="modal-header">
                                                 <button type="button" class="close" data-dismiss="modal"
                                                         aria-label="Close"><span aria-hidden="true">&times;</span>
                                                 </button>
                                                 <h4 class="modal-title" id="myModalLabel">新建供应关系</h4>
                                             </div>
-                                        {% endif %}
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
