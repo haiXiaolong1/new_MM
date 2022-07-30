@@ -165,10 +165,6 @@
                 },
                 series: [{
                     type: "pie",
-                    tooltip: {
-                        trigger: 'item',
-                        formatter: "{a} <br/>{b} : {c} ({d}%)"
-                    },
                     label: {
                         'show': true,
                         'formatter': '{b}: {d}%'
@@ -188,6 +184,10 @@
                     }]
                 }],
                 color:['#0070E0','#F1C205','#63cb89','red'],
+                tooltip: {
+                    trigger: 'item',
+                    'formatter': "{b} : {c} ({d}%)"
+                },
             }
             flot3.setOption(option3);
 
