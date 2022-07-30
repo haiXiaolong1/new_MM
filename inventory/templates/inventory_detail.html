@@ -35,11 +35,7 @@
                 <div class="col-md-6">
                     <div class="panel panel-white">
                         <div class="panel-body">
-                            <div class="panel-heading clearfix">
-                                <h4 class="panel-body"><strong>{{ now.maid_id }}库存占比情况</strong></h4>
-                            </div>
-                            <div id="flot3">
-                                <svg></svg>
+                            <div id="flot3" style="width: 100%;height: 350px">
                             </div>
                         </div>
                     </div>
@@ -47,7 +43,7 @@
                 <div class="col-md-6">
                     <div class="panel panel-white">
                         <div class="panel-body ">
-                            <div id="chart2" style="width: 100%;height:400px;"></div>
+                            <div id="chart2" style="width: 100%;height:350px;"></div>
                         </div>
                     </div>
                 </div>
@@ -55,7 +51,7 @@
             <div class="col-md-12" style="padding: 0">
                 <div class="panel panel-white">
                     <div class="panel-body ">
-                        <div id="chart1" style="width: 100%;height:400px;"></div>
+                        <div id="chart1" style="width: 100%;height:500px;"></div>
                     </div>
                 </div>
             </div><!-- Row -->
@@ -158,52 +154,42 @@
             // 使用刚指定的配置项和数据显示图表。
             myChart2.setOption(option2);
             var flot3 = echarts.init(document.getElementById('flot3'));
-
-            var flot3 = function () {
-                var data = [{
-                    label: "在途库存",
-                    data: {{now.inventoryonroad}},
-                    color: "#0070E0",
-                }, {
-                    label: "暂存库存",
-                    data:{{now.inventorytemp}},
-                    color: "#F1C205",
-                }, {
-                    label: "未限制使用库存",
-                    data:{{now.inventoryunrest}},
-                    color: "#63cb89",
-                }, {
-                    label: "冻结库存",
-                    data: {{now.inventoryfreeze}},
-                    color: "red",
-                }];
-                var options = {
-                    series: {
-                        pie: {
-                            show: true
-                        }
+            var option3={
+                title: {
+                    text: '{{ now.maid_id }}各类型库存占比',
+                    left: "center",
+                },
+                legend: {
+                    bottom:0,
+                    data: ['在途库存', '暂存库存', '未限制使用库存', '冻结库存']
+                },
+                series: [{
+                    type: "pie",
+                    tooltip: {
+                        trigger: 'item',
+                        formatter: "{a} <br/>{b} : {c} ({d}%)"
                     },
-                    legend: {
-                        labelFormatter: function (label, series) {
-                            return '<span class="pie-chart-legend">' + label + '</span>';
-                        }
+                    label: {
+                        'show': true,
+                        'formatter': '{b}: {d}%'
                     },
-                    grid: {
-                        hoverable: true
-                    },
-                    tooltip: true,
-                    tooltipOpts: {
-                        content: "%p.0%, %s",
-                        shifts: {
-                            x: 20,
-                            y: 0
-                        },
-                        defaultTheme: false
-                    }
-                };
-                $.plot($("#flot3"), data, options);
-            };
-            flot3().setOption(options);
+                    data: [{
+                        value: {{now.inventoryonroad}},
+                        name: "在途库存"
+                    }, {
+                        value: {{now.inventorytemp}},
+                        name: "暂存库存"
+                    }, {
+                        value: {{now.inventoryunrest}},
+                        name: "未限制使用库存"
+                    }, {
+                        value: {{now.inventoryfreeze}},
+                        name: "冻结库存"
+                    }]
+                }],
+                color:['#0070E0','#F1C205','#63cb89','red'],
+            }
+            flot3.setOption(option3);
 
         })
 
