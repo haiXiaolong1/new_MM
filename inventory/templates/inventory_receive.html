@@ -141,13 +141,15 @@
 {% block js %}
     <script type="text/javascript">
         var RECEIVE_ID, INVOICE_ID, DELETE_ID;
+        var PAGE,LENGTH;
         $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#inventory_receive').addClass('active-page');
             $('#inventory').addClass('active-page').addClass('open');
             $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
-
+            var oTable = $('#example').dataTable();
+            var oSettings = oTable.fnSettings();
             $("#btnSave").click(function () {
                 if (RECEIVE_ID) {
                     $.ajax({
@@ -160,6 +162,8 @@
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
                                 RECEIVE_ID = undefined;
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             }else {
                                 $("#count_error").text(res.error);
@@ -179,10 +183,8 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
-                                // localStorage.setItem("notify_show", true);
-                                // localStorage.setItem("notify_tittle", "提示");
-                                // localStorage.setItem("notify_context", "生成发票成功，发票单号：" + res.id);
-                                // localStorage.setItem("notify_type", "success");
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                                 INVOICE_ID = undefined;
                             }else {
@@ -200,6 +202,10 @@
                 $("#receivecount")[0].setAttribute("placeholder", "实际入库数量");
                 $("#formAdd")[0].reset();
                 $("#count_error").text("");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#myd").modal('show');
             })
             $("#table").on('click', '.btnInvoice', function () {
@@ -208,10 +214,18 @@
                 $("#receivecount")[0].setAttribute("placeholder", "请输入运费");
                 $("#formAdd")[0].reset();
                 $("#count_error").text("");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#myd").modal('show');
             })
             $("#table").on('click', '.btnDelete', function () {
                 DELETE_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#deleteModel").modal('show');
             })
             $("#Delete").click(
@@ -225,10 +239,8 @@
                             if (res.status) {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
-                                // localStorage.setItem("notify_show", true);
-                                // localStorage.setItem("notify_tittle", "提示");
-                                // localStorage.setItem("notify_context", "入库单删除成功");
-                                // localStorage.setItem("notify_type", "success");
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             }
                         }

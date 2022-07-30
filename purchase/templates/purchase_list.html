@@ -98,16 +98,22 @@
 {% block js %}
     <script type="text/javascript">
         var DELETE_ID;
+        var PAGE,LENGTH;
         $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#purchase_list').addClass('active-page');
             $('#purchase').addClass('active-page').addClass('open');
             $('#purchase_ul').css('display', 'block');
             $('#purchase_ul li').addClass('animation');
-
+            var oTable = $('#example').dataTable();
+            var oSettings = oTable.fnSettings();
             {#动态增加点击事件#}
             $("#table").on('click', '.btnDelete', function () {
                 DELETE_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#deleteModel").modal('show');
             })
 
@@ -122,6 +128,8 @@
                             if (res.status) {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             } else {
                             }

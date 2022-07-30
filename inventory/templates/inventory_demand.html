@@ -162,6 +162,7 @@
 {% block js %}
     <script type="text/javascript">
         var VERIFY_ID, DELETE_ID;
+        var PAGE,LENGTH;
         // var showToast = localStorage.getItem("notify_show");
         $(document).ready(function () {
             $('li').removeClass('active-page');
@@ -169,10 +170,15 @@
             $('#inventory').addClass('active-page').addClass('open');
             $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
-
+            var oTable = $('#example').dataTable();
+            var oSettings = oTable.fnSettings();
             $("#btnAdd").click(function () {
                 $(".formError").text("");
                 $("#formAdd")[0].reset();
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#myd").modal('show');
             })
             $("#btnSave").click(function () {
@@ -186,6 +192,8 @@
                             $("#myd").modal('hide');
                             $("#formAdd")[0].reset();
                             // 先reload后提示，由request将notify信息传值给session并在reload后清空
+                            sessionStorage.setItem("page",PAGE);
+                            sessionStorage.setItem("length",LENGTH);
                             location.reload()
                         } else {
                             var ids = ["#facid_id_error", "#maid_id_error", "#price_error", "#tcount_error"];
@@ -202,6 +210,10 @@
 
             $("#table").on('click', '.btnVerify', function () {
                 VERIFY_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $.ajax({
                     url: "/inventory/demand/verify/n/",
                     type: "post",
@@ -209,6 +221,8 @@
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {
+                            sessionStorage.setItem("page",PAGE);
+                            sessionStorage.setItem("length",LENGTH);
                             location.reload();
                         }
                     }
@@ -217,6 +231,10 @@
 
             $("#table").on('click', '.btnDelete', function () {
                 DELETE_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#deleteModel").modal('show');
             })
 
@@ -231,6 +249,8 @@
                             if (res.status) {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             } else {
                             }

@@ -152,13 +152,15 @@
 {% block js %}
     <script type="text/javascript">
         var QUANTITY_ID, QUALITY_ID, DELETE_ID;
+        var PAGE,LENGTH;
         $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#inventory_temp').addClass('active-page');
             $('#inventory').addClass('active-page').addClass('open');
             $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
-
+            var oTable = $('#example').dataTable();
+            var oSettings = oTable.fnSettings();
             $("#btnSave").click(function () {
                 if (QUALITY_ID) {
                     $.ajax({
@@ -170,6 +172,8 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             }
                         }
@@ -187,6 +191,8 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             }
                         }
@@ -202,6 +208,11 @@
                 $("#formAdd")[0].reset();
                 $("#myModalLabel").text("数量检查");
                 $("#myLa").text("量检结果");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
+
                 $("#myd").modal('show');
             })
             $("#table").on('click', '.btnQuality', function () {
@@ -209,11 +220,21 @@
                 $("#formAdd")[0].reset();
                 $("#myModalLabel").text("质量检查");
                 $("#myLa").text("质检结果");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
+
                 $("#myd").modal('show');
             })
 
             $("#table").on('click', '.btnDelete', function () {
                 DELETE_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
+
                 $("#deleteModel").modal('show');
             })
             $("#Delete").click(
@@ -227,6 +248,8 @@
                             if (res.status) {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             }
                         }
