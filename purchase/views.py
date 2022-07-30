@@ -80,7 +80,7 @@ def create_qui(request):
     me=models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
     wl=qgd.maid
     message=[]
-    message.append("【系统自动发信】")
+    message.append("【系统消息】")
     message.append("向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
                    .format(gys.name, gys.id, qgd.demandid, inid))
     message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
@@ -154,7 +154,7 @@ def quote_evaluateByID(request):
         qgd = models.Caigouxuqiu.objects.filter(demandid=did).first()
         wl = qgd.maid
         message = []
-        message.append("【系统自动发信】<br/>报价反馈信息")
+        message.append("【系统消息】报价反馈信息")
         message.append("询价单-{}<br/>询价物料:{}({})<br/>询价数量:{}  预期报价:{}元/{}"
                        .format(bjd.inquiryid_id, wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
         situation = "报价评估情况:"
@@ -253,7 +253,7 @@ def purchase_createByQuote(request):
     inv_yg = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="3").first()
     pur_jl = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="4").first()
     message = []
-    message.append("【系统自动发信】<br/>采购订单反馈信息")
+    message.append("【系统消息】采购订单反馈信息")
     print(deadline)
     message.append("引用报价单-{}<br/>创建采购订单={}<br/>发往工厂:{}({})<br/>收货截至期限：{}"
                    .format(quid,puid,ff.type,ff.address,datetime.strptime(deadline,"%Y-%m-%d").strftime("%Y{}%m{}%d{}").format("年","月","日")))

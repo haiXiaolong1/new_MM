@@ -128,7 +128,7 @@ def demand_add(request):
         notify = []
         if me.office != "5" and me.isactive==1 and me.issuper == 0:
             wl=models.Wuliao.objects.filter(id=r['maid_id']).first()
-            message.append("【系统自动发信】<br/>申请审核")
+            message.append("【系统消息】申请审核")
             message.append('待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
                            .format(wl.desc,wl.id,r['tcount'],r['price'],wl.calcutype))
             to = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
@@ -157,7 +157,7 @@ def demand_verify(request):
     if me.office != "0" and me.isactive == 1 and me.issuper == 0:
         cgxq = cgd.first()
         wl = models.Wuliao.objects.filter(id=cgxq.maid_id).first()
-        message.append("【系统自动发信】")
+        message.append("【系统消息】")
         message.append("采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"
                        .format(did,wl.desc,wl.id,cgxq.tcount,cgxq.price,wl.calcutype))
         to = models.Yuangong.objects.filter(id=cgxq.createuserid_id).first()
@@ -269,7 +269,7 @@ def ischeck(request, pid, notify):
                            type="info", position="top-center"))
         notify.append(dict(id=3, tittle="系统消息", context="已提示 {}-{} 前往创建入库单".format(jl.get_office_display(), jl.username),type="info", position="top-center"))
         message = []
-        message.append("【系统消息】<br/>暂存单通过检查")
+        message.append("【系统消息】暂存单通过检查")
         message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购订单:{}<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
                        .format(gys.name,gys.id,fac.type,fac.address,cgd.purchaseid,wl.desc,wl.id,cgd.tcount,wl.calcutype,cgd.price,wl.calcutype))
         message.append("入库前物料检查情况：<br/>量检通过-质检通过<br/>备注：<br/>{}".format(zcd.moreinfo))
@@ -380,7 +380,7 @@ def receive_add(request):
     notify.append(dict(id=2, tittle="系统消息", context="向 {}-{} 发信反馈物料需求入库完成".format(jl.get_office_display(), jl.username),
                        type="info",position="top-center"))
     message = []
-    message.append("【系统消息】<br/>物料需求成功入库")
+    message.append("【系统消息】物料需求成功入库")
     message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
                    .format(gys.name, gys.id, fac.type, fac.address, wl.desc, wl.id, cgd.tcount,wl.calcutype, cgd.price, wl.calcutype))
     message.append("物料检查情况：<br/>量检通过-质检通过<br/>备注：<br/>{}".format(zcd.moreinfo))
