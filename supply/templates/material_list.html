@@ -142,13 +142,15 @@
     <script type="text/javascript">
         var EDIT_ID;
         var DELETE_ID;
+        var PAGE,LENGTH;
         $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#supply2').addClass('active-page');
             $('#supply').addClass('active-page').addClass('open');
             $('#supply_ul').css('display', 'block');
             $('#supply_ul li').addClass('animation');
-
+            var oTable = $('#example').dataTable();
+            var oSettings = oTable.fnSettings();
             var showToast = localStorage.getItem("notify_show");
             if (showToast != undefined) {
                 if (showToast) {
@@ -165,6 +167,10 @@
                 //将正在编辑的ID置空
                 $(".formError").text("");
                 EDIT_ID = undefined;
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#myModalLabel").text("新建供应关系");
                 $("#formAdd")[0].reset();
                 $("#myd").modal('show');
@@ -192,10 +198,11 @@
                                     localStorage.setItem("notify_context", "关系已存在，不能重复添加");
                                     localStorage.setItem("notify_type", "error");
                                 }
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             } else {
                                 var ids = ["#supplyid_id_error", "#materialid_id_error"];
-                                console.log(res)
                                 for (var i = 0; i < ids.length; i++) {
                                     $(ids[i]).text("");
                                     if (res.error[i] != true) {
@@ -227,6 +234,8 @@
                                     localStorage.setItem("notify_context", "关系已存在，不能重复添加");
                                     localStorage.setItem("notify_type", "error");
                                 }
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                                 EDIT_ID = undefined;
                             } else {
@@ -247,13 +256,12 @@
 
             })
 
-            //  $(".btnDelete").click(function (){
-//
-            //舍弃静态设置点击事件
-            // })
-            {#动态增加点击事件#}
             $("#table").on('click', '.btnDelete', function () {
                 DELETE_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#deleteModel").modal('show');
             })
             $("#Delete").click(
@@ -271,6 +279,8 @@
                                 localStorage.setItem("notify_tittle", "提示");
                                 localStorage.setItem("notify_context", "删除成功");
                                 localStorage.setItem("notify_type", "success");
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             }
                         }
@@ -278,14 +288,6 @@
                 }
             )
 
-            /*
-            $(".btnEdit").click(function (){
-
-
-            })
-
-             */
-            {#动态事件#}
             $("#table").on('click', '.btnEdit', function () {
                 var curid = $(this).attr("uid");
                 EDIT_ID = curid;
@@ -308,7 +310,11 @@
                                 console.log(res, options);
                             })
                             $(".formError").text("");
-                            $("#myModalLabel").text("编辑供应关系")
+                            $("#myModalLabel").text("编辑供应关系");
+                            // 获取页码值
+                            PAGE=oSettings._iDisplayStart;
+                            //获取页面分割长度
+                            LENGTH=oSettings._iDisplayLength;
                             $("#myd").modal('show');
                         } else {
 

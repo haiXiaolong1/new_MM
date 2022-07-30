@@ -474,7 +474,7 @@ def quote_edit(request):
     res = form_check(toCheck, types)
     if res['status']:
         models.Baojiadan.objects.filter(quoteid=quid).update(quote=quote)
-        request.session['notify']=[dict(id=0, tittle="提示", context="报价单 {} 报价修改成功".format(qid), type="success", position="top-center")]
+        request.session['notify']=[dict(id=0, tittle="提示", context="报价单 {} 报价修改成功".format(quid), type="success", position="top-center")]
     return JsonResponse(json.dumps(res, ensure_ascii=False), safe=False)
 
 
@@ -528,16 +528,17 @@ def mm_edit(request):
 
     return JsonResponse({"status": True})
 
-
-# 删除供应商
+@csrf_exempt
+# 删除物料
 def mm_delete(request):
-    id = request.GET.get("uid")
+    id = request.POST.get("uid")
     '''
     s=models.Wuliao.objects.filter(supplyid_id=id).first()
     # 先判断是否有关联关系，如果有则不能删除，目前没有
     if s:
         return JsonResponse({"status":False})
     '''
+    print(id)
     models.Wuliao.objects.filter(id=id).delete()
     return JsonResponse({"status": True})
 

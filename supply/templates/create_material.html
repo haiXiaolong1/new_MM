@@ -160,13 +160,15 @@
     <script type="text/javascript">
         var EDIT_ID;
         var DELETE_ID;
+        var PAGE,LENGTH;
         $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#init_documents').addClass('active-page');
             $('#init').addClass('active-page').addClass('open');
             $('#init_ul').css('display', 'block');
             $('#init_ul li').addClass('animation');
-
+            var oTable = $('#example').dataTable();
+            var oSettings = oTable.fnSettings();
             var showToast = localStorage.getItem("notify_show");
             if (showToast != undefined) {
                 if (showToast) {
@@ -184,6 +186,10 @@
                 EDIT_ID = undefined;
                 $("#myModalLabel").text("新建物料");
                 $("#formAdd")[0].reset();
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#myd").modal('show');
             })
             $("#btnSave").click(function () {
@@ -210,6 +216,8 @@
                                     localStorage.setItem("notify_tittle", "提示");
                                     localStorage.setItem("notify_context", "物料添加成功");
                                     localStorage.setItem("notify_type", "success");
+                                    sessionStorage.setItem("page",PAGE);
+                                    sessionStorage.setItem("length",LENGTH);
                                     location.reload();
                                 }
                             }
@@ -238,6 +246,8 @@
                                     localStorage.setItem("notify_tittle", "提示");
                                     localStorage.setItem("notify_context", "物料编辑成功");
                                     localStorage.setItem("notify_type", "success");
+                                    sessionStorage.setItem("page",PAGE);
+                                    sessionStorage.setItem("length",LENGTH);
                                     location.reload();
                                 }
                             }
@@ -251,6 +261,10 @@
 
             $("#table").on('click', '.btnDelete', function () {
                 DELETE_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#deleteModel").modal('show');
             })
 
@@ -269,6 +283,8 @@
                                 localStorage.setItem("notify_tittle", "提示");
                                 localStorage.setItem("notify_context", "成功删除物料");
                                 localStorage.setItem("notify_type", "success");
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             } else {
                                 localStorage.setItem("notify_show", true);
@@ -277,6 +293,8 @@
                                 localStorage.setItem("notify_type", "error");
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             }
                         }
@@ -299,7 +317,11 @@
                             $.each(res.supply, function (name, value) {
                                 $("#" + name).val(value);
                             })
-                            $("#myModalLabel").text("编辑物料")
+                            $("#myModalLabel").text("编辑物料");
+                            // 获取页码值
+                            PAGE=oSettings._iDisplayStart;
+                            //获取页面分割长度
+                            LENGTH=oSettings._iDisplayLength;
                             $("#myd").modal('show');
                         } else {
 

@@ -158,13 +158,16 @@
 <script type="text/javascript">
         var EDIT_ID;
         var DELETE_ID;
+        var PAGE,LENGTH;
+
         $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#supply1').addClass('active-page');
             $('#supply').addClass('active-page').addClass('open');
             $('#supply_ul').css('display', 'block');
             $('#supply_ul li').addClass('animation');
-
+            var oTable = $('#example').dataTable();
+            var oSettings = oTable.fnSettings();
             var showToast = localStorage.getItem("notify_show");
             if (showToast != undefined) {
                 if (showToast) {
@@ -178,6 +181,12 @@
             }
 
             $("#btnAdd").click(function () {
+
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
+
                 //将正在编辑的ID置空
                 EDIT_ID = undefined;
                 $(".formError").text("");
@@ -204,6 +213,8 @@
                                 localStorage.setItem("notify_tittle", "提示");
                                 localStorage.setItem("notify_context", "供应商添加成功");
                                 localStorage.setItem("notify_type", "success");
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             } else {
                                 var ids = ["#name_error", "#address_error"];
@@ -230,6 +241,8 @@
                                 localStorage.setItem("notify_tittle", "提示");
                                 localStorage.setItem("notify_context", "编辑成功");
                                 localStorage.setItem("notify_type", "success");
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             } else {
                                 var ids = ["#name_error", "#address_error"];
@@ -250,6 +263,10 @@
 
             $("#table").on('click', '.btnDelete', function () {
                 DELETE_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
                 $("#deleteModel").modal('show');
             })
 
@@ -268,6 +285,8 @@
                                 localStorage.setItem("notify_tittle", "提示");
                                 localStorage.setItem("notify_context", "供应商删除成功");
                                 localStorage.setItem("notify_type", "success");
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             } else {
                                 localStorage.setItem("notify_show", true);
@@ -276,6 +295,8 @@
                                 localStorage.setItem("notify_type", "error");
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             }
                         }
@@ -299,7 +320,11 @@
                                 $("#" + name).val(value);
                             })
                             $(".formError").text("");
-                            $("#myModalLabel").text("编辑供应商")
+                            $("#myModalLabel").text("编辑供应商");
+                            // 获取页码值
+                            PAGE=oSettings._iDisplayStart;
+                            //获取页面分割长度
+                            LENGTH=oSettings._iDisplayLength;
                             $("#myd").modal('show');
                         } else {
 

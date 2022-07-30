@@ -419,8 +419,19 @@
                 }
             }
             notify();
-
-            $('#example').dataTable({
+            var page=sessionStorage.getItem("page");
+            var length=sessionStorage.getItem("length");
+            sessionStorage.removeItem("page");
+            sessionStorage.removeItem("length");
+            if (!page)
+                page=0;
+            if(!length)
+                length=5;
+            if(page&&length){
+                length=Number(length);
+                page=Number(page);
+            }
+            var table=$('#example').dataTable({
                 "lengthMenu": [5, 10, 15, 20],
                 "order": [[ 0, "desc" ]],
                 "language": {
@@ -437,9 +448,13 @@
                         "previous": "上一页",
                         "next": "下一页",
                         "last": "末页"
-                    }
-                } //多语言配置
+                    },
+                    "stateSave":'true'
+                } , //多语言配置
+                "iDisplayStart" :page,  //用于指定从哪一条数据开始显示到表格中去 num为20的时候，第一页是0，第二页是20.....
+                "iDisplayLength" :length,
             });
+
             $('.topli').click(
                 function () {
                     $('.topli').removeClass('active-page');
