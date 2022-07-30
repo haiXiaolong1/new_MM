@@ -177,27 +177,81 @@
     margin-left: -40px;   
     color:rgb(68, 48, 48);   
 }
-def{
-    left: -5%;
-    position: relative;
-    width: 593.6px;
+
+.chat_status_0
+{
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    word-wrap: break-word;
+    box-sizing: border-box;
+    text-decoration: revert;
+    border: 1px;
+    color: azure;
+    border-radius: 3px;
+    display: inline-block;
+    text-align: center;
+    border-color: grey;
+    margin-left: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+    font: menu;
+    background-color: rgb(238, 194, 18);
+}
+/*已完成*/
+.chat_status_1
+{
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    word-wrap: break-word;
+    box-sizing: border-box;
+    text-decoration: revert;
+    border: 1px;
+    color: azure;
+    border-radius: 3px;
+    display: inline-block;
+    text-align: center;
+    border-color: grey;
+    margin-left: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+    font: menu;
+    background-color: rgb(98, 229, 119);
 }
 
-aft{
-    width: 593.6px;
-    position: fixed;
-    top: 81px;
-    left: 40px;
-}
-def{
-    left: -5%;
-    position: relative;
-    width: 593.6px;
+/*失败*/
+.chat_status_2
+{
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    word-wrap: break-word;
+    box-sizing: border-box;
+    text-decoration: revert;
+    border: 1px;
+    color: azure;
+    border-radius: 3px;
+    display: inline-block;
+    text-align: center;
+    border-color: grey;
+    margin-left: 2px;
+    padding-left: 3px;
+    padding-right: 3px;
+    font: menu;
+    background-color: rgb(243, 100, 104);
 }
 
-aft{
-    width: 593.6px;
-    position: fixed;
-    top: 81px;
-    left: 40px;
+.chat_link
+{
+    -webkit-text-size-adjust: 100%;
+    -webkit-tap-highlight-color: rgba(0,0,0,0);
+    font-size: 13px;
+    font-weight: 400;
+    line-height: 1.8;
+    word-wrap: break-word;
+    box-sizing: border-box;
+    text-decoration: revert;
+    font-family: Ubuntu,sans-serif;
+    color: #2b2b2b;
+    background-color: white;
+    padding: 0px 5px;
+    border-radius: 3px;
 }

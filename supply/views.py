@@ -439,7 +439,7 @@ def quote_add(request):
         notify.append(dict(id=2, tittle="系统消息", context="已提示 {}-{} 前往评估报价单".format(jl.get_office_display(),jl.username), type="info", position="top-center"))
         request.session["notify"] =notify
         message.append("【系统消息】<br/>收到新报价单")
-        message.append("供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a href='/purchase/quote/evaluate/'>>></a>"
+        message.append('供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>'
                        .format(gys.name,gys.id,xjd.inquiryid,qid,qgd.price,wl.calcutype,quote,wl.calcutype))
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
@@ -465,6 +465,7 @@ def quote_edit(request):
     res = form_check(toCheck, types)
     if res['status']:
         models.Baojiadan.objects.filter(quoteid=quid).update(quote=quote)
+        request.session['notify']=[dict(id=0, tittle="提示", context="报价单 {} 报价修改成功".format(qid), type="success", position="top-center")]
     return JsonResponse(json.dumps(res, ensure_ascii=False), safe=False)
 
 

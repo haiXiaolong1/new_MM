@@ -129,7 +129,7 @@ def demand_add(request):
         if me.office != "5" and me.isactive==1 and me.issuper == 0:
             wl=models.Wuliao.objects.filter(id=r['maid_id']).first()
             message.append("【系统自动发信】<br/>申请审核")
-            message.append("待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a href='/inventory/demand/n/'>>></a>"
+            message.append('待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
                            .format(wl.desc,wl.id,r['tcount'],r['price'],wl.calcutype))
             to = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             for m in message:
@@ -166,7 +166,7 @@ def demand_verify(request):
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
         message[1]="新增已审核采购需求：<br/>采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"\
             .format(did,wl.desc,wl.id,cgxq.tcount,cgxq.price,wl.calcutype)
-        message.append("请尽快前往创建询价单<a href='/purchase/inquiry/create/'>>></a>")
+        message.append('请尽快前往创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a>')
         pur_yg = models.Yuangong.objects.filter(businessid=me.businessid,isactive=1,office="2").first()
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
@@ -275,7 +275,7 @@ def ischeck(request, pid, notify):
         message.append("入库前物料检查情况：<br/>量检通过-质检通过<br/>备注：<br/>{}".format(zcd.moreinfo))
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
-        message.append("请核验物料入库数量并创建入库单<a href='/inventory/receive/'>>></a>".format())
+        message.append('请核验物料入库数量并创建入库单<a class="chat_link" href="/inventory/receive/">>></a>'.format())
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
     return notify
@@ -385,7 +385,7 @@ def receive_add(request):
                    .format(gys.name, gys.id, fac.type, fac.address, wl.desc, wl.id, cgd.tcount,wl.calcutype, cgd.price, wl.calcutype))
     message.append("物料检查情况：<br/>量检通过-质检通过<br/>备注：<br/>{}".format(zcd.moreinfo))
     message.append("物料入库情况：<br/>入库数量:{}{}<br/>备注：<br/>{}".format(receivecount,wl.calcutype,moreinfo))
-    message.append("查看订单单据流<a href='/purchase/documents/?id={}'>>></a>".format(cgd.purchaseid))
+    message.append('查看订单单据流<a class="chat_link" href="/purchase/documents/?id={}">>></a>'.format(cgd.purchaseid))
     for m in message:
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
