@@ -47,6 +47,16 @@
                     </div>
                 </div>
             </div><!-- Row -->
+            <div class="row">
+                <div class="panel panel-white">
+                    <div class="panel-body">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-body" ><strong>{{ now.facid_id }}库存占比情况</strong></h4>
+                        </div>
+                        <div id="flot3"><svg></svg></div>
+                    </div>
+                </div>
+            </div><!-- Row -->
         </div><!-- Main Wrapper -->
     </div>
 {% endblock %}
@@ -142,8 +152,53 @@
             };
             // 使用刚指定的配置项和数据显示图表。
             myChart2.setOption(option2);
+var flot3 = echarts.init(document.getElementById('flot3'));
 
-
+var flot3 = function () {
+        var data = [{
+            label: "在途库存",
+            data: {{now.inventoryonroad}},
+            color: "#0070E0",
+        }, {
+            label: "暂存库存",
+            data:{{now.inventorytemp}} ,
+            color: "#F1C205",
+        }, {
+            label: "未限制使用库存",
+            data:{{now.inventoryunrest}} ,
+            color:"#A20",
+        },{
+            label: "冻结库存",
+            data: {{now.inventoryfreeze}},
+            color: "#171515",
+        }];
+        var options = {
+            series: {
+                pie: {
+                    show: true
+                }
+            },
+            legend: {
+                labelFormatter: function(label, series){
+                    return '<span class="pie-chart-legend">'+label+'</span>';
+                }
+            },
+            grid: {
+                hoverable: true
+            },
+            tooltip: true,
+            tooltipOpts: {
+                content: "%p.0%, %s",
+                shifts: {
+                    x: 20,
+                    y: 0
+                },
+                defaultTheme: false
+            }
+        };
+        $.plot($("#flot3"), data, options);
+    };
+flot3().setOption(options);
             {#new Chart(document.getElementById("chart3"),#}
             {#    {"type":"line",#}
             {#        "data":{#}
