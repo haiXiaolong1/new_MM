@@ -57,11 +57,13 @@
                                         <form method="post" id="formAdd">
                                             {% csrf_token %}
                                             <div class="form-group">
+                                                <label>供应商名称</label>
                                                 <input type="text" class="form-control" placeholder="供应商名称"
                                                        name="name" id="name" required>
                                                 <a class="formError" id="name_error"></a>
                                             </div>
                                             <div class="form-group">
+                                                <label>地址</label>
                                                 <input type="text" class="form-control" placeholder="地址"
                                                        name="address" id="address" required>
                                                 <a class="formError" id="address_error"></a>
