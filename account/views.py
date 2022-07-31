@@ -21,17 +21,17 @@ def ac_add(request):
     isactive = o['isactive']
     issuper = 0
     bid=o["businessid_id"]
-    toCheck = [o['username'], o['password'],bid]
-    types = ['nan', 'nan','nan']
+    toCheck = [o['username'], o['password'],o['email'],bid]
+    types = ['nan', 'nan','nan','nan']
     res = form_check(toCheck, types)
     if res["status"]:
-        models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password']
+        models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password'],email=o['email']
                                         ,id=sid,isactive=isactive,issuper=issuper,businessid_id=bid)
     return JsonResponse(res)
 # 编辑用户时返回用户原始数据
 def ac_detail(request):
     id=request.GET.get("uid")
-    ac=models.Yuangong.objects.filter(id=id).values("office",'password','username',"isactive","issuper","businessid_id").first()
+    ac=models.Yuangong.objects.filter(id=id).values("office",'password','username',"email","isactive","issuper","businessid_id").first()
     if not ac:
         return JsonResponse({"status":False,"error":"数据不存在"})
     return JsonResponse({"account":ac,"status":True})
@@ -43,11 +43,11 @@ def ac_edit(request):
     isactive = o['isactive']
     issuper = 0
     bid=o["businessid_id"]
-    toCheck = [o['username'], o['password'],bid]
-    types = ['nan', 'nan','nan']
+    toCheck = [o['username'], o['password'],o['email'],bid]
+    types = ['nan', 'nan','nan','nan']
     res = form_check(toCheck, types)
     if res["status"]:
-        models.Yuangong.objects.filter(id=id).update(office=o['office'],username=o['username'],password=o['password']
+        models.Yuangong.objects.filter(id=id).update(office=o['office'],username=o['username'],password=o['password'],email=o['email']
                                                  ,isactive=isactive,issuper=issuper,businessid=o['businessid_id'])
 
     return JsonResponse(res)

@@ -579,9 +579,7 @@ def mm_delete(request):
 
 
 
-# Create your views here.
-from django.http import HttpResponseBadRequest
-from django import forms
+
 import django_excel as excel
 import json
 

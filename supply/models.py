@@ -50,6 +50,7 @@ class Yuangong(models.Model):
         (0, "否")
     )
     issuper = models.IntegerField(blank=True, null=True, choices=choices2)
+    email=models.CharField(max_length=40,blank=True,null=True)
     businessid = models.ForeignKey(to='Gongsi', to_field='myid', on_delete=models.CASCADE)
 
     class Meta:
@@ -104,16 +105,7 @@ class Gongyingguanxi(models.Model):
         db_table = 'gongyingguanxi'
 
 
-# class Hezuoguanxi(models.Model):
-#     supplyid = models.ForeignKey(to='Gongyingshang',to_field='id',on_delete=models.CASCADE)
-#     bussid = models.ForeignKey(to='Gongsi',to_field='myid',on_delete=models.CASCADE)
-#     createtime = models.DateTimeField(blank=True, null=True)
-#     updatetime = models.DateTimeField(blank=True, null=True)
-#     createnumid = models.ForeignKey(to='Yuangong',to_field='id',on_delete=models.CASCADE,related_name='updatenumid')
-#     updatenumid = models.ForeignKey(to='Yuangong',to_field='id',on_delete=models.CASCADE,related_name='createnumid')
-#    舍弃合作关系这张表
-#     class Meta:
-#         db_table = 'hezuoguanxi'
+
 
 class Gongchangkucun(models.Model):
     facid = models.ForeignKey(to='Gongchang', to_field='id', on_delete=models.CASCADE)
