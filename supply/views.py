@@ -260,9 +260,12 @@ def form_set_byId(request):
         retu['gc']={'type':gc.type,'id':gc.id,'add':gc.address}
         retu['wl']={"id":wl.id,"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
         retu['tcount']=xjd.tcount
+        retu['xjyxq']=xjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")
     if "bjd" in type:
         xid=request.GET.get("xjd")
-        xjd=models.Baojiadan.objects.filter(quoteid=xid).first().inquiryid
+        print(xid)
+        bjd=models.Baojiadan.objects.filter(quoteid=xid).first()
+        xjd=bjd.inquiryid
         wl=xjd.maid
         gs=xjd.bussid
         gc=xjd.demandid.facid
@@ -270,6 +273,8 @@ def form_set_byId(request):
         retu['gc']={'type':gc.type,'id':gc.id,'add':gc.address}
         retu['wl']={"id":wl.id,"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
         retu['tcount']=xjd.tcount
+        retu['xjyxq']=xjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")
+        retu['bjyxq'] =bjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年", "月", "日")
     if 'gys' in type:
         bid=request.GET.get('xjd')
         bjd=models.Baojiadan.objects.filter(quoteid=bid).first()
