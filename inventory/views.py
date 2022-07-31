@@ -126,6 +126,7 @@ def demand_add(request):
         me = models.Yuangong.objects.filter(id=id).first()
         message = []
         notify = []
+        notify.append(dict(id=0, tittle="提示", context="采购需求创建成功！", type="success", position="top-center"))
         if me.office != "5" and me.isactive==1 and me.issuper == 0:
             wl=models.Wuliao.objects.filter(id=r['maid_id']).first()
             message.append("【系统消息】申请审核")
@@ -134,10 +135,9 @@ def demand_add(request):
             to = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
-            notify.append(dict(id=0,tittle="提示", context="采购需求创建成功！", type="success", position="top-center"))
-            notify.append(dict(id=1,tittle="系统消息", context="已向{}发送采购需求审核申请".format(to.username), 
+            notify.append(dict(id=1,tittle="系统消息", context="已向{}发送采购需求审核申请".format(to.username),
                                type="info", position="top-center"))
-            request.session["notify"]=notify
+        request.session["notify"]=notify
     return JsonResponse({"status": returnStatus, "error": errors})
 
 
@@ -154,6 +154,7 @@ def demand_verify(request):
     me = models.Yuangong.objects.filter(id=id).first()
     message = []
     notify = []
+    notify.append(dict(id=0, tittle="提示", context="采购需求审核成功！", type="success", position="top-center"))
     if me.office != "0" and me.isactive == 1 and me.issuper == 0:
         cgxq = cgd.first()
         wl = models.Wuliao.objects.filter(id=cgxq.maid_id).first()
@@ -170,14 +171,13 @@ def demand_verify(request):
         pur_yg = models.Yuangong.objects.filter(businessid=me.businessid,isactive=1,office="2").first()
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
-        notify.append(dict(id=0, tittle="提示", context="采购需求审核成功！", type="success", position="top-center"))
         notify.append(dict(id=1, tittle="系统消息", context="已向 {}-{} 发送采购需求审核回执"
                            .format(to.get_office_display(), to.username),
                  type="info", position="top-center"))
         notify.append(dict(id=2, tittle="系统消息", context="已向 {}-{} 发送询价单创建提示"
                            .format(pur_yg.get_office_display(), pur_yg.username),
                  type="info", position="top-center"))
-        request.session["notify"] = notify
+    request.session["notify"] = notify
     return JsonResponse({"status": True})
 
 

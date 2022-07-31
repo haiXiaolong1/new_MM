@@ -29,7 +29,13 @@
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
-                                                <div class="form-group">
+                                                <div class="form-group form-line-start" style="width:28%">
+                                                    <input class="form-control" disabled placeholder="工厂地址" id="fac_add" name="fac_add"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:28%">
+                                                    <input class="form-control" disabled placeholder="工厂类型" id="fac_type"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:40%">
                                                     <select class="form-control" name="facid_id" id="facid_id">
                                                         <option value selected>工厂编号</option>
                                                         {% for s in factory %}
@@ -38,7 +44,10 @@
                                                     </select>
                                                     <a class="formError" id="facid_id_error"></a>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group form-line-start" style="width:58%">
+                                                    <input class="form-control" disabled placeholder="物料描述" id="ma_desc"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width: 40%;">
                                                     <select class="form-control" name="maid_id" id="maid_id">
                                                         <option value selected>物料编号</option>
                                                         {% for m in material %}
@@ -48,14 +57,23 @@
                                                     </select>
                                                     <a class="formError" id="maid_id_error"></a>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group form-line-start" style="width:28%">
+                                                    <input class="form-control" disabled placeholder="物料类型" id="ma_type"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:28%">
+                                                    <input class="form-control" disabled placeholder="计量单位" id="ma_cal"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width: 40%;">
                                                     <input type="number" class="form-control" placeholder="价格"
-                                                           name="price" id="price" required>
+                                                           name="price" id="price" required >
                                                     <a class="formError" id="price_error"></a>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group form-line-start" style="width:48%">
+                                                    <input class="form-control" disabled placeholder="库存数量" id="inv_count"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width: 50%;">
                                                     <input type="number" class="form-control" placeholder="数量"
-                                                           name="tcount" id="tcount" required>
+                                                           name="tcount" id="tcount" required >
                                                     <a class="formError" id="tcount_error"></a>
                                                 </div>
                                             </form>
@@ -252,6 +270,48 @@
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
                                 location.reload();
+                            } else {
+                            }
+                        }
+                    })
+                }
+            )
+
+            $("#facid_id").change(
+                function(){
+                    var fac=facid_id.value;
+                    // var token=$('input[name=csrfmiddlewaretoken]').val();
+                    $.ajax({
+                        url: "/supply/formSetup",
+                        type: "get",
+                        data: {'facid':fac,'type':"gc"},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#fac_add").attr("value",res.gc.add);
+                                $("#fac_type").attr("value",res.gc.type);
+                            } else {
+                            }
+                        }
+                    })
+                }
+            )
+
+            $("#maid_id").change(
+                function(){
+                    var fac=facid_id.value;
+                    var ma=maid_id.value;
+                    $.ajax({
+                        url: "/supply/formSetup",
+                        type: "get",
+                        data: {'maid':ma,'facid':fac,'type':"wl,gckc"},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#ma_desc").attr("value",res.wl.desc);
+                                $("#ma_type").attr("value",res.wl.type);
+                                $("#ma_cal").attr("value",res.wl.cal);
+                                $("#inv_count").attr("value","库存数量："+res.gckc.unres+res.wl.cal);
                             } else {
                             }
                         }

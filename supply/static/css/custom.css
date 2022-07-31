@@ -256,6 +256,16 @@
     border-radius: 3px;
 }
 
+.form-line{
+    float: left;
+    margin-left: 2%;
+}
+
+.form-line-start{
+    float: left;
+    margin-left: 0%;
+}
+
 
 .btnadd{
     margin-top: 20px;

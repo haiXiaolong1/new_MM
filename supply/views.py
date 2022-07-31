@@ -223,6 +223,30 @@ def delete_notify(request):
         None
     return JsonResponse({"status": True})
 
+#表单信息展示函数
+def form_set_byId(request):
+    type=request.GET.get("type").split(",")
+    print(type)
+    retu={"status": True}
+    if "gc" in type:
+        id = request.GET.get("facid")
+        gc = models.Gongchang.objects.filter(id=id).first()
+        retu["gc"] = {"add": gc.address, "type": gc.type}
+    if "wl" in type:
+        id = request.GET.get("maid")
+        wl = models.Wuliao.objects.filter(id=id).first()
+        retu["wl"] = {"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
+    if "gckc" in type:
+        facid = request.GET.get("facid")
+        maid=request.GET.get("maid")
+        kc = models.Gongchangkucun.objects.filter(facid=facid, maid=maid).first()
+        if not kc==None:
+            retu["gckc"] = {"unres":kc.inventoryunrest}
+        else:
+            retu["gckc"] = {"unres":0}
+    print(retu)
+    return JsonResponse(retu)
+
 # 登录功能
 def login(request):
     if request.method == "GET":
