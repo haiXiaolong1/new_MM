@@ -87,7 +87,7 @@ def validateEmail(email):
 data = {
     'sender':"2393226759@qq.com", # 发送者邮箱，自己用可写死
     'password':"gnpdimapluwcebja", # 在开启SMTP服务后，可以生成授权码，此处为授权码
-    'subject':"xxx验证码", # 邮件主题名，没有违规文字都行
+    'subject':"NEW MM验证码", # 邮件主题名，没有违规文字都行
 }
 class SendEmail:
     def __init__(self, data,receiver):
@@ -137,7 +137,6 @@ def ac_send(request):
         return JsonResponse({"status":False,"errors":error})
     verification = SendEmail(data=data,receiver=email).send_email()
     request.session['valid']=verification
-    print(verification)
     return JsonResponse({"status":True})
 
 def ac_login(request):
