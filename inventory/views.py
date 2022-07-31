@@ -97,7 +97,6 @@ def form_item_check(context, type="nan"):
 
 # 添加采购需求
 def demand_add(request):
-    print(1)
     """添加采购需求"""
     n = 10000000
     if models.Caigouxuqiu.objects.all().first():
@@ -105,6 +104,7 @@ def demand_add(request):
     did = "de" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     r = request.POST
+    # print(r)
     id = request.session["info"]['id']
     # 设置表单数据校验
     toCheck = [r['facid_id'], r['maid_id'], r['price'], r['tcount']]  # 校验字段
@@ -116,7 +116,6 @@ def demand_add(request):
         errors.append(result)
         if not result == True:
             returnStatus = False
-    print(returnStatus)
     if returnStatus:  # 校验成功才执行插入
         models.Caigouxuqiu.objects.create(demandid=did, price=r["price"], tcount=r['tcount']
                                           , status=0, createtime=time, createuserid_id=id,

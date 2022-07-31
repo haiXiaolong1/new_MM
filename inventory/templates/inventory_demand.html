@@ -200,6 +200,14 @@
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
                 LENGTH=oSettings._iDisplayLength;
+                $("#inv_count").attr("value","库存数量");
+                $("#ma_desc").attr("value","物料描述");
+                $("#ma_type").attr("value","物料类型");
+                $("#ma_cal").attr("value","计量单位");
+                $("#ma_pri").attr("value","元/单位");
+                $("#fac_add").attr("value","工厂地址");
+                $("#fac_type").attr("value","工厂类型");
+
                 $("#myd").modal('show');
             })
             $("#btnSave").click(function () {
