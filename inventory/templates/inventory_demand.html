@@ -37,7 +37,7 @@
                                                 </div>
                                                 <div class="form-group form-line" style="width:40%">
                                                     <select class="form-control" name="facid_id" id="facid_id">
-                                                        <option value selected>工厂编号</option>
+                                                        <option value selected id="fac_select">工厂编号</option>
                                                         {% for s in factory %}
                                                             <option value="{{ s.id }}">{{ s.id }}</option>
                                                         {% endfor %}
@@ -49,7 +49,7 @@
                                                 </div>
                                                 <div class="form-group form-line" style="width: 40%;">
                                                     <select class="form-control" name="maid_id" id="maid_id">
-                                                        <option value selected>物料编号</option>
+                                                        <option value selected id="ma_select">物料编号</option>
                                                         {% for m in material %}
                                                             <option value="{{ m.id }}"
                                                                     id="{{ m.id }}">{{ m.id }}</option>
@@ -57,16 +57,19 @@
                                                     </select>
                                                     <a class="formError" id="maid_id_error"></a>
                                                 </div>
-                                                <div class="form-group form-line-start" style="width:28%">
+                                                <div class="form-group form-line-start" style="width:23%">
                                                     <input class="form-control" disabled placeholder="物料类型" id="ma_type"></input>
                                                 </div>
-                                                <div class="form-group form-line" style="width:28%">
+                                                <div class="form-group form-line" style="width: 23%">
                                                     <input class="form-control" disabled placeholder="计量单位" id="ma_cal"></input>
                                                 </div>
-                                                <div class="form-group form-line" style="width: 40%;">
+                                                <div class="form-group form-line" style="width: 33%;">
                                                     <input type="number" class="form-control" placeholder="价格"
                                                            name="price" id="price" required >
                                                     <a class="formError" id="price_error"></a>
+                                                </div>
+                                                <div class="form-group form-line" style="width: 15%;">
+                                                    <input class="form-control" disabled placeholder="元/单位" id="ma_pri"></input>
                                                 </div>
                                                 <div class="form-group form-line-start" style="width:48%">
                                                     <input class="form-control" disabled placeholder="库存数量" id="inv_count"></input>
@@ -280,16 +283,33 @@
             $("#facid_id").change(
                 function(){
                     var fac=facid_id.value;
-                    // var token=$('input[name=csrfmiddlewaretoken]').val();
+                    console.log(fac)
+                    if (fac=="")
+                    {
+                        $("#inv_count").attr("value","库存数量");
+                        $("#fac_add").attr("value","工厂地址");
+                        $("#fac_type").attr("value","工厂类型");
+                        return;
+                    }
+                    var ma=maid_id.value;
+                    var type="gc"
+                    if (ma!="" && ma!=$("#ma_select").text())
+                    {
+                        type="gc,gckc";
+                    }
                     $.ajax({
                         url: "/supply/formSetup",
                         type: "get",
-                        data: {'facid':fac,'type':"gc"},
+                        data: {'facid':fac,'type':type,"maid":ma},
                         dataType: "JSON",
                         success: function (res) {
                             if (res.status) {
                                 $("#fac_add").attr("value",res.gc.add);
                                 $("#fac_type").attr("value",res.gc.type);
+                                if(ma!=""&& ma!=$("#ma_select").text())
+                                {
+                                    $("#inv_count").attr("value","库存数量："+res.gckc.unres+res.wl.cal);
+                                }
                             } else {
                             }
                         }
@@ -301,17 +321,35 @@
                 function(){
                     var fac=facid_id.value;
                     var ma=maid_id.value;
+                    if(ma=="")
+                    {
+                        $("#inv_count").attr("value","库存数量");
+                        $("#ma_desc").attr("value","物料描述");
+                        $("#ma_type").attr("value","物料类型");
+                        $("#ma_cal").attr("value","计量单位");
+                        $("#ma_pri").attr("value","元/单位");
+                        return;
+                    }
+                    var type="wl"
+                    if (fac!=""&& fac!=$("#fac_select").text)
+                    {
+                        type="wl,gckc";
+                    }
                     $.ajax({
                         url: "/supply/formSetup",
                         type: "get",
-                        data: {'maid':ma,'facid':fac,'type':"wl,gckc"},
+                        data: {'maid':ma,'facid':fac,'type':type},
                         dataType: "JSON",
                         success: function (res) {
                             if (res.status) {
                                 $("#ma_desc").attr("value",res.wl.desc);
                                 $("#ma_type").attr("value",res.wl.type);
                                 $("#ma_cal").attr("value",res.wl.cal);
-                                $("#inv_count").attr("value","库存数量："+res.gckc.unres+res.wl.cal);
+                                $("#ma_pri").attr("value","元/"+res.wl.cal);
+                                if(fac!=""&& fac!=$("#fac_select").text())
+                                {
+                                    $("#inv_count").attr("value","库存数量："+res.gckc.unres+res.wl.cal);
+                                }
                             } else {
                             }
                         }
