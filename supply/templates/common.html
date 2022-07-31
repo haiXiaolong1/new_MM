@@ -689,9 +689,36 @@
             $("#sendTextMessage").click(function () {
                 sendMessage();
             })
+
         });
 
     </script>
+    <script type="text/javascript" language=JavaScript>
+    document.onkeydown = function (event) {
+        var e = event || window.event || arguments.callee.caller.arguments[0];
+        if(e.ctrlKey && e.altKey){
+            if (e.keyCode === 49 || e.keyCode === 97 ) {
+                top.location.href = "/supply/list";
+
+            }
+            if (e.keyCode === 50 || e.keyCode === 98 ) {
+                top.location.href = "/purchase/documents/";
+            }
+            if (e.keyCode === 51 || e.keyCode === 99 ) {
+                top.location.href = "/inventory/display/";
+            }
+            if (e.keyCode === 52 || e.keyCode === 100 ) {
+                top.location.href = "/account/ac/list/";
+            }
+            if (e.keyCode === 53 || e.keyCode === 101 ) {
+                top.location.href = "/supply/mm/list/";
+            }
+         }
+
+
+    }
+</script>
+
     {% block js %}
     {% endblock %}
 </body>
