@@ -250,6 +250,26 @@ def form_set_byId(request):
             retu["gckc"] = {"unres":kc.inventoryunrest}
         else:
             retu["gckc"] = {"unres":0}
+    if "xjd" in type:
+        xid=request.GET.get("xjd")
+        xjd=models.Xunjiadan.objects.filter(inquiryid=xid).first()
+        wl=xjd.maid
+        gs=xjd.bussid
+        gc=xjd.demandid.facid
+        retu["gs"]={'id':gs.myid,'name':gs.name}
+        retu['gc']={'type':gc.type,'id':gc.id,'add':gc.address}
+        retu['wl']={"id":wl.id,"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
+        retu['tcount']=xjd.tcount
+    if "bjd" in type:
+        xid=request.GET.get("xjd")
+        xjd=models.Baojiadan.objects.filter(quoteid=xid).first().inquiryid
+        wl=xjd.maid
+        gs=xjd.bussid
+        gc=xjd.demandid.facid
+        retu["gs"]={'id':gs.myid,'name':gs.name}
+        retu['gc']={'type':gc.type,'id':gc.id,'add':gc.address}
+        retu['wl']={"id":wl.id,"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
+        retu['tcount']=xjd.tcount
     print(retu)
     return JsonResponse(retu)
 

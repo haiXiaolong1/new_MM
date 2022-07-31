@@ -25,8 +25,40 @@
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
+                                                <div class="form-group form-line-start" style="width:49%">
+                                                    <label>询价公司编号</label>
+                                                    <input class="form-control" disabled id="form_gs_id"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:49%">
+                                                    <label>询价公司名称</label>
+                                                    <input class="form-control" disabled id="form_gs_name"></input>
+                                                </div>
+                                                <div class="form-group form-line-start" style="width:32%">
+                                                    <label>发往工厂</label>
+                                                    <input class="form-control" disabled id="form_gc_id"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>工厂类型</label>
+                                                    <input class="form-control" disabled id="form_gc_type"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>工厂地址</label>
+                                                    <input class="form-control" disabled id="form_gc_add"></input>
+                                                </div>
+                                                <div class="form-group form-line-start" style="width:32%">
+                                                    <label>询价物料编号</label>
+                                                    <input class="form-control" disabled id="form_wl_id"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>物料名称</label>
+                                                    <input class="form-control" disabled id="form_wl_name"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>询价数量</label>
+                                                    <input class="form-control" disabled id="form_wl_count"></input>
+                                                </div>
                                                 <div class="form-group" style="width: 50%">
-                                                    <label>价格</label>
+                                                    <label>报价价格</label>
                                                     <input type="number" class="form-control" placeholder="价格" name="quote" id="quote" required>
                                                     <a class="formError" id="quote_error"></a>
                                                 </div>
@@ -215,7 +247,7 @@
                 }
             })
 
-            {#动态增加点击事件#}
+            // {#动态增加点击事件#}
             $("#table").on('click', '.btnQuote', function () {
                 $("#quote_error").text("")
                 var curid = $(this).attr("uid");
@@ -226,7 +258,27 @@
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
                 LENGTH=oSettings._iDisplayLength;
-                $("#myd").modal('show');
+                $.ajax({
+                        url: "/supply/formSetup",
+                        type: "get",
+                        data: {"xjd":curid,'type':"xjd"},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#form_gs_id").attr("value",res.gs.id);
+                                $("#form_gs_name").attr("value",res.gs.name);
+                                $("#form_gc_id").attr("value",res.gc.id);
+                                $("#form_gc_type").attr("value",res.gc.type);
+                                $("#form_gc_add").attr("value",res.gc.add);
+                                $("#form_wl_id").attr("value",res.wl.id);
+                                $("#form_wl_name").attr("value",res.wl.desc);
+                                $("#form_wl_count").attr("value",res.tcount+res.wl.cal);
+                                $("#myd").modal('show');
+                            } else {
+                            }
+                        }
+
+                    })
             })
 
             $("#table").on('click', '.btnDelete', function () {
@@ -268,17 +320,37 @@
                 $.ajax({
                     url: "/supply/quote/detail/",
                     type: "get",
-                    data: {uid: curid},
+                    data: { uid: curid },
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {
                             $("#quote").val(res.quote)
                             $("#myModalLabel").text("修改报价");
                             // 获取页码值
-                            PAGE=oSettings._iDisplayStart;
+                            PAGE = oSettings._iDisplayStart;
                             //获取页面分割长度
-                            LENGTH=oSettings._iDisplayLength;
-                            $("#myd").modal('show');
+                            LENGTH = oSettings._iDisplayLength;
+                            $.ajax({
+                                url: "/supply/formSetup",
+                                type: "get",
+                                data: { "xjd": curid, 'type': "bjd" },
+                                dataType: "JSON",
+                                success: function (res) {
+                                    if (res.status) {
+                                        $("#form_gs_id").attr("value", res.gs.id);
+                                        $("#form_gs_name").attr("value", res.gs.name);
+                                        $("#form_gc_id").attr("value", res.gc.id);
+                                        $("#form_gc_type").attr("value", res.gc.type);
+                                        $("#form_gc_add").attr("value", res.gc.add);
+                                        $("#form_wl_id").attr("value", res.wl.id);
+                                        $("#form_wl_name").attr("value", res.wl.desc);
+                                        $("#form_wl_count").attr("value", res.tcount + res.wl.cal);
+                                        $("#myd").modal('show');
+                                    } else {
+                                    }
+                                }
+
+                            })
                         } else {
 
                         }
