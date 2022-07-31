@@ -245,7 +245,7 @@ def form_set_byId(request):
     if "gckc" in type:
         facid = request.GET.get("facid")
         maid=request.GET.get("maid")
-        kc = models.Gongchangkucun.objects.filter(facid=facid, maid=maid).first()
+        kc = models.Gongchangkucun.objects.filter(facid=facid, maid=maid).order_by('-updatetime').first()
         if not kc==None:
             retu["gckc"] = {"unres":kc.inventoryunrest}
         else:
