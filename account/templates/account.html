@@ -241,7 +241,7 @@
                                 sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             }else {
-                                var ids = ["#name_error", "#password_error","#bid_error"];
+                                var ids = ["#name_error", "#password_error","#email_error","#bid_error"];
                                 for (var i = 0; i < ids.length; i++) {
                                     $(ids[i]).text("");
                                     if (res.error[i] != true) {
@@ -270,7 +270,7 @@
                                 sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             }else {
-                                var ids = ["#name_error", "#password_error","#bid_error"];
+                                var ids = ["#name_error", "#password_error","#email_error","#bid_error"];
                                 for (var i = 0; i < ids.length; i++) {
                                     $(ids[i]).text("");
                                     if (res.error[i] != true) {

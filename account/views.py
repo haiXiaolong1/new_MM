@@ -24,6 +24,10 @@ def ac_add(request):
     toCheck = [o['username'], o['password'],o['email'],bid]
     types = ['nan', 'nan','nan','nan']
     res = form_check(toCheck, types)
+    if not validateEmail(o['email']):
+        res["error"][2]="请输入正确的邮箱"
+        res["status"]=False
+
     if res["status"]:
         models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password'],email=o['email']
                                         ,id=sid,isactive=isactive,issuper=issuper,businessid_id=bid)
@@ -46,6 +50,9 @@ def ac_edit(request):
     toCheck = [o['username'], o['password'],o['email'],bid]
     types = ['nan', 'nan','nan','nan']
     res = form_check(toCheck, types)
+    if not validateEmail(o['email']):
+        res["error"][2]="请输入正确的邮箱"
+        res["status"]=False
     if res["status"]:
         models.Yuangong.objects.filter(id=id).update(office=o['office'],username=o['username'],password=o['password'],email=o['email']
                                                  ,isactive=isactive,issuper=issuper,businessid=o['businessid_id'])
