@@ -318,7 +318,15 @@ def supply_edit(request):
     toCheck = [s['name'], s['address']]
     types = ['nan', 'nan']
     res = form_check(toCheck, types)
-    if res:
+    l1=len(s['name'])
+    l2=len(s['address'])
+    if l1>20:
+        res['error'][0]='供应商名称不能超过20个字符'
+        res['status']=False
+    if l2>20:
+        res['error'][0]='供应商地址不能超过20个字符'
+        res['status']=False
+    if res['status']:
         models.Gongyingshang.objects.filter(id=id).update(name=s['name'],
                                                           address=s['address'], updatetime=time, updatenumberid_id=uid)
 
