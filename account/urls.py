@@ -7,4 +7,7 @@ urlpatterns = [
     path('ac/edit/',views.ac_edit),
     path('ac/delete/', views.ac_delete),
     path('ac/detail/',views.ac_detail),
+    path('ac/password/',views.ac_password),
+    path('ac/send/',views.ac_send),
+    path('ac/login/',views.ac_login),
 ]
