@@ -31,7 +31,7 @@
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
-                                                <div class="form-group">
+                                                <div class="form-group col-md-6">
                                                     <label>供应商编号</label>
                                                     <select class="form-control" name="supplyid" id="supplyid_id">
                                                         <option value selected>供应商编号</option>
@@ -41,7 +41,7 @@
                                                     </select>
                                                     <span class="formError" id="supplyid_id_error"></span>
                                                 </div>
-                                                <div class="form-group">
+                                                <div class="form-group col-md-6">
                                                 <label>物料编号</label>
                                                     <select class="form-control" name="materialid" id="materialid_id">
                                                         <option value selected>物料编号</option>
