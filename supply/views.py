@@ -231,11 +231,17 @@ def form_set_byId(request):
     if "gc" in type:
         id = request.GET.get("facid")
         gc = models.Gongchang.objects.filter(id=id).first()
-        retu["gc"] = {"add": gc.address, "type": gc.type}
+        if gc==None:
+            retu["gc"] = {"add": "工厂地址", "type": "工厂类型"}
+        else:
+            retu["gc"] = {"add": gc.address, "type": gc.type}
     if "wl" in type:
         id = request.GET.get("maid")
         wl = models.Wuliao.objects.filter(id=id).first()
-        retu["wl"] = {"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
+        if wl==None:
+            retu["wl"] = {"desc": "物料描述", "cal": "计量单位","type": "物料类型"}
+        else:
+            retu["wl"] = {"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
     if "gckc" in type:
         facid = request.GET.get("facid")
         maid=request.GET.get("maid")
