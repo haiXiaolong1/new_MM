@@ -270,6 +270,11 @@ def form_set_byId(request):
         retu['gc']={'type':gc.type,'id':gc.id,'add':gc.address}
         retu['wl']={"id":wl.id,"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
         retu['tcount']=xjd.tcount
+    if 'gys' in type:
+        bid=request.GET.get('xjd')
+        bjd=models.Baojiadan.objects.filter(quoteid=bid).first()
+        gys=bjd.supplyid
+        retu['gys']={"id":gys.id,"name":gys.name,"price":bjd.quote}
     print(retu)
     return JsonResponse(retu)
 

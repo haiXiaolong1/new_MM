@@ -25,21 +25,59 @@
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
-
-                                                <div class="form-group col-md-7">
+                                                <div class="form-group form-line-start" style="width:32%">
+                                                    <label>发往工厂</label>
+                                                    <input class="form-control" disabled id="form_gc_id"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>工厂类型</label>
+                                                    <input class="form-control" disabled id="form_gc_type"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>工厂地址</label>
+                                                    <input class="form-control" disabled id="form_gc_add"></input>
+                                                </div>
+                                                <div class="form-group form-line-start" style="width:32%">
+                                                    <label>询价物料编号</label>
+                                                    <input class="form-control" disabled id="form_wl_id"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>物料名称</label>
+                                                    <input class="form-control" disabled id="form_wl_name"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>询价数量</label>
+                                                    <input class="form-control" disabled id="form_wl_count"></input>
+                                                </div>
+                                                <div class="form-group form-line-start" style="width:32%">
+                                                    <label>供应商编号</label>
+                                                    <input class="form-control" disabled id="form_gys_id"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>供应商名称</label>
+                                                    <input class="form-control" disabled id="form_gys_name"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>报价价格</label>
+                                                    <input class="form-control" disabled id="form_gys_price"></input>
+                                                </div>
+                                                <!-- <div class="form-group form-line-start" style="width:100%">
+                                                    <hr/>
+                                                </div> -->
+                                                <div class="form-check form-switch form-line-start" style="width:38%;padding-top:2.5%;">
+                                                    <input class="form-check-input " type="checkbox" id="mySwitch"
+                                                           name="isall" value="1">
+                                                    <label class="form-check-label" for="mySwitch">同时拒绝其他报价单</label>
+                                                </div>
+                                                <div class="form-group form-line" style="width:60%;margin-bottom:3%;padding-top:1%;">
                                                     <select class="form-control" name="isreceived" id="isreceived">
                                                         <option value="0" selected>评估</option>
                                                         <option value="1">接受</option>
                                                         <option value="2">拒绝</option>
                                                     </select>
                                                 </div>
-                                                <div class="form-check form-switch col-md-5">
-                                                    <input class="form-check-input " type="checkbox" id="mySwitch"
-                                                           name="isall" value="1">
-                                                    <label class="form-check-label" for="mySwitch">同时拒绝其他报价单</label>
-                                                </div>
+                                                
                                             </form>
-
                                         </div>
                                         <div class="modal-footer" style="margin-top: 40px">
                                             <button type="button" class="btn btn-default" data-dismiss="modal">取消
@@ -171,7 +209,27 @@
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
                 LENGTH=oSettings._iDisplayLength;
-                $("#myd").modal('show');
+                $.ajax({
+                        url: "/supply/formSetup",
+                        type: "get",
+                        data: {"xjd":curid,'type':"bjd,gys"},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#form_gc_id").attr("value",res.gc.id);
+                                $("#form_gc_type").attr("value",res.gc.type);
+                                $("#form_gc_add").attr("value",res.gc.add);
+                                $("#form_wl_id").attr("value",res.wl.id);
+                                $("#form_wl_name").attr("value",res.wl.desc);
+                                $("#form_wl_count").attr("value",res.tcount+res.wl.cal);
+                                $("#form_gys_id").attr("value",res.gys.id);
+                                $("#form_gys_name").attr("value",res.gys.name);
+                                $("#form_gys_price").attr("value",res.gys.price+"元/"+res.wl.cal);
+                                $("#myd").modal('show');
+                            } else {
+                            }
+                        }
+                    })
             })
 
             $("#table").on('click', '.btnDelete', function () {
