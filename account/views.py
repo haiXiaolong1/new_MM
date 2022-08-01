@@ -148,7 +148,7 @@ def ac_send(request):
 
 def ac_login(request):
     error=["","","",""]
-    va=request.session['valid']
+    va=request.session.get("valid")
     id=request.POST.get("username")
     valid=request.POST.get("valid")
     password=request.POST.get("password")
