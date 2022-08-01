@@ -20,11 +20,64 @@
                                         <div class="modal-header">
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span></button>
+                                                <button id="cg-detail" class="my-detail-button">采购详情
+                                                    <i class="fa fa-angle-left" aria-hidden="true" id="cg-icon"></i></button>
+                                                <button id="zc-detail" class="my-detail-button">暂存详情
+                                                    <i class="fa fa-angle-left" aria-hidden="true" id="zc-icon"></i></button>
                                             <h4 class="modal-title" id="myModalLabel">入库确认</h4>
                                         </div>
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
+                                                <div class="form-group form-line-start" style="width:32%">
+                                                    <label>采购物料编号</label>
+                                                    <input class="form-control" disabled id="form_wl_id"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>物料名称</label>
+                                                    <input class="form-control" disabled id="form_wl_name"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:32%">
+                                                    <label>采购数量</label>
+                                                    <input class="form-control" disabled id="form_wl_count"></input>
+                                                </div>
+                                                <div id="extra-info-0" class="my-hiden">
+                                                    <div class="form-group form-line-start" style="width:49%">
+                                                        <label>需求工厂</label>
+                                                        <input class="form-control" disabled id="form_gc"></input>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:49%">
+                                                        <label>已有库存</label>
+                                                        <input class="form-control" disabled id="form_gckc"></input>
+                                                    </div>
+                                                    <div class="form-group form-line-start" style="width:32%">
+                                                        <label>供应商编号</label>
+                                                        <input class="form-control" disabled id="form_gys_id"></input>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:32%">
+                                                        <label>供应商名称</label>
+                                                        <input class="form-control" disabled id="form_gys_name"></input>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:32%">
+                                                        <label>报价价格</label>
+                                                        <input class="form-control" disabled id="form_gys_price"></input>
+                                                    </div>
+                                                </div>
+                                                <div  id="extra-info-1" class="my-hiden">
+                                                    <div class="form-group form-line-start" style="width:49%">
+                                                        <label>收货暂存时间</label>
+                                                        <input class="form-control" disabled id="form_cgd_time"></input>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:49%">
+                                                        <label>通过暂存检查时间</label>
+                                                        <input class="form-control" disabled id="form_zsd_time"></input>
+                                                    </div>
+                                                    <div class="form-group form-line-start" style="width:100%">
+                                                        <label>暂存检查备注</label>
+                                                        <textarea class="input-large form-control" name="getinfo" disabled
+                                                              id="zsd-info" rows="3" placeholder="暂存检查备注信息"></textarea>
+                                                    </div>
+                                                </div>
                                                 <div class="form-group">
                                                     <input type="number" class="form-control" placeholder="实际入库数量"
                                                            name="receivecount" id="receivecount" required>
@@ -206,7 +259,29 @@
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
                 LENGTH=oSettings._iDisplayLength;
-                $("#myd").modal('show');
+                $.ajax({
+                        url: "/supply/formSetup",
+                        type: "get",
+                        data: {"rkd":RECEIVE_ID,'type':"rkd"},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#form_gc").attr("value",res.gc.id+"  |  "+res.gc.type+"  |  "+res.gc.add);
+                                $("#form_gckc").attr("value",res.gckc+res.wl.cal);
+                                $("#form_wl_id").attr("value",res.wl.id);
+                                $("#form_wl_name").attr("value",res.wl.desc);
+                                $("#form_wl_count").attr("value",res.tcount+res.wl.cal);
+                                $("#form_gys_id").attr("value",res.gys.id);
+                                $("#form_gys_name").attr("value",res.gys.name);
+                                $("#form_gys_price").attr("value",res.gys.price+"元/"+res.wl.cal);
+                                $("#form_cgd_time").attr("value",res.cgd.time);
+                                $("#form_zsd_time").attr("value",res.zsd.time);
+                                $("#zsd-info").attr("placeholder",res.zsd.info);
+                                $("#myd").modal('show');
+                            } else {
+                            }
+                        }
+                    })
             })
             $("#table").on('click', '.btnInvoice', function () {
                 INVOICE_ID = $(this).attr("uid");
@@ -247,6 +322,17 @@
                     })
                 }
             )
+            $("#cg-detail").click(function(){
+                $("#extra-info-0").toggleClass("my-hiden");
+                $("#cg-icon").toggleClass("fa-angle-left");
+                $("#cg-icon").toggleClass("fa-angle-down");
+            })
+
+            $("#zc-detail").click(function(){
+                $("#extra-info-1").toggleClass("my-hiden");
+                $("#zc-icon").toggleClass("fa-angle-left");
+                $("#zc-icon").toggleClass("fa-angle-down");
+            })
 
 
         })
