@@ -316,6 +316,36 @@ def login(request):
     request.session["messageFlow"] = all_message_by_user(None, ins.id)
     return JsonResponse({"status": True})
 
+# 找回密码-跳转
+def forgot(request):
+    question = models.Securityquestion.objects.filter().all()
+    sq = []
+    for i in question:
+        sq.append(i.question)
+    return render(request, 'forgot.html',locals())
+
+# 修改密码
+def r_password(request):
+    username = request.POST.get("username")
+    sq = request.POST.get("sq")
+    sq_verification = request.POST.get("sq_verification")
+    new_password = request.POST.get("new_password")
+    ins = models.Yuangong.objects.filter(id=username).first()
+    if ins is None:
+        messages.success(request, "员工号输入错误！", locals())
+        return redirect('/forgot')
+    if ins.question == sq:
+        if ins.verification == sq_verification:
+            models.Yuangong.objects.filter(id=username).update(password=new_password)
+            return redirect('/login')
+        else:
+            messages.success(request, "密保答案错误！", locals())
+            return redirect('/forgot')
+    else:
+        messages.success(request, "密保问题选择错误！", locals())
+        return redirect('/forgot')
+
+
 
 # 登出功能
 def logout(request):
