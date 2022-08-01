@@ -1,0 +1,103 @@
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+	<!-- Required meta tags -->
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<!-- Bootstrap CSS -->
+	<link rel="stylesheet" href={% static 'loginui/bootstrap.min.css' %}>
+
+	<!-- Loding font -->
+	<link href="https://fonts.googleapis.com/css?family=Montserrat:300,700" rel="stylesheet">
+
+	<!-- Custom Styles -->
+	<link rel="stylesheet" type="text/css" href={% static 'loginui/styles.css' %}>
+    <link href={% static 'css/sweetalert.css' %} rel="stylesheet">
+
+	<title>忘记密码</title>
+</head>
+<body>
+
+<!-- Backgrounds -->
+
+<div id="login-bg" class="container-fluid">
+
+	<div class="bg-img"></div>
+	<div class="bg-color"></div>
+</div>
+
+<!-- End Backgrounds -->
+
+<div class="container" id="login">
+	<div class="row justify-content-center" >
+		<div class="col-lg-6">
+			<div class="login" style="height:110%">
+
+				<h2>New MM</h2>
+				<h5>忘记密码</h5>
+
+				<!-- Loging form -->
+
+				<form method="post" action="/supply/r_password">
+					{% csrf_token %}
+					<div>
+						<input type="text" class="form-control" id="exampleInputEmail1" placeholder="员工编号" name="username" >
+						<a class="formError" id="username_error" style="color: red;text-align: left"></a>
+					</div>
+					<br>
+					<div >
+						<div class="form-group">
+                            <select class="form-control" name="sq"
+                                    id="businessid_id">
+                            <option name="sq" >密保问题</option>
+                                {% for q in sq %}
+                                    <option value="{{ q }}" name="sq">{{ q }}</option>
+                                {% endfor %}
+                            </select>
+                            <a class="formError" id="sq_error"></a>
+                        </div>
+					</div>
+                    <div>
+						<input type="text" class="form-control" id="exampleInputEmail1" placeholder="密保验证" name="sq_verification" >
+						<a class="formError" id="sq_verification_error" style="color: red;text-align: left"></a>
+					</div>
+                    <br>
+                    <div>
+						<input type="password" class="form-control" id="exampleInputEmail1" placeholder="新密码" name="new_password" >
+						<a class="formError" id="new_password_error" style="color: red;text-align: left"></a>
+					</div>
+					<hr>
+					<button type="submit" class="btn-success btn"  style="width:100%;margin: auto">修改密码</button>
+
+					<div class="form-check">
+						<label class="forgot-password"><a href="/login">返回登录？</a></label>
+					</div>
+
+				</form>
+				<!-- End Loging form -->
+
+
+			</div>
+		</div>
+	</div>
+	<script src={% static 'plugins/jquery/jquery-3.1.0.min.js' %}></script>
+	<script src={% static 'plugins/bootstrap/js/bootstrap.min.js' %}></script>
+	<script src={% static 'plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}></script>
+	<script src={% static 'plugins/uniform/js/jquery.uniform.standalone.js' %}></script>
+	<script src={% static 'plugins/switchery/switchery.min.js' %}></script>
+	<script src={% static 'js/ecaps.min.js' %}></script>
+	<script src={% static 'plugins/datatables/js/jquery.datatables.min.js' %}></script>
+	<script src={% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
+    <script src={% static 'js/sweetalert-dev.js' %}></script>
+    {% if messages %}
+        <script>
+            {% for msg in messages %}
+                swal('{{ msg.message }}')
+            {% endfor %}
+        </script>
+    {% endif %}
+</div>
+</body>
+</html>
