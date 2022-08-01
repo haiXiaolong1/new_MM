@@ -223,6 +223,17 @@ def delete_notify(request):
         None
     return JsonResponse({"status": True})
 
+#询价单系列数据
+def xjd_info(xjd,retu):
+    wl = xjd.maid
+    gs = xjd.bussid
+    gc = xjd.demandid.facid
+    retu["gs"] = {'id': gs.myid, 'name': gs.name}
+    retu['gc'] = {'type': gc.type, 'id': gc.id, 'add': gc.address}
+    retu['wl'] = {"id": wl.id, "desc": wl.desc, "cal": wl.calcutype, "type": wl.type}
+    retu['tcount'] = xjd.tcount
+    return
+
 #表单信息展示函数
 def form_set_byId(request):
     type=request.GET.get("type").split(",")
@@ -253,26 +264,14 @@ def form_set_byId(request):
     if "xjd" in type:
         xid=request.GET.get("xjd")
         xjd=models.Xunjiadan.objects.filter(inquiryid=xid).first()
-        wl=xjd.maid
-        gs=xjd.bussid
-        gc=xjd.demandid.facid
-        retu["gs"]={'id':gs.myid,'name':gs.name}
-        retu['gc']={'type':gc.type,'id':gc.id,'add':gc.address}
-        retu['wl']={"id":wl.id,"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
-        retu['tcount']=xjd.tcount
+        xjd_info(xjd,retu)
         retu['xjyxq']=xjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")
     if "bjd" in type:
         xid=request.GET.get("xjd")
         print(xid)
         bjd=models.Baojiadan.objects.filter(quoteid=xid).first()
         xjd=bjd.inquiryid
-        wl=xjd.maid
-        gs=xjd.bussid
-        gc=xjd.demandid.facid
-        retu["gs"]={'id':gs.myid,'name':gs.name}
-        retu['gc']={'type':gc.type,'id':gc.id,'add':gc.address}
-        retu['wl']={"id":wl.id,"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
-        retu['tcount']=xjd.tcount
+        xjd_info(xjd,retu)
         retu['xjyxq']=xjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")
         retu['bjyxq'] =bjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年", "月", "日")
     if 'gys' in type:
@@ -280,6 +279,11 @@ def form_set_byId(request):
         bjd=models.Baojiadan.objects.filter(quoteid=bid).first()
         gys=bjd.supplyid
         retu['gys']={"id":gys.id,"name":gys.name,"price":bjd.quote}
+    if 'cgd' in type:
+        pid=request.GET.get("cgd")
+        cgd=models.Caigoudan.objects.filter(purchaseid=pid).first()
+        xjd=cgd.quoteid.inquiryid
+        xjd_info(xjd,retu)
     print(retu)
     return JsonResponse(retu)
 

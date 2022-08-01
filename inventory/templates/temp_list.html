@@ -25,17 +25,46 @@
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
                                                 <div class="form-group">
+                                                    <div class="form-group form-line-start" style="width:32%">
+                                                        <label>采购物料编号</label>
+                                                        <input class="form-control" disabled id="form_wl_id"></input>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:32%">
+                                                        <label>物料名称</label>
+                                                        <input class="form-control" disabled id="form_wl_name"></input>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:32%">
+                                                        <label>采购数量</label>
+                                                        <input class="form-control" disabled id="form_wl_count"></input>
+                                                    </div>
                                                     <div class="control-group m-b-sm" id="toastTypeGroup">
                                                         <div class="controls">
-                                                            <label id="myLa">质检结果</label><br>
-                                                            <label>
-                                                                <input type="radio" name="check" value="1" checked/> 通过
-                                                            </label><br><br>
-                                                            <label>
+                                                            <label id="myLa" >质检结果</label>
+                                                            <label style="margin-left:4%">
+                                                                <input type="radio" name="check" value="1" checked /> 通过
+                                                            </label>
+                                                            <label style="margin-left:2%">
                                                                 <input type="radio" name="check" value="0"/> 不通过
                                                             </label>
                                                         </div>
-                                                        <div class="form-group" style="margin-top: 15px">
+                                                    </div>
+                                                    <div class="control-group m-b-sm" id="rejectReason">
+                                                        <div class="rejectReason_controls">
+                                                            <label id="myLa" >不合格原因</label>
+                                                            <label style="margin-left:3%">
+                                                                <input type="radio" name="check_reason" value="0" id="reason_check_a" checked> 货物破损</label>
+                                                            </label>
+                                                            <label style="margin-left:1%">
+                                                                <input type="radio" name="check_reason" value="1" id="reason_check_b"> 配送错误物料</label>
+                                                            </label>
+                                                            <label style="margin-left:1%">
+                                                                <input type="radio" name="check_reason" value="2" id="reason_check_c"> 抽检质量不达标</label>
+                                                            </label>
+                                                            <label style="margin-left:1%">
+                                                                <input type="radio" name="check_reason" value="3" id="reason_check_d"> 全检质量不达标</label>
+                                                            </label>
+                                                        </div>
+                                                        <div class="form-group" style="margin-top: 15px;" >
                                                             <textarea class="input-large form-control" name="moreinfo"
                                                                       id="message" rows="3"
                                                                       placeholder="情况说明"></textarea>
@@ -212,8 +241,26 @@
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
                 LENGTH=oSettings._iDisplayLength;
+                $("#uniform-reason_check_a").attr("value","货物破损");
+                $("#uniform-reason_check_b").attr("value","配送错误物料");
+                $("#uniform-reason_check_c").attr("value","抽检不达标");
+                $("#uniform-reason_check_d").attr("value","全检不达标");
+                $.ajax({
+                        url: "/supply/formSetup",
+                        type: "get",
+                        data: {"cgd":QUANTITY_ID,'type':"cgd"},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#form_wl_id").attr("value",res.wl.id);
+                                $("#form_wl_name").attr("value",res.wl.desc);
+                                $("#form_wl_count").attr("value",res.tcount+res.wl.cal);
+                                $("#myd").modal('show');
+                            } else {
+                            }
+                        }
 
-                $("#myd").modal('show');
+                    })
             })
             $("#table").on('click', '.btnQuality', function () {
                 QUALITY_ID = $(this).attr("uid");
@@ -224,8 +271,27 @@
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
                 LENGTH=oSettings._iDisplayLength;
+                alert($("#uniform-reason_check_a").val());
+                $("#uniform-reason_check_a").attr("value","");
+                $("#uniform-reason_check_b").attr("value","");
+                $("#uniform-reason_check_c").attr("value","");
+                $("#uniform-reason_check_d").attr("value","");
+                $.ajax({
+                        url: "/supply/formSetup",
+                        type: "get",
+                        data: {"cgd":QUALITY_ID,'type':"cgd"},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#form_wl_id").attr("value",res.wl.id);
+                                $("#form_wl_name").attr("value",res.wl.desc);
+                                $("#form_wl_count").attr("value",res.tcount+res.wl.cal);
+                                $("#myd").modal('show');
+                            } else {
+                            }
+                        }
 
-                $("#myd").modal('show');
+                    })
             })
 
             $("#table").on('click', '.btnDelete', function () {
