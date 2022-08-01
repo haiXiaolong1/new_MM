@@ -24,7 +24,7 @@
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
-                                                <div class="form-group">
+                                                <div class="form-group" id="form-show-group">
                                                     <div class="form-group form-line-start" style="width:32%">
                                                         <label>采购物料编号</label>
                                                         <input class="form-control" disabled id="form_wl_id"></input>
@@ -48,22 +48,35 @@
                                                             </label>
                                                         </div>
                                                     </div>
+                                                    <div class="form-group form-line-start" style="width:15%">
+                                                        <label id="myLa" >不合格原因</label>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:15%" id="reason_check_4">
+                                                        <label>
+                                                        <input type="checkbox" name="check_reason" value="0" id="reason_check_0"/> 货物破损
+                                                    </label>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:22%" id="reason_check_5">
+                                                        <label>
+                                                        <input type="checkbox" name="check_reason" value="1" id="reason_check_1"/> 配送错误物料</label>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:18%" id="reason_check_6">
+                                                        <label>
+                                                        <input type="checkbox" name="check_reason" value="2" id="reason_check_2"/> 抽检不达标</label>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:18%" id="reason_check_7">
+                                                        <label>
+                                                        <input type="checkbox" name="check_reason" value="3" id="reason_check_3"/> 全检不达标</label>
+                                                    </div>
+                                                    <div class="form-group form-line-start" style="width:18%" id="reason_check_8">
+                                                        <label>
+                                                        <input type="checkbox" name="check_reason" value="4" id="reason_check_4"/> 损耗超标</label>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:22%" id="reason_check_9">
+                                                        <label>
+                                                        <input type="checkbox" name="check_reason" value="5" id="reason_check_5"/> 计量单位错误</label>
+                                                    </div>
                                                     <div class="control-group m-b-sm" id="rejectReason">
-                                                        <div class="rejectReason_controls">
-                                                            <label id="myLa" >不合格原因</label>
-                                                            <label style="margin-left:3%">
-                                                                <input type="radio" name="check_reason" value="0" id="reason_check_a" checked> 货物破损</label>
-                                                            </label>
-                                                            <label style="margin-left:1%">
-                                                                <input type="radio" name="check_reason" value="1" id="reason_check_b"> 配送错误物料</label>
-                                                            </label>
-                                                            <label style="margin-left:1%">
-                                                                <input type="radio" name="check_reason" value="2" id="reason_check_c"> 抽检质量不达标</label>
-                                                            </label>
-                                                            <label style="margin-left:1%">
-                                                                <input type="radio" name="check_reason" value="3" id="reason_check_d"> 全检质量不达标</label>
-                                                            </label>
-                                                        </div>
                                                         <div class="form-group" style="margin-top: 15px;" >
                                                             <textarea class="input-large form-control" name="moreinfo"
                                                                       id="message" rows="3"
@@ -231,7 +244,7 @@
                 }
 
             })
-
+            var checkBoxs=$('input[name="check_reason"]');
             $("#table").on('click', '.btnQuantity', function () {
                 QUANTITY_ID = $(this).attr("uid");
                 $("#formAdd")[0].reset();
@@ -241,10 +254,13 @@
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
                 LENGTH=oSettings._iDisplayLength;
-                $("#uniform-reason_check_a").attr("value","货物破损");
-                $("#uniform-reason_check_b").attr("value","配送错误物料");
-                $("#uniform-reason_check_c").attr("value","抽检不达标");
-                $("#uniform-reason_check_d").attr("value","全检不达标");
+                $('#form-show-group span').removeClass("checked");
+                $("#reason_check_8").removeClass("my-hiden");
+                $("#reason_check_9").removeClass("my-hiden");
+                $("#reason_check_4").addClass("my-hiden");
+                $("#reason_check_5").addClass("my-hiden");
+                $("#reason_check_6").addClass("my-hiden");
+                $("#reason_check_7").addClass("my-hiden");
                 $.ajax({
                         url: "/supply/formSetup",
                         type: "get",
@@ -271,11 +287,13 @@
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
                 LENGTH=oSettings._iDisplayLength;
-                alert($("#uniform-reason_check_a").val());
-                $("#uniform-reason_check_a").attr("value","");
-                $("#uniform-reason_check_b").attr("value","");
-                $("#uniform-reason_check_c").attr("value","");
-                $("#uniform-reason_check_d").attr("value","");
+                $('#form-show-group span').removeClass("checked");
+                $("#reason_check_4").removeClass("my-hiden");
+                $("#reason_check_5").removeClass("my-hiden");
+                $("#reason_check_6").removeClass("my-hiden");
+                $("#reason_check_7").removeClass("my-hiden");
+                $("#reason_check_8").addClass("my-hiden");
+                $("#reason_check_9").addClass("my-hiden");
                 $.ajax({
                         url: "/supply/formSetup",
                         type: "get",
@@ -292,6 +310,34 @@
                         }
 
                     })
+            })
+            var checkstate=[false,false,false,false,false,false];
+            $("input[name='check_reason']").click(function(index,item){
+                var dic={
+                    0:'\r\n货物破损情况严重',
+                    1:'\r\n配送物料种类与采购订单不符。',
+                    2:'\r\n对物料抽样检查，合格率不达标。',
+                    3:'\r\n对所有物料进行质检，均不合格。',
+                    4:'\r\n运输物料的损耗率超出约定的损耗率，物料余量不足。',
+                    5:'\r\n供应商使用错误的计量单位，暂收量与采购量不一致。'
+                };
+                checkstate[this.value]=!checkstate[this.value];
+                console.log(checkstate);
+                var text="【不通过原因】：";
+                var flag=false;
+                for(let i=0;i<6;i++)
+                {
+                    if(checkstate[i])
+                    {
+                        text+=dic[i];
+                        flag=true;
+                    }
+                }
+                if(!flag)
+                {
+                    text="";
+                }
+                $("#message").text(text);
             })
 
             $("#table").on('click', '.btnDelete', function () {

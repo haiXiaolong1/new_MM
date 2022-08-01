@@ -111,6 +111,8 @@
 
 .my-hiden{
     display: none;
+    margin: 0px;
+    padding: 0px;
 }
 
 .my-left{
