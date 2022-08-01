@@ -272,3 +272,8 @@
 .btnadd{
     margin-top: 20px;
 }
+
+.my-detail-button{
+    float: right;
+    margin-right: 2%;
+}

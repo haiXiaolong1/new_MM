@@ -280,10 +280,29 @@ def form_set_byId(request):
         gys=bjd.supplyid
         retu['gys']={"id":gys.id,"name":gys.name,"price":bjd.quote}
     if 'cgd' in type:
-        pid=request.GET.get("cgd")
-        cgd=models.Caigoudan.objects.filter(purchaseid=pid).first()
-        xjd=cgd.quoteid.inquiryid
+        pid = request.GET.get("cgd")
+        cgd = models.Caigoudan.objects.filter(purchaseid=pid).first()
+        xjd = cgd.quoteid.inquiryid
+        xjd_info(xjd, retu)
+    if 'rkd' in type:
+        rid=request.GET.get("rkd")
+        rkd=models.Rukudan.objects.filter(id=rid).first()
+        zsd=rkd.temid
+        cgd=rkd.temid.purchaseid
+        bjd=cgd.quoteid
+        xjd=bjd.inquiryid
+        gys=cgd.supplyid
         xjd_info(xjd,retu)
+        facid=xjd.demandid.facid_id
+        maid=xjd.demandid.maid_id
+        kc=models.Gongchangkucun.objects.filter(facid=facid, maid=maid).order_by('-updatetime').first()
+        if not kc==None:
+            retu["gckc"] = kc.inventoryunrest
+        else:
+            retu["gckc"] = 0
+        retu['gys']={"id":gys.id,"name":gys.name,"price":bjd.quote}
+        retu['cgd']={"time":cgd.createtime.strftime("%Y{}%m{}%d{} %H:%M:%S").format("年","月","日")}
+        retu['zsd']={'time':zsd.createtime.strftime("%Y{}%m{}%d{} %H:%M:%S").format("年","月","日"),'info':zsd.moreinfo}
     print(retu)
     return JsonResponse(retu)
 
