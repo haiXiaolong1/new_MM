@@ -52,10 +52,19 @@ class Yuangong(models.Model):
     issuper = models.IntegerField(blank=True, null=True, choices=choices2)
     email=models.CharField(max_length=40,blank=True,null=True)
     businessid = models.ForeignKey(to='Gongsi', to_field='myid', on_delete=models.CASCADE)
+    question = models.CharField(max_length=255, blank=True, null=True)
+    verification = models.CharField(max_length=40, blank=True, null=True)
 
     class Meta:
         db_table = 'yuangong'
 
+# 密保问题
+class Securityquestion(models.Model):
+    id = models.CharField(primary_key=True, max_length=40)
+    question = models.CharField(max_length=255, blank=True, null=True)
+
+    class Meta:
+        db_table = 'securityquestion'
 
 class Xiaoxi(models.Model):
     fromId = models.ForeignKey(to='Yuangong', to_field='id', related_name='from_id', on_delete=models.CASCADE)
@@ -67,6 +76,8 @@ class Xiaoxi(models.Model):
         (0, "未读")
     )
     read = models.IntegerField(default=0, choices=choices)
+    class Meta:
+        db_table = 'xiaoxi'
 
 
 class Gongchang(models.Model):
