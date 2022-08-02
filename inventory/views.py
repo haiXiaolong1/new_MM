@@ -126,8 +126,8 @@ def demand_add(request):
         message = []
         notify = []
         notify.append(dict(id=0, tittle="提示", context="采购需求创建成功！", type="success", position="top-center"))
+        wl = models.Wuliao.objects.filter(id=r['maid_id']).first()
         if me.office != "5" and me.isactive==1 and me.issuper == 0:
-            wl=models.Wuliao.objects.filter(id=r['maid_id']).first()
             message.append("【系统消息】申请审核")
             message.append('待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
                            .format(wl.desc,wl.id,r['tcount'],r['price'],wl.calcutype))
@@ -135,6 +135,32 @@ def demand_add(request):
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
             notify.append(dict(id=1,tittle="系统消息", context="已向{}发送采购需求审核申请".format(to.username),
+                               type="info", position="top-center"))
+        else:
+            message.append("【系统消息】操作历史记录")
+            message.append(
+                '待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>下一步骤前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
+                .format(wl.desc, wl.id, r['tcount'], r['price'], wl.calcutype))
+            fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
+            notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
+        if request.session["produceActive"]:
+            message = []
+            message.append("【系统消息】操作历史记录")
+            next=me
+            if not me.issuper==1:
+                next=models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
+            message.append(
+                '【{}】{}<br/>创建待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
+                '下一步操作人:【{}】{}<br/>'
+                '下一步骤:审核采购需求<a class="chat_link" href="/inventory/demand/n/">>></a><br/>'
+                .format(me.get_office_display(),me.username,wl.desc, wl.id, r['tcount'], r['price'], wl.calcutype,next.get_office_display(),next.username))
+            fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+            toid=models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m, read=0)
+            notify.append(dict(id=len(notify), tittle="系统消息", context="操作历史已抄送至 {}-{}".format(toid.get_office_display(),toid.username),
                                type="info", position="top-center"))
         request.session["notify"]=notify
     return JsonResponse({"status": returnStatus, "error": errors})
@@ -154,9 +180,9 @@ def demand_verify(request):
     message = []
     notify = []
     notify.append(dict(id=0, tittle="提示", context="采购需求审核成功！", type="success", position="top-center"))
+    cgxq = cgd.first()
+    wl = models.Wuliao.objects.filter(id=cgxq.maid_id).first()
     if me.office != "0" and me.isactive == 1 and me.issuper == 0:
-        cgxq = cgd.first()
-        wl = models.Wuliao.objects.filter(id=cgxq.maid_id).first()
         message.append("【系统消息】")
         message.append("采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"
                        .format(did,wl.desc,wl.id,cgxq.tcount,cgxq.price,wl.calcutype))
@@ -176,6 +202,34 @@ def demand_verify(request):
         notify.append(dict(id=2, tittle="系统消息", context="已向 {}-{} 发送询价单创建提示"
                            .format(pur_yg.get_office_display(), pur_yg.username),
                  type="info", position="top-center"))
+    else:
+        message.append("【系统消息】操作历史记录")
+        message.append("采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"
+                       .format(did, wl.desc, wl.id, cgxq.tcount, cgxq.price, wl.calcutype))
+        message.append('请尽快前往创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a>')
+        fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
+        notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
+    if request.session["produceActive"]:
+        message = []
+        message.append("【系统消息】操作历史记录")
+        next = me
+        if not me.issuper == 1:
+            next = models.Yuangong.objects.filter(businessid=me.businessid, office="2").first()
+        message.append(
+            '【{}】{}<br/>审核采购需求单<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
+            '下一步操作人:【{}】{}<br/>'
+            '下一步骤:引用采购需求，创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a><br/>'
+            .format(me.get_office_display(), me.username, wl.desc, wl.id, cgxq.tcount, cgxq.price, wl.calcutype,
+                    next.get_office_display(), next.username))
+        fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+        toid = models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m, read=0)
+        notify.append(dict(id=len(notify), tittle="系统消息",
+                           context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                           type="info", position="top-center"))
     request.session["notify"] = notify
     return JsonResponse({"status": True})
 

@@ -36,6 +36,7 @@ class Yuangong(models.Model):
         ("4", "采购经理"),
         ("5", "库存经理"),
         ("6", "生产经理"),
+        ("7", "操作历史"),
     )
     office = models.CharField(max_length=20, blank=True, null=True, choices=choices)
     password = models.CharField(max_length=40, blank=True, null=True)

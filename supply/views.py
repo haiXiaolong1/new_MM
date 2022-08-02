@@ -333,6 +333,7 @@ def login(request):
     request.session["info"] = {"name": ins.username, "id": ins.id, "issuper": ins.issuper
         , "office": ins.office, "business": ins.businessid.name, "officename": ins.get_office_display()}
     request.session["messageFlow"] = all_message_by_user(None, ins.id)
+    request.session['produceActive']=True #控制是否向生产经理抄送操作记录
     return JsonResponse({"status": True})
 from django.contrib import messages
 # 找回密码-跳转
