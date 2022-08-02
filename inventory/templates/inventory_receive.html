@@ -29,17 +29,19 @@
                                         <div class="modal-body">
                                             <form method="post" id="formAdd">
                                                 {% csrf_token %}
-                                                <div class="form-group form-line-start" style="width:32%">
-                                                    <label>采购物料编号</label>
-                                                    <input class="form-control" disabled id="form_wl_id"></input>
-                                                </div>
-                                                <div class="form-group form-line" style="width:32%">
-                                                    <label>物料名称</label>
-                                                    <input class="form-control" disabled id="form_wl_name"></input>
-                                                </div>
-                                                <div class="form-group form-line" style="width:32%">
-                                                    <label>采购数量</label>
-                                                    <input class="form-control" disabled id="form_wl_count"></input>
+                                                <div id="info-div">
+                                                    <div class="form-group form-line-start" style="width:32%">
+                                                        <label>采购物料编号</label>
+                                                        <input class="form-control" disabled id="form_wl_id"></input>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:32%">
+                                                        <label>物料名称</label>
+                                                        <input class="form-control" disabled id="form_wl_name"></input>
+                                                    </div>
+                                                    <div class="form-group form-line" style="width:32%">
+                                                        <label>采购数量</label>
+                                                        <input class="form-control" disabled id="form_wl_count"></input>
+                                                    </div>
                                                 </div>
                                                 <div id="extra-info-0" class="my-hiden">
                                                     <div class="form-group form-line-start" style="width:49%">
@@ -254,6 +256,9 @@
                 $("#receivecount")[0].setAttribute("placeholder", "实际入库数量");
                 $("#formAdd")[0].reset();
                 $("#count_error").text("");
+                $("#info-div").removeClass("my-hiden");
+                $("#cg-detail").removeClass("my-hiden");
+                $("#zc-detail").removeClass("my-hiden");
                 // 获取页码值
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
@@ -289,6 +294,9 @@
                 $("#receivecount")[0].setAttribute("placeholder", "请输入运费");
                 $("#formAdd")[0].reset();
                 $("#count_error").text("");
+                $("#info-div").addClass("my-hiden");
+                $("#cg-detail").addClass("my-hiden");
+                $("#zc-detail").addClass("my-hiden");
                 // 获取页码值
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
