@@ -49,6 +49,7 @@ class TestDjangoExcelDownload(View):
     def get(self, request):
         sheet = excel.pe.Sheet([["供应商名称name", "供应商地址address"]])
         name = "供应商上传批量模板"
+
         ts = int(time.time())
         return excel.make_response(sheet, "xlsx",file_name=name+str(ts))
 
@@ -66,3 +67,23 @@ def add_supply_axu(data_each,request):
     models.Gongyingshang.objects.create(name=named, address=addressd, createtime=time
                                         , id=sid, updatetime=time, createnumberid_id=id,
                                         updatenumberid_id=id)
+
+from django.http import HttpResponse
+from io import BytesIO
+import xlsxwriter
+
+def new_excel(request):
+
+
+    x_io = BytesIO()
+    work_book = xlsxwriter.Workbook(x_io)
+    work_sheet = work_book.add_worksheet("excel-1")
+    work_sheet.write(0,0,"test")
+    work_sheet.data_validation("A1:A5", {'validate':'list', 'source':[1, 2, 3, 4]})
+    work_book.close()
+    res = HttpResponse()
+    res["Content-Type"] = "application/octet-stream"
+    res["Content-Disposition"] = 'filename="userinfos.xlsx"'
+    res.write(x_io.getvalue())
+
+    return res
