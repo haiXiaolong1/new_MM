@@ -589,7 +589,7 @@
 
             // 设置检测间隔，开发阶段可不启用
             // 调用时间：进入和刷新页面时，间隔调用时
-            setTimeout(checkMessage, 2000);
+            {#setTimeout(checkMessage, 2000);#}
 
             function myScrollDown() {
                 var scrollTo_int = $('.right-sidebar-chat').prop('scrollHeight') + 'px';

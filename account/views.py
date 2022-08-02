@@ -92,15 +92,15 @@ def validateEmail(email):
         return False
 
 data = {
-    'sender':"2393226759@qq.com", # 发送者邮箱，自己用可写死
-    'password':"gnpdimapluwcebja", # 在开启SMTP服务后，可以生成授权码，此处为授权码
+    'sender':"3425053441@qq.com", # 发送者邮箱，自己用可写死
+    'password':"vbgejeqczrszcjfh", # 在开启SMTP服务后，可以生成授权码，此处为授权码
     'subject':"NEW MM验证码", # 邮件主题名，没有违规文字都行
 }
 class SendEmail:
     def __init__(self, data,receiver):
-        self.sender = data.get('sender','2393226759@qq.com') # 发送者QQ邮箱
+        self.sender = data.get('sender','3425053441@qq.com') # 发送者QQ邮箱
         self.receiver = receiver # 接收者邮箱
-        self.password = data.get('password','gnpdimapluwcebja')
+        self.password = data.get('password','vbgejeqczrszcjfh')
         self.subject = data.get('subject','NEWMM验证码')
 
     def load_message(self):
