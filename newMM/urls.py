@@ -19,6 +19,7 @@ urlpatterns = [
     path('supply/',include('supply.urls')),
     path('login/',views.login),
     path('logout/', views.logout),
+    path('forgot', views.forgot),
     path('purchase/',include('purchase.urls')),
     path('inventory/',include('inventory.urls')),
     path('account/',include('account.urls')),

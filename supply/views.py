@@ -334,7 +334,7 @@ def login(request):
         , "office": ins.office, "business": ins.businessid.name, "officename": ins.get_office_display()}
     request.session["messageFlow"] = all_message_by_user(None, ins.id)
     return JsonResponse({"status": True})
-
+from django.contrib import messages
 # 找回密码-跳转
 def forgot(request):
     question = models.Securityquestion.objects.filter().all()
