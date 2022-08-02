@@ -201,7 +201,7 @@ def quote_evaluateByID(request):
         situation += '<hr>{}({}) {}元/{} <a class="chat_status_{}">{}</a>'\
             .format(bjd.supplyid.name, bjd.supplyid_id, bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
         message.append(situation)
-        if me.issuper==0 and not me.office=="4":  #非管理员/采购经理
+        if me.issuper==0:  #非管理员
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
