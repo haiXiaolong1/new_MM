@@ -325,12 +325,40 @@ def ischeck(request, pid, notify):
         message.append("【系统消息】暂存单通过检查")
         message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购订单:{}<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
                        .format(gys.name,gys.id,fac.type,fac.address,cgd.purchaseid,wl.desc,wl.id,cgd.tcount,wl.calcutype,cgd.price,wl.calcutype))
-        message.append("入库前物料检查情况：<br/>量检通过-质检通过<br/>备注：<br/>{}".format(zcd.moreinfo))
-        for m in message:
-            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
-        message.append('请核验物料入库数量并创建入库单<a class="chat_link" href="/inventory/receive/">>></a>'.format())
-        for m in message:
-            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
+        mes="<br/>"+zcd.moreinfo
+        if mes.strip()=="<br/>":
+            mes=" 无备注"
+        message.append("入库前物料检查情况：<br/>量检通过-质检通过<br/>备注：{}".format(mes))
+        if me.issuper==0 and not me.office=="5":
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
+            message.append('请核验物料入库数量并创建入库单<a class="chat_link" href="/inventory/receive/">>></a>'.format())
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
+        else:
+            message[0]="【系统消息】操作历史记录"
+            message.append('请核验物料入库数量并创建入库单<a class="chat_link" href="/inventory/receive/">>></a>')
+            fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
+            notify=notify[:2]
+            notify.append(dict(id=len(notify), tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
+        if request.session["produceActive"]:
+            message[1] = '【{}】{}完成暂存物料检查<br/>'.format(me.get_office_display(), me.username) + message[1]
+            next = me
+            if me.issuper == 0:
+                next = models.Yuangong.objects.filter(businessid=me.businessid, office="3").first()
+            message.append('下一步操作人:【{}】{}<br/>'
+                           '下一步骤:验物料入库数量并创建入库单<a class="chat_link" href="/inventory/receive/">>></a>'
+                           .format(next.get_office_display(), next.username))
+            fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+            toid = models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m,
+                                             read=0)
+            notify.append(dict(id=len(notify), tittle="系统消息",
+                               context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                               type="info", position="top-center"))
     return notify
 
 
