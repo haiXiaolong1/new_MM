@@ -183,3 +183,7 @@ def ac_login(request):
     request.session["messageFlow"] = all_message_by_user(None, ins.id)
     request.session['produceActive']=True #控制是否向生产经理抄送操作记录
     return JsonResponse({"status": True})
+
+
+def ac_excel(request):
+    return HttpResponse("批量+")

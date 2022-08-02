@@ -15,9 +15,8 @@ class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 
-# ex:/assetinfo/test_django_excel_upload
 class TestDjangoExcelUpload(View):
-    """测试使用django-excel上传文件"""
+
 
     def get(self, request):
         form = UploadFileForm()
@@ -42,9 +41,7 @@ class TestDjangoExcelUpload(View):
             return HttpResponse("出错了")
 
 import time
-# ex:/assetinfo/test_django_excel_download
 class TestDjangoExcelDownload(View):
-    """测试使用django-excel下载文件"""
 
     def get(self, request):
         sheet = excel.pe.Sheet([["供应商名称name", "供应商地址address"]])
@@ -87,3 +84,12 @@ def new_excel(request):
     res.write(x_io.getvalue())
 
     return res
+
+class TestDjangoExcelDownload_ac(View):
+
+    def get(self, request):
+        sheet = excel.pe.Sheet([["姓名", "登录密码","邮箱","职位","是否激活","公司编号"]])
+        name = "账户上传批量模板"
+
+        ts = int(time.time())
+        return excel.make_response(sheet, "xlsx",file_name=name+str(ts))
