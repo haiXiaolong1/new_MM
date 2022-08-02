@@ -463,7 +463,6 @@ def material_list(request):
     }
 
     return render(request, 'material_list.html', result)
-
 # 添加供应商与物料的供应关系
 def material_add(request):
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -487,7 +486,6 @@ def material_add(request):
                                              supplyid_id=sid, materialid_id=mid)
         request.session['notify'] = [dict(id=0, tittle="提示", context="供应关系创建成功", type="success", position="top-center")]
     return JsonResponse(res)
-
 # 编辑供应关系时展示原始数据
 def material_detail(request):
     smid = request.GET.get("uid")
@@ -495,7 +493,6 @@ def material_detail(request):
     if not su:
         return JsonResponse({"status": False, "error": "数据不存在"})
     return JsonResponse({"sm": su, "status": True})
-
 # 保存编辑过后的供应关系
 def material_edit(request):
     id = request.GET.get("uid")
@@ -526,7 +523,6 @@ def quote_list(request):
     print(m.union(q))
     # 仅显示有效期内的报价单
     return render(request, 'quote_list.html', {"queryset": m.union(q), "title": "报价单管理"})
-
 
 def quote_add(request):
     """报价完成"""
@@ -594,52 +590,13 @@ def quote_add(request):
                                context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
                                type="info", position="top-center"))
     request.session["notify"] = notify
-        message.append("询价单-{} 已收到报价<br/>报价单号-{}".format(xjd.inquiryid, qid))
-        if me.issuper==0:
-            for m in message:
-                models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
-            message[1] = '供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>'\
-                .format(gys.name,gys.id,xjd.inquiryid,qid,qgd.price,wl.calcutype,quote,wl.calcutype)
-            for m in message:
-                models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
-        else:
-            message[0]="【系统消息】操作历史记录"
-            fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
-            for m in message:
-                models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
-            models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(),
-                                         context='供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>'
-                                                 '预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>'\
-                                         .format(gys.name,gys.id,xjd.inquiryid,qid,qgd.price,wl.calcutype,quote,wl.calcutype),
-                                         read=0)
-            notify=notify[:1]
-            notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
-        if request.session['produceActive']:
-            message[1]='【{}】{}<br/>'.format(me.get_office_display(),me.username)+message[1]
-            next=me
-            if me.issuper==0:
-                next = models.Yuangong.objects.filter(businessid=me.businessid, office="4").first()
-            message.append('下一步操作人:【{}】{}<br/>'
-                           '下一步骤:维护供应商报价单<a class="chat_link" href="/supply/quote/list/">>></a><br/>'
-                           .format(next.get_office_display(), next.username))
-            fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
-            toid = models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
-            for m in message:
-                models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m,
-                                             read=0)
-            notify.append(dict(id=len(notify), tittle="系统消息",
-                               context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
-                               type="info", position="top-center"))
-    request.session["notify"] = notify
     return JsonResponse(res)
-
 
 def quote_detail(request):
     """修改报价单时返回相应数据"""
     id = request.GET.get("uid")
     quote = models.Baojiadan.objects.filter(quoteid=id).first().quote
     return JsonResponse({"status": True, "quote": quote})
-
 
 def quote_edit(request):
     """根据报价单号修改报价"""
@@ -652,8 +609,6 @@ def quote_edit(request):
         models.Baojiadan.objects.filter(quoteid=quid).update(quote=quote)
         request.session['notify']=[dict(id=0, tittle="提示", context="报价单 {} 报价修改成功".format(quid), type="success", position="top-center")]
     return JsonResponse(json.dumps(res, ensure_ascii=False), safe=False)
-
-
 # 展示物料列表
 def mm_list(request):
     qu = models.Wuliao.objects.all()
@@ -665,8 +620,6 @@ def mm_list(request):
         n.append(i.username)
     yuan = dict(zip(id, n))
     return render(request, 'create_material.html', {"queryset": qu, "yuangong": yuan, "title": "物料列表"})
-
-
 # 添加供应商
 def mm_add(request):
     n = 1000
@@ -718,18 +671,9 @@ def mm_delete(request):
     models.Wuliao.objects.filter(id=id).delete()
     return JsonResponse({"status": True})
 
-
-
-
-
 import django_excel as excel
 import json
 
 def supply_excel(request):
     if request.method == "GET":
         return render(request, 'supplyexcel.html')
-
-
-
-
-

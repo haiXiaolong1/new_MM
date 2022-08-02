@@ -464,13 +464,45 @@ def receive_add(request):
     message.append("【系统消息】物料需求成功入库")
     message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
                    .format(gys.name, gys.id, fac.type, fac.address, wl.desc, wl.id, cgd.tcount,wl.calcutype, cgd.price, wl.calcutype))
-    message.append("物料检查情况：<br/>量检通过-质检通过<br/>备注：<br/>{}".format(zcd.moreinfo))
-    message.append("物料入库情况：<br/>入库数量:{}{}<br/>备注：<br/>{}".format(receivecount,wl.calcutype,moreinfo))
+    msg1,msg2="<br/>"+zcd.moreinfo,"<br/>"+moreinfo
+    if msg1.strip()=="<br/>":
+        msg1="无备注"
+    if msg2.strip()=="<br/>":
+        msg2="无备注"
+    message.append("物料检查情况：<br/>量检通过-质检通过<br/>备注：{}".format(msg1))
+    message.append("物料入库情况：<br/>入库数量:{}{}<br/>备注：{}".format(receivecount,wl.calcutype,msg2))
     message.append('查看订单单据流<a class="chat_link" href="/purchase/documents/?id={}">>></a>'.format(cgd.purchaseid))
     for m in message:
-        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
-    request.session["notify"]=notify
+    if me.issuper==0:
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
+    else:
+        message[0] = "【系统消息】操作历史记录"
+        next = me
+        fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
+        notify = notify[:1]
+        notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
+    if request.session['produceActive']:
+        message[1] = '【{}】{}<br/>'.format(me.get_office_display(), me.username) + message[1]
+        next = me
+        if me.issuper == 0:
+            next = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
+        message.append('下一步操作人:【{}】{}<br/>'
+                       '下一步骤:开具发票<a class="chat_link" href="/inventory/receive/">>></a><br/>'
+                       .format(next.get_office_display(), next.username))
+        fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+        toid = models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m,
+                                         read=0)
+        notify.append(dict(id=len(notify), tittle="系统消息",
+                           context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                           type="info", position="top-center"))
+    request.session["notify"] = notify
+
     return JsonResponse({"status": True})
 
 
