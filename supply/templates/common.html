@@ -416,6 +416,7 @@
                     var position=$("#toast-position-"+String(i)).text();
                     Notification(type,context,tittle,position);
                     // $("#showtoast").triggerHandler("click");
+                    resetNotify();
                 }
             }
             notify();
@@ -584,7 +585,7 @@
                         }
                     }
                 })
-                setTimeout(checkMessage, 1000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
+                // setTimeout(checkMessage, 1000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
             }
 
             // 设置检测间隔，开发阶段可不启用

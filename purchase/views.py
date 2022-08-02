@@ -80,25 +80,62 @@ def create_qui(request):
     me=models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
     wl=qgd.maid
     message=[]
-    message.append("【系统消息】")
-    message.append("向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
-                   .format(gys.name, gys.id, qgd.demandid, inid))
-    message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
-                   .format(wl.desc,wl.id,qgd.tcount,qgd.price,wl.calcutype,datetime.strptime(date,'%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")))
-    pur_jl = models.Yuangong.objects.filter(businessid_id=me.businessid_id,office="5").first()
-    inv_yg = models.Yuangong.objects.filter(businessid_id=me.businessid_id,office="1").first()
-    for m in message:
-        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
-        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
-    models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(),
-                                 context='请于询价有效期内获取供应商报价反馈<br/>并填入系统<a class="chat_link" href="/supply/quote/list/">>></a>', read=0)
     notify=[]
     notify.append(dict(id=0, tittle="提示", context="询价单 {} 创建成功！".format(inid),
                        type="success", position="top-center"))
-    notify.append(dict(id=1, tittle="系统消息", context="已向 {}-{} 发送反馈信息"
-                       .format(pur_jl.get_office_display(),pur_jl.username), type="info", position="top-center"))
-    notify.append(dict(id=2, tittle="系统消息", context="已提示 {}-{} 询价并维护供应商报价单"
-                       .format(inv_yg.get_office_display(),inv_yg.username), type="info", position="top-center"))
+    message.append("【系统消息】创建询价单")
+    message.append("向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
+                   .format(gys.name, gys.id, qgd.demandid, inid))
+    message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
+                   .format(wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype,
+                           datetime.strptime(date, '%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
+                                                                                                           "日")))
+    if me.issuper == 0:
+        pur_jl = models.Yuangong.objects.filter(businessid_id=me.businessid_id, office="5").first()
+        inv_yg = models.Yuangong.objects.filter(businessid_id=me.businessid_id, office="1").first()
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
+        models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(),
+                                     context='请于询价有效期内获取供应商报价反馈<br/>并填入系统<a class="chat_link" href="/supply/quote/list/">>></a>',
+                                     read=0)
+        notify.append(dict(id=0, tittle="提示", context="询价单 {} 创建成功！".format(inid),
+                           type="success", position="top-center"))
+        notify.append(dict(id=1, tittle="系统消息", context="已向 {}-{} 发送反馈信息"
+                           .format(pur_jl.get_office_display(), pur_jl.username), type="info", position="top-center"))
+        notify.append(dict(id=2, tittle="系统消息", context="已提示 {}-{} 询价并维护供应商报价单"
+                           .format(inv_yg.get_office_display(), inv_yg.username), type="info", position="top-center"))
+    else:  #管理员情况
+        message[0]="【系统消息】操作历史记录"
+        fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
+        models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(),
+                                     context='于询价有效期内获取供应商报价反馈<br/>并填入系统<a class="chat_link" href="/supply/quote/list/">>></a>',
+                                     read=0)
+        notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
+    if request.session['produceActive']:
+        message = []
+        message.append("【系统消息】操作历史记录")
+        next = me
+        if not me.issuper == 1:
+            next = models.Yuangong.objects.filter(businessid=me.businessid, office="1").first()
+        message.append("【{}】{}<br/>向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
+                       .format(me.get_office_display(), me.username, gys.name, gys.id, qgd.demandid, inid))
+        message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
+                       .format(wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype,
+                               datetime.strptime(date, '%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
+                                                                                                               "日")))
+        message.append('下一步操作人:【{}】{}<br/>'
+                       '下一步骤:维护供应商报价单<a class="chat_link" href="/supply/quote/list/">>></a><br/>'
+                       .format(next.get_office_display(), next.username))
+        fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+        toid = models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m, read=0)
+        notify.append(dict(id=len(notify), tittle="系统消息",
+                           context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                           type="info", position="top-center"))
     request.session["notify"] = notify
 
     models.Xunjiadan.objects.create(inquiryid=inid, tcount=d.tcount, validitytime=date,

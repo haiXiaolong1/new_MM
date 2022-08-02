@@ -365,13 +365,10 @@ def r_password(request):
         messages.success(request, "密保问题选择错误！", locals())
         return redirect('/forgot')
 
-
-
 # 登出功能
 def logout(request):
     request.session.clear()
     return redirect('/login')
-
 
 # 展示供应商列表
 def supply_list(request):
@@ -384,7 +381,6 @@ def supply_list(request):
         n.append(i.username)
     yuan = dict(zip(id, n))
     return render(request, 'supply_list.html', {"queryset": qu, "yuangong": yuan, "title": "供应商列表"})
-
 
 # 添加供应商
 def supply_add(request):
@@ -412,7 +408,6 @@ def supply_add(request):
                                             , id=sid, updatetime=time, createnumberid_id=id, updatenumberid_id=id)
     return JsonResponse(res)
 
-
 # 编辑供应商时返回供应商原始数据
 def supply_detail(request):
     sid = request.GET.get("uid")
@@ -420,7 +415,6 @@ def supply_detail(request):
     if not su:
         return JsonResponse({"status": False, "error": "数据不存在"})
     return JsonResponse({"supply": su, "status": True})
-
 
 # 保存编辑供应商的最新数据
 def supply_edit(request):
@@ -446,7 +440,6 @@ def supply_edit(request):
 
     return JsonResponse(res)
 
-
 # 删除供应商
 def supply_delete(request):
     id = request.GET.get("uid")
@@ -456,7 +449,6 @@ def supply_delete(request):
         return JsonResponse({"status": False})
     models.Gongyingshang.objects.filter(id=id).delete()
     return JsonResponse({"status": True})
-
 
 # 展示供应商与材料的供应关系
 def material_list(request):
@@ -471,7 +463,6 @@ def material_list(request):
     }
 
     return render(request, 'material_list.html', result)
-
 
 # 添加供应商与物料的供应关系
 def material_add(request):
@@ -497,7 +488,6 @@ def material_add(request):
         request.session['notify'] = [dict(id=0, tittle="提示", context="供应关系创建成功", type="success", position="top-center")]
     return JsonResponse(res)
 
-
 # 编辑供应关系时展示原始数据
 def material_detail(request):
     smid = request.GET.get("uid")
@@ -505,7 +495,6 @@ def material_detail(request):
     if not su:
         return JsonResponse({"status": False, "error": "数据不存在"})
     return JsonResponse({"sm": su, "status": True})
-
 
 # 保存编辑过后的供应关系
 def material_edit(request):
@@ -528,7 +517,6 @@ def material_edit(request):
     if res["status"]:
         i.update(supplyid_id=sid, materialid_id=mid, updatetime=time, updateid_id=uid)
     return JsonResponse(res)
-
 
 def quote_list(request):
     """进行报价"""
@@ -570,15 +558,42 @@ def quote_add(request):
         notify.append(dict(id=0, tittle="提示", context="报价单 {} 创建成功".format(qid), type="success", position="top-center"))
         notify.append(dict(id=1, tittle="系统消息", context="向 {}-{} 发信反馈已报价".format(yg.get_office_display(),yg.username), type="info", position="top-center"))
         notify.append(dict(id=2, tittle="系统消息", context="已提示 {}-{} 前往评估报价单".format(jl.get_office_display(),jl.username), type="info", position="top-center"))
-        request.session["notify"] =notify
         message.append("【系统消息】收到新报价单")
-        message.append('供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>'
-                       .format(gys.name,gys.id,xjd.inquiryid,qid,qgd.price,wl.calcutype,quote,wl.calcutype))
-        for m in message:
-            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
-        message[1]="询价单-{} 已收到报价<br/>报价单号-{}".format(xjd.inquiryid,qid)
-        for m in message:
-            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
+        message.append("询价单-{} 已收到报价<br/>报价单号-{}".format(xjd.inquiryid, qid))
+        if me.issuper==0:
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
+            message[1] = '供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>'\
+                .format(gys.name,gys.id,xjd.inquiryid,qid,qgd.price,wl.calcutype,quote,wl.calcutype)
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
+        else:
+            message[0]="【系统消息】操作历史记录"
+            fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
+            models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(),
+                                         context='于询价有效期内获取供应商报价反馈<br/>并填入系统<a class="chat_link" href="/supply/quote/list/">>></a>',
+                                         read=0)
+            notify=notify[:1]
+            notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
+        if request.session['produceActive']:
+            message[1]='下一步操作人:【{}】{}<br/>'.format(me.get_office_display(),me.username)+message[1]
+            next=me
+            if me.issuper==0:
+                next = models.Yuangong.objects.filter(businessid=me.businessid, office="4").first()
+            message.append('下一步操作人:【{}】{}<br/>'
+                           '下一步骤:维护供应商报价单<a class="chat_link" href="/supply/quote/list/">>></a><br/>'
+                           .format(next.get_office_display(), next.username))
+            fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
+            toid = models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
+            for m in message:
+                models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m,
+                                             read=0)
+            notify.append(dict(id=len(notify), tittle="系统消息",
+                               context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                               type="info", position="top-center"))
+    request.session["notify"] = notify
     return JsonResponse(res)
 
 
