@@ -88,8 +88,41 @@ def new_excel(request):
 class TestDjangoExcelDownload_ac(View):
 
     def get(self, request):
-        sheet = excel.pe.Sheet([["姓名", "登录密码","邮箱","职位","是否激活","公司编号"]])
-        name = "账户上传批量模板"
+        #sheet = excel.pe.Sheet([["姓名", "登录密码","邮箱","职位","是否激活","公司编号"]])
+
+        office = [
+            ("系统管理员"),
+            ("供应商员工"),
+            ("采购员工"),
+            ("库存员工"),
+            ("采购经理"),
+            ("库存经理"),
+            ("生产经理")
+        ]
+
+
+        name = "acTemp"
 
         ts = int(time.time())
-        return excel.make_response(sheet, "xlsx",file_name=name+str(ts))
+        file_name = name + str(ts)+'.xlsx'
+
+
+        x_io = BytesIO()
+        work_book = xlsxwriter.Workbook(x_io)
+        work_sheet = work_book.add_worksheet(name)
+        work_sheet.write(0, 0, "姓名")
+        work_sheet.write(0, 1, "登录密码")
+        work_sheet.write(0, 2, "邮箱")
+        work_sheet.write(0, 3, "职位")
+        work_sheet.write(0, 4, "是否激活")
+        work_sheet.write(0, 5, "公司编号")
+
+        work_sheet.data_validation("D2:D10", {'validate': 'list', 'source': office})
+        work_sheet.data_validation("E2:E10", {'validate': 'list', 'source': [0,1]})
+        work_book.close()
+        res = HttpResponse()
+        res["Content-Type"] = "application/octet-stream"
+        res["Content-Disposition"] = 'filename="'+file_name+'"'
+        res.write(x_io.getvalue())
+
+        return res
