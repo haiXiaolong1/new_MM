@@ -250,6 +250,7 @@
             var checkBoxs=$('input[name="check_reason"]');
             $("#table").on('click', '.btnQuantity', function () {
                 QUANTITY_ID = $(this).attr("uid");
+                QUALITY_ID = undefined;
                 $("#formAdd")[0].reset();
                 $("#myModalLabel").text("数量检查");
                 $("#myLa").text("量检结果");
@@ -283,6 +284,7 @@
             })
             $("#table").on('click', '.btnQuality', function () {
                 QUALITY_ID = $(this).attr("uid");
+                QUANTITY_ID = undefined;
                 $("#formAdd")[0].reset();
                 $("#myModalLabel").text("质量检查");
                 $("#myLa").text("质检结果");
