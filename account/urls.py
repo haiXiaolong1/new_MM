@@ -10,4 +10,6 @@ urlpatterns = [
     path('ac/password/',views.ac_password),
     path('ac/send/',views.ac_send),
     path('ac/login/',views.ac_login),
+    path('ac/r_massage/',views.r_massage),
+    path('ac/r_password/',views.r_password),
 ]
