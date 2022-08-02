@@ -1,5 +1,5 @@
-from django.shortcuts import render,HttpResponse
-
+from django.shortcuts import render, HttpResponse, redirect
+from django.contrib import messages
 # Create your views here.
 from supply import models
 from supply.views import form_check, all_message_by_user
