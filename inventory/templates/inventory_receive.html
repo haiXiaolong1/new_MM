@@ -223,8 +223,6 @@
                             }
                         }
                     })
-
-                    // {#    ID重新赋值为空#}
                 }
                 if (INVOICE_ID) {
                     $.ajax({
@@ -251,6 +249,7 @@
 
             $("#table").on('click', '.btnReceive', function () {
                 RECEIVE_ID = $(this).attr("uid");
+                INVOICE_ID = undefined;
                 $("#myModalLabel").text("入库确认");
                 $("#receivecount")[0].setAttribute("placeholder", "实际入库数量");
                 $("#formAdd")[0].reset();
@@ -285,6 +284,7 @@
             })
             $("#table").on('click', '.btnInvoice', function () {
                 INVOICE_ID = $(this).attr("uid");
+                RECEIVE_ID = undefined;
                 $("#myModalLabel").text("生成发票");
                 $("#receivecount")[0].setAttribute("placeholder", "请输入运费");
                 $("#formAdd")[0].reset();
