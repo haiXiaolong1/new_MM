@@ -183,3 +183,42 @@ def ac_login(request):
     request.session["messageFlow"] = all_message_by_user(None, ins.id)
     request.session['produceActive']=True #控制是否向生产经理抄送操作记录
     return JsonResponse({"status": True})
+
+# 修改个人信息（密保等）
+def r_massage(request):
+    if request.method == "GET":
+        sq = models.Securityquestion.objects.all()
+        return render(request, 'r_massage.html', locals())
+    else:
+        name = request.POST.get("name")
+        sq = request.POST.get("sq")
+        verification = request.POST.get("verification")
+        models.Yuangong.objects.filter(id=request.session['info']['id']).update(username=name, question=sq,
+                                                                                verification=verification)
+        # 更新session
+        request.session['info']['name'], request.session['info']['verification'], request.session['info'][
+            'question'] = name, verification, sq
+        messages.success(request, "修改成功！", locals())
+        return redirect('/account/ac/r_massage/')
+
+
+# 修改密码
+def r_password(request):
+    if request.method == "GET":
+        return render(request, 'r_password.html', locals())
+    else:
+        old_password = request.POST.get("old_password")
+        new1_password = request.POST.get("new1_password")
+        new2_password = request.POST.get("new2_password")
+        old_pass = models.Yuangong.objects.filter(id=request.session['info']['id']).values()[0]['password']
+        if old_pass == old_password:
+            if new1_password == new2_password:
+                models.Yuangong.objects.filter(id=request.session['info']['id']).update(password=new1_password)
+                messages.success(request, "修改成功！", locals())
+                return redirect('/account/ac/r_password/')
+            else:
+                messages.success(request, "两次新密码不一致！", locals())
+                return redirect('/account/ac/r_password/')
+        else:
+            messages.success(request, "原密码错误！", locals())
+            return redirect('/account/ac/r_password/')
