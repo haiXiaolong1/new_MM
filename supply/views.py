@@ -84,7 +84,6 @@ def all_message_by_user(request, me="e0002"):
 
 # 找到一对聊天对象的所有消息流
 def all_message(them='e0003', me='e0002'):
-    print(them, me)
     who = models.Yuangong.objects.filter(id=them).first().username
     froms = models.Xiaoxi.objects.filter(fromId=them, toId=me).all()
     tos = models.Xiaoxi.objects.filter(fromId=me, toId=them).all()
@@ -120,7 +119,6 @@ def group_by_time(f):
     group = 0
     groups = {0: []}
     for i in flow:
-        print(int(i["compare"])-start)
         if int(i["compare"]) - start >= interval:
             start = int(i["compare"])
             group += 1
@@ -237,7 +235,6 @@ def xjd_info(xjd,retu):
 #表单信息展示函数
 def form_set_byId(request):
     type=request.GET.get("type").split(",")
-    print(type)
     retu={"status": True}
     if "gc" in type:
         id = request.GET.get("facid")
@@ -268,7 +265,6 @@ def form_set_byId(request):
         retu['xjyxq']=xjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")
     if "bjd" in type:
         xid=request.GET.get("xjd")
-        print(xid)
         bjd=models.Baojiadan.objects.filter(quoteid=xid).first()
         xjd=bjd.inquiryid
         xjd_info(xjd,retu)
@@ -303,7 +299,6 @@ def form_set_byId(request):
         retu['gys']={"id":gys.id,"name":gys.name,"price":bjd.quote}
         retu['cgd']={"time":cgd.createtime.strftime("%Y{}%m{}%d{} %H:%M:%S").format("年","月","日")}
         retu['zsd']={'time':zsd.createtime.strftime("%Y{}%m{}%d{} %H:%M:%S").format("年","月","日"),'info':zsd.moreinfo}
-    print(retu)
     return JsonResponse(retu)
 
 # 登录功能
@@ -396,7 +391,6 @@ def supply_add(request):
     res = form_check(toCheck, types)
     l1=len(o['name'])
     l2=len(o['address'])
-    print(res)
     if l1>20:
         res['error'][0]='供应商名称不能超过20个字符'
         res['status']=False
@@ -479,7 +473,6 @@ def material_add(request):
     types = ['id供应商编号', 'id物料编号']
     res = form_check(toCheck, types)
     res["isexist"] = False
-    print(res)
     if res['status']:
         models.Gongyingguanxi.objects.create(createtime=time, updatetime=time,
                                              createid_id=id, updateid_id=id,
@@ -520,7 +513,6 @@ def quote_list(request):
     time = datetime.now()
     m=models.Baojiadan.objects.filter(quote=None).filter(validitytime__gte=time)
     q = models.Baojiadan.objects.filter(isdelete=0).filter(quote__isnull=False)
-    print(m.union(q))
     # 仅显示有效期内的报价单
     return render(request, 'quote_list.html', {"queryset": m.union(q), "title": "报价单管理"})
 
