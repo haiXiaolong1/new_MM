@@ -101,6 +101,7 @@
                                     <tr>
                                         <th>报价单编号</th>
                                         <th>询价单编号</th>
+                                        <th>请购单编号</th>
                                         <th>物料编号</th>
                                         <th>供应商编号</th>
                                         <th>公司编号</th>
@@ -120,6 +121,7 @@
                                                 {% endif %}
                                             </td>
                                             <td>{{ obj.inquiryid_id }}</td>
+                                            <td>{{ obj.inquiryid.demandid_id }}</td>
                                             <td>{{ obj.maid_id }}</td>
                                             <td>{{ obj.supplyid_id }}</td>
                                             <td>{{ obj.bussid_id }}</td>
