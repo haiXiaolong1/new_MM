@@ -671,3 +671,8 @@ import json
 def supply_excel(request):
     if request.method == "GET":
         return render(request, 'supplyexcel.html')
+   
+def initial(request):
+    return render(request, 'initial.html')
+def guide(request):
+    return render(request, 'viewer.html')
