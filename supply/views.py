@@ -651,10 +651,11 @@ def mm_edit(request):
     id = request.GET.get("uid")
     uid = request.session["info"]['id']
     o = request.POST
-
+    notify=[]
     models.Wuliao.objects.filter(id=id).update(type=o['type'], salegroup=o['salegroup'], saleway=o['saleway']
                                                , calcutype=o['calcutype'], desc=o['desc'])
-
+    notify.append(dict(id=0, tittle="提示", context="物料 {} 编辑成功".format(id), type="success", position="top-center"))
+    request.session["notify"] = notify
     return JsonResponse({"status": True})
 
 @csrf_exempt
@@ -665,8 +666,9 @@ def mm_delete(request):
     if  models.Gongyingguanxi.objects.filter(materialid_id=id):
         notify.append(dict(id=0, tittle="提示", context="物料 {} 不能删除".format(id), type="error", position="top-center"))
         request.session["notify"] = notify
-    return JsonResponse({"status": False})
-
+        return JsonResponse({"status": False})
+    notify.append(dict(id=0, tittle="提示", context="物料 {} 删除成功".format(id), type="success", position="top-center"))
+    request.session["notify"] = notify
     models.Wuliao.objects.filter(id=id).delete()
     return JsonResponse({"status": True})
 

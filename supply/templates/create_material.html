@@ -169,18 +169,6 @@
             $('#init_ul li').addClass('animation');
             var oTable = $('#example').dataTable();
             var oSettings = oTable.fnSettings();
-            var showToast = localStorage.getItem("notify_show");
-            if (showToast != undefined) {
-                if (showToast) {
-                    if (showToast != "false") {
-                        $("#toast-type").text(localStorage.getItem("notify_type"));
-                        $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
-                        $("#toast-context").text(localStorage.getItem("notify_context"));
-                        $("#showtoast").triggerHandler("click");
-                    }
-                }
-            }
-
             $("#btnAdd").click(function () {
                 //将正在编辑的ID置空
                 EDIT_ID = undefined;
@@ -212,10 +200,6 @@
                                     {#验证是否为空#}
                                     $("#formAdd")[0].reset();
                                     $("#myd").modal('hide');
-                                    localStorage.setItem("notify_show", true);
-                                    localStorage.setItem("notify_tittle", "提示");
-                                    localStorage.setItem("notify_context", "物料添加成功");
-                                    localStorage.setItem("notify_type", "success");
                                     sessionStorage.setItem("page",PAGE);
                                     sessionStorage.setItem("length",LENGTH);
                                     location.reload();
@@ -242,10 +226,6 @@
                                 if (res.status) {
                                     $("#myd").modal('hide');
                                     $("#formAdd")[0].reset();
-                                    localStorage.setItem("notify_show", true);
-                                    localStorage.setItem("notify_tittle", "提示");
-                                    localStorage.setItem("notify_context", "物料编辑成功");
-                                    localStorage.setItem("notify_type", "success");
                                     sessionStorage.setItem("page",PAGE);
                                     sessionStorage.setItem("length",LENGTH);
                                     location.reload();
@@ -279,18 +259,10 @@
                             if (res.status) {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "成功删除物料");
-                                localStorage.setItem("notify_type", "success");
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             } else {
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "该物料有关联供应关系，不能删除！");
-                                localStorage.setItem("notify_type", "error");
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
                                 sessionStorage.setItem("page",PAGE);
