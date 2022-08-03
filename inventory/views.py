@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from supply import models
+from supply.views import set_copy_message
 
 
 # 查看库存
@@ -185,13 +186,13 @@ def demand_verify(request):
     if me.office != "0" and me.isactive == 1 and me.issuper == 0:
         message.append("【系统消息】审核反馈")
         message.append("采购需求单{}<br/>已审核通过"
-                       .format(did))
+                       .format(set_copy_message(did)))
         to = models.Yuangong.objects.filter(id=cgxq.createuserid_id).first()
         if me.id!=to.id:
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
         message[1]="新增已审核采购需求：<br/>采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"\
-            .format(did,wl.desc,wl.id,cgxq.tcount,cgxq.price,wl.calcutype)
+            .format(set_copy_message(did),wl.desc,set_copy_message(wl.id),cgxq.tcount,cgxq.price,wl.calcutype)
         message.append('请尽快前往创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a>')
         pur_yg = models.Yuangong.objects.filter(businessid=me.businessid,isactive=1,office="2").first()
         for m in message:
@@ -205,7 +206,7 @@ def demand_verify(request):
     else:
         message.append("【系统消息】操作历史记录")
         message.append("采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"
-                       .format(did, wl.desc, wl.id, cgxq.tcount, cgxq.price, wl.calcutype))
+                       .format(set_copy_message(did), wl.desc, wl.id, cgxq.tcount, cgxq.price, wl.calcutype))
         message.append('请尽快前往创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a>')
         fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
         for m in message:
@@ -221,7 +222,7 @@ def demand_verify(request):
             '【{}】{}<br/>审核采购需求单:{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
             '下一步操作人:【{}】{}<br/>'
             '下一步骤:引用采购需求，创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a><br/>'
-            .format(me.get_office_display(), me.username, cgxq.demandid, wl.desc, wl.id, cgxq.tcount, cgxq.price, wl.calcutype,
+            .format(me.get_office_display(), me.username, set_copy_message(cgxq.demandid), wl.desc, wl.id, cgxq.tcount, cgxq.price, wl.calcutype,
                     next.get_office_display(), next.username))
         fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
         toid = models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
@@ -324,7 +325,7 @@ def ischeck(request, pid, notify):
         message = []
         message.append("【系统消息】暂存单反馈信息")
         message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购订单:{}<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
-                       .format(gys.name,gys.id,fac.type,fac.address,cgd.purchaseid,wl.desc,wl.id,cgd.tcount,wl.calcutype,cgd.price,wl.calcutype))
+                       .format(gys.name,gys.id,fac.type,fac.address,set_copy_message(cgd.purchaseid),wl.desc,wl.id,cgd.tcount,wl.calcutype,cgd.price,wl.calcutype))
         mes="<br/>"+zcd.moreinfo
         if mes.strip()=="<br/>":
             mes=" 无备注"
