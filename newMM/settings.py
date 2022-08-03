@@ -82,7 +82,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'mmssm',
         'USER': 'root',
-        'PASSWORD': 'ymysql',
+        'PASSWORD': 'Tj215283#',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -137,3 +137,17 @@ FILE_UPLOAD_HANDLERS = (
     "django_excel.ExcelMemoryFileUploadHandler",
     "django_excel.TemporaryExcelFileUploadHandler",
 )
+
+#缓存
+CACHES = {
+    'default':{
+        'BACKEND':'django.core.cache.backends.db.DatabaseCache',
+        #数据库缓存 引擎
+        'LOCATION':'my_cache_table', #数据库缓存表 名称
+        'TIMEOUT':300, #最大缓存事件 300s
+        'OPTIONS':{
+            'MAX_ENTRIES':300, #最大缓存数量 300
+            'CULL_FREQUENCY':2, #到达最大缓存时 删除1/2 的数据
+        }
+    }
+}

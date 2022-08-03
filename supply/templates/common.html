@@ -1,8 +1,10 @@
 {% load static %}
+{% load cache %}
 
 <!DOCTYPE html>
 <html lang="en">
 
+{% cache 500 head %}
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -19,7 +21,7 @@
     <link href={% static "plugins/bootstrap/css/bootstrap.min.css" %} rel="stylesheet">
     <link href={% static 'plugins/datatables/css/jquery.datatables.min.css' %} rel="stylesheet" type="text/css" />
     <link href={% static 'plugins/datatables/css/jquery.datatables_themeroller.css' %} rel="stylesheet"
-        type="text/css" />
+    type="text/css" />
     <link href={% static 'plugins/bootstrap-datepicker/css/datepicker3.css' %} rel="stylesheet" type="text/css" />
     <link href={% static 'plugins/font-awesome/css/font-awesome.min.css' %} rel="stylesheet">
     <link href={% static 'plugins/icomoon/style.css' %} rel="stylesheet">
@@ -45,328 +47,328 @@
     {% block css %}
     {% endblock %}
 </head>
-
+{% endcache %}
 <body class="page-sidebar-fixed">
 
-    <!-- Page Container -->
-    <div class="page-container">
-        <!-- Page Sidebar -->
-        <div class="page-sidebar">
-            <a class="logo-box" href="">
-                <span style="font-size:x-large">NEWMM</span>
-                <i class="icon-close" id="sidebar-toggle-button-close"></i>
-            </a>
-            <div class="page-sidebar-inner">
-                <div class="page-sidebar-menu">
-                    <ul class="accordion-menu">
-                        <li class="topli" id="supply">
-                            <a href="javascript:void(0);">
-                                <i class="menu-icon icon-people"></i>
-                                <span style="font-size: large"><strong>供应商管理</strong></span>
-                                <i class="accordion-icon fa fa-angle-left">
-                                </i>
-                            </a>
-                            <ul class="sub-menu" id="supply_ul">
-                                <li id="supply1"><a href="/supply/list" style="font-size:medium">维护供应商</a></li>
-                                <li id="supply2"><a href="/supply/material/list" style="font-size:medium">维护物料关系</a>
-                                </li>
-                                <li id="supply3"><a href="/supply/quote/list" style="font-size:medium">维护报价单</a></li>
-                            </ul>
-                        </li>
-                        <li class="topli" id="purchase">
-                            <a href="javascript:void(0);">
-                                <i class="menu-icon glyphicon glyphicon-shopping-cart"></i>
-                                <span style="font-size: large"><strong>采购管理</strong></span><i
-                                    class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul class="sub-menu" id="purchase_ul">
-                                <li class="subMenu" id="purchase_documents"><a href="/purchase/documents/"
-                                        style="font-size:medium">查看单据流</a>
-                                </li>
-                                <li class="subMenu" id="purchase_create_inquiry"><a href="/purchase/inquiry/create/"
-                                        style="font-size:medium">创建询价单</a></li>
-                                <li class="subMenu" id="purchase_e_quote"><a href="/purchase/quote/evaluate/"
-                                        style="font-size:medium">评估报价单</a>
-                                </li>
-                                <li class="subMenu" id="purchase_list"><a href="/purchase/list/"
-                                        style="font-size:medium">创建采购单</a></li>
-                            </ul>
-                        </li>
-                        <li class="topli" id="inventory">
-                            <a href="javascript:void(0);">
-                                <i class="menu-icon icon-home2"></i>
-                                <span style="font-size: large"><strong>库存管理</strong></span><i
-                                    class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul class="sub-menu" id="inventory_ul">
-                                <li id="inventory_display"><a href="/inventory/display/"
-                                        style="font-size:medium">查看库存</a></li>
-                                <li id="inventory_demand"><a href="/inventory/demand/n/"
-                                        style="font-size:medium">采购需求管理</a></li>
-                                <li id="inventory_temp"><a href="/inventory/temp/" style="font-size:medium">暂存检查</a>
-                                </li>
-                                <li id="inventory_receive"><a href="/inventory/receive/"
-                                        style="font-size:medium">收货管理</a></li>
-                                <li id="inventory_invoice"><a href="/inventory/invoice/" style="font-size:medium">发票</a>
-                                </li>
-                            </ul>
-                        </li>
-                        {% if request.session.info.office == "0" %}
-                        <li class="topli" id="account">
-                            <a href="javascript:void(0);">
-                                <i class="menu-icon icon-command"></i>
-                                <span style="font-size: large"><strong>权限管理</strong></span>
-                                <i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul class="sub-menu" id="account_ul">
-                                <li class="subMenu" id="account_documents"><a href="/account/ac/list/"
-                                        style="font-size:medium">用户管理</a></li>
-                            </ul>
-                        </li>
-                        <li class="topli" id="init">
-                            <a href="javascript:void(0);">
-                                <i class="menu-icon icon-settings"></i>
-                                <span style="font-size: large"><strong>基础设置</strong></span>
-                                <i class="accordion-icon fa fa-angle-left"></i>
-                            </a>
-                            <ul class="sub-menu" id="init_ul">
-                                <li class="subMenu" id="init_documents"><a href="/supply/mm/list"
-                                        style="font-size: medium">物料维护</a></li>
-                            </ul>
-                        </li>
-                        {% endif %}
-                    </ul>
-                </div>
+<!-- Page Container -->
+<div class="page-container">
+    <!-- Page Sidebar -->
+    <div class="page-sidebar">
+        <a class="logo-box" href="">
+            <span style="font-size:x-large">NEWMM</span>
+            <i class="icon-close" id="sidebar-toggle-button-close"></i>
+        </a>
+        <div class="page-sidebar-inner">
+            <div class="page-sidebar-menu">
+                <ul class="accordion-menu">
+                    <li class="topli" id="supply">
+                        <a href="javascript:void(0);">
+                            <i class="menu-icon icon-people"></i>
+                            <span style="font-size: large"><strong>供应商管理</strong></span>
+                            <i class="accordion-icon fa fa-angle-left">
+                            </i>
+                        </a>
+                        <ul class="sub-menu" id="supply_ul">
+                            <li id="supply1"><a href="/supply/list" style="font-size:medium">维护供应商</a></li>
+                            <li id="supply2"><a href="/supply/material/list" style="font-size:medium">维护物料关系</a>
+                            </li>
+                            <li id="supply3"><a href="/supply/quote/list" style="font-size:medium">维护报价单</a></li>
+                        </ul>
+                    </li>
+                    <li class="topli" id="purchase">
+                        <a href="javascript:void(0);">
+                            <i class="menu-icon glyphicon glyphicon-shopping-cart"></i>
+                            <span style="font-size: large"><strong>采购管理</strong></span><i
+                                class="accordion-icon fa fa-angle-left"></i>
+                        </a>
+                        <ul class="sub-menu" id="purchase_ul">
+                            <li class="subMenu" id="purchase_documents"><a href="/purchase/documents/"
+                                                                           style="font-size:medium">查看单据流</a>
+                            </li>
+                            <li class="subMenu" id="purchase_create_inquiry"><a href="/purchase/inquiry/create/"
+                                                                                style="font-size:medium">创建询价单</a></li>
+                            <li class="subMenu" id="purchase_e_quote"><a href="/purchase/quote/evaluate/"
+                                                                         style="font-size:medium">评估报价单</a>
+                            </li>
+                            <li class="subMenu" id="purchase_list"><a href="/purchase/list/"
+                                                                      style="font-size:medium">创建采购单</a></li>
+                        </ul>
+                    </li>
+                    <li class="topli" id="inventory">
+                        <a href="javascript:void(0);">
+                            <i class="menu-icon icon-home2"></i>
+                            <span style="font-size: large"><strong>库存管理</strong></span><i
+                                class="accordion-icon fa fa-angle-left"></i>
+                        </a>
+                        <ul class="sub-menu" id="inventory_ul">
+                            <li id="inventory_display"><a href="/inventory/display/"
+                                                          style="font-size:medium">查看库存</a></li>
+                            <li id="inventory_demand"><a href="/inventory/demand/n/"
+                                                         style="font-size:medium">采购需求管理</a></li>
+                            <li id="inventory_temp"><a href="/inventory/temp/" style="font-size:medium">暂存检查</a>
+                            </li>
+                            <li id="inventory_receive"><a href="/inventory/receive/"
+                                                          style="font-size:medium">收货管理</a></li>
+                            <li id="inventory_invoice"><a href="/inventory/invoice/" style="font-size:medium">发票</a>
+                            </li>
+                        </ul>
+                    </li>
+                    {% if request.session.info.office == "0" %}
+                    <li class="topli" id="account">
+                        <a href="javascript:void(0);">
+                            <i class="menu-icon icon-command"></i>
+                            <span style="font-size: large"><strong>权限管理</strong></span>
+                            <i class="accordion-icon fa fa-angle-left"></i>
+                        </a>
+                        <ul class="sub-menu" id="account_ul">
+                            <li class="subMenu" id="account_documents"><a href="/account/ac/list/"
+                                                                          style="font-size:medium">用户管理</a></li>
+                        </ul>
+                    </li>
+                    <li class="topli" id="init">
+                        <a href="javascript:void(0);">
+                            <i class="menu-icon icon-settings"></i>
+                            <span style="font-size: large"><strong>基础设置</strong></span>
+                            <i class="accordion-icon fa fa-angle-left"></i>
+                        </a>
+                        <ul class="sub-menu" id="init_ul">
+                            <li class="subMenu" id="init_documents"><a href="/supply/mm/list"
+                                                                       style="font-size: medium">物料维护</a></li>
+                        </ul>
+                    </li>
+                    {% endif %}
+                </ul>
             </div>
-        </div><!-- /Page Sidebar -->
-        <!-- Page Content -->
-        <div class="page-content">
-            <!-- Page Header -->
-            <div class="page-header" style="position: sticky;width: 100%;top:0;height: 90px" id="pageHeader";>
-                <div class="search-form">
-                    <form action="#" method="GET">
-                        <div class="input-group">
-                            <input type="text" name="search" class="form-control search-input" placeholder="搜索功能模块"
-                                id="topSearch">
-                            <span class="input-group-btn">
+        </div>
+    </div><!-- /Page Sidebar -->
+    <!-- Page Content -->
+    <div class="page-content">
+        <!-- Page Header -->
+        <div class="page-header" style="position: sticky;width: 100%;top:0;height: 90px" id="pageHeader";>
+            <div class="search-form">
+                <form action="#" method="GET">
+                    <div class="input-group">
+                        <input type="text" name="search" class="form-control search-input" placeholder="搜索功能模块"
+                               id="topSearch">
+                        <span class="input-group-btn">
                                 <button class="btn btn-default" id="close-search" type="button"><i
                                         class="icon-close"></i></button>
                             </span>
-                            <input type="text" name="search" style="display: none">
-                        </div>
-                        <div style="float: left;margin-left: 25px;color: grey;background-color: #f7f9fa;width: 200px"
-                            id="tips">
+                        <input type="text" name="search" style="display: none">
+                    </div>
+                    <div style="float: left;margin-left: 25px;color: grey;background-color: #f7f9fa;width: 200px"
+                         id="tips">
 
+                    </div>
+                </form>
+            </div>
+            <nav class="navbar navbar-default">
+                <div class="container-fluid">
+                    <!-- Brand and toggle get grouped for better mobile display -->
+                    <div class="navbar-header">
+                        <div class="logo-sm" >
+                            <a href="javascript:void(0)" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
+                            <a class="logo-box" href=""><span>newmm</span></a>
                         </div>
-                    </form>
-                </div>
-                <nav class="navbar navbar-default">
-                    <div class="container-fluid">
-                        <!-- Brand and toggle get grouped for better mobile display -->
-                        <div class="navbar-header">
-                            <div class="logo-sm" >
-                                <a href="javascript:void(0)" id="sidebar-toggle-button"><i class="fa fa-bars"></i></a>
-                                <a class="logo-box" href=""><span>newmm</span></a>
-                            </div>
-                            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                        <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
                                 data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
-                                <i class="fa fa-angle-down"></i>
-                            </button>
-                        </div>
+                            <i class="fa fa-angle-down"></i>
+                        </button>
+                    </div>
 
-                        <!-- Collect the nav links, forms, and other content for toggling -->
+                    <!-- Collect the nav links, forms, and other content for toggling -->
 
-                        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-                            <ul class="nav navbar-nav">
-                                <li><a href="javascript:void(0)" id="collapsed-sidebar-toggle-button"><i
-                                            class="fa fa-bars"></i></a></li>
-                                <li><a href="javascript:void(0)" id="toggle-fullscreen"><i class="fa fa-expand"></i></a>
-                                </li>
-                                <li><a href="javascript:void(0)" id="search-button"><i class="fa fa-search"></i></a>
-                                </li>
-                            </ul>
-                            <ul class="nav navbar-nav navbar-right">
-                                <li><a href="javascript:void(0)" class="right-sidebar-toggle"
-                                        data-sidebar-id="main-right-sidebar">
-                                        <i class="fa fa-envelope" style="margin-top: 5px">
-                                            <span class="my-badge my-hiden" id="messageRedPoint" ></span>
-                                        </i>
-                                    </a></li>
-                                <li><a href="javascript:void(0)">
-                                        <button id="sendTestMessage" class="btn btn-link">
-                                            <span class="glyphicon glyphicon-send"></span> 发送消息
-                                        </button>
-                                    </a></li>
-{#                                    <button id="showtoast">123</button>#}
-                                <li class="dropdown user-dropdown">
+                    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                        <ul class="nav navbar-nav">
+                            <li><a href="javascript:void(0)" id="collapsed-sidebar-toggle-button"><i
+                                    class="fa fa-bars"></i></a></li>
+                            <li><a href="javascript:void(0)" id="toggle-fullscreen"><i class="fa fa-expand"></i></a>
+                            </li>
+                            <li><a href="javascript:void(0)" id="search-button"><i class="fa fa-search"></i></a>
+                            </li>
+                        </ul>
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="javascript:void(0)" class="right-sidebar-toggle"
+                                   data-sidebar-id="main-right-sidebar">
+                                <i class="fa fa-envelope" style="margin-top: 5px">
+                                    <span class="my-badge my-hiden" id="messageRedPoint" ></span>
+                                </i>
+                            </a></li>
+                            <li><a href="javascript:void(0)">
+                                <button id="sendTestMessage" class="btn btn-link">
+                                    <span class="glyphicon glyphicon-send"></span> 发送消息
+                                </button>
+                            </a></li>
+                            {#                                    <button id="showtoast">123</button>#}
+                            <li class="dropdown user-dropdown">
 
-                                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
-                                        aria-haspopup="true" aria-expanded="false"
-                                        style="font-size: medium;margin-top: 5px">
-                                        {{ request.session.info.name }}</a>
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button"
+                                   aria-haspopup="true" aria-expanded="false"
+                                   style="font-size: medium;margin-top: 5px">
+                                    {{ request.session.info.name }}</a>
 
-                                    <ul class="dropdown-menu" id="on-log-user" yid="{{ request.session.info.id }}">
-                                        <li><a href="#">用户名：{{ request.session.info.name }}</a></li>
-                                        <li><a href="#">职位：{{ request.session.info.officename }}</a></li>
-                                        <li><a href="#">公司：{{ request.session.info.business }}</a></li>
-                                        <li role="separator" class="divider"></li>
-                                        <li><a href="/account/ac/r_massage">修改个人资料</a></li>
-                                        <li><a href="/account/ac/r_password">修改登录密码</a></li>
-                                        
-                                        <li><a href="/logout">退出</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div><!-- /.navbar-collapse -->
-                    </div><!-- /.container-fluid -->
-                </nav>
-            </div><!-- /Page Header -->
-            
-            <div class="my_hide_element">
-                <a class="table_status_2" style="display:none"></a>
-                <a class="formError" style="display:none"></a>
-                <a class="my_hide_element" id="toast-type"></a>
-                <a class="my_hide_element" id="toast-tittle"></a>
-                <a class="my_hide_element" id="toast-context"></a>
-                <div id="notifySave" class="my_hiden_element" ns={{request.session.notify|length}}>
-                    {% for i in request.session.notify %}
-                    <a class="my_hide_element" id="toast-type-{{i.id}}">{{i.type}}</a>
-                    <a class="my_hide_element" id="toast-tittle-{{i.id}}">{{i.tittle}}</a>
-                    <a class="my_hide_element" id="toast-context-{{i.id}}">{{i.context}}</a>
-                    <a class="my_hide_element" id="toast-position-{{i.id}}">{{i.position}}</a>
-                    {% endfor %}
-                </div>
+                                <ul class="dropdown-menu" id="on-log-user" yid="{{ request.session.info.id }}">
+                                    <li><a href="#">用户名：{{ request.session.info.name }}</a></li>
+                                    <li><a href="#">职位：{{ request.session.info.officename }}</a></li>
+                                    <li><a href="#">公司：{{ request.session.info.business }}</a></li>
+                                    <li role="separator" class="divider"></li>
+                                    <li><a href="/account/ac/r_massage">修改个人资料</a></li>
+                                    <li><a href="/account/ac/r_password">修改登录密码</a></li>
+
+                                    <li><a href="/logout">退出</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div><!-- /.navbar-collapse -->
+                </div><!-- /.container-fluid -->
+            </nav>
+        </div><!-- /Page Header -->
+
+        <div class="my_hide_element">
+            <a class="table_status_2" style="display:none"></a>
+            <a class="formError" style="display:none"></a>
+            <a class="my_hide_element" id="toast-type"></a>
+            <a class="my_hide_element" id="toast-tittle"></a>
+            <a class="my_hide_element" id="toast-context"></a>
+            <div id="notifySave" class="my_hiden_element" ns={{request.session.notify|length}}>
+                {% for i in request.session.notify %}
+                <a class="my_hide_element" id="toast-type-{{i.id}}">{{i.type}}</a>
+                <a class="my_hide_element" id="toast-tittle-{{i.id}}">{{i.tittle}}</a>
+                <a class="my_hide_element" id="toast-context-{{i.id}}">{{i.context}}</a>
+                <a class="my_hide_element" id="toast-position-{{i.id}}">{{i.position}}</a>
+                {% endfor %}
             </div>
-            <!-- Page Inner -->
-            {% block content %}
-            {% endblock %}
-            <!-- /Page Inner -->
-            <!-- 员工信息交互功能 -->
-            <div class="page-right-sidebar" id="main-right-sidebar">
-                <div class="page-right-sidebar-inner">
-                    <div class="right-sidebar-top">
-                        <div class="right-sidebar-tabs">
-                            <!-- Nav tabs -->
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="active" id="chat-tab"><a href="#chat"
-                                                                                        aria-controls="chat" role="tab" data-toggle="tab">消息</a></li>
-                            </ul>
-                        </div>
-                        <a href="javascript:void(0)" class="right-sidebar-toggle right-sidebar-close"
-                           data-sidebar-id="main-right-sidebar"><i class="icon-close"></i></a>
+        </div>
+        <!-- Page Inner -->
+        {% block content %}
+        {% endblock %}
+        <!-- /Page Inner -->
+        <!-- 员工信息交互功能 -->
+        <div class="page-right-sidebar" id="main-right-sidebar">
+            <div class="page-right-sidebar-inner">
+                <div class="right-sidebar-top">
+                    <div class="right-sidebar-tabs">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active" id="chat-tab"><a href="#chat"
+                                                                                    aria-controls="chat" role="tab" data-toggle="tab">消息</a></li>
+                        </ul>
                     </div>
-                    <div class="right-sidebar-content" style="overflow: auto;">
-                        <!-- Tab panes -->
-                        <div class="tab-content">
-                            <div role="tabpanel" class="tab-pane active" id="chat">
-                                {% if request.session.messageFlow.unread.items|length > 0 %}
-                                    <div class="chat-list">
-                                        <span class="chat-title">新消息</span>
-                                        {% for k,v in request.session.messageFlow.unread.items %}
-                                            {% load myfilter %}
-                                            <a href="javascript:void(0);"
-                                               class="right-sidebar-toggle chat-item unread active-user"
-                                               data-sidebar-id="chat-right-sidebar" yid="{{ k }}">
-                                                <div class="user-avatar">
-                                                    <img src="http://via.placeholder.com/40x40" alt="">
-                                                </div>
-                                                <div class="chat-info">
-                                                    <span class="chat-author">{{ v.name }}</span>
-                                                    <span class="chat-text">{{ v.text }}</span>
-                                                    <span class="chat-time">{{ v.time }}</span>
-                                                </div>
-                                            </a>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                                {% if request.session.messageFlow.read.items|length > 0 %}
-                                    <div class="chat-list">
-                                        <span class="chat-title">已读消息</span>
-                                        {% for k,v in request.session.messageFlow.read.items %}
-                                            <a href="javascript:void(0);" class="right-sidebar-toggle chat-item"
-                                               data-sidebar-id="chat-right-sidebar" yid="{{ k }}">
-                                                <div class="user-avatar">
-                                                    <img src="http://via.placeholder.com/40x40" alt="">
-                                                </div>
-                                                <div class="chat-info">
-                                                    <span class="chat-author">{{ v.name }}</span>
-                                                    <span class="chat-text">{{ v.text }}</span>
-                                                    <span class="chat-time">{{ v.time }}</span>
-                                                </div>
-                                            </a>
-                                        {% endfor %}
-                                        <!-- <a href="javascript:void(0);" class="load-more-messages" data-toggle="tooltip"
-                                            data-placement="bottom" title="Load More">&bull;&bull;&bull;加载更多</a> -->
-                                    </div>
-                                {% endif %}
-                                {% if request.session.messageFlow.unread.items|length == 0 and  request.session.messageFlow.read.items|length == 0 %}
-                                    <div class="chat-list">
-                                        <h4 class="noinfo_holder">暂无消息</h4>
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <!-- 这里删掉了settings -->
-                        </div>
-                    </div>
+                    <a href="javascript:void(0)" class="right-sidebar-toggle right-sidebar-close"
+                       data-sidebar-id="main-right-sidebar"><i class="icon-close"></i></a>
                 </div>
-            </div>
-            <div class="page-right-sidebar" id="chat-right-sidebar">
-                <div class="page-right-sidebar-inner">
-                    <div class="right-sidebar-top">
-                        <div class="chat-top-info">
-                            <span class="chat-name" id="chatDetailName">发信人</span>
-                            <span class="chat-state" id="chatDetailTime">发信时间</span>
-                        </div>
-                        <a href="javascript:void(0)" class="right-sidebar-toggle chat-sidebar-close pull-right"
-                           data-sidebar-id="chat-right-sidebar"><i class="icon-keyboard_arrow_right"></i></a>
-                    </div>
-                    <div class="right-sidebar-content">
-                        <div class="right-sidebar-chat slimscroll">
-                            <div class="chat-bubbles" id="setMessage">
+                <div class="right-sidebar-content" style="overflow: auto;">
+                    <!-- Tab panes -->
+                    <div class="tab-content">
+                        <div role="tabpanel" class="tab-pane active" id="chat">
+                            {% if request.session.messageFlow.unread.items|length > 0 %}
+                            <div class="chat-list">
+                                <span class="chat-title">新消息</span>
+                                {% for k,v in request.session.messageFlow.unread.items %}
+                                {% load myfilter %}
+                                <a href="javascript:void(0);"
+                                   class="right-sidebar-toggle chat-item unread active-user"
+                                   data-sidebar-id="chat-right-sidebar" yid="{{ k }}">
+                                    <div class="user-avatar">
+                                        <img src="http://via.placeholder.com/40x40" alt="">
+                                    </div>
+                                    <div class="chat-info">
+                                        <span class="chat-author">{{ v.name }}</span>
+                                        <span class="chat-text">{{ v.text }}</span>
+                                        <span class="chat-time">{{ v.time }}</span>
+                                    </div>
+                                </a>
+                                {% endfor %}
                             </div>
-                        </div>
-                        <div class="chat-write">
-                            <div class="form-horizontal" action="javascript:void(0);">
-                                <input type="text" class="form-control my-left" id="textMessage" autocomplete="off"
-                                       placeholder="在这里输入新消息">
-                                <button id="sendTextMessage">发送</button>
+                            {% endif %}
+                            {% if request.session.messageFlow.read.items|length > 0 %}
+                            <div class="chat-list">
+                                <span class="chat-title">已读消息</span>
+                                {% for k,v in request.session.messageFlow.read.items %}
+                                <a href="javascript:void(0);" class="right-sidebar-toggle chat-item"
+                                   data-sidebar-id="chat-right-sidebar" yid="{{ k }}">
+                                    <div class="user-avatar">
+                                        <img src="http://via.placeholder.com/40x40" alt="">
+                                    </div>
+                                    <div class="chat-info">
+                                        <span class="chat-author">{{ v.name }}</span>
+                                        <span class="chat-text">{{ v.text }}</span>
+                                        <span class="chat-time">{{ v.time }}</span>
+                                    </div>
+                                </a>
+                                {% endfor %}
+                                <!-- <a href="javascript:void(0);" class="load-more-messages" data-toggle="tooltip"
+                                    data-placement="bottom" title="Load More">&bull;&bull;&bull;加载更多</a> -->
                             </div>
+                            {% endif %}
+                            {% if request.session.messageFlow.unread.items|length == 0 and  request.session.messageFlow.read.items|length == 0 %}
+                            <div class="chat-list">
+                                <h4 class="noinfo_holder">暂无消息</h4>
+                            </div>
+                            {% endif %}
                         </div>
+                        <!-- 这里删掉了settings -->
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="page-right-sidebar" id="chat-right-sidebar">
+            <div class="page-right-sidebar-inner">
+                <div class="right-sidebar-top">
+                    <div class="chat-top-info">
+                        <span class="chat-name" id="chatDetailName">发信人</span>
+                        <span class="chat-state" id="chatDetailTime">发信时间</span>
+                    </div>
+                    <a href="javascript:void(0)" class="right-sidebar-toggle chat-sidebar-close pull-right"
+                       data-sidebar-id="chat-right-sidebar"><i class="icon-keyboard_arrow_right"></i></a>
+                </div>
+                <div class="right-sidebar-content">
+                    <div class="right-sidebar-chat slimscroll">
+                        <div class="chat-bubbles" id="setMessage">
+                        </div>
+                    </div>
+                    <div class="chat-write">
+                        <div class="form-horizontal" action="javascript:void(0);">
+                            <input type="text" class="form-control my-left" id="textMessage" autocomplete="off"
+                                   placeholder="在这里输入新消息">
+                            <button id="sendTextMessage">发送</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-        </div><!-- /Page Content -->
-    </div><!-- /Page Container -->
+    </div><!-- /Page Content -->
+</div><!-- /Page Container -->
 
 
-    <!-- Javascripts -->
-    <script src={% static 'plugins/jquery/jquery-3.1.0.min.js' %}></script>
-    <script src={% static 'plugins/bootstrap/js/bootstrap.min.js' %}></script>
-    <script src={% static 'plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}></script>
-    <script src={% static 'plugins/uniform/js/jquery.uniform.standalone.js' %}></script>
-    <script src={% static 'plugins/switchery/switchery.min.js' %}></script>
-    <script src={% static 'plugins/chartjs/chart.min.js' %}></script>
-    <script src={% static 'plugins/d3/d3.min.js' %}></script>
-    <script src={% static 'plugins/nvd3/nv.d3.min.js' %}></script>
-    <script src={% static 'plugins/flot/jquery.flot.min.js' %}></script>
-    <script src={% static 'plugins/flot/jquery.flot.time.min.js' %}></script>
-    <script src={% static 'plugins/flot/jquery.flot.symbol.min.js' %}></script>
-    <script src={% static 'plugins/flot/jquery.flot.resize.min.js' %}></script>
-    <script src={% static 'plugins/flot/jquery.flot.tooltip.min.js' %}></script>
-    <script src={% static 'plugins/flot/jquery.flot.pie.min.js' %}></script>
-    <script src={% static 'plugins/jquery-validation/jquery.validate.min.js' %}></script>
-    <script src={% static 'js/pages/chart.js' %}></script>
-    <script src={% static 'js/ecaps.min.js' %}></script>
+<!-- Javascripts -->
+<script src={% static 'plugins/jquery/jquery-3.1.0.min.js' %}></script>
+<script src={% static 'plugins/bootstrap/js/bootstrap.min.js' %}></script>
+<script src={% static 'plugins/jquery-slimscroll/jquery.slimscroll.min.js' %}></script>
+<script src={% static 'plugins/uniform/js/jquery.uniform.standalone.js' %}></script>
+<script src={% static 'plugins/switchery/switchery.min.js' %}></script>
+<script src={% static 'plugins/chartjs/chart.min.js' %}></script>
+<script src={% static 'plugins/d3/d3.min.js' %}></script>
+<script src={% static 'plugins/nvd3/nv.d3.min.js' %}></script>
+<script src={% static 'plugins/flot/jquery.flot.min.js' %}></script>
+<script src={% static 'plugins/flot/jquery.flot.time.min.js' %}></script>
+<script src={% static 'plugins/flot/jquery.flot.symbol.min.js' %}></script>
+<script src={% static 'plugins/flot/jquery.flot.resize.min.js' %}></script>
+<script src={% static 'plugins/flot/jquery.flot.tooltip.min.js' %}></script>
+<script src={% static 'plugins/flot/jquery.flot.pie.min.js' %}></script>
+<script src={% static 'plugins/jquery-validation/jquery.validate.min.js' %}></script>
+<script src={% static 'js/pages/chart.js' %}></script>
+<script src={% static 'js/ecaps.min.js' %}></script>
 
 
-    <script src={% static 'plugins/datatables/js/jquery.datatables.min.js' %}></script>
-    <script src={% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
-    <script src={% static 'plugins/echarts.js' %}></script>
-    <script src={% static 'js/pages/timeline.js' %}></script>
-    <script src={% static 'plugins/toastr/toastr.min.js' %}></script>
-    <script src={% static 'js/pages/ui-notifications.js' %}></script>
-    <script type="text/javascript" language="JavaScript">
+<script src={% static 'plugins/datatables/js/jquery.datatables.min.js' %}></script>
+<script src={% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
+<script src={% static 'plugins/echarts.js' %}></script>
+<script src={% static 'js/pages/timeline.js' %}></script>
+<script src={% static 'plugins/toastr/toastr.min.js' %}></script>
+<script src={% static 'js/pages/ui-notifications.js' %}></script>
+<script type="text/javascript" language="JavaScript">
         $(document).ready(function () {
 
             function resetNotify(){
@@ -709,7 +711,7 @@
         });
 
     </script>
-    <script type="text/javascript" language=JavaScript>
+<script type="text/javascript" language=JavaScript>
     document.onkeydown = function (event) {
         var e = event || window.event || arguments.callee.caller.arguments[0];
         if(e.ctrlKey && e.altKey){
@@ -734,8 +736,9 @@
     }
 </script>
 
-    {% block js %}
-    {% endblock %}
+{% block js %}
+{% endblock %}
 </body>
 
 </html>
+
