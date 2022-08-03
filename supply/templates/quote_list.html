@@ -165,8 +165,12 @@
         $(document).ready(function () {
             var page=sessionStorage.getItem("page1");
             var length=sessionStorage.getItem("length1");
+            var search=sessionStorage.getItem("search1");
+            sessionStorage.removeItem("search1");
             sessionStorage.removeItem("page1");
             sessionStorage.removeItem("length1");
+            if(!search)
+                search=""
             if (!page)
                 page=0;
             if(!length)
@@ -198,6 +202,8 @@
                 "iDisplayStart" :page,  //用于指定从哪一条数据开始显示到表格中去 num为20的时候，第一页是0，第二页是20.....
                 "iDisplayLength" :length,
             });
+            $('#example1_filter input').val(search).trigger($.Event("keyup", { keyCode: 13 }));;
+
             $('li').removeClass('active-page');
             $('#supply3').addClass('active-page');
             $('#supply').addClass('active-page').addClass('open');
@@ -205,6 +211,7 @@
             $('#supply_ul li').addClass('animation');
             var oTable = $('#example1').dataTable();
             var oSettings = oTable.fnSettings();
+            {#oTable.search("123").draw();#}
             $("#btnSave").click(function () {
                 if (!EDIT_ID) {
                     $.ajax({
@@ -216,6 +223,7 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
+                                sessionStorage.setItem("search1",$('#example1_filter input')[0].value);
                                 sessionStorage.setItem("page1",PAGE);
                                 sessionStorage.setItem("length1",LENGTH);
                                 location.reload();
@@ -237,6 +245,7 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
+                                sessionStorage.setItem("search1",$('#example1_filter input')[0].value);
                                 sessionStorage.setItem("page1",PAGE);
                                 sessionStorage.setItem("length1",LENGTH);
                                 location.reload();

@@ -541,6 +541,7 @@ def quote_add(request):
     toCheck = [quote]
     types = ["float+"]
     res = form_check(toCheck, types)
+    res['did']=models.Xunjiadan.objects.filter(inquiryid=inid).first().demandid_id
     if res['status']:
         models.Baojiadan.objects.filter(inquiryid_id=inid).update(quote=quote,
                                                                   quoteid=qid,
