@@ -168,18 +168,6 @@
             $('#supply_ul li').addClass('animation');
             var oTable = $('#example').dataTable();
             var oSettings = oTable.fnSettings();
-            var showToast = localStorage.getItem("notify_show");
-            if (showToast != undefined) {
-                if (showToast) {
-                    if (showToast != "false") {
-                        $("#toast-type").text(localStorage.getItem("notify_type"));
-                        $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
-                        $("#toast-context").text(localStorage.getItem("notify_context"));
-                        $("#showtoast").triggerHandler("click");
-                    }
-                }
-            }
-
             $("#btnAdd").click(function () {
 
                 // 获取页码值
@@ -209,12 +197,9 @@
                                 {#验证是否为空#}
                                 $("#formAdd")[0].reset();
                                 $("#myd").modal('hide');
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "供应商添加成功");
-                                localStorage.setItem("notify_type", "success");
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             } else {
                                 var ids = ["#name_error", "#address_error"];
@@ -237,13 +222,11 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "编辑成功");
-                                localStorage.setItem("notify_type", "success");
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
+                                EDIT_ID = undefined;
                             } else {
                                 var ids = ["#name_error", "#address_error"];
                                 for (var i = 0; i < ids.length; i++) {
@@ -255,7 +238,6 @@
                             }
                         }
                     })
-                    EDIT_ID = undefined;
                 }
 
 
@@ -281,20 +263,15 @@
                             if (res.status) {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "供应商删除成功");
-                                localStorage.setItem("notify_type", "success");
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
                                 location.reload();
                             } else {
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "报错");
-                                localStorage.setItem("notify_context", "存在物料供应关系，不能删除供应商");
-                                localStorage.setItem("notify_type", "error");
+
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
                                 location.reload();

@@ -223,6 +223,7 @@
                             // 先reload后提示，由request将notify信息传值给session并在reload后清空
                             sessionStorage.setItem("page",PAGE);
                             sessionStorage.setItem("length",LENGTH);
+                            sessionStorage.setItem("search",$('#example_filter input')[0].value);
                             location.reload()
                         } else {
                             var ids = ["#facid_id_error", "#maid_id_error", "#price_error", "#tcount_error"];
@@ -252,6 +253,7 @@
                         if (res.status) {
                             sessionStorage.setItem("page",PAGE);
                             sessionStorage.setItem("length",LENGTH);
+                            sessionStorage.setItem("search",$('#example_filter input')[0].value);
                             location.reload();
                         }
                     }
@@ -280,6 +282,7 @@
                                 DELETE_ID = undefined;
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             } else {
                             }

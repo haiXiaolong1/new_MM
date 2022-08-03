@@ -219,6 +219,7 @@
                                 RECEIVE_ID = undefined;
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             }else {
                                 $("#count_error").text(res.error);
@@ -238,6 +239,7 @@
                                 $("#formAdd")[0].reset();
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                                 INVOICE_ID = undefined;
                             }else {
@@ -336,6 +338,7 @@
                                 DELETE_ID = undefined;
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             }
                         }
