@@ -202,9 +202,10 @@ def set_message_detail(request):
 
 def send_test_message(request):
     me = request.GET.get("meid")
-    gjr = models.Yuangong.objects.filter().exclude(id=me).first().id
-    models.Xiaoxi.objects.create(fromId_id=gjr, toId_id=me, context="骚扰" + str(random.randint(1, 20)),
-                                 time=datetime.now(), read=0)
+    gj = models.Yuangong.objects.filter().exclude(id=me)
+    for gjr in gj:
+        models.Xiaoxi.objects.create(fromId_id=gjr.id, toId_id=me, context="骚扰" + str(random.randint(1, 20)),
+                                     time=datetime.now(), read=0)
     return JsonResponse({"status": True})
 
 def send_message(request):
