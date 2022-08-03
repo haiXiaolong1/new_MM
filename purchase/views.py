@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from supply import models
 from supply.views import set_copy_message
+import re
 
 
 # 创建询价单
@@ -197,10 +198,10 @@ def quote_evaluateByID(request):
                        .format(set_copy_message(bjd.inquiryid_id), wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
         situation = "报价评估情况:"
         for bj in c:
-            situation += '<br/>{}({}) {}元/{} <a class="chat_status_{}">{}</a>'\
-                .format(bj.supplyid.name, bj.supplyid_id, bj.quote, wl.calcutype,bj.isreceived,bj.get_isreceived_display())
-        situation += '<hr>{}({}) {}元/{} <a class="chat_status_{}">{}</a>'\
-            .format(bjd.supplyid.name, bjd.supplyid_id, bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
+            situation += '<br/>{}{}{}元/{} <a class="chat_status_{}">{}</a>'\
+                .format(bj.supplyid.name, set_copy_message(bj.supplyid_id), bj.quote, wl.calcutype,bj.isreceived,bj.get_isreceived_display())
+        situation += '<hr>{}{}{}元/{} <a class="chat_status_{}">{}</a>'\
+            .format(bjd.supplyid.name, set_copy_message(bjd.supplyid_id), bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
         message.append(situation)
         if me.issuper==0:  #非管理员
             for m in message:

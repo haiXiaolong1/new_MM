@@ -203,7 +203,7 @@ def set_message_detail(request):
 def send_test_message(request):
     me = request.GET.get("meid")
     gj = models.Yuangong.objects.filter().exclude(id=me)
-    div='<div>{}{}</div>'
+    div='<div class="copyDiv">{}{}</div>'
     input='<input class="copyInput" readonly value="{}"></input>'
     but='<button class="copyButton"><i class="fa fa-clone" aria-hidden="true"></i></button>'
     html=div.format(input,but)
@@ -213,7 +213,7 @@ def send_test_message(request):
     return JsonResponse({"status": True})
 
 def set_copy_message(s):
-    div = '<div>{}{}</div>'
+    div = '<div class="copyDiv">{}{}</div>'
     input = '<input class="copyInput" readonly value="{}"></input>'
     but = '<button class="copyButton"><i class="fa fa-clone" aria-hidden="true"></i></button>'
     html = div.format(input, but)
@@ -574,7 +574,8 @@ def quote_add(request):
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
             models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(),
-                                         context='于询价有效期内获取供应商报价反馈<br/>并填入系统<a class="chat_link" href="/supply/quote/list/">>></a>',
+                                         context='供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>'\
+                                         .format(gys.name,gys.id,set_copy_message(xjd.inquiryid),set_copy_message(qid),qgd.price,wl.calcutype,quote,wl.calcutype),
                                          read=0)
             notify=notify[:1]
             notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))

@@ -153,10 +153,10 @@ def demand_add(request):
             if not me.issuper==1:
                 next=models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             message.append(
-                '【{}】{}<br/>创建待审核采购需求：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
+                '【{}】{}<br/>创建采购需求：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
                 '下一步操作人:【{}】{}<br/>'
                 '下一步骤:审核采购需求<a class="chat_link" href="/inventory/demand/n/">>></a><br/>'
-                .format(me.get_office_display(),me.username,did,wl.desc, wl.id, r['tcount'], r['price'], wl.calcutype,next.get_office_display(),next.username))
+                .format(me.get_office_display(),me.username,set_copy_message(did),wl.desc, wl.id, r['tcount'], r['price'], wl.calcutype,next.get_office_display(),next.username))
             fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
             toid=models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
             for m in message:
@@ -192,7 +192,7 @@ def demand_verify(request):
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
         message[1]="新增已审核采购需求：<br/>采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"\
-            .format(set_copy_message(did),wl.desc,set_copy_message(wl.id),cgxq.tcount,cgxq.price,wl.calcutype)
+            .format(set_copy_message(did),wl.desc,wl.id,cgxq.tcount,cgxq.price,wl.calcutype)
         message.append('请尽快前往创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a>')
         pur_yg = models.Yuangong.objects.filter(businessid=me.businessid,isactive=1,office="2").first()
         for m in message:
