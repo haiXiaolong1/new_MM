@@ -184,7 +184,7 @@ def quote_evaluateByID(request):
         # 系统自动发信
         me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
         buss = me.businessid
-        inv_yg = models.Yuangong.objects.filter(businessid=buss, isactive=1, office="3").first()
+        inv_yg = models.Yuangong.objects.filter(businessid=buss, isactive=1, office="1").first()
         pur_yg = models.Yuangong.objects.filter(businessid=buss, isactive=1, office="2").first()
         qgd = models.Caigouxuqiu.objects.filter(demandid=did).first()
         wl = qgd.maid
