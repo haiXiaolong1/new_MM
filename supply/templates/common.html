@@ -702,6 +702,7 @@
             $("#chat-right-sidebar").on('click', '.copyButton', function () {
                 $(this).prev().select(); // 选择对象
                 document.execCommand("Copy");
+                Notification("info","已成功复制到剪贴板。\r\n复制内容：【"+String($(this).prev().val())+"】","复制成功","top-right")
                 return;
             })
 
