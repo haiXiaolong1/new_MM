@@ -15,9 +15,8 @@ class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 
-# ex:/assetinfo/test_django_excel_upload
 class TestDjangoExcelUpload(View):
-    """测试使用django-excel上传文件"""
+
 
     def get(self, request):
         form = UploadFileForm()
@@ -42,13 +41,12 @@ class TestDjangoExcelUpload(View):
             return HttpResponse("出错了")
 
 import time
-# ex:/assetinfo/test_django_excel_download
 class TestDjangoExcelDownload(View):
-    """测试使用django-excel下载文件"""
 
     def get(self, request):
         sheet = excel.pe.Sheet([["供应商名称name", "供应商地址address"]])
         name = "供应商上传批量模板"
+
         ts = int(time.time())
         return excel.make_response(sheet, "xlsx",file_name=name+str(ts))
 
@@ -66,3 +64,102 @@ def add_supply_axu(data_each,request):
     models.Gongyingshang.objects.create(name=named, address=addressd, createtime=time
                                         , id=sid, updatetime=time, createnumberid_id=id,
                                         updatenumberid_id=id)
+
+from django.http import HttpResponse
+from io import BytesIO
+import xlsxwriter
+
+def new_excel(request):
+
+
+    x_io = BytesIO()
+    work_book = xlsxwriter.Workbook(x_io)
+    work_sheet = work_book.add_worksheet("excel-1")
+    work_sheet.write(0,0,"test")
+    work_sheet.data_validation("A1:A5", {'validate':'list', 'source':[1, 2, 3, 4]})
+    work_book.close()
+    res = HttpResponse()
+    res["Content-Type"] = "application/octet-stream"
+    res["Content-Disposition"] = 'filename="userinfos.xlsx"'
+    res.write(x_io.getvalue())
+
+    return res
+
+from supply import models
+from django.db import connection
+class TestDjangoExcelDownload_ac(View):
+
+    def get(self, request):
+        #sheet = excel.pe.Sheet([["姓名", "登录密码","邮箱","职位","是否激活","公司编号"]])
+
+        office = [
+            ("系统管理员"),
+            ("供应商员工"),
+            ("采购员工"),
+            ("库存员工"),
+            ("采购经理"),
+            ("库存经理"),
+            ("生产经理")
+        ]
+
+
+        name = "acTemp"
+
+        ts = int(time.time())
+        file_name = name + str(ts)+'.xlsx'
+
+
+        x_io = BytesIO()
+        work_book = xlsxwriter.Workbook(x_io)
+        cen_format = work_book.add_format({'align':'center'})
+        merge_format = work_book.add_format({
+            'bold': True,
+            'align': 'center',  # 水平居中
+            'valign': 'vcenter',  # 垂直居中
+        })
+        work_sheet = work_book.add_worksheet(name)
+        work_sheet.write(0, 0, "姓名")
+        work_sheet.write(0, 1, "登录密码")
+        work_sheet.write(0, 2, "邮箱")
+        work_sheet.write(0, 3, "职位")
+        work_sheet.write(0, 4, "是否激活")
+        work_sheet.write(0, 5, "公司编号")
+
+
+        work_sheet.merge_range('J1:K1', '职位录入参考', merge_format)
+
+        for i in range(len(office)):
+            work_sheet.write(i+1, 9, i,cen_format)
+            work_sheet.write(i+1, 10, office[i],cen_format)
+
+        yu = models.Gongsi.objects.all().values("name", "myid")
+        #print(yu)
+
+
+        work_sheet.merge_range('J10:K10', '公司-编号参考', merge_format)
+
+
+        for i in range(len(yu)):
+            work_sheet.write(i + 11, 9, yu[i]['myid'], cen_format)
+            work_sheet.write(i + 11, 10, yu[i]['name'], cen_format)
+
+        work_sheet.set_column('J1:K1', 15)
+        '''
+        cursor = connection.cursor()
+        query_recreation = 'insert  into  yuangong values(id,office,username,password,isactive,issuper,)'
+        cursor.execute(query_recreation)
+        '''
+
+
+
+
+        #work_sheet.data_validation("D2:D10", {'validate': 'list', 'source': office})
+        #work_sheet.data_validation("E2:E10", {'validate': 'list', 'source': [0,1]})
+
+        work_book.close()
+        res = HttpResponse()
+        res["Content-Type"] = "application/octet-stream"
+        res["Content-Disposition"] = 'filename="'+file_name+'"'
+        res.write(x_io.getvalue())
+
+        return res
