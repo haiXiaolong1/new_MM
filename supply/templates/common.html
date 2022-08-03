@@ -210,6 +210,9 @@
                                         <li><a href="#">职位：{{ request.session.info.officename }}</a></li>
                                         <li><a href="#">公司：{{ request.session.info.business }}</a></li>
                                         <li role="separator" class="divider"></li>
+                                        <li><a href="/account/ac/r_massage">修改个人资料</a></li>
+                                        <li><a href="/account/ac/r_password">修改登录密码</a></li>
+                                        
                                         <li><a href="/logout">退出</a></li>
                                     </ul>
                                 </li>
@@ -252,7 +255,7 @@
                         <a href="javascript:void(0)" class="right-sidebar-toggle right-sidebar-close"
                            data-sidebar-id="main-right-sidebar"><i class="icon-close"></i></a>
                     </div>
-                    <div class="right-sidebar-content">
+                    <div class="right-sidebar-content" style="overflow: auto;">
                         <!-- Tab panes -->
                         <div class="tab-content">
                             <div role="tabpanel" class="tab-pane active" id="chat">

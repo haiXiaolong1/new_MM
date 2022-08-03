@@ -475,7 +475,8 @@ def receive_add(request):
     for m in message:
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
     if me.issuper==0:
-        for m in message:
+        message[0]="【系统消息】物料需求入库反馈"
+        for m in message[:-1]:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
     else:
         message[0] = "【系统消息】操作历史记录"

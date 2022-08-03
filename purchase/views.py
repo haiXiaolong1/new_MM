@@ -99,8 +99,6 @@ def create_qui(request):
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(),
                                      context='请于询价有效期内获取供应商报价反馈<br/>并填入系统<a class="chat_link" href="/supply/quote/list/">>></a>',
                                      read=0)
-        notify.append(dict(id=0, tittle="提示", context="询价单 {} 创建成功！".format(inid),
-                           type="success", position="top-center"))
         notify.append(dict(id=1, tittle="系统消息", context="已向 {}-{} 发送反馈信息"
                            .format(pur_jl.get_office_display(), pur_jl.username), type="info", position="top-center"))
         notify.append(dict(id=2, tittle="系统消息", context="已提示 {}-{} 询价并维护供应商报价单"
@@ -186,7 +184,7 @@ def quote_evaluateByID(request):
         # 系统自动发信
         me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
         buss = me.businessid
-        inv_yg = models.Yuangong.objects.filter(businessid=buss, isactive=1, office="3").first()
+        inv_yg = models.Yuangong.objects.filter(businessid=buss, isactive=1, office="1").first()
         pur_yg = models.Yuangong.objects.filter(businessid=buss, isactive=1, office="2").first()
         qgd = models.Caigouxuqiu.objects.filter(demandid=did).first()
         wl = qgd.maid
@@ -201,7 +199,7 @@ def quote_evaluateByID(request):
         situation += '<hr>{}({}) {}元/{} <a class="chat_status_{}">{}</a>'\
             .format(bjd.supplyid.name, bjd.supplyid_id, bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
         message.append(situation)
-        if me.issuper==0 and not me.office=="4":  #非管理员/采购经理
+        if me.issuper==0:  #非管理员
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
@@ -323,7 +321,7 @@ def purchase_createByQuote(request):
     pur_jl = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="4").first()
     message = []
     notify = []
-    message.append("【系统消息】采购订单反馈信息")
+    message.append("【系统消息】新采购订单")
     notify.append(
         dict(id=0, tittle="提示", context="采购订单 {} 创建成功！".format(puid), type="success", position="top-center"))
     message.append("引用报价单-{}<br/>创建采购订单={}<br/>发往工厂:{}({})<br/>收货截至期限：{}"
@@ -332,6 +330,11 @@ def purchase_createByQuote(request):
     if me.issuper==0 and not me.office=="4":
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
+        message[0]="【系统消息】采购订单反馈信息"
+        message[1]="已经"+message[1]
+        message=message[:-1]
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
         notify.append(dict(id=1, context="向 {}-{} 发信反馈采购订单情况".format(pur_jl.get_office_display(), pur_jl.username)
                            , tittle="系统消息", type="info", position="top-center"))
         notify.append(dict(id=2, context="向 {}-{} 发信并提追踪送货进度".format(inv_yg.get_office_display(), inv_yg.username)

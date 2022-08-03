@@ -7,11 +7,18 @@ class AuthMW(MiddlewareMixin):
 
     def process_request(self,request):
         if request.path_info == "/login/" or request.path_info == "/account/ac/password/" or \
-                request.path_info == "/account/ac/send/" or request.path_info == "/account/ac/login/"\
-                or request.path_info =="/forgot" or request.path_info == "/supply/r_password":
+                request.path_info == "/account/ac/send/" or request.path_info == "/account/ac/login/"
             return
 
+        if request.path_info == "/forgot/":
+            return
+        if request.path_info == "/supply/r_password":
+            return
+        if request.path_info == "/initial/":
+            return
+        if request.path_info == "/guide/":
+            return
         if not request.session.get("info"):
-            return redirect('/login/')
+            return redirect('/initial/')
 
         return
