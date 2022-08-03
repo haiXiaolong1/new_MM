@@ -203,8 +203,12 @@ def set_message_detail(request):
 def send_test_message(request):
     me = request.GET.get("meid")
     gj = models.Yuangong.objects.filter().exclude(id=me)
+    div='<div><form>{}{}</form></div>'
+    input='<input class="copyInput" value="{}"></input>'
+    but='<button class="copyButton"><i class="fa fa-clone" aria-hidden="true"></i></button>'
+    html=div.format(input,but)
     for gjr in gj:
-        models.Xiaoxi.objects.create(fromId_id=gjr.id, toId_id=me, context="骚扰" + str(random.randint(1, 20)),
+        models.Xiaoxi.objects.create(fromId_id=gjr.id, toId_id=me, context=html.format(str(random.randint(1, 20))),
                                      time=datetime.now(), read=0)
     return JsonResponse({"status": True})
 

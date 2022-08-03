@@ -693,6 +693,13 @@
                 sendMessage();
             })
 
+            // 复制单号功能
+            $("#chat-right-sidebar").on('click', '.copyButton', function () {
+                $(this).prev().select(); // 选择对象
+                document.execCommand("Copy");
+                return;
+            })
+
         });
 
     </script>
