@@ -212,6 +212,13 @@ def send_test_message(request):
                                      time=datetime.now(), read=0)
     return JsonResponse({"status": True})
 
+def set_copy_message(s):
+    div = '<div>{}{}</div>'
+    input = '<input class="copyInput" readonly value="{}"></input>'
+    but = '<button class="copyButton"><i class="fa fa-clone" aria-hidden="true"></i></button>'
+    html = div.format(input, but)
+    return html.format(s)
+
 def send_message(request):
     me = request.GET.get("meid")
     them = request.GET.get("yid")
@@ -552,13 +559,13 @@ def quote_add(request):
         notify.append(dict(id=1, tittle="系统消息", context="向 【{}】{} 发信反馈已报价".format(yg.get_office_display(),yg.username), type="info", position="top-center"))
         notify.append(dict(id=2, tittle="系统消息", context="已提示 【{}】{} 前往评估报价单".format(jl.get_office_display(),jl.username), type="info", position="top-center"))
         message.append("【系统消息】报价反馈信息")
-        message.append("询价单-{} 已收到报价<br/>报价单号-{}".format(xjd.inquiryid, qid))
+        message.append("询价单 {} 已收到报价<br/>报价单号 {}".format(set_copy_message(xjd.inquiryid), set_copy_message(qid)))
         if me.issuper==0:
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
             message[0]="【系统消息】收到新报价单"
             message[1] = '供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>'\
-                .format(gys.name,gys.id,xjd.inquiryid,qid,qgd.price,wl.calcutype,quote,wl.calcutype)
+                .format(gys.name,gys.id,set_copy_message(xjd.inquiryid),set_copy_message(qid),qgd.price,wl.calcutype,quote,wl.calcutype)
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
         else:

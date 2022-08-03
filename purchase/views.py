@@ -5,6 +5,7 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from supply import models
+from supply.views import set_copy_message
 
 
 # 创建询价单
@@ -85,7 +86,7 @@ def create_qui(request):
                        type="success", position="top-center"))
     message.append("【系统消息】询价反馈信息")
     message.append("向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
-                   .format(gys.name, gys.id, qgd.demandid, inid))
+                   .format(gys.name, gys.id, set_copy_message(qgd.demandid), set_copy_message(inid)))
     message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
                    .format(wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype,
                            datetime.strptime(date, '%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
@@ -121,7 +122,7 @@ def create_qui(request):
         if not me.issuper == 1:
             next = models.Yuangong.objects.filter(businessid=me.businessid, office="1").first()
         message.append("【{}】{}<br/>向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
-                       .format(me.get_office_display(), me.username, gys.name, gys.id, qgd.demandid, inid))
+                       .format(me.get_office_display(), me.username, gys.name, gys.id, set_copy_message(qgd.demandid), set_copy_message(inid)))
         message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
                        .format(wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype,
                                datetime.strptime(date, '%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
@@ -192,8 +193,8 @@ def quote_evaluateByID(request):
         wl = qgd.maid
         message = []
         message.append("【系统消息】报价评估反馈信息")
-        message.append("询价单-{}<br/>询价物料:{}({})<br/>询价数量:{}  预期报价:{}元/{}"
-                       .format(bjd.inquiryid_id, wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
+        message.append("询价单 {}<br/>询价物料:{}({})<br/>询价数量:{}  预期报价:{}元/{}"
+                       .format(set_copy_message(bjd.inquiryid_id), wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
         situation = "报价评估情况:"
         for bj in c:
             situation += '<br/>{}({}) {}元/{} <a class="chat_status_{}">{}</a>'\
@@ -328,8 +329,8 @@ def purchase_createByQuote(request):
     message.append("【系统消息】新采购订单")
     notify.append(
         dict(id=0, tittle="提示", context="采购订单 {} 创建成功！".format(puid), type="success", position="top-center"))
-    message.append("引用报价单-{}<br/>创建采购订单={}<br/>发往工厂:{}({})<br/>收货截至期限：{}"
-                   .format(quid,puid,ff.type,ff.address,datetime.strptime(deadline,"%Y-%m-%d").strftime("%Y{}%m{}%d{}").format("年","月","日")))
+    message.append("引用报价单 {}<br/>创建采购订单 {}<br/>发往工厂:{}({})<br/>收货截至期限：{}"
+                   .format(set_copy_message(quid),set_copy_message(puid),ff.type,ff.address,datetime.strptime(deadline,"%Y-%m-%d").strftime("%Y{}%m{}%d{}").format("年","月","日")))
     message.append('请在追踪供应商送货进度<br/>在截止期限前将货物暂存<a class="chat_link" href="/inventory/temp/">>></a>')
     if me.issuper==0 and not me.office=="4":
         for m in message:
