@@ -12,4 +12,5 @@ urlpatterns = [
     path('ac/login/',views.ac_login),
     path('ac/r_massage/',views.r_massage),
     path('ac/r_password/',views.r_password),
+
 ]
