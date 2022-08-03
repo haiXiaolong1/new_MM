@@ -203,8 +203,8 @@ def set_message_detail(request):
 def send_test_message(request):
     me = request.GET.get("meid")
     gj = models.Yuangong.objects.filter().exclude(id=me)
-    div='<div><form>{}{}</form></div>'
-    input='<input class="copyInput" value="{}"></input>'
+    div='<div>{}{}</div>'
+    input='<input class="copyInput" readonly value="{}"></input>'
     but='<button class="copyButton"><i class="fa fa-clone" aria-hidden="true"></i></button>'
     html=div.format(input,but)
     for gjr in gj:
