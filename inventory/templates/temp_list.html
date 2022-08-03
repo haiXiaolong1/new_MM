@@ -219,12 +219,14 @@
                                 $("#formAdd")[0].reset();
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
+
+                                QUALITY_ID = undefined;
                             }
                         }
                     })
 
-                    QUALITY_ID = undefined;
                 }
                 if (QUANTITY_ID) {
                     $.ajax({
@@ -238,12 +240,14 @@
                                 $("#formAdd")[0].reset();
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
+
+                                QUANTITY_ID = undefined;
                             }
                         }
                     })
 
-                    QUANTITY_ID = undefined;
                 }
 
             })
@@ -376,6 +380,7 @@
                                 DELETE_ID = undefined;
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             }
                         }

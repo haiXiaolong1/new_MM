@@ -5,6 +5,8 @@ from django.shortcuts import render, redirect
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from supply import models
+from supply.views import set_copy_message
+import re
 
 
 # 创建询价单
@@ -83,9 +85,9 @@ def create_qui(request):
     notify=[]
     notify.append(dict(id=0, tittle="提示", context="询价单 {} 创建成功！".format(inid),
                        type="success", position="top-center"))
-    message.append("【系统消息】创建询价单")
+    message.append("【系统消息】询价反馈信息")
     message.append("向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
-                   .format(gys.name, gys.id, qgd.demandid, inid))
+                   .format(gys.name, gys.id, set_copy_message(qgd.demandid), set_copy_message(inid)))
     message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
                    .format(wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype,
                            datetime.strptime(date, '%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
@@ -95,13 +97,15 @@ def create_qui(request):
         inv_yg = models.Yuangong.objects.filter(businessid_id=me.businessid_id, office="1").first()
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
+        message[0]="【系统消息】创建询价单"
+        for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(),
                                      context='请于询价有效期内获取供应商报价反馈<br/>并填入系统<a class="chat_link" href="/supply/quote/list/">>></a>',
                                      read=0)
-        notify.append(dict(id=1, tittle="系统消息", context="已向 {}-{} 发送反馈信息"
+        notify.append(dict(id=1, tittle="系统消息", context="已向 【{}】{} 发送反馈信息"
                            .format(pur_jl.get_office_display(), pur_jl.username), type="info", position="top-center"))
-        notify.append(dict(id=2, tittle="系统消息", context="已提示 {}-{} 询价并维护供应商报价单"
+        notify.append(dict(id=2, tittle="系统消息", context="已提示 【{}】{} 询价并维护供应商报价单"
                            .format(inv_yg.get_office_display(), inv_yg.username), type="info", position="top-center"))
     else:  #管理员情况
         message[0]="【系统消息】操作历史记录"
@@ -119,7 +123,7 @@ def create_qui(request):
         if not me.issuper == 1:
             next = models.Yuangong.objects.filter(businessid=me.businessid, office="1").first()
         message.append("【{}】{}<br/>向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
-                       .format(me.get_office_display(), me.username, gys.name, gys.id, qgd.demandid, inid))
+                       .format(me.get_office_display(), me.username, gys.name, gys.id, set_copy_message(qgd.demandid), set_copy_message(inid)))
         message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
                        .format(wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype,
                                datetime.strptime(date, '%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
@@ -132,7 +136,7 @@ def create_qui(request):
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m, read=0)
         notify.append(dict(id=len(notify), tittle="系统消息",
-                           context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                           context="操作历史已抄送至 【{}】{}".format(toid.get_office_display(), toid.username),
                            type="info", position="top-center"))
     request.session["notify"] = notify
 
@@ -189,19 +193,21 @@ def quote_evaluateByID(request):
         qgd = models.Caigouxuqiu.objects.filter(demandid=did).first()
         wl = qgd.maid
         message = []
-        message.append("【系统消息】报价反馈信息")
-        message.append("询价单-{}<br/>询价物料:{}({})<br/>询价数量:{}  预期报价:{}元/{}"
-                       .format(bjd.inquiryid_id, wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
+        message.append("【系统消息】报价评估反馈信息")
+        message.append("询价单 {}<br/>询价物料:{}({})<br/>询价数量:{}  预期报价:{}元/{}"
+                       .format(set_copy_message(bjd.inquiryid_id), wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
         situation = "报价评估情况:"
         for bj in c:
-            situation += '<br/>{}({}) {}元/{} <a class="chat_status_{}">{}</a>'\
-                .format(bj.supplyid.name, bj.supplyid_id, bj.quote, wl.calcutype,bj.isreceived,bj.get_isreceived_display())
-        situation += '<hr>{}({}) {}元/{} <a class="chat_status_{}">{}</a>'\
-            .format(bjd.supplyid.name, bjd.supplyid_id, bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
+            situation += '<br/>{}{}{}元/{} <a class="chat_status_{}">{}</a>'\
+                .format(bj.supplyid.name, set_copy_message(bj.supplyid_id), bj.quote, wl.calcutype,bj.isreceived,bj.get_isreceived_display())
+        situation += '<hr>{}{}{}元/{} <a class="chat_status_{}">{}</a>'\
+            .format(bjd.supplyid.name, set_copy_message(bjd.supplyid_id), bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
         message.append(situation)
         if me.issuper==0:  #非管理员
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
+            message[0]="【系统消息】收到新报价评估"
+            for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(),
                                          context='请在报价有效期({}) 内创建采购订单<a class="chat_link" href="/purchase/list/">>></a>'
@@ -209,10 +215,10 @@ def quote_evaluateByID(request):
                                              bjd.inquiryid.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
                                                                                                               "日")),
                                          read=0)
-            notify.append(dict(id=1, context="向 {}-{} 发信反馈报价评估情况".format(inv_yg.get_office_display(), inv_yg.username)
+            notify.append(dict(id=1, context="向 【{}】{} 发信反馈报价评估情况".format(inv_yg.get_office_display(), inv_yg.username)
                                , tittle="系统消息", type="info", position="top-center"))
             notify.append(
-                dict(id=2, context="向 {}-{} 发信报价评估情况，并提示创建采购订单".format(pur_yg.get_office_display(), pur_yg.username)
+                dict(id=2, context="向 【{}】{} 发信报价评估情况，并提示创建采购订单".format(pur_yg.get_office_display(), pur_yg.username)
                      , tittle="系统消息", type="info", position="top-center"))
         else:
             message[0]="【系统消息】操作历史记录"
@@ -239,7 +245,7 @@ def quote_evaluateByID(request):
                 models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m,
                                              read=0)
             notify.append(dict(id=len(notify), tittle="系统消息",
-                               context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                               context="操作历史已抄送至 【{}】{}".format(toid.get_office_display(), toid.username),
                                type="info", position="top-center"))
     request.session["notify"] = notify
     return JsonResponse({"status": True,"state":state_dict[int(isrece)]})
@@ -324,20 +330,19 @@ def purchase_createByQuote(request):
     message.append("【系统消息】新采购订单")
     notify.append(
         dict(id=0, tittle="提示", context="采购订单 {} 创建成功！".format(puid), type="success", position="top-center"))
-    message.append("引用报价单-{}<br/>创建采购订单={}<br/>发往工厂:{}({})<br/>收货截至期限：{}"
-                   .format(quid,puid,ff.type,ff.address,datetime.strptime(deadline,"%Y-%m-%d").strftime("%Y{}%m{}%d{}").format("年","月","日")))
+    message.append("引用报价单 {}<br/>创建采购订单 {}<br/>发往工厂:{}({})<br/>收货截至期限：{}"
+                   .format(set_copy_message(quid),set_copy_message(puid),ff.type,ff.address,datetime.strptime(deadline,"%Y-%m-%d").strftime("%Y{}%m{}%d{}").format("年","月","日")))
     message.append('请在追踪供应商送货进度<br/>在截止期限前将货物暂存<a class="chat_link" href="/inventory/temp/">>></a>')
     if me.issuper==0 and not me.office=="4":
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
         message[0]="【系统消息】采购订单反馈信息"
-        message[1]="已经"+message[1]
         message=message[:-1]
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
-        notify.append(dict(id=1, context="向 {}-{} 发信反馈采购订单情况".format(pur_jl.get_office_display(), pur_jl.username)
+        notify.append(dict(id=1, context="向 【{}】{} 发信反馈采购订单情况".format(pur_jl.get_office_display(), pur_jl.username)
                            , tittle="系统消息", type="info", position="top-center"))
-        notify.append(dict(id=2, context="向 {}-{} 发信并提追踪送货进度".format(inv_yg.get_office_display(), inv_yg.username)
+        notify.append(dict(id=2, context="向 【{}】{} 发信并提追踪送货进度".format(inv_yg.get_office_display(), inv_yg.username)
                            , tittle="系统消息", type="info", position="top-center"))
     else:
         message[0] = "【系统消息】操作历史记录"
@@ -348,6 +353,7 @@ def purchase_createByQuote(request):
         notify = notify[:1]
         notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
     if request.session['produceActive']:
+        message[0] = "【系统消息】创建采购订单"
         message[1] = '【{}】{}<br/>'.format(me.get_office_display(), me.username) + message[1]
         next = me
         if me.issuper == 0:
@@ -361,7 +367,7 @@ def purchase_createByQuote(request):
             models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m,
                                          read=0)
         notify.append(dict(id=len(notify), tittle="系统消息",
-                           context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                           context="操作历史已抄送至 【{}】{}".format(toid.get_office_display(), toid.username),
                            type="info", position="top-center"))
     request.session["notify"] = notify
     return JsonResponse({"status": True, "pid": puid})

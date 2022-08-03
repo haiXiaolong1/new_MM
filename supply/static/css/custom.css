@@ -277,3 +277,20 @@
     float: right;
     margin-right: 2%;
 }
+
+.copyButton{
+    border: 0;
+    border-radius: 20%;
+    color: gray;
+    height: 20px;
+}
+
+.copyInput{
+    background-color: #00000000;
+    border: 0;
+    width: 80px;
+}
+
+.copyDiv{
+    display: inline-block;
+}

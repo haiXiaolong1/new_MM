@@ -231,6 +231,7 @@
                                 $("#myd").modal('hide');
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             }else {
                                 var ids = ["#name_error", "#password_error","#email_error","#bid_error"];
@@ -256,6 +257,7 @@
                                 EDIT_ID = undefined;
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             }else {
                                 var ids = ["#name_error", "#password_error","#email_error","#bid_error"];
@@ -295,6 +297,7 @@
                                 DELETE_ID = undefined;
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             } else {
                                 {#员工禁用就行了，没必要删除#}
@@ -302,6 +305,7 @@
                                 DELETE_ID = undefined;
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             }
                         }
