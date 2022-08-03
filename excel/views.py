@@ -85,6 +85,8 @@ def new_excel(request):
 
     return res
 
+from supply import models
+from django.db import connection
 class TestDjangoExcelDownload_ac(View):
 
     def get(self, request):
@@ -109,6 +111,12 @@ class TestDjangoExcelDownload_ac(View):
 
         x_io = BytesIO()
         work_book = xlsxwriter.Workbook(x_io)
+        cen_format = work_book.add_format({'align':'center'})
+        merge_format = work_book.add_format({
+            'bold': True,
+            'align': 'center',  # 水平居中
+            'valign': 'vcenter',  # 垂直居中
+        })
         work_sheet = work_book.add_worksheet(name)
         work_sheet.write(0, 0, "姓名")
         work_sheet.write(0, 1, "登录密码")
@@ -117,8 +125,37 @@ class TestDjangoExcelDownload_ac(View):
         work_sheet.write(0, 4, "是否激活")
         work_sheet.write(0, 5, "公司编号")
 
-        work_sheet.data_validation("D2:D10", {'validate': 'list', 'source': office})
-        work_sheet.data_validation("E2:E10", {'validate': 'list', 'source': [0,1]})
+
+        work_sheet.merge_range('J1:K1', '职位录入参考', merge_format)
+
+        for i in range(len(office)):
+            work_sheet.write(i+1, 9, i,cen_format)
+            work_sheet.write(i+1, 10, office[i],cen_format)
+
+        yu = models.Gongsi.objects.all().values("name", "myid")
+        #print(yu)
+
+
+        work_sheet.merge_range('J10:K10', '公司-编号参考', merge_format)
+
+
+        for i in range(len(yu)):
+            work_sheet.write(i + 11, 9, yu[i]['myid'], cen_format)
+            work_sheet.write(i + 11, 10, yu[i]['name'], cen_format)
+
+        work_sheet.set_column('J1:K1', 15)
+        '''
+        cursor = connection.cursor()
+        query_recreation = 'insert  into  yuangong values(id,office,username,password,isactive,issuper,)'
+        cursor.execute(query_recreation)
+        '''
+
+
+
+
+        #work_sheet.data_validation("D2:D10", {'validate': 'list', 'source': office})
+        #work_sheet.data_validation("E2:E10", {'validate': 'list', 'source': [0,1]})
+
         work_book.close()
         res = HttpResponse()
         res["Content-Type"] = "application/octet-stream"
