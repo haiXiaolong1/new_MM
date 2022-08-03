@@ -24,12 +24,15 @@ def ac_add(request):
     toCheck = [o['username'], o['password'],o['email'],bid]
     types = ['nan', 'nan','nan','nan']
     res = form_check(toCheck, types)
+    notify=[]
     if not validateEmail(o['email']):
         res["error"][2]="请输入正确的邮箱"
         res["status"]=False
     if res["status"]:
         models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password'],email=o['email']
                                         ,id=sid,isactive=isactive,issuper=issuper,businessid_id=bid)
+        notify.append(dict(id=0, tittle="提示", context="员工 {} 创建成功".format(sid), type="success", position="top-center"))
+        request.session["notify"] = notify
     return JsonResponse(res)
 # 编辑用户时返回用户原始数据
 def ac_detail(request):
@@ -37,12 +40,14 @@ def ac_detail(request):
     ac=models.Yuangong.objects.filter(id=id).values("office",'password','username',"email","isactive","issuper","businessid_id").first()
     if not ac:
         return JsonResponse({"status":False,"error":"数据不存在"})
+
     return JsonResponse({"account":ac,"status":True})
 
 # 保存编辑用户的最新数据
 def ac_edit(request):
     id=request.GET.get("uid")
     o=request.POST
+    notify=[]
     isactive = o['isactive']
     issuper = 0
     bid=o["businessid_id"]
@@ -55,19 +60,27 @@ def ac_edit(request):
     if res["status"]:
         models.Yuangong.objects.filter(id=id).update(office=o['office'],username=o['username'],password=o['password'],email=o['email']
                                                  ,isactive=isactive,issuper=issuper,businessid=o['businessid_id'])
-
+        notify.append(dict(id=0, tittle="提示", context="员工 {} 编辑成功".format(id), type="success", position="top-center"))
+        request.session["notify"] = notify
     return JsonResponse(res)
 
 # 删除用户
 @csrf_exempt
 def ac_delete(request):
     id=request.POST.get("uid")
+    notify=[]
     gc=models.Gongyingshang.objects.filter(createnumberid_id=id).first()
     gu=models.Gongyingshang.objects.filter(updatenumberid_id=id).first()
     cc=models.Caigouxuqiu.objects.filter(createuserid_id=id).first()
     cu=models.Caigouxuqiu.objects.filter(verifyuserid_id=id).first()
-    if gc or gu or cc or cu :
+    xj=models.Xunjiadan.objects.filter(createuserid_id=id).first()
+    cg=models.Caigoudan.objects.filter(createuserid_id=id).first()
+    if gc or gu or cc or cu or xj or cg:
+        notify.append(dict(id=0, tittle="提示", context="员工 {} 有关联的供应商或待处理订单，不能删除".format(id), type="error", position="top-center"))
+        request.session["notify"] = notify
         return JsonResponse({"status":False})
+    notify.append(dict(id=0, tittle="提示", context="员工 {} 删除成功".format(id), type="success", position="top-center"))
+    request.session["notify"] = notify
     models.Yuangong.objects.filter(id=id).delete()
     return JsonResponse({"status":True})
 
