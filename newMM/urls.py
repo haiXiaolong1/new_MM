@@ -24,4 +24,6 @@ urlpatterns = [
     path('inventory/',include('inventory.urls')),
     path('account/',include('account.urls')),
     path('excel/',include('excel.urls')),
+    path('initial/',views.initial),
+    path('guide/',views.guide),
 ]
