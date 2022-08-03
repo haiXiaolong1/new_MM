@@ -109,17 +109,6 @@
 
             $('#printBtn').click(function () {
                 if (confirm("您确认下载该PDF文件吗?")) {
-                    {#var pdf = new jsPDF('p','pt','a4');#}
-                    {#// 设置打印比例 越大打印越小#}
-                    {#pdf.internal.scaleFactor = 1;#}
-                    {#var options = {#}
-                    {#    pagesplit: true, //设置是否自动分页#}
-                    {#    "background": '#FFFFFF'   //如果导出的pdf为黑色背景，需要将导出的html模块内容背景 设置成白色。#}
-                    {# };#}
-                    {#var printHtml = $('#invoicePdf').get(0);   // 页面某一个div里面的内容，通过id获取div内容#}
-                    {#pdf.addHTML(printHtml,15, 15, options,function() {#}
-                    {#    pdf.save('目标.pdf');#}
-                    {# });#}
                     let bdhtml = window.document.body.innerHTML;
                     let sprnstr = "<!--startprint-->"; //开始打印标识字符串有17个字符
                     let eprnstr = "<!--endprint-->"; //结束打印标识字符串

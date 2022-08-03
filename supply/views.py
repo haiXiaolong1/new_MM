@@ -626,12 +626,14 @@ def mm_add(request):
     if models.Wuliao.objects.first():
         n = models.Wuliao.objects.all().order_by('-id').first().id[1:]
     sid = "m" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
-    # time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
     o = request.POST
     id = request.session["info"]['id']
+    notify=[]
     models.Wuliao.objects.create(type=o['type'], salegroup=o['salegroup'], saleway=o['saleway']
                                  , id=sid, calcutype=o['calcutype'], desc=o['desc'])
-
+    notify.append(dict(id=0, tittle="提示", context="物料 {} 创建成功".format(sid), type="success", position="top-center"))
+    request.session["notify"] = notify
     return JsonResponse({"status": True})
 
 
@@ -648,9 +650,7 @@ def mm_detail(request):
 def mm_edit(request):
     id = request.GET.get("uid")
     uid = request.session["info"]['id']
-    # 用户ID
     o = request.POST
-    # time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
     models.Wuliao.objects.filter(id=id).update(type=o['type'], salegroup=o['salegroup'], saleway=o['saleway']
                                                , calcutype=o['calcutype'], desc=o['desc'])
@@ -661,13 +661,12 @@ def mm_edit(request):
 # 删除物料
 def mm_delete(request):
     id = request.POST.get("uid")
-    '''
-    s=models.Wuliao.objects.filter(supplyid_id=id).first()
-    # 先判断是否有关联关系，如果有则不能删除，目前没有
-    if s:
-        return JsonResponse({"status":False})
-    '''
-    print(id)
+    notify=[]
+    if  models.Gongyingguanxi.objects.filter(materialid_id=id):
+        notify.append(dict(id=0, tittle="提示", context="物料 {} 不能删除".format(id), type="error", position="top-center"))
+        request.session["notify"] = notify
+    return JsonResponse({"status": False})
+
     models.Wuliao.objects.filter(id=id).delete()
     return JsonResponse({"status": True})
 
