@@ -99,8 +99,6 @@ def create_qui(request):
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(),
                                      context='请于询价有效期内获取供应商报价反馈<br/>并填入系统<a class="chat_link" href="/supply/quote/list/">>></a>',
                                      read=0)
-        notify.append(dict(id=0, tittle="提示", context="询价单 {} 创建成功！".format(inid),
-                           type="success", position="top-center"))
         notify.append(dict(id=1, tittle="系统消息", context="已向 {}-{} 发送反馈信息"
                            .format(pur_jl.get_office_display(), pur_jl.username), type="info", position="top-center"))
         notify.append(dict(id=2, tittle="系统消息", context="已提示 {}-{} 询价并维护供应商报价单"
