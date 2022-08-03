@@ -202,6 +202,7 @@
                                     $("#myd").modal('hide');
                                     sessionStorage.setItem("page",PAGE);
                                     sessionStorage.setItem("length",LENGTH);
+                                    sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                     location.reload();
                                 }
                             }
@@ -228,6 +229,7 @@
                                     $("#formAdd")[0].reset();
                                     sessionStorage.setItem("page",PAGE);
                                     sessionStorage.setItem("length",LENGTH);
+                                    sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                     location.reload();
                                 }
                             }
@@ -261,12 +263,14 @@
                                 DELETE_ID = undefined;
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             } else {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 location.reload();
                             }
                         }
