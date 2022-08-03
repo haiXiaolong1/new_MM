@@ -202,7 +202,7 @@
                 "iDisplayStart" :page,  //用于指定从哪一条数据开始显示到表格中去 num为20的时候，第一页是0，第二页是20.....
                 "iDisplayLength" :length,
             });
-            $('#example1_filter input').val(search).trigger($.Event("keyup", { keyCode: 13 }));;
+            $('#example1_filter input').val(search).trigger($.Event("keyup", { keyCode: 13 }));
 
             $('li').removeClass('active-page');
             $('#supply3').addClass('active-page');

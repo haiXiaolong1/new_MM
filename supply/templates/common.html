@@ -425,6 +425,8 @@
             notify();
             var page=sessionStorage.getItem("page");
             var length=sessionStorage.getItem("length");
+            var search=sessionStorage.getItem("search");
+            sessionStorage.removeItem("search");
             sessionStorage.removeItem("page");
             sessionStorage.removeItem("length");
             if (!page)
@@ -458,7 +460,7 @@
                 "iDisplayStart" :page,  //用于指定从哪一条数据开始显示到表格中去 num为20的时候，第一页是0，第二页是20.....
                 "iDisplayLength" :length,
             });
-
+            $('#example_filter input').val(search).trigger($.Event("keyup", { keyCode: 13 }));
             $('.topli').click(
                 function () {
                     $('.topli').removeClass('active-page');

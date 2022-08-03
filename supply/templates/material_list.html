@@ -151,17 +151,6 @@
             $('#supply_ul li').addClass('animation');
             var oTable = $('#example').dataTable();
             var oSettings = oTable.fnSettings();
-            var showToast = localStorage.getItem("notify_show");
-            if (showToast != undefined) {
-                if (showToast) {
-                    if (showToast != "false") {
-                        $("#toast-type").text(localStorage.getItem("notify_type"));
-                        $("#toast-tittle").text(localStorage.getItem("notify_tittle"));
-                        $("#toast-context").text(localStorage.getItem("notify_context"));
-                        $("#showtoast").triggerHandler("click");
-                    }
-                }
-            }
 
             $("#btnAdd").click(function () {
                 //将正在编辑的ID置空
@@ -187,17 +176,7 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
-                                if (!res.isexist) {
-                                    localStorage.setItem("notify_show", true);
-                                    localStorage.setItem("notify_tittle", "提示");
-                                    localStorage.setItem("notify_context", "供应关系添加成功");
-                                    localStorage.setItem("notify_type", "success");
-                                } else {
-                                    localStorage.setItem("notify_show", true);
-                                    localStorage.setItem("notify_tittle", "错误");
-                                    localStorage.setItem("notify_context", "关系已存在，不能重复添加");
-                                    localStorage.setItem("notify_type", "error");
-                                }
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
                                 location.reload();
@@ -223,17 +202,7 @@
                             if (res.status) {
                                 $("#myd").modal('hide');
                                 $("#formAdd")[0].reset();
-                                if (!res.isexist) {
-                                    localStorage.setItem("notify_show", true);
-                                    localStorage.setItem("notify_tittle", "提示");
-                                    localStorage.setItem("notify_context", "修改保存成功");
-                                    localStorage.setItem("notify_type", "success");
-                                } else {
-                                    localStorage.setItem("notify_show", true);
-                                    localStorage.setItem("notify_tittle", "提示");
-                                    localStorage.setItem("notify_context", "关系已存在，不能重复添加");
-                                    localStorage.setItem("notify_type", "error");
-                                }
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
                                 location.reload();
@@ -275,10 +244,7 @@
                             if (res.status) {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
-                                localStorage.setItem("notify_show", true);
-                                localStorage.setItem("notify_tittle", "提示");
-                                localStorage.setItem("notify_context", "删除成功");
-                                localStorage.setItem("notify_type", "success");
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
                                 sessionStorage.setItem("page",PAGE);
                                 sessionStorage.setItem("length",LENGTH);
                                 location.reload();
