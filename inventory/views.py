@@ -134,7 +134,7 @@ def demand_add(request):
             to = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
-            notify.append(dict(id=1,tittle="系统消息", context="已向{}发送采购需求审核申请".format(to.username),
+            notify.append(dict(id=1,tittle="系统消息", context="已向【{}】{}发送采购需求审核申请".format(to.get_office_display(),to.username),
                                type="info", position="top-center"))
         else:
             message.append("【系统消息】操作历史记录")
@@ -152,15 +152,15 @@ def demand_add(request):
             if not me.issuper==1:
                 next=models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             message.append(
-                '【{}】{}<br/>创建待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
+                '【{}】{}<br/>创建待审核采购需求：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
                 '下一步操作人:【{}】{}<br/>'
                 '下一步骤:审核采购需求<a class="chat_link" href="/inventory/demand/n/">>></a><br/>'
-                .format(me.get_office_display(),me.username,wl.desc, wl.id, r['tcount'], r['price'], wl.calcutype,next.get_office_display(),next.username))
+                .format(me.get_office_display(),me.username,did,wl.desc, wl.id, r['tcount'], r['price'], wl.calcutype,next.get_office_display(),next.username))
             fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
             toid=models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m, read=0)
-            notify.append(dict(id=len(notify), tittle="系统消息", context="操作历史已抄送至 {}-{}".format(toid.get_office_display(),toid.username),
+            notify.append(dict(id=len(notify), tittle="系统消息", context="操作历史已抄送至 【{}】{}".format(toid.get_office_display(),toid.username),
                                type="info", position="top-center"))
         request.session["notify"]=notify
     return JsonResponse({"status": returnStatus, "error": errors})
@@ -183,9 +183,9 @@ def demand_verify(request):
     cgxq = cgd.first()
     wl = models.Wuliao.objects.filter(id=cgxq.maid_id).first()
     if me.office != "0" and me.isactive == 1 and me.issuper == 0:
-        message.append("【系统消息】")
-        message.append("采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"
-                       .format(did,wl.desc,wl.id,cgxq.tcount,cgxq.price,wl.calcutype))
+        message.append("【系统消息】审核反馈")
+        message.append("采购需求单{}<br/>已审核通过"
+                       .format(did))
         to = models.Yuangong.objects.filter(id=cgxq.createuserid_id).first()
         if me.id!=to.id:
             for m in message:
@@ -196,10 +196,10 @@ def demand_verify(request):
         pur_yg = models.Yuangong.objects.filter(businessid=me.businessid,isactive=1,office="2").first()
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
-        notify.append(dict(id=1, tittle="系统消息", context="已向 {}-{} 发送采购需求审核回执"
+        notify.append(dict(id=1, tittle="系统消息", context="已向 【{}】{} 发送采购需求审核回执"
                            .format(to.get_office_display(), to.username),
                  type="info", position="top-center"))
-        notify.append(dict(id=2, tittle="系统消息", context="已向 {}-{} 发送询价单创建提示"
+        notify.append(dict(id=2, tittle="系统消息", context="已向 【{}】{} 发送询价单创建提示"
                            .format(pur_yg.get_office_display(), pur_yg.username),
                  type="info", position="top-center"))
     else:
@@ -218,17 +218,17 @@ def demand_verify(request):
         if not me.issuper == 1:
             next = models.Yuangong.objects.filter(businessid=me.businessid, office="2").first()
         message.append(
-            '【{}】{}<br/>审核采购需求单<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
+            '【{}】{}<br/>审核采购需求单:{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
             '下一步操作人:【{}】{}<br/>'
             '下一步骤:引用采购需求，创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a><br/>'
-            .format(me.get_office_display(), me.username, wl.desc, wl.id, cgxq.tcount, cgxq.price, wl.calcutype,
+            .format(me.get_office_display(), me.username, cgxq.demandid, wl.desc, wl.id, cgxq.tcount, cgxq.price, wl.calcutype,
                     next.get_office_display(), next.username))
         fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
         toid = models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m, read=0)
         notify.append(dict(id=len(notify), tittle="系统消息",
-                           context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                           context="操作历史已抄送至 【{}】{}".format(toid.get_office_display(), toid.username),
                            type="info", position="top-center"))
     request.session["notify"] = notify
     return JsonResponse({"status": True})
@@ -318,11 +318,11 @@ def ischeck(request, pid, notify):
         wl=cgd.maid
         jl=models.Yuangong.objects.filter(businessid=me.businessid,isactive=1,office="5").first()
         notify.append(dict(id=1, tittle="提示", context="暂存单 {} 通过【质检】及【量检】".format(zcd.temid), type="success", position="top-center"))
-        notify.append(dict(id=2, tittle="系统消息", context="向 {}-{} 发信反馈暂存单检查完成".format(yg.get_office_display(), yg.username),
+        notify.append(dict(id=2, tittle="系统消息", context="向 【{}】{} 发信反馈暂存单检查完成".format(yg.get_office_display(), yg.username),
                            type="info", position="top-center"))
-        notify.append(dict(id=3, tittle="系统消息", context="已提示 {}-{} 前往创建入库单".format(jl.get_office_display(), jl.username),type="info", position="top-center"))
+        notify.append(dict(id=3, tittle="系统消息", context="已提示 【{}】{} 前往创建入库单".format(jl.get_office_display(), jl.username),type="info", position="top-center"))
         message = []
-        message.append("【系统消息】暂存单通过检查")
+        message.append("【系统消息】暂存单反馈信息")
         message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购订单:{}<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
                        .format(gys.name,gys.id,fac.type,fac.address,cgd.purchaseid,wl.desc,wl.id,cgd.tcount,wl.calcutype,cgd.price,wl.calcutype))
         mes="<br/>"+zcd.moreinfo
@@ -332,6 +332,7 @@ def ischeck(request, pid, notify):
         if me.issuper==0 and not me.office=="5":
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
+            message[0]="【系统消息】暂存单通过检查，等待入库"
             message.append('请核验物料入库数量并创建入库单<a class="chat_link" href="/inventory/receive/">>></a>'.format())
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
@@ -344,12 +345,13 @@ def ischeck(request, pid, notify):
             notify=notify[:2]
             notify.append(dict(id=len(notify), tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
         if request.session["produceActive"]:
-            message[1] = '【{}】{}完成暂存物料检查<br/>'.format(me.get_office_display(), me.username) + message[1]
+            message[1] = '【{}】{}<br/>完成暂存物料检查<br/>'.format(me.get_office_display(), me.username) + message[1]
             next = me
             if me.issuper == 0:
-                next = models.Yuangong.objects.filter(businessid=me.businessid, office="3").first()
+                next = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
+            message=message[:-1]
             message.append('下一步操作人:【{}】{}<br/>'
-                           '下一步骤:验物料入库数量并创建入库单<a class="chat_link" href="/inventory/receive/">>></a>'
+                           '下一步骤:核验物料入库数量并创建入库单<a class="chat_link" href="/inventory/receive/">>></a>'
                            .format(next.get_office_display(), next.username))
             fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
             toid = models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
@@ -357,7 +359,7 @@ def ischeck(request, pid, notify):
                 models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m,
                                              read=0)
             notify.append(dict(id=len(notify), tittle="系统消息",
-                               context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                               context="操作历史已抄送至 【{}】{}".format(toid.get_office_display(), toid.username),
                                type="info", position="top-center"))
     return notify
 
@@ -456,9 +458,9 @@ def receive_add(request):
     fac = cgd.facid
     wl = cgd.maid
     notify.append(dict(id=0, tittle="提示", context="入库单 {} 创建成功".format(zcd.temid), type="success", position="top-center"))
-    notify.append(dict(id=1, tittle="系统消息", context="向 {}-{} 发信反馈入库完成".format(yg.get_office_display(), yg.username),
+    notify.append(dict(id=1, tittle="系统消息", context="向 【{}】{} 发信反馈入库完成".format(yg.get_office_display(), yg.username),
                        type="info", position="top-center"))
-    notify.append(dict(id=2, tittle="系统消息", context="向 {}-{} 发信反馈物料需求入库完成".format(jl.get_office_display(), jl.username),
+    notify.append(dict(id=2, tittle="系统消息", context="向 【{}】{} 发信反馈物料需求入库完成".format(jl.get_office_display(), jl.username),
                        type="info",position="top-center"))
     message = []
     message.append("【系统消息】物料需求成功入库")
@@ -487,6 +489,7 @@ def receive_add(request):
         notify = notify[:1]
         notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
     if request.session['produceActive']:
+        message[0] = "【系统消息】采购订单入库"
         message[1] = '【{}】{}<br/>'.format(me.get_office_display(), me.username) + message[1]
         next = me
         if me.issuper == 0:
@@ -500,7 +503,7 @@ def receive_add(request):
             models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=toid.id, time=datetime.now(), context=m,
                                          read=0)
         notify.append(dict(id=len(notify), tittle="系统消息",
-                           context="操作历史已抄送至 {}-{}".format(toid.get_office_display(), toid.username),
+                           context="操作历史已抄送至 【{}】{}".format(toid.get_office_display(), toid.username),
                            type="info", position="top-center"))
     request.session["notify"] = notify
 
