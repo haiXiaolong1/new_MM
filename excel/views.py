@@ -144,14 +144,6 @@ class TestDjangoExcelDownload_ac(View):
             work_sheet.write(i + 11, 10, yu[i]['name'], cen_format)
 
         work_sheet.set_column('J1:K1', 15)
-        '''
-        cursor = connection.cursor()
-        query_recreation = 'insert  into  yuangong values(id,office,username,password,isactive,issuper,)'
-        cursor.execute(query_recreation)
-        '''
-
-
-
 
         #work_sheet.data_validation("D2:D10", {'validate': 'list', 'source': office})
         #work_sheet.data_validation("E2:E10", {'validate': 'list', 'source': [0,1]})
@@ -163,3 +155,53 @@ class TestDjangoExcelDownload_ac(View):
         res.write(x_io.getvalue())
 
         return res
+
+class TestDjangoExcelUpload_ac(View):
+    def get(self, request):
+        form = UploadFileForm()
+        return render(request, 'upload_form.html', context={'form': form})
+
+    def post(self, request):
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            filehandle = request.FILES['file']
+            sheet = filehandle.get_sheet()  # 对准
+            print(sheet.to_array())
+            data = sheet.to_array()
+
+            da = data[1:]
+            for ea in da:
+                if ea[5] != "":
+                    add_account_axu(ea[:6],request)
+
+            #return HttpResponse(data)
+            return redirect("/account/ac/list/")
+        else:
+            return HttpResponse("出错了")
+
+
+def add_account_axu(data_each,request):
+    n = 1000
+    if models.Yuangong.objects.first():
+        n = models.Yuangong.objects.all().order_by('-id').first().id[1:]
+    long = 4
+    tcc = str(int(n) + 1)
+    adt=4-len(tcc)
+    sid = "e" + adt*'0'+str(tcc)  # 编号递增，这样计算避免删除后出现错误
+
+
+    named=data_each[0]
+    passworded=data_each[1]
+    emailed=data_each[2]
+    officed=data_each[3]
+    actived=data_each[4]
+    bussinessd=data_each[5]
+
+
+    cursor = connection.cursor()
+    query_recreation = 'insert  into  yuangong(id,password,email,office,username,isactive,businessid_id)' \
+                       "  values('"+str(sid)+"','"+str(passworded)+"','"+str(emailed)  \
+                       +"','"+str(officed)+"','"+str(named) +"','"+str(actived) +"','"+str(bussinessd)+"')"
+    cursor.execute(query_recreation)
+
+

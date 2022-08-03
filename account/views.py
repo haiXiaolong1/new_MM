@@ -233,3 +233,8 @@ def r_password(request):
         else:
             messages.success(request, "原密码错误！", locals())
             return redirect('/account/ac/r_password/')
+
+def ac_excel(request):
+    if request.method == "GET":
+        return render(request, 'accountexcel.html')
+
