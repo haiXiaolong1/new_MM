@@ -23,8 +23,8 @@
                 </div>
             </div>
             {% if progressShow %}
-            <div class="col-md-12" style="position:sticky;z-index: 42;" id="barContainer">
-                <div id="doucumentProgressBar" style="background-color: #FFFFFF;margin-top: 0" progress="{{progress}}"
+            <div class="col-md-12" style="background-color: #FFFFFF;position:sticky;z-index: 40;padding-top: 0px;padding-bottom: 10px" id="barContainer">
+                <div id="doucumentProgressBar" style="padding-top: 20px;background-color: #FFFFFF;margin-top: 0" progress="{{progress}}"
                 progress1="{{progress1}}" progress2="{{progress2}}">
                     <!-- 进度条 -->
                     <div class="progress progress-md" style="background-color: #FFFFFF;">
@@ -39,27 +39,27 @@
                         </div>
                     </div>
                     <!-- 五个圆 -->
-                    <span style="left:0%;background:#5893df"></span>
+                    <span style="left:0%;background:#5893df;margin-top: 10px"></span>
                     <span
-                        style="left:8%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;background:#5893df"></span>
+                        style="left:8%;margin-top: 15px;margin-left: -12px;width: 24px;height: 24px;background:#5893df"></span>
                     <span
-                        style="left:16%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.0}}"></span>
-                    <span style="left:25%;{{style.1}}"></span>
+                        style="left:16%;margin-top: 15px;margin-left: -12px;width: 24px;height: 24px;{{style.0}}"></span>
+                    <span style="left:25%;{{style.1}};margin-top: 10px"></span>
                     <span
-                        style="left:33%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.2}}"></span>
+                        style="left:33%;margin-top: 15px;margin-left: -12px;width: 24px;height: 24px;{{style.2}}"></span>
                     <span
-                        style="left:41%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.3}}"></span>
+                        style="left:41%;margin-top: 15px;margin-left: -12px;width: 24px;height: 24px;{{style.3}}"></span>
                     <span
-                        style="left:49%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.4}}"></span>
-                    <span style="left:58%;{{style.5}}"></span>
+                        style="left:49%;margin-top: 15px;margin-left: -12px;width: 24px;height: 24px;{{style.4}}"></span>
+                    <span style="left:58%;{{style.5}};margin-top: 10px"></span>
                     <span
-                        style="left:66%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.6}}"></span>
+                        style="left:66%;margin-top: 15px;margin-left: -12px;width: 24px;height: 24px;{{style.6}}"></span>
                     <span
-                        style="left:74%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.7}}"></span>
-                    <span style="left:83%;{{style.8}}"></span>
+                        style="left:74%;margin-top: 15px;margin-left: -12px;width: 24px;height: 24px;{{style.7}}"></span>
+                    <span style="left:83%;{{style.8}};margin-top: 10px"></span>
                     <span
-                        style="left:91%;margin-top: -5px;margin-left: -12px;width: 24px;height: 24px;{{style.9}}"></span>
-                    <span style="left:100%;{{style.10}}"></span>
+                        style="left:91%;margin-top: 15px;margin-left: -12px;width: 24px;height: 24px;{{style.9}}"></span>
+                    <span style="left:100%;{{style.10}};margin-top: 10px"></span>
                     <div id="doucumentProgressText">
                         <span style="left:0%;">物料需求</span>
                         <span style="left:25%;">创建请购单</span>
@@ -80,7 +80,7 @@
                 </div>
             </div>
             {% endif %}
-            <div class="col-md-12" id="documents" style="z-index: 1;padding-left: 30px;padding-right: 30px">
+            <div class="col-md-12" id="documents" style="z-index: 1;padding-left: 30px;padding-right: 30px;padding-top: 20px">
                 <section id="cd-timeline" class="cd-container">
                     {% for obj in list %}
                     {% if obj.id != "暂未创建" %}
