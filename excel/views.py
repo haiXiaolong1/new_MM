@@ -301,21 +301,25 @@ class TestDjangoExcelUpload_mt(View):
 
 
             flag = 1
-            q_list=1
-            for j in c:
+            q_l=[]
+            for j in range(len(c)):
                 try:
-                    models.Gongyingshang.objects.get(id=j[0])
-                    models.Wuliao.objects.get(id=j[1])
-                    q_list=q_list+1
+                    models.Gongyingshang.objects.get(id=c[j][0])
+                    models.Wuliao.objects.get(id=c[j][1])
                 except:
                     flag = 0
+                    q_l.append(j+1)
 
+            strq=""
+            for e in q_l:
+                strq=strq+str(e)+","
 
             if (flag==0):
-                print(q_list)
+                #print(q_l)
                 return render(request, 'mt_vali_list.html', {
                     'data': c,
-                    'q_ind':q_list,
+                    'q_ind':q_l,
+                    'r_ind':strq[:-1]
                 })
 
             for ea in da:
