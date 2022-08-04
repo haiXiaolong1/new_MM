@@ -299,11 +299,31 @@ class TestDjangoExcelUpload_mt(View):
                 temp.append(temp2[i])
                 c.append(temp)
 
-            print(c)
-            return render(request, 'mt_vali_list.html', {
-                'data': c,
-            })
-            #return redirect("/supply/material/list/")
+
+            flag = 1
+            q_list=1
+            for j in c:
+                try:
+                    models.Gongyingshang.objects.get(id=j[0])
+                    models.Wuliao.objects.get(id=j[1])
+                    q_list=q_list+1
+                except:
+                    flag = 0
+
+
+            if (flag==0):
+                print(q_list)
+                return render(request, 'mt_vali_list.html', {
+                    'data': c,
+                    'q_ind':q_list,
+                })
+
+            for ea in da:
+                if ea[0] != "" and ea[1] != "":
+                    add_mt_axu(ea[:2],request)
+
+
+            return redirect("/supply/material/list/")
         else:
             return HttpResponse("出错了")
 
