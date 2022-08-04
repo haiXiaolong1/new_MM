@@ -671,7 +671,7 @@
             function sendMessage() {
                 var me = $("#on-log-user").attr("yid");
                 var them = $("#chatDetailName").attr("yid");
-                var text = $("#textMessage").val().length;
+                var text = $("#textMessage").val();
                 if (text != 0) {
                     $.ajax({
                         url: "/supply/sendMessage",

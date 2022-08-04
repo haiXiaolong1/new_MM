@@ -91,11 +91,11 @@ def all_message(them='e0003', me='e0002'):
     for i in froms:
         message_flow.append(
             {"isThem": True, "time": i.time.strftime("%m{m}%d{d} %H:%M:%S").format(m="月", d="日"), "text": i.context,
-             "compare": int(i.time.strftime("%Y%m%d%H%M"))})
+             "compare": int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     for i in tos:
         message_flow.append(
             {"isThem": False, "time": i.time.strftime("%m{m}%d{d} %H:%M:%S").format(m="月", d="日"), "text": i.context,
-             "compare": int(i.time.strftime("%Y%m%d%H%M"))})
+             "compare": int(i.time.strftime("%Y%m%d%H%M%S%f"))})
     message_flow = sorted(message_flow, key=lambda a: a["compare"])
     flow = {"who": who, "flow": message_flow}
     return flow
@@ -115,7 +115,8 @@ def add_message(line):
 def group_by_time(f):
     flow = f["flow"]
     start = int(flow[0]["compare"])
-    interval = 3 #同一时间组发送时间差上限  分钟
+    print(start)
+    interval = 300000000 #同一时间组发送时间差上限  分钟|秒（2位）|毫秒（6位）
     group = 0
     groups = {0: []}
     for i in flow:
