@@ -177,10 +177,10 @@
                 length=5;
             if(page&&length){
                 length=Number(length);
-                page=Number(page);
+                page=Number(page)/length;
             }
             {#alert(length)#}
-            $('#example1').dataTable({
+            var table=$('#example1').dataTable({
                 "lengthMenu": [5, 10, 15, 20],
                 "order": [[ 1, "desc" ]],
                 "language": {
@@ -203,7 +203,7 @@
                 "iDisplayLength" :length,
             });
             $('#example1_filter input').val(search).trigger($.Event("keyup", { keyCode: 13 }));
-
+            table.fnPageChange(page);
             $('li').removeClass('active-page');
             $('#supply3').addClass('active-page');
             $('#supply').addClass('active-page').addClass('open');
