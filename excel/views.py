@@ -208,8 +208,6 @@ class TestDjangoExcelDownload_mt(View):
 
     def get(self, request):
 
-        time_used = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
         name = "mtTemp"
         ts = int(time.time())
         file_name = name + str(ts)+'.xlsx'
@@ -256,5 +254,44 @@ class TestDjangoExcelDownload_mt(View):
         res.write(x_io.getvalue())
 
         return res
+
+class TestDjangoExcelUpload_mt(View):
+
+
+    def get(self, request):
+        form = UploadFileForm()
+        return render(request, 'upload_form.html', context={'form': form})
+
+    def post(self, request):
+        form = UploadFileForm(request.POST, request.FILES)
+        if form.is_valid():
+            filehandle = request.FILES['file']
+            sheet = filehandle.get_sheet()  # 对准
+            print(sheet.to_array())
+
+            data = sheet.to_array()
+
+            da = data[1:]
+            for ea in da:
+                if ea[0] != "" and ea[1] != "":
+                    add_mt_axu(ea[:2],request)
+
+            #return HttpResponse(data)
+            return redirect("/supply/material/list/")
+        else:
+            return HttpResponse("出错了")
+
+def add_mt_axu(data_each,request):
+    uid = request.session["info"]['id']
+    td = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    gysid=data_each[0]
+    wlid=data_each[1]
+
+    cursor = connection.cursor()
+    query_recreation = 'insert  into  gongyingguanxi(createtime,updatetime,createid_id,materialid_id,supplyid_id,updateid_id)' \
+                       "  values('"+str(td)+"','"+str(td)+"','"+str(uid)  \
+                       +"','"+str(wlid)+"','"+str(gysid) +"','"+str(uid)+"')"
+    cursor.execute(query_recreation)
 
 

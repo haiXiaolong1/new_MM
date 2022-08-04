@@ -35,6 +35,7 @@ urlpatterns = [
     path('formSetup',views.form_set_byId),
 
     path('supply_excel', views.supply_excel),
+    path('mt_excel', views.mt_excel),
     path('r_password', views.r_password),
     
 ]
