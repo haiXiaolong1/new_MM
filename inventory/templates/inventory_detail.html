@@ -7,7 +7,11 @@
         </div>
         <div id="main-wrapper">
             <div class="row">
-                <div class="col-md-7" style="height: 200px">
+                {% if request.session.info.office == "6" %}
+                <div class="col-md-4" style="height: 200px">
+                {% else %}
+                <div class="col-md-6" style="height: 200px">
+                {% endif %}
                     <div class="panel panel-white">
                         <div class="panel-heading clearfix">
                             <h4 class="panel-title"><strong>物料信息</strong></h4>
@@ -20,7 +24,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-5" style="height: 200px">
+                {% if request.session.info.office == "6" %}
+                <div class="col-md-4" style="height: 200px">
+                {% else %}
+                <div class="col-md-6" style="height: 200px">
+                {% endif %}
                     <div class="panel panel-white" style="height: 177px">
                         <div class="panel-heading clearfix">
                             <h4 class="panel-title"><strong>工厂信息</strong></h4>
@@ -32,6 +40,27 @@
                         </div>
                     </div>
                 </div>
+                {% if request.session.info.office == "6" %}
+                <div class="col-md-4" style="height: 200px">
+                    <div class="panel panel-white" style="height: 177px">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title"><strong>新建物料需求</strong></h4>
+                        </div>
+                        <div class="panel-body">
+                            <span>工厂：{{ now.facid_id }} | {{ now.facid.type }} | {{ now.facid.address }}</span><br/>
+                            <span>物料：{{ now.maid_id }} | {{ now.maid.desc }} | {{ now.maid.type }}</span><br/>
+                            <div>
+                                <form style="width: 100%;display: inline-block;" id="purchase_create">
+                                    {% csrf_token %}
+                                    采购量：<input name="purchase_volume" placeholder="需求量" style="width: 30%; display: inline-block;">{{ now.maid.calcutype }}<br/>
+                                    采购单价：<input name="purchase_price" placeholder="预期单价" style="width: 30%; display: inline-block;">{{ now.maid.calcutype }}
+                                    <button id="purchase_btn" style="margin-left: 3%;display: inline-block;">确认</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
                 <div class="col-md-6">
                     <div class="panel panel-white">
                         <div class="panel-body">
@@ -69,7 +98,7 @@
             $('#inventory').addClass('active-page').addClass('open');
             $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
-            {#图表#}
+            // {#图表#}
             var myChart = echarts.init(document.getElementById('chart1'));
             var legenddata, xdata, sdata;
             // 指定图表的配置项和数据
@@ -192,6 +221,28 @@
             flot3.setOption(option3);
 
         })
+
+        // 创建需求
+        $("#purchase_btn").click(function () {
+            var volume=$("#purchase_volume").val();
+            var price=$("#purchase_price").val();
+            var facid={{now.facid_id}};
+            var maid={{now.maid_id}};
+            var meid={{request.session.info.id}};
+                $.ajax({
+                    url: "/inventory/demand/create",
+                    type: "post",
+                    data: {"purchase_volume":volume,"purchase_price":price,"facid":facid,"maid":maid,meid:meid},
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            $("#purchase_create")[0].reset();
+                            location.reload()
+                        } else {
+                        }
+                    }
+                })
+            })
 
 
     </script>

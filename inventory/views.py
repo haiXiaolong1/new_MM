@@ -51,8 +51,8 @@ def inventory_detail(request, uid):  # 路径传参要写进函数参数中
         "l1": l1,
         "l2": l2,
         "l3": l3,
-        "l4": l4
-        , "title": "库存详情"
+        "l4": l4,
+        "title": "库存详情",
     }
     print(result)
     return render(request, 'inventory_detail.html', result)
@@ -166,6 +166,38 @@ def demand_add(request):
         request.session["notify"]=notify
     return JsonResponse({"status": returnStatus, "error": errors})
 
+@csrf_exempt
+def demand_create(request):
+    r=request.POST
+    print(r)
+    # 设置表单数据校验
+    toCheck = [r['purchase_volume'],r['purchase_price']]  # 校验字段
+    types = ["int+","int+"]  # 校验类型
+    errors = []  # 校验结果
+    returnStatus = True  # 是否通过所有校验
+    for idx, (cck, typ) in enumerate(zip(toCheck, types)):
+        result = form_item_check(cck, typ)
+        errors.append(result)
+        if not result == True:
+            returnStatus = False
+    if returnStatus:
+        message,notify=[],[]
+        notify.append(dict(id=0, tittle="提示", context="采购需求创建成功！", type="success", position="top-center"))
+        wl = models.Wuliao.objects.filter(id=r['maid']).first()
+        gc = models.Gongchang.objects.filter(id=r["facid"]).first()
+        me = models.Yuangong.objects.filter(id=r['meid']).first()
+        yg = models.Yuangong.objects.filter(businessid=me.businessid,office="3").first()
+        message.append("【系统消息】物料请购需求")
+        message.append(
+            '需求工厂：{} | {} | {}<br/>需求物料：{}({})<br/>需求数量：{}{}<br/>预期采购价：{}元/{}'
+            '<br/>请前往创建请购单<a class="chat_link" href="/inventory/demand/n/">>></a>'
+            .format(gc.id,gc.type,gc.address,gc.set_copy_message(did),
+                    wl.desc, wl.id, r['purchase_volume'],wl.calcutype, r['purchase_price'], wl.calcutype))
+        for m in message:
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
+        notify.append(dict(id=1, tittle="系统消息", context="已向【{}】{}发送物料采购申请".format(yg.get_office_display(), yg.username),
+                           type="info", position="top-center"))
+    return JsonResponse({"status": returnStatus, "error": errors})
 
 @csrf_exempt
 def demand_verify(request):
