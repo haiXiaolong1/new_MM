@@ -255,6 +255,15 @@ class TestDjangoExcelDownload_mt(View):
 
         return res
 
+def dictfetchall(cursor):
+    "将游标返回的结果保存到一个字典对象中"
+    desc = cursor.description
+    return [
+    dict(zip([col[0] for col in desc], row))
+    for row in cursor.fetchall()
+    ]
+
+
 class TestDjangoExcelUpload_mt(View):
 
 
@@ -267,17 +276,34 @@ class TestDjangoExcelUpload_mt(View):
         if form.is_valid():
             filehandle = request.FILES['file']
             sheet = filehandle.get_sheet()  # 对准
-            print(sheet.to_array())
+            #print(sheet.to_array())
 
             data = sheet.to_array()
 
             da = data[1:]
+
+            temp1 = []
+            temp2 = []
+            temp=[]
             for ea in da:
                 if ea[0] != "" and ea[1] != "":
-                    add_mt_axu(ea[:2],request)
+                    temp1.append(ea[:2][0])
+                    temp2.append(ea[:2][1])
 
-            #return HttpResponse(data)
-            return redirect("/supply/material/list/")
+                    #add_mt_axu(ea[:2],request)
+
+            c=[]
+            for i in range(len(temp1)):
+                temp=[]
+                temp.append(temp1[i])
+                temp.append(temp2[i])
+                c.append(temp)
+
+            print(c)
+            return render(request, 'mt_vali_list.html', {
+                'data': c,
+            })
+            #return redirect("/supply/material/list/")
         else:
             return HttpResponse("出错了")
 
