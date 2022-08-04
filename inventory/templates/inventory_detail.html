@@ -7,7 +7,7 @@
         </div>
         <div id="main-wrapper">
             <div class="row">
-                {% if request.session.info.office == "6" %}
+                {% if request.session.info.office == "6" or request.session.info.office == "0" %}
                 <div class="col-md-4" style="height: 210px">
                 {% else %}
                 <div class="col-md-6" style="height: 210px">
@@ -24,7 +24,7 @@
                         </div>
                     </div>
                 </div>
-                {% if request.session.info.office == "6" %}
+                {% if request.session.info.office == "6" or request.session.info.office == "0" %}
                 <div class="col-md-4" style="height: 210px">
                 {% else %}
                 <div class="col-md-6" style="height: 210px">
@@ -40,7 +40,7 @@
                         </div>
                     </div>
                 </div>
-                {% if request.session.info.office == "6" %}
+                {% if request.session.info.office == "6" or request.session.info.office == "0" %}
                 <div class="col-md-4" style="height: 210px">
                     <div class="panel panel-white">
                         <div class="panel-heading clearfix">
@@ -52,18 +52,22 @@
                             <div>
                                 <form style="width: 100%;display: inline-block;" id="purchase_create">
                                     {% csrf_token %}
-                                    采购量：<input id="purchase_volume" autocomplete="off" placeholder="需求量" style="width: 30%; display: inline-block;">{{ now.maid.calcutype }}<br/>
-                                    <a class="formError" id="purchase_volume_error"></a><br/>
-                                    采购单价：<input id="purchase_price" autocomplete="off" placeholder="预期单价" style="width: 30%; display: inline-block;margin-right: 5px;"> 元/{{ now.maid.calcutype }}
-                                    <button type="button" id="purchase_btn" style="margin-left: 2%;display: inline-block;">确认</button><br/>
-                                    <a class="formError" id="purchase_price_error"></a>
+                                    <div style="margin-bottom: 10px;margin-top: 5px">
+                                        采购数量：<input id="purchase_volume" autocomplete="off" placeholder="需求量" style="width: 30%; display: inline-block;"> {{ now.maid.calcutype }}
+                                    </div>
+                                    <a class="formError" id="purchase_volume_error" style="width: 100%"></a>
+                                    <div>
+                                        采购单价：<input id="purchase_price" autocomplete="off" placeholder="预期单价" style="width: 30%; display: inline-block;margin-right: 5px;"> 元/{{ now.maid.calcutype }}
+                                        <button type="button" id="purchase_btn"  style="margin-left: 2%;display: inline-block;">确认</button>
+                                    </div>
+                                    <a class="formError" id="purchase_price_error" style="width: 100%"></a>
                                 </form>
                             </div>
                         </div>
                     </div>
                 </div>
                 {% endif %}
-                <div class="col-md-6">
+                <div class="col-md-6" style="margin-top: 20px">
                     <div class="panel panel-white">
                         <div class="panel-body">
                             <div id="flot3" style="width: 100%;height: 350px">
@@ -71,7 +75,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6">
+                <div class="col-md-6" style="margin-top: 20px">
                     <div class="panel panel-white">
                         <div class="panel-body ">
                             <div id="chart2" style="width: 100%;height:350px;"></div>
