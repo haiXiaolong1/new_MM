@@ -232,9 +232,9 @@
             var meid=$("#on-log-user").attr("yid");
             alert(1);
                 $.ajax({
-                    url: "/inventory/demand/create/",
+                    url: "/inventory/demand/create/n/",
                     type: "post",
-                    data: {"purchase_volume":volume,"purchase_price":price,"facid":facid,"maid":maid,meid:meid},
+                    data: {"purchase_volume":volume,"purchase_price":price,"facid":facid,"maid":maid,"meid":meid},
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {

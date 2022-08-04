@@ -11,7 +11,7 @@ urlpatterns = [
     path("demand/add/n/", views.demand_add),
     path("demand/verify/n/", views.demand_verify),
     path("demand/delete/n/", views.demand_delete),
-    path("demand/create/",views.demand_create),
+    path("demand/create/n/",views.demand_create),
 
     path("quality/check/", views.quality_check),
     path("quantity/check/", views.quantity_check),
