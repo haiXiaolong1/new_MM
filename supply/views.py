@@ -185,6 +185,7 @@ def set_message_detail(request):
     yid = request.GET.get("yid")
     me = request.GET.get("meid")
     who = models.Yuangong.objects.filter(id=yid).first().username
+    office = models.Yuangong.objects.filter(id=yid).first().get_office_display()
     unread = models.Xiaoxi.objects.filter(toId=me, fromId=yid, read=0).all().count()
     models.Xiaoxi.objects.filter(toId=me, fromId=yid).update(read=1)
     sett = set_chart_group(all_message_by_user(None, me))
@@ -198,7 +199,7 @@ def set_message_detail(request):
     out = ""
     for g in groups.values():
         out += add_group(g)
-    return JsonResponse({"status": True, "message": out, "who": who, "when": state, "setList": set_list, "count": cou})
+    return JsonResponse({"status": True, "message": out,"office": office, "who": who, "when": state, "setList": set_list, "count": cou})
 
 
 def send_test_message(request):

@@ -330,7 +330,7 @@
                     <div class="chat-write">
                         <div class="form-horizontal" action="javascript:void(0);">
                             <input type="text" class="form-control my-left" id="textMessage" autocomplete="off"
-                                   placeholder="在这里输入新消息">
+                                   style="width:80%;" placeholder="在这里输入新消息">
                             <button id="sendTextMessage">发送</button>
                         </div>
                     </div>
@@ -623,7 +623,7 @@
                     success: function (res) {
                         if (res.status) {
                             $("#setMessage")[0].innerHTML = res.message;
-                            $('#chatDetailName').text(res.who);
+                            $('#chatDetailName').text(res.office+" "+res.who);
                             $('#chatDetailTime').text(res.when);
                             setMessageList();
                             if ($("#chat-right-sidebar").attr("class") == "page-right-sidebar") {
