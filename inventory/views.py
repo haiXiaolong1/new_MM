@@ -130,8 +130,8 @@ def demand_add(request):
         wl = models.Wuliao.objects.filter(id=r['maid_id']).first()
         if me.office != "5" and me.isactive==1 and me.issuper == 0:
             message.append("【系统消息】申请审核")
-            message.append('待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
-                           .format(wl.desc,wl.id,r['tcount'],r['price'],wl.calcutype))
+            message.append('待审核采购需求：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
+                           .format(set_copy_message(did),wl.desc,wl.id,r['tcount'],r['price'],wl.calcutype))
             to = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
@@ -140,8 +140,8 @@ def demand_add(request):
         else:
             message.append("【系统消息】操作历史记录")
             message.append(
-                '待审核采购需求：<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>下一步骤前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
-                .format(wl.desc, wl.id, r['tcount'], r['price'], wl.calcutype))
+                '待审核采购需求：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>下一步骤前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
+                .format(set_copy_message(did),wl.desc, wl.id, r['tcount'], r['price'], wl.calcutype))
             fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
@@ -184,7 +184,7 @@ def demand_verify(request):
     cgxq = cgd.first()
     wl = models.Wuliao.objects.filter(id=cgxq.maid_id).first()
     if me.office != "0" and me.isactive == 1 and me.issuper == 0:
-        message.append("【系统消息】审核反馈")
+        message.append("【反馈消息】采购需求审核反馈")
         message.append("采购需求单{}<br/>已审核通过"
                        .format(set_copy_message(did)))
         to = models.Yuangong.objects.filter(id=cgxq.createuserid_id).first()
@@ -323,13 +323,13 @@ def ischeck(request, pid, notify):
                            type="info", position="top-center"))
         notify.append(dict(id=3, tittle="系统消息", context="已提示 【{}】{} 前往创建入库单".format(jl.get_office_display(), jl.username),type="info", position="top-center"))
         message = []
-        message.append("【系统消息】暂存单反馈信息")
+        message.append("【反馈消息】暂存单反馈信息")
         message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购订单:{}<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
                        .format(gys.name,gys.id,fac.type,fac.address,set_copy_message(cgd.purchaseid),wl.desc,wl.id,cgd.tcount,wl.calcutype,cgd.price,wl.calcutype))
         mes="<br/>"+zcd.moreinfo
         if mes.strip()=="<br/>":
             mes=" 无备注"
-        message.append("入库前物料检查情况：<br/>量检通过-质检通过<br/>备注：{}".format(mes))
+        message.append("暂存单号:{}<br/>暂存检查情况：<br/>量检通过-质检通过<br/>备注：{}".format(set_copy_message(zcd.temid),mes))
         if me.issuper==0 and not me.office=="5":
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
@@ -478,7 +478,7 @@ def receive_add(request):
     for m in message:
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
     if me.issuper==0:
-        message[0]="【系统消息】物料需求入库反馈"
+        message[0]="【反馈消息】物料需求入库反馈"
         for m in message[:-1]:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
     else:

@@ -85,7 +85,7 @@ def create_qui(request):
     notify=[]
     notify.append(dict(id=0, tittle="提示", context="询价单 {} 创建成功！".format(inid),
                        type="success", position="top-center"))
-    message.append("【系统消息】询价反馈信息")
+    message.append("【反馈消息】询价反馈信息")
     message.append("向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
                    .format(gys.name, gys.id, set_copy_message(qgd.demandid), set_copy_message(inid)))
     message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
@@ -193,7 +193,7 @@ def quote_evaluateByID(request):
         qgd = models.Caigouxuqiu.objects.filter(demandid=did).first()
         wl = qgd.maid
         message = []
-        message.append("【系统消息】报价评估反馈信息")
+        message.append("【反馈消息】报价评估反馈信息")
         message.append("询价单 {}<br/>询价物料:{}({})<br/>询价数量:{}  预期报价:{}元/{}"
                        .format(set_copy_message(bjd.inquiryid_id), wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
         situation = "报价评估情况:"
@@ -202,6 +202,7 @@ def quote_evaluateByID(request):
                 .format(bj.supplyid.name, set_copy_message(bj.supplyid_id), bj.quote, wl.calcutype,bj.isreceived,bj.get_isreceived_display())
         situation += '<hr>{}{}{}元/{} <a class="chat_status_{}">{}</a>'\
             .format(bjd.supplyid.name, set_copy_message(bjd.supplyid_id), bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
+        situation+='<br/>接受报价单号{}'.format(set_copy_message(bjd.quoteid))
         message.append(situation)
         if me.issuper==0:  #非管理员
             for m in message:
@@ -336,7 +337,7 @@ def purchase_createByQuote(request):
     if me.issuper==0 and not me.office=="4":
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
-        message[0]="【系统消息】采购订单反馈信息"
+        message[0]="【反馈消息】采购订单反馈信息"
         message=message[:-1]
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
