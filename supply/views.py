@@ -77,9 +77,11 @@ def all_message_by_user(request, me="e0002"):
         else:
             read[other] = info
     for k, v in read.items():
-        read[k]["name"] = models.Yuangong.objects.filter(id=k).first().username
+        yg=models.Yuangong.objects.filter(id=k).first()
+        read[k]["name"] = "【{}】{}".format(yg.get_office_display(),yg.username)
     for k, v in unread.items():
-        unread[k]["name"] = models.Yuangong.objects.filter(id=k).first().username
+        yg = models.Yuangong.objects.filter(id=k).first()
+        unread[k]["name"] = "【{}】{}".format(yg.get_office_display(),yg.username)
     return {"read": read, "unread": unread, "me": me}
 
 # 找到一对聊天对象的所有消息流
