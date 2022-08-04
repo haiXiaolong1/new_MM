@@ -58,9 +58,9 @@ def inventory_detail(request, uid):  # 路径传参要写进函数参数中
     return render(request, 'inventory_detail.html', result)
 
 
-# 采购需求列表
+# 请购单列表
 def inventory_demand(request, did):
-    """采购需求管理（请购单）"""
+    """请购单管理（请购单）"""
     material = models.Wuliao.objects.filter().all()
     factory = models.Gongchang.objects.filter().all()
     caigou = models.Caigouxuqiu.objects.filter(demandid=did)
@@ -70,7 +70,7 @@ def inventory_demand(request, did):
         "material": material,
         "factory": factory,
         "caigou": caigou
-        , "title": "采购需求管理"
+        , "title": "请购单管理"
     }
     return render(request, 'inventory_demand.html', result)
 
@@ -96,9 +96,9 @@ def form_item_check(context, type="nan"):
     return True
 
 
-# 添加采购需求
+# 添加请购单
 def demand_add(request):
-    """添加采购需求"""
+    """添加请购单"""
     n = 10000000
     if models.Caigouxuqiu.objects.all().first():
         n = models.Caigouxuqiu.objects.all().order_by('-demandid').first().demandid[2:]
@@ -126,21 +126,21 @@ def demand_add(request):
         me = models.Yuangong.objects.filter(id=id).first()
         message = []
         notify = []
-        notify.append(dict(id=0, tittle="提示", context="采购需求创建成功！", type="success", position="top-center"))
+        notify.append(dict(id=0, tittle="提示", context="请购单创建成功！", type="success", position="top-center"))
         wl = models.Wuliao.objects.filter(id=r['maid_id']).first()
         if me.office != "5" and me.isactive==1 and me.issuper == 0:
             message.append("【系统消息】申请审核")
-            message.append('待审核采购需求：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
+            message.append('待审核请购单：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
                            .format(set_copy_message(did),wl.desc,wl.id,r['tcount'],r['price'],wl.calcutype))
             to = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
-            notify.append(dict(id=1,tittle="系统消息", context="已向【{}】{}发送采购需求审核申请".format(to.get_office_display(),to.username),
+            notify.append(dict(id=1,tittle="系统消息", context="已向【{}】{}发送请购单审核申请".format(to.get_office_display(),to.username),
                                type="info", position="top-center"))
         else:
             message.append("【系统消息】操作历史记录")
             message.append(
-                '待审核采购需求：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>下一步骤前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
+                '待审核请购单：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>下一步骤前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
                 .format(set_copy_message(did),wl.desc, wl.id, r['tcount'], r['price'], wl.calcutype))
             fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
             for m in message:
@@ -153,9 +153,9 @@ def demand_add(request):
             if not me.issuper==1:
                 next=models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             message.append(
-                '【{}】{}<br/>创建采购需求：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
+                '【{}】{}<br/>创建请购单：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
                 '下一步操作人:【{}】{}<br/>'
-                '下一步骤:审核采购需求<a class="chat_link" href="/inventory/demand/n/">>></a><br/>'
+                '下一步骤:审核请购单<a class="chat_link" href="/inventory/demand/n/">>></a><br/>'
                 .format(me.get_office_display(),me.username,set_copy_message(did),wl.desc, wl.id, r['tcount'], r['price'], wl.calcutype,next.get_office_display(),next.username))
             fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
             toid=models.Yuangong.objects.filter(businessid=me.businessid, office="6").first()
@@ -169,35 +169,35 @@ def demand_add(request):
 
 @csrf_exempt
 def demand_verify(request):
-    """审核采购需求"""
+    """审核请购单"""
     did = request.POST.get("did")
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id = request.session["info"]['id']
     cgd = models.Caigouxuqiu.objects.filter(demandid=did)
     cgd.update(verifytime=time,verifyuserid_id=id, status=1)
     # 自动发信功能
-    # 1，确认员工身份，是管理员则不发信 否则 向采购需求对应的员工发信
+    # 1，确认员工身份，是管理员则不发信 否则 向请购单对应的员工发信
     me = models.Yuangong.objects.filter(id=id).first()
     message = []
     notify = []
-    notify.append(dict(id=0, tittle="提示", context="采购需求审核成功！", type="success", position="top-center"))
+    notify.append(dict(id=0, tittle="提示", context="请购单审核成功！", type="success", position="top-center"))
     cgxq = cgd.first()
     wl = models.Wuliao.objects.filter(id=cgxq.maid_id).first()
     if me.office != "0" and me.isactive == 1 and me.issuper == 0:
-        message.append("【反馈消息】采购需求审核反馈")
-        message.append("采购需求单{}<br/>已审核通过"
+        message.append("【反馈消息】请购单审核反馈")
+        message.append("请购单{}<br/>已审核通过"
                        .format(set_copy_message(did)))
         to = models.Yuangong.objects.filter(id=cgxq.createuserid_id).first()
         if me.id!=to.id:
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
-        message[1]="新增已审核采购需求：<br/>采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"\
+        message[1]="新增已审核请购单：<br/>请购单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"\
             .format(set_copy_message(did),wl.desc,wl.id,cgxq.tcount,cgxq.price,wl.calcutype)
         message.append('请尽快前往创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a>')
         pur_yg = models.Yuangong.objects.filter(businessid=me.businessid,isactive=1,office="2").first()
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
-        notify.append(dict(id=1, tittle="系统消息", context="已向 【{}】{} 发送采购需求审核回执"
+        notify.append(dict(id=1, tittle="系统消息", context="已向 【{}】{} 发送请购单审核回执"
                            .format(to.get_office_display(), to.username),
                  type="info", position="top-center"))
         notify.append(dict(id=2, tittle="系统消息", context="已向 【{}】{} 发送询价单创建提示"
@@ -205,7 +205,7 @@ def demand_verify(request):
                  type="info", position="top-center"))
     else:
         message.append("【系统消息】操作历史记录")
-        message.append("采购需求单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"
+        message.append("请购单{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>已审核通过"
                        .format(set_copy_message(did), wl.desc, wl.id, cgxq.tcount, cgxq.price, wl.calcutype))
         message.append('请尽快前往创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a>')
         fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
@@ -219,9 +219,9 @@ def demand_verify(request):
         if not me.issuper == 1:
             next = models.Yuangong.objects.filter(businessid=me.businessid, office="2").first()
         message.append(
-            '【{}】{}<br/>审核采购需求单:{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
+            '【{}】{}<br/>审核请购单:{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
             '下一步操作人:【{}】{}<br/>'
-            '下一步骤:引用采购需求，创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a><br/>'
+            '下一步骤:引用请购单，创建询价单<a class="chat_link" href="/purchase/inquiry/create/">>></a><br/>'
             .format(me.get_office_display(), me.username, set_copy_message(cgxq.demandid), wl.desc, wl.id, cgxq.tcount, cgxq.price, wl.calcutype,
                     next.get_office_display(), next.username))
         fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
@@ -560,11 +560,11 @@ def invoice_display(request, ivid):
 
 
 def demand_delete(request):
-    """删除已完成的采购需求"""
+    """删除已完成的请购单"""
     id = request.GET.get("uid")
     models.Caigouxuqiu.objects.filter(demandid=id).update(isdelete=1)
     notify = []
-    notify.append(dict(id=0, tittle="提示", context="采购需求删除成功！", type="success", position="top-center"))
+    notify.append(dict(id=0, tittle="提示", context="请购单删除成功！", type="success", position="top-center"))
     request.session["notify"] = notify
     return JsonResponse({"status": True})
 
