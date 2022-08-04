@@ -24,13 +24,18 @@
             </div>
             {% if progressShow %}
             <div class="col-md-12" style="position:sticky;z-index: 42;" id="barContainer">
-                <div id="doucumentProgressBar" style="background-color: #FFFFFF;margin-top: 0" progress="{{progress}}">
+                <div id="doucumentProgressBar" style="background-color: #FFFFFF;margin-top: 0" progress="{{progress}}"
+                progress1="{{progress1}}" progress2="{{progress2}}">
                     <!-- 进度条 -->
                     <div class="progress progress-md" style="background-color: #FFFFFF;">
                         <div class="progress-bar progress-bar-info progress-bar-striped" role="progressbar"
                             aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="theBar">
-                            <span class="sr-only">25% Complete</span>
-
+                        </div>
+                        <div class="progress-bar progress-bar-warning progress-bar-striped" role="progressbar"
+                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="theBar1">
+                        </div>
+                        <div class="progress-bar progress-bar-danger progress-bar-striped" role="progressbar"
+                            aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 0%" id="theBar2">
                         </div>
                     </div>
                     <!-- 五个圆 -->
@@ -113,7 +118,11 @@
 
         function resetProgressBar() {
             var progress = $("#doucumentProgressBar").attr("progress");
+            var progress1 = $("#doucumentProgressBar").attr("progress1");
+            var progress2 = $("#doucumentProgressBar").attr("progress2");
             $("#theBar").attr("style", "width:" + String((Number(progress) + 2) / 12 * 100) + "%");
+            $("#theBar1").attr("style", "width:" + String((Number(progress1)) / 12 * 100) + "%");
+            $("#theBar2").attr("style", "width:" + String((Number(progress2)) / 12 * 100) + "%");
         }
 
         resetProgressBar();

@@ -680,35 +680,71 @@ def purchase_documents(request):
             document_state+="X"
     if document_state=="请1":  #区分无报价/未评估报价
         xjd=models.Xunjiadan.objects.filter(demandid=list[0]["id"]).first().inquiryid
-        bjd=models.Baojiadan.objects.filter(inquiryid=xjd).first().isreceived
+        bjd=models.Baojiadan.objects.filter(inquiryid=xjd).first()
         print(xjd,bjd)
         if bjd==None:
             document_state+="报0"
         else:
-            document_state+="报1"
-    if document_state=="采0请1询X报1暂X":  #区分三种质检情况
-        zsd=models.Zanshoudan.objects.filter(temid=list[0]["id"]).first()
+            bjds=models.Baojiadan.objects.filter(inquiryid=xjd).all()
+            flag=False
+            for i in bjds:
+                if not i.isreceived==2:
+                    flag=True
+                    break
+            if flag:
+                document_state+="报1"
+            else:
+                document_state+="报-1"
+    if document_state == "采0请1询X报1暂X":  # 区分三种质检情况
+        zsd = models.Zanshoudan.objects.filter(temid=list[0]["id"]).first()
+        document_state += "质{}量{}".format(zsd.qualitycheckinfo, zsd.quantitycheckinfo)
+    if document_state=="采-1请1询X报1暂-2":  #区分三种质检情况
+        print(list)
+        zsd=models.Zanshoudan.objects.filter(temid=list[-1]["id"]).first()
         document_state+="质{}量{}".format(zsd.qualitycheckinfo,zsd.quantitycheckinfo)
-    document_state_dict={"采1请1询X报1暂1入1发X":10,"采1请1询X报1暂0入0":8,
-                         "采0请1询X报1入-1入-1":7,"采0请1询X报1暂X质1量-1":6,
-                         "采0请1询X报1暂X质-1量1":6,"采0请1询X报1暂X质-1量-1":5,
-                         "请1询X报-1":4,"请1报1":3,"请1报0":2,"请0":1,"请-1":-1,"":-2}
+    document_state_dict={"采1请1询X报1暂1入1发X":[10,0,0],
+                         "采1请1询X报1暂0入0":[8,1,0],
+                         "采0请1询X报1入-1入-1":[7,1,0],
+                         "采0请1询X报1暂X质1量-1":[6,1,0],
+                         "采0请1询X报1暂X质-1量1":[6,1,0],
+                         "采0请1询X报1暂X质-1量-1":[5,1,0],
+                         "采-1请1询X报1暂-2质0量-1":[5,0,1],
+                         "采-1请1询X报1暂-2质-1量0":[5,0,1],
+                         "采-1请1询X报1暂-2质0量1":[6,0,1],
+                         "采-1请1询X报1暂-2质1量0":[6,0,1],
+                         "请1询X报-1":[4,1,0],
+                         "请1报1":[3,1,0],
+                         "请1报0":[2,1,0],
+                         "请1报-1": [3, 0, 1],
+                         "请0":[1,1,0],
+                         "请-1":[-1,1,0],
+                         "":[-2,1,0]}
     active="background:#5893df"
+    inprogress="background:#f3cb2a"
+    danger="background:#ec5e69"
     style=[""]*11
     print(document_state)
     progress=document_state_dict[document_state]
-    for i in range(progress+1):
+    for i in range(progress[0]+1):
         style[i]=active
+    if progress[1]==1:
+        style[progress[0]+1] = inprogress
+    if progress[2]==1:
+        style[progress[0]+1+progress[1]]=danger
     textFirst="货物质检"
     textSecond="货物量检"
-    if document_state=="采0请1询X报1暂X质-1量1":
+    if document_state=="采0请1询X报1暂X质-1量1" \
+            or document_state=="采-1请1询X报1暂-2质-1量0" \
+            or document_state=="采-1请1询X报1暂-2质0量1":
         textFirst,textSecond=textSecond,textFirst
     progressShow=(len(list)>0)
     result = {
         "list": list,
         "id": nid,
         "title": "查看单据流",
-        "progress":progress,
+        "progress":progress[0],
+        "progress1":progress[1],
+        "progress2":progress[2],
         "style":style,
         "textFirst":textFirst,
         "textSecond":textSecond,
