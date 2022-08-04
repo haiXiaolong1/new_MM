@@ -17,7 +17,7 @@
                             <h4 class="panel-title"><strong>物料信息</strong></h4>
                         </div>
                         <div class="panel-body">
-                            <span>物料编号：{{ now.maid_id }}</span><br/>
+                            <span id="the-maid" maid="{{now.maid_id}}">物料编号：{{ now.maid_id }}</span><br/>
                             <span>物料类型：{{ now.maid.type }}</span><br/>
                             <span>物料描述：{{ now.maid.desc }}</span><br/>
                             <span>计量单位：{{ now.maid.calcutype }}</span>
@@ -34,7 +34,7 @@
                             <h4 class="panel-title"><strong>工厂信息</strong></h4>
                         </div>
                         <div class="panel-body">
-                            <span>工厂编号：{{ now.facid_id }}</span><br/>
+                            <span id="the-facid" facid="{{now.facid_id}}">工厂编号：{{ now.facid_id }}</span><br/>
                             <span>工厂类型：{{ now.facid.type }}</span><br/>
                             <span>地址：{{ now.facid.address }}</span>
                         </div>
@@ -224,13 +224,15 @@
 
         // 创建需求
         $("#purchase_btn").click(function () {
+            alert(0);
             var volume=$("#purchase_volume").val();
             var price=$("#purchase_price").val();
-            var facid={{now.facid_id}};
-            var maid={{now.maid_id}};
-            var meid={{request.session.info.id}};
+            var facid=$("#the-facid").attr("facid");
+            var maid=$("#the-maid").attr("maid");
+            var meid=$("#on-log-user").attr("yid");
+            alert(1);
                 $.ajax({
-                    url: "/inventory/demand/create",
+                    url: "/inventory/demand/create/",
                     type: "post",
                     data: {"purchase_volume":volume,"purchase_price":price,"facid":facid,"maid":maid,meid:meid},
                     dataType: "JSON",
