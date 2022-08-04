@@ -104,7 +104,7 @@
                             <li id="inventory_display"><a href="/inventory/display/"
                                                           style="font-size:medium">查看库存</a></li>
                             <li id="inventory_demand"><a href="/inventory/demand/n/"
-                                                         style="font-size:medium">采购需求管理</a></li>
+                                                         style="font-size:medium">请购单管理</a></li>
                             <li id="inventory_temp"><a href="/inventory/temp/" style="font-size:medium">暂存检查</a>
                             </li>
                             <li id="inventory_receive"><a href="/inventory/receive/"
@@ -510,7 +510,7 @@
                         case "查看库存":
                             top.location.href = "/inventory/display/";
                             break;
-                        case "采购需求管理":
+                        case "请购单管理":
                             top.location.href = "/inventory/demand/n/";
                             break;
                         case "暂存检查":
@@ -530,7 +530,7 @@
             })
             $("#topSearch").on('input', function (e) {
                 var s = ["维护物料", "维护供应商", "维护物料关系", "维护报价单", "查看单据流", "创建询价单", "评估报价单",
-                    "创建采购单", "查看库存", "采购需求管理", "暂存检查", "收货管理", "发票"]
+                    "创建采购单", "查看库存", "请购单管理", "暂存检查", "收货管理", "发票"]
                 var v = $("#topSearch")[0].value;
                 p = "<br>";
                 divstart = "<a class='option' style='width: 100%;' >"
