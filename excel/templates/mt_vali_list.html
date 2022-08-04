@@ -14,8 +14,8 @@
                     </div>
                     <div>
 
-                        <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">返回
-                        </button>
+                        <a href="/supply/mt_excel"><button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnexcel">返回修改
+                        </button></a>
                         <!-- 新建/编辑对话框 -->
 
                     </div>
@@ -31,8 +31,16 @@
                                 <tbody id="table">
                                 {% for obj in data %}
                                 <tr>
+                                    {% if forloop.counter == q_ind %}
+                                    <td style="background:yellow;color:red">{{ obj.0 }}</td>
+                                    <td style="background:yellow;color:red">{{ obj.1 }}</td>
+                                    {% endif %}
+
+                                    {% if forloop.counter != q_ind %}
                                     <td>{{ obj.0 }}</td>
                                     <td>{{ obj.1 }}</td>
+                                    {% endif %}
+
                                 </tr>
                                 {% endfor %}
                                 </tbody>
