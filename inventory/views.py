@@ -171,7 +171,7 @@ def demand_create(request):
     r=request.POST
     print(r)
     # 设置表单数据校验
-    toCheck = [r['purchase_volume'],r['purchase_price']]  # 校验字段
+    toCheck = [r['volume'],r['price']]  # 校验字段
     types = ["int+","int+"]  # 校验类型
     errors = []  # 校验结果
     returnStatus = True  # 是否通过所有校验
@@ -191,12 +191,13 @@ def demand_create(request):
         message.append(
             '需求工厂：{} | {} | {}<br/>需求物料：{}({})<br/>需求数量：{}{}<br/>预期采购价：{}元/{}'
             '<br/>请前往创建请购单<a class="chat_link" href="/inventory/demand/n/">>></a>'
-            .format(gc.id,gc.type,gc.address,gc.set_copy_message(did),
-                    wl.desc, wl.id, r['purchase_volume'],wl.calcutype, r['purchase_price'], wl.calcutype))
+            .format(gc.id,gc.type,gc.address,
+                    wl.desc, wl.id, r['volume'],wl.calcutype, r['price'], wl.calcutype))
         for m in message:
-            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=to.id, time=datetime.now(), context=m, read=0)
+            models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
         notify.append(dict(id=1, tittle="系统消息", context="已向【{}】{}发送物料采购申请".format(yg.get_office_display(), yg.username),
                            type="info", position="top-center"))
+        request.session["notify"]=notify
     return JsonResponse({"status": returnStatus, "error": errors})
 
 @csrf_exempt

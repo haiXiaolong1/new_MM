@@ -8,11 +8,11 @@
         <div id="main-wrapper">
             <div class="row">
                 {% if request.session.info.office == "6" %}
-                <div class="col-md-4" style="height: 200px">
+                <div class="col-md-4" style="height: 210px">
                 {% else %}
-                <div class="col-md-6" style="height: 200px">
+                <div class="col-md-6" style="height: 210px">
                 {% endif %}
-                    <div class="panel panel-white">
+                    <div class="panel panel-white"style="height: 210px">
                         <div class="panel-heading clearfix">
                             <h4 class="panel-title"><strong>物料信息</strong></h4>
                         </div>
@@ -25,11 +25,11 @@
                     </div>
                 </div>
                 {% if request.session.info.office == "6" %}
-                <div class="col-md-4" style="height: 200px">
+                <div class="col-md-4" style="height: 210px">
                 {% else %}
-                <div class="col-md-6" style="height: 200px">
+                <div class="col-md-6" style="height: 210px">
                 {% endif %}
-                    <div class="panel panel-white" style="height: 177px">
+                    <div class="panel panel-white"style="height: 210px">
                         <div class="panel-heading clearfix">
                             <h4 class="panel-title"><strong>工厂信息</strong></h4>
                         </div>
@@ -41,8 +41,8 @@
                     </div>
                 </div>
                 {% if request.session.info.office == "6" %}
-                <div class="col-md-4" style="height: 200px">
-                    <div class="panel panel-white" style="height: 177px">
+                <div class="col-md-4" style="height: 210px">
+                    <div class="panel panel-white">
                         <div class="panel-heading clearfix">
                             <h4 class="panel-title"><strong>新建物料需求</strong></h4>
                         </div>
@@ -52,9 +52,11 @@
                             <div>
                                 <form style="width: 100%;display: inline-block;" id="purchase_create">
                                     {% csrf_token %}
-                                    采购量：<input name="purchase_volume" placeholder="需求量" style="width: 30%; display: inline-block;">{{ now.maid.calcutype }}<br/>
-                                    采购单价：<input name="purchase_price" placeholder="预期单价" style="width: 30%; display: inline-block;">{{ now.maid.calcutype }}
-                                    <button id="purchase_btn" style="margin-left: 3%;display: inline-block;">确认</button>
+                                    采购量：<input id="purchase_volume" placeholder="需求量" style="width: 30%; display: inline-block;">{{ now.maid.calcutype }}<br/>
+                                    <a class="formError" id="purchase_volume_error"></a><br/>
+                                    采购单价：<input id="purchase_price" placeholder="预期单价" style="width: 30%; display: inline-block;margin-right: 5px;"> 元/{{ now.maid.calcutype }}
+                                    <button id="purchase_btn" style="margin-left: 2%;display: inline-block;">确认</button><br/>
+                                    <a class="formError" id="purchase_price_error"></a>
                                 </form>
                             </div>
                         </div>
@@ -224,23 +226,28 @@
 
         // 创建需求
         $("#purchase_btn").click(function () {
-            alert(0);
             var volume=$("#purchase_volume").val();
             var price=$("#purchase_price").val();
             var facid=$("#the-facid").attr("facid");
             var maid=$("#the-maid").attr("maid");
             var meid=$("#on-log-user").attr("yid");
-            alert(1);
                 $.ajax({
                     url: "/inventory/demand/create/n/",
                     type: "post",
-                    data: {"purchase_volume":volume,"purchase_price":price,"facid":facid,"maid":maid,"meid":meid},
+                    data: {"volume":volume,"price":price,"facid":facid,"maid":maid,"meid":meid},
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {
                             $("#purchase_create")[0].reset();
                             location.reload()
                         } else {
+                            var ids = ["#purchase_volume_error", "#purchase_price_error"];
+                            for (var i = 0; i < ids.length; i++) {
+                                $(ids[i]).text("");
+                                if (res.error[i] != true) {
+                                    $(ids[i]).text(res.error[i]);
+                                }
+                            }
                         }
                     }
                 })
