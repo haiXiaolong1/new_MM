@@ -204,4 +204,57 @@ def add_account_axu(data_each,request):
                        +"','"+str(officed)+"','"+str(named) +"','"+str(actived) +"','"+str(bussinessd)+"')"
     cursor.execute(query_recreation)
 
+class TestDjangoExcelDownload_mt(View):
+
+    def get(self, request):
+
+        time_used = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+        name = "mtTemp"
+        ts = int(time.time())
+        file_name = name + str(ts)+'.xlsx'
+
+        x_io = BytesIO()
+        work_book = xlsxwriter.Workbook(x_io)
+        cen_format = work_book.add_format({'align':'center'})
+        merge_format = work_book.add_format({
+            'bold': True,
+            'align': 'center',  # 水平居中
+            'valign': 'vcenter',  # 垂直居中
+        })
+        work_sheet = work_book.add_worksheet(name)
+        work_sheet.write(0, 0, "供应商编号",cen_format)
+        work_sheet.write(0, 1, "物料编号",cen_format)
+
+
+        work_sheet.merge_range('E1:G1', '供应商-编号参考', merge_format)
+        yu = models.Gongyingshang.objects.all().values("id", "name","address")
+        for i in range(len(yu)):
+            work_sheet.write(i + 1, 4, yu[i]['id'], cen_format)
+            work_sheet.write(i + 1, 5, yu[i]['name'], cen_format)
+            work_sheet.write(i + 1, 6, yu[i]['address'], cen_format)
+
+        work_sheet.merge_range('I1:K1', '物料-编号参考', merge_format)
+
+        wu = models.Wuliao.objects.all().values("id", "type", "desc")
+        for i in range(len(wu)):
+            work_sheet.write(i + 1, 8, wu[i]['id'], cen_format)
+            work_sheet.write(i + 1, 9, wu[i]['type'], cen_format)
+            work_sheet.write(i + 1, 10, wu[i]['desc'], cen_format)
+
+        work_sheet.set_column('A1:B1', 10)
+        work_sheet.set_column('E1:G1', 11)
+        work_sheet.set_column('I1:K1', 11)
+
+        #work_sheet.data_validation("D2:D10", {'validate': 'list', 'source': office})
+        #work_sheet.data_validation("E2:E10", {'validate': 'list', 'source': [0,1]})
+
+        work_book.close()
+        res = HttpResponse()
+        res["Content-Type"] = "application/octet-stream"
+        res["Content-Disposition"] = 'filename="'+file_name+'"'
+        res.write(x_io.getvalue())
+
+        return res
+
 

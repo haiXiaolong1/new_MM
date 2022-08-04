@@ -15,8 +15,16 @@
                         <div>
                             {% if  request.session.info.office == "1" or request.session.info.office == "0" %}
 
-                                <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加
-                                </button>
+                            <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加
+                            </button>
+
+                            <a href="/excel/excel_download_mt"><button type="button" class="btn btn-info" style="margin-bottom: 20px;float: right;margin-right: 1px" id="btnexceldown">模板下载
+                            </button></a>
+
+                            <a href="/supply/mt_excel"><button type="button" class="btn btn-info" style="margin-bottom: 20px;float: right;margin-right: 5px" id="btnexcel">批量添加
+                            </button></a>
+
+
                             {% endif %}
                             <!-- 新建/编辑对话框 -->
                             <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">

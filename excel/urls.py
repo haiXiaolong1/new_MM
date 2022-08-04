@@ -10,6 +10,7 @@ urlpatterns = [
     path('excel_download', TestDjangoExcelDownload.as_view(), name='excel_download'),
     path('excel_upload_account', TestDjangoExcelUpload_ac.as_view()),
     path('excel_download_account', TestDjangoExcelDownload_ac.as_view()),
+    path('excel_download_mt', TestDjangoExcelDownload_mt.as_view()),
 
     path('new_excel',views.new_excel)
 ]
