@@ -12,6 +12,7 @@ urlpatterns = [
     path('material/add/', views.material_add),
     path('material/detail/', views.material_detail),
     path('material/edit/', views.material_edit),
+    path('material/delete/', views.material_delete),
 
     path('quote/list/', views.quote_list),
     path('quote/add/', views.quote_add),

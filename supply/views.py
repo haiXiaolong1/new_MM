@@ -521,17 +521,22 @@ def material_edit(request):
     s = request.POST
     mid = s["materialid"]
     sid = s["supplyid"]
+    notify=[]
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     isexist = models.Gongyingguanxi.objects.filter(supplyid_id=sid, materialid_id=mid)
     i = models.Gongyingguanxi.objects.filter(id=id)
     # 如果未作改动依旧显示成功
     if isexist and (i.first().materialid_id != mid or i.first().supplyid_id != sid):
+        notify.append(dict(id=0, tittle="提示", context="供应关系编辑成功", type="success", position="top-center"))
+        request.session["notify"] = notify
         return JsonResponse({"status": True, "isexist": True})
     toCheck = [sid, mid]
     types = ['id供应商编号', 'id物料编号']
     res = form_check(toCheck, types)
     res["isexist"] = False
     if res["status"]:
+        notify.append(dict(id=0, tittle="提示", context="供应关系编辑成功", type="success", position="top-center"))
+        request.session["notify"] = notify
         i.update(supplyid_id=sid, materialid_id=mid, updatetime=time, updateid_id=uid)
     return JsonResponse(res)
 
@@ -644,7 +649,7 @@ def mm_list(request):
         n.append(i.username)
     yuan = dict(zip(id, n))
     return render(request, 'create_material.html', {"queryset": qu, "yuangong": yuan, "title": "物料列表"})
-# 添加供应商
+
 def mm_add(request):
     n = 1000
     if models.Wuliao.objects.first():
@@ -661,7 +666,7 @@ def mm_add(request):
     return JsonResponse({"status": True})
 
 
-# 编辑供应商时返回供应商原始数据
+
 def mm_detail(request):
     sid = request.GET.get("uid")
     su = models.Wuliao.objects.filter(id=sid).values("type", 'salegroup', 'saleway', "calcutype", "desc").first()
@@ -670,7 +675,7 @@ def mm_detail(request):
     return JsonResponse({"supply": su, "status": True})
 
 
-# 保存编辑供应商的最新数据
+
 def mm_edit(request):
     id = request.GET.get("uid")
     uid = request.session["info"]['id']
@@ -696,7 +701,7 @@ def mm_delete(request):
     models.Wuliao.objects.filter(id=id).delete()
     return JsonResponse({"status": True})
 
-import django_excel as excel
+
 import json
 
 def supply_excel(request):
@@ -711,3 +716,20 @@ def initial(request):
     return render(request, 'initial.html')
 def guide(request):
     return render(request, 'viewer.html')
+
+
+def material_delete(request):
+    id=request.GET.get("uid")
+    gy=models.Gongyingguanxi.objects.filter(id=id).first()
+    mid=gy.materialid_id
+    notify=[]
+    sid=gy.supplyid_id
+    q=models.Xunjiadan.objects.filter(supplyid_id=sid,demandid__maid=mid)
+    if q:
+        notify.append(dict(id=0, tittle="提示", context="该此供应关系存在未处理采购单，不能删除", type="error", position="top-center"))
+        request.session["notify"] = notify
+        return JsonResponse({"status":False})
+    models.Gongyingguanxi.objects.filter(id=id).delete()
+    notify.append(dict(id=0, tittle="提示", context="供应关系删除成功", type="success", position="top-center"))
+    request.session["notify"] = notify
+    return JsonResponse({"status":True})

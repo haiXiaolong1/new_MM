@@ -244,12 +244,19 @@
             $("#Delete").click(
                 function () {
                     $.ajax({
-                        url: "/supply/delete/",
+                        url: "/supply/material/delete/",
                         type: "get",
                         data: {uid: DELETE_ID},
                         dataType: "JSON",
                         success: function (res) {
                             if (res.status) {
+                                $("#deleteModel").modal('hide');
+                                DELETE_ID = undefined;
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
+                                location.reload();
+                            }else {
                                 $("#deleteModel").modal('hide');
                                 DELETE_ID = undefined;
                                 sessionStorage.setItem("search",$('#example_filter input')[0].value);
