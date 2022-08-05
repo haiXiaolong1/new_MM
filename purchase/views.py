@@ -491,7 +491,7 @@ def documents(list, puid):
                         m["id"] = id
                         m["fid"] = fid
                         m["tcount"] = tcount
-                        m["price"] = p.price
+                        m["price"] = p.quoteid.quote
                         m["mid"] = mid
                         m['sid'] = sid
                         m["name"] = name
@@ -511,7 +511,7 @@ def documents(list, puid):
                     m["id"] = id
                     m["tcount"] = tcount
                     m["fee"] = iv.fee
-                    m["totalmoney"]=iv.totalmoney
+                    m["totalmoney"]=iv.money+iv.fee
                     m["mid"] = mid
                     m['sid'] = sid
                     m["name"] = name
@@ -587,6 +587,7 @@ def purchase_documents(request):
     quid = ""
     teid = ""
     wid = ""
+    ivid=""
     nid = request.GET.get("id", "")
     tp = nid[:2]
     if tp == "pu":
@@ -601,6 +602,8 @@ def purchase_documents(request):
         teid = nid
     if tp == "wa":
         wid = nid
+    if tp == "iv":
+        ivid=nid
     if puid:
         documents(list, puid)
     elif did:
@@ -671,6 +674,11 @@ def purchase_documents(request):
         if wa:
             puid = wa.temid.purchaseid_id
             documents(list, puid)
+    elif ivid:
+        iv=models.Fapiao.objects.filter(invoiceid=ivid).first()
+        if iv:
+            puid=iv.purchaseid_id
+            documents(list,puid)
     document_state=""
     for docu in list:
         document_state+=docu['name'][0]
