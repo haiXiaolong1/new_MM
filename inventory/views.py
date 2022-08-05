@@ -215,7 +215,7 @@ def demand_verify(request):
     notify.append(dict(id=0, tittle="提示", context="请购单审核成功！", type="success", position="top-center"))
     cgxq = cgd.first()
     wl = models.Wuliao.objects.filter(id=cgxq.maid_id).first()
-    if me.office != "0" and me.isactive == 1 and me.issuper == 0:
+    if me.office != "0" and me.isactive == 1:
         message.append("【反馈消息】请购单审核反馈")
         message.append("请购单{}<br/>已审核通过"
                        .format(set_copy_message(did)))
@@ -289,9 +289,9 @@ def ischeck(request, pid, notify):
         zid = "te" + str(int(n) + 1)
         z.update(temid=zid, isreceived=0, createtime=createtime)
         # 更新库存信息,此情况下，库存为冻结库存
-        fid = z.first().purchaseid.facid_id
-        mid = z.first().maid_id
-        tcount = z.first().tcount
+        fid = z.first().purchaseid.quoteid.inquiryid.demandid.facid_id
+        mid = z.first().purchaseid.quoteid.inquiryid.demandid.maid_id
+        tcount = z.first().purchaseid.quoteid.inquiryid.demandid.tcount
         # 更新采购单和暂存单的状态为冻结状态
         models.Zanshoudan.objects.filter(temid=zid).update(isreceived=-1)
         models.Caigoudan.objects.filter(purchaseid=pid).update(iscomplete=-1)

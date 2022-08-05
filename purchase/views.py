@@ -92,8 +92,8 @@ def create_qui(request):
                    .format(wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype,
                            datetime.strptime(date, '%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
                                                                                                            "日")))
-    # if me.issuper == 0:
-    if 1:
+
+    if me.office!="0":
         pur_jl = models.Yuangong.objects.filter(businessid_id=me.businessid_id, office="5").first()
         inv_yg = models.Yuangong.objects.filter(businessid_id=me.businessid_id, office="1").first()
         for m in message:
@@ -121,8 +121,7 @@ def create_qui(request):
         message = []
         message.append("【系统消息】操作历史记录")
         next = me
-        # if not me.issuper == 1:
-        if 1:
+        if me.office!="0":
             next = models.Yuangong.objects.filter(businessid=me.businessid, office="1").first()
         message.append("【{}】{}<br/>向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
                        .format(me.get_office_display(), me.username, gys.name, gys.id, set_copy_message(qgd.demandid), set_copy_message(inid)))
@@ -205,7 +204,6 @@ def quote_evaluateByID(request):
             .format(bjd.supplyid.name, set_copy_message(bjd.supplyid_id), bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
         situation+='<br/>接受报价单号{}'.format(set_copy_message(bjd.quoteid))
         message.append(situation)
-        # if me.issuper==0:  #非管理员
         if me.office!="0":
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
@@ -237,7 +235,6 @@ def quote_evaluateByID(request):
         if request.session['produceActive']:
             message[1] = '【{}】{}<br/>'.format(me.get_office_display(), me.username) + message[1]
             next = me
-            # if me.issuper == 0:
             if me.office!="0":
                 next = models.Yuangong.objects.filter(businessid=me.businessid, office="4").first()
             message.append('下一步操作人:【{}】{}<br/>'
@@ -557,7 +554,7 @@ def demand_list(list, did, quid, inid):
         m["fid"] = fid
         m["tcount"] = tcount
         m["mid"] = mid
-        m['bid'] = i.bussid.name
+        m['bid'] = i.createuserid.businessid.name
         m["name"] = name
         list.append(m)
     # 报价单

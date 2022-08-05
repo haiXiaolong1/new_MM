@@ -565,8 +565,8 @@ def quote_add(request):
         notify.append(dict(id=2, tittle="系统消息", context="已提示 【{}】{} 前往评估报价单".format(jl.get_office_display(),jl.username), type="info", position="top-center"))
         message.append("【反馈信息】报价反馈信息")
         message.append("询价单 {} 已收到报价<br/>报价单号 {}".format(set_copy_message(xjd.inquiryid), set_copy_message(qid)))
-        # if me.issuper==0:
-        if 1:
+
+        if me.office!="0":
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
             message[0]="【系统消息】收到新报价单"
@@ -589,8 +589,7 @@ def quote_add(request):
             message[0] = "【系统消息】报价评估完成"
             message[1]='下一步操作人:【{}】{}<br/>'.format(me.get_office_display(),me.username)+message[1]
             next=me
-            # if me.issuper==0:
-            if 1:
+            if me.office!=0:
                 next = models.Yuangong.objects.filter(businessid=me.businessid, office="2").first()
             message.append('下一步操作人:【{}】{}<br/>'
                            '下一步骤:维护供应商报价单<a class="chat_link" href="/supply/quote/list/">>></a><br/>'

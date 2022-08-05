@@ -48,7 +48,6 @@ def ac_edit(request):
     o=request.POST
     notify=[]
     isactive = o['isactive']
-    issuper = 0
     bid=o["businessid_id"]
     toCheck = [o['username'], o['password'],o['email'],bid]
     types = ['nan', 'nan','nan','nan']
@@ -58,7 +57,7 @@ def ac_edit(request):
         res["status"]=False
     if res["status"]:
         models.Yuangong.objects.filter(id=id).update(office=o['office'],username=o['username'],password=o['password'],email=o['email']
-                                                 ,isactive=isactive,issuper=issuper,businessid=o['businessid_id'])
+                                                 ,isactive=isactive,businessid=o['businessid_id'])
         notify.append(dict(id=0, tittle="提示", context="员工 {} 编辑成功".format(id), type="success", position="top-center"))
         request.session["notify"] = notify
     return JsonResponse(res)
@@ -188,7 +187,7 @@ def ac_login(request):
     models.Yuangong.objects.filter(id=id).update(password=password)
     ins=models.Yuangong.objects.filter(id=id).first()
     request.session.pop("valid")
-    request.session["info"] = {"name": ins.username, "id": ins.id, "issuper": ins.issuper
+    request.session["info"] = {"name": ins.username, "id": ins.id
         , "office": ins.office, "business": ins.businessid.name, "officename": ins.get_office_display()}
     request.session["messageFlow"] = all_message_by_user(None, ins.id)
     request.session['produceActive']=True #控制是否向生产经理抄送操作记录
