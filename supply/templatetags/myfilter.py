@@ -93,11 +93,11 @@ def obj_document(arg):
         "mark":[False,False,"sid",False,"mid",False,False,False,False]
     }
     rkd={
-        "items":["id","status","fid","fid","sid","sid","mid","mid","tcount","moreinfo"],
-        "tittles":["入库单号","订单状态","工厂编号","工厂地址","供应商编号","供应商","物料编号","物料描述","暂收数量","备注"],
-        "classes":["half"]*8+["full"]*2,
-        "texts":[""]*10,
-        "mark":[False,"status",False,"fid",False,"sid",False,"mid",False,False]
+        "items":["id","status","fid","fid","sid","sid","mid","mid","tcount","rcount","moreinfo"],
+        "tittles":["入库单号","订单状态","工厂编号","工厂地址","供应商编号","供应商","物料编号","物料描述","暂收数量","入库数量","备注"],
+        "classes":["half"]*10+["full"]*1,
+        "texts":[""]*11,
+        "mark":[False,"status",False,"fid",False,"sid",False,"mid",False,False,False]
     }
     patterns=dict(zip(names,[qgd,xjd,bjd,cgd,zsd,rkd,fp]))
     p=patterns[arg["name"]]
