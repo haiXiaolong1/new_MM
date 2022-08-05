@@ -407,6 +407,7 @@ def supply_add(request):
     res = form_check(toCheck, types)
     l1=len(o['name'])
     l2=len(o['address'])
+    notify=[]
     if l1>20:
         res['error'][0]='供应商名称不能超过20个字符'
         res['status']=False
@@ -414,6 +415,8 @@ def supply_add(request):
         res['error'][0]='供应商地址不能超过20个字符'
         res['status']=False
     if res['status']:
+        notify.append(dict(id=0, tittle="提示", context="供应商 {} 创建成功".format(sid), type="success", position="top-center"))
+        request.session["notify"] = notify
         models.Gongyingshang.objects.create(name=o['name'], address=o['address'], createtime=time
                                             , id=sid, updatetime=time, createnumberid_id=id, updatenumberid_id=id)
     return JsonResponse(res)
@@ -432,6 +435,7 @@ def supply_edit(request):
     uid = request.session["info"]['id']
     # 用户ID
     s = request.POST
+    notify=[]
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     toCheck = [s['name'], s['address']]
     types = ['nan', 'nan']
@@ -445,6 +449,8 @@ def supply_edit(request):
         res['error'][0]='供应商地址不能超过20个字符'
         res['status']=False
     if res['status']:
+        notify.append(dict(id=0, tittle="提示", context="供应商 {} 编辑成功".format(id), type="success", position="top-center"))
+        request.session["notify"] = notify
         models.Gongyingshang.objects.filter(id=id).update(name=s['name'],
                                                           address=s['address'], updatetime=time, updatenumberid_id=uid)
 
@@ -454,9 +460,14 @@ def supply_edit(request):
 def supply_delete(request):
     id = request.GET.get("uid")
     s = models.Gongyingguanxi.objects.filter(supplyid_id=id).first()
+    notify=[]
     # 先判断是否有关联的供应关系，如果有则不能删除
     if s:
+        notify.append(dict(id=0, tittle="提示", context="供应商 {} 存在供应关系，不能删除".format(id), type="error", position="top-center"))
+        request.session["notify"] = notify
         return JsonResponse({"status": False})
+    notify.append(dict(id=0, tittle="提示", context="供应商 {} 删除成功".format(id), type="success", position="top-center"))
+    request.session["notify"] = notify
     models.Gongyingshang.objects.filter(id=id).delete()
     return JsonResponse({"status": True})
 
