@@ -733,3 +733,6 @@ def material_delete(request):
     notify.append(dict(id=0, tittle="提示", context="供应关系删除成功", type="success", position="top-center"))
     request.session["notify"] = notify
     return JsonResponse({"status":True})
+
+def map(request,pos):
+    return render(request, 'map.html',{'pos':pos})
