@@ -578,6 +578,9 @@ def invoice_add(request):
                                  createuserid_id=id, purchaseid_id=pid, money=money, moreinfo=moreinfo
                                  )
     # 更新暂收单状态
+    notify=[]
+    notify.append(dict(id=0, tittle="提示", context="发票{}创建成功".format(ivid), type="success", position="top-center"))
+    request.session["notify"] = notify
     models.Zanshoudan.objects.filter(temid=tid).update(isreceived=2)
     return JsonResponse({"status": True, "id": ivid})
 
