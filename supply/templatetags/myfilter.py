@@ -109,3 +109,7 @@ def obj_document(arg):
            "text":p["texts"][idx]}
         result.append(d)
     return result
+
+@register.filter(name="money_add")
+def money_add(arg,val):
+    return float(val)+float(arg)

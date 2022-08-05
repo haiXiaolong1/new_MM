@@ -122,9 +122,9 @@
                                             </td>
                                             <td>{{ obj.inquiryid_id }}</td>
                                             <td>{{ obj.inquiryid.demandid_id }}</td>
-                                            <td>{{ obj.maid_id }}</td>
+                                            <td>{{ obj.inquiryid.demandid.maid_id }}</td>
                                             <td>{{ obj.supplyid_id }}</td>
-                                            <td>{{ obj.bussid_id }}</td>
+                                            <td>{{ obj.inquiryid.demandid.createuserid.businessid_id }}</td>
                                             <td>{{ obj.quote }}</td>
                                             <td>{{ obj.validitytime|date:"Y-m-d H:i:s" }}</td>
                                             {% if  request.session.info.office == "1" or request.session.info.office == "0" %}

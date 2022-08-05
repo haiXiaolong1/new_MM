@@ -146,10 +146,10 @@
                                     {% for obj in queryset %}
                                         <tr>
                                             <td>{{ obj.temid_id }}</td>
-                                            <td>{{ obj.maid_id }}</td>
-                                            <td>{{ obj.facid_id }}</td>
-                                            <td>{{ obj.temid.purchaseid.price }}</td>
-                                            <td>{{ obj.purcount }}</td>
+                                            <td>{{ obj.temid.purchaseid.quoteid.inquiryid.demandid.maid_id }}</td>
+                                            <td>{{ obj.temid.purchaseid.quoteid.inquiryid.demandid.facid_id }}</td>
+                                            <td>{{ obj.temid.purchaseid.quoteid.quote }}</td>
+                                            <td>{{ obj.temid.purchaseid.quoteid.inquiryid.demandid.tcount }}</td>
                                             <td>{{ obj.temid.get_isreceived_display }}</td>
                                             <td>{{ obj.receivecount }}</td>
                                             <td>{{ obj.moreinfo }}</td>

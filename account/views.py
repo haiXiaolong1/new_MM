@@ -19,7 +19,6 @@ def ac_add(request):
     sid="e"+ "0"*cal +num
     o=request.POST
     isactive = o['isactive']
-    issuper = 0
     bid=o["businessid_id"]
     toCheck = [o['username'], o['password'],o['email'],bid]
     types = ['nan', 'nan','nan','nan']
@@ -30,14 +29,14 @@ def ac_add(request):
         res["status"]=False
     if res["status"]:
         models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password'],email=o['email']
-                                        ,id=sid,isactive=isactive,issuper=issuper,businessid_id=bid)
+                                        ,id=sid,isactive=isactive,businessid_id=bid)
         notify.append(dict(id=0, tittle="提示", context="员工 {} 创建成功".format(sid), type="success", position="top-center"))
         request.session["notify"] = notify
     return JsonResponse(res)
 # 编辑用户时返回用户原始数据
 def ac_detail(request):
     id=request.GET.get("uid")
-    ac=models.Yuangong.objects.filter(id=id).values("office",'password','username',"email","isactive","issuper","businessid_id").first()
+    ac=models.Yuangong.objects.filter(id=id).values("office",'password','username',"email","isactive","businessid_id").first()
     if not ac:
         return JsonResponse({"status":False,"error":"数据不存在"})
 

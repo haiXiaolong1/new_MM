@@ -128,7 +128,7 @@ def demand_add(request):
         notify = []
         notify.append(dict(id=0, tittle="提示", context="请购单创建成功！", type="success", position="top-center"))
         wl = models.Wuliao.objects.filter(id=r['maid_id']).first()
-        if me.office != "5" and me.isactive==1 and me.issuper == 0:
+        if me.office != "5" and me.isactive==1 :
             message.append("【系统消息】申请审核")
             message.append('待审核请购单：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
                            .format(set_copy_message(did),wl.desc,wl.id,r['tcount'],r['price'],wl.calcutype))
@@ -150,8 +150,7 @@ def demand_add(request):
             message = []
             message.append("【系统消息】操作历史记录")
             next=me
-            if not me.issuper==1:
-                next=models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
+            next=models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             message.append(
                 '【{}】{}<br/>创建请购单：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
                 '下一步操作人:【{}】{}<br/>'
@@ -249,8 +248,7 @@ def demand_verify(request):
         message = []
         message.append("【系统消息】操作历史记录")
         next = me
-        if not me.issuper == 1:
-            next = models.Yuangong.objects.filter(businessid=me.businessid, office="2").first()
+        next = models.Yuangong.objects.filter(businessid=me.businessid, office="2").first()
         message.append(
             '【{}】{}<br/>审核请购单:{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>'
             '下一步操作人:【{}】{}<br/>'
@@ -323,9 +321,9 @@ def ischeck(request, pid, notify):
         zid = "te" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
         z.update(temid=zid, isreceived=0, createtime=createtime)
         # 更新库存信息
-        fid = z.first().purchaseid.facid_id
-        mid = z.first().maid_id
-        tcount = z.first().tcount
+        fid = z.first().purchaseid.quoteid.inquiryid.demandid.facid_id
+        mid = z.first().purchaseid.quoteid.inquiryid.demandid.maid_id
+        tcount = z.first().purchaseid.quoteid.inquiryid.demandid.tcount
         w = models.Gongchangkucun.objects.filter(facid_id=fid, maid_id=mid).order_by("-updatetime").first()
         if w:
             models.Gongchangkucun.objects.create(facid_id=fid, maid_id=mid, inventorytemp=tcount + w.inventorytemp
@@ -339,17 +337,17 @@ def ischeck(request, pid, notify):
                                                  , updatetime=createtime)
         # 暂时生成入库单,单号等于暂存单号
         id = request.session["info"]['id']
-        models.Rukudan.objects.create(id=zid, purcount=tcount, createusersid_id=id, facid_id=fid,
-                                      maid_id=mid, temid_id=zid)
+        models.Rukudan.objects.create(id=zid, createusersid_id=id,
+                                       temid_id=zid)
         flag = True
         #系统自动发信
         me=models.Yuangong.objects.filter(id=id).first()
         zcd=z.first()
         cgd=zcd.purchaseid
         yg=cgd.createuserid
-        gys=cgd.supplyid
-        fac=cgd.facid
-        wl=cgd.maid
+        gys=cgd.quoteid.inquiryid.supplyid
+        fac=cgd.quoteid.inquiryid.demandid.facid
+        wl=cgd.quoteid.inquiryid.demandid.maid
         jl=models.Yuangong.objects.filter(businessid=me.businessid,isactive=1,office="5").first()
         notify.append(dict(id=1, tittle="提示", context="暂存单 {} 通过【质检】及【量检】".format(zcd.temid), type="success", position="top-center"))
         notify.append(dict(id=2, tittle="系统消息", context="向 【{}】{} 发信反馈暂存单检查完成".format(yg.get_office_display(), yg.username),
@@ -358,12 +356,12 @@ def ischeck(request, pid, notify):
         message = []
         message.append("【反馈消息】暂存单反馈信息")
         message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购订单:{}<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
-                       .format(gys.name,gys.id,fac.type,fac.address,set_copy_message(cgd.purchaseid),wl.desc,wl.id,cgd.tcount,wl.calcutype,cgd.price,wl.calcutype))
+                       .format(gys.name,gys.id,fac.type,fac.address,set_copy_message(cgd.purchaseid),wl.desc,wl.id,cgd.quoteid.inquiryid.demandid.tcount,wl.calcutype,cgd.quoteid.quote,wl.calcutype))
         mes="<br/>"+zcd.moreinfo
         if mes.strip()=="<br/>":
             mes=" 无备注"
         message.append("暂存单号:{}<br/>暂存检查情况：<br/>量检通过-质检通过<br/>备注：{}".format(set_copy_message(zcd.temid),mes))
-        if me.issuper==0 and not me.office=="5":
+        if me.office!="0" and not me.office=="5":
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
             message[0]="【系统消息】暂存单通过检查，等待入库"
@@ -381,7 +379,7 @@ def ischeck(request, pid, notify):
         if request.session["produceActive"]:
             message[1] = '【{}】{}<br/>完成暂存物料检查<br/>'.format(me.get_office_display(), me.username) + message[1]
             next = me
-            if me.issuper == 0:
+            if me.office!="0":
                 next = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
             message=message[:-1]
             message.append('下一步操作人:【{}】{}<br/>'
@@ -443,15 +441,15 @@ def receive_add(request):
     """添加入库"""
     tid = request.GET.get("tid")
     t = models.Rukudan.objects.filter(temid_id=tid)
-    fid = t.first().facid_id
-    mid = t.first().maid_id
+    fid = t.first().temid.purchaseid.quoteid.inquiryid.demandid.facid_id
+    mid = t.first().temid.purchaseid.quoteid.inquiryid.demandid.maid_id
     pid = t.first().temid.purchaseid_id
     receivecount = request.POST.get("receivecount")
     if not receivecount:
         return JsonResponse({"status": False,"error":"实际入库数量不能为空"})
     if float(receivecount) < 0:
         return JsonResponse({"status": False,"error":"实际入库数量不能为负数"})
-    pcount = t.first().purcount
+    pcount = t.first().temid.purchaseid.quoteid.inquiryid.demandid.tcount
     moreinfo = request.POST.get("moreinfo")
     id = request.session["info"]['id']
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -488,9 +486,9 @@ def receive_add(request):
     jl = models.Yuangong.objects.filter(isactive=1, businessid_id=me.businessid_id, office="6").first()
     zcd = models.Zanshoudan.objects.filter(temid=tid).first()
     cgd = zcd.purchaseid
-    gys = cgd.supplyid
-    fac = cgd.facid
-    wl = cgd.maid
+    gys = cgd.quoteid.inquiryid.supplyid
+    fac = cgd.quoteid.inquiryid.demandid.facid
+    wl = cgd.quoteid.inquiryid.demandid.maid
     notify.append(dict(id=0, tittle="提示", context="入库单 {} 创建成功".format(zcd.temid), type="success", position="top-center"))
     notify.append(dict(id=1, tittle="系统消息", context="向 【{}】{} 发信反馈入库完成".format(yg.get_office_display(), yg.username),
                        type="info", position="top-center"))
@@ -499,7 +497,7 @@ def receive_add(request):
     message = []
     message.append("【系统消息】物料需求成功入库")
     message.append("供应商:{}({})<br/>收货工厂:{}({})<br/>采购物料:{}({})<br/>采购数量:{}{}<br/>采购价格:{}元/{}"
-                   .format(gys.name, gys.id, fac.type, fac.address, wl.desc, wl.id, cgd.tcount,wl.calcutype, cgd.price, wl.calcutype))
+                   .format(gys.name, gys.id, fac.type, fac.address, wl.desc, wl.id, cgd.quoteid.inquiryid.demandid.tcount,wl.calcutype, cgd.quoteid.quote, wl.calcutype))
     msg1,msg2="<br/>"+zcd.moreinfo,"<br/>"+moreinfo
     if msg1.strip()=="<br/>":
         msg1="无备注"
@@ -510,7 +508,7 @@ def receive_add(request):
     message.append('查看订单单据流<a class="chat_link" href="/purchase/documents/?id={}">>></a>'.format(cgd.purchaseid))
     for m in message:
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
-    if me.issuper==0:
+    if me.office!="0":
         message[0]="【反馈消息】物料需求入库反馈"
         for m in message[:-1]:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
@@ -526,7 +524,7 @@ def receive_add(request):
         message[0] = "【系统消息】采购订单入库"
         message[1] = '【{}】{}<br/>'.format(me.get_office_display(), me.username) + message[1]
         next = me
-        if me.issuper == 0:
+        if me.office!="0":
             next = models.Yuangong.objects.filter(businessid=me.businessid, office="5").first()
         message.append('下一步操作人:【{}】{}<br/>'
                        '下一步骤:开具发票<a class="chat_link" href="/inventory/receive/">>></a><br/>'
@@ -556,29 +554,27 @@ def invoice_add(request):
     tid = request.GET.get("tid")
     t = models.Rukudan.objects.filter(temid_id=tid)
     pid = t.first().temid.purchaseid_id
-    sid = t.first().temid.purchaseid.supplyid_id
+    sid = t.first().temid.purchaseid.quoteid.inquiryid.supplyid_id
     fee = request.POST.get("receivecount")
     if not fee:
         return JsonResponse({"status": False,"error":"运费不能为空"})
     if float(fee)<0:
         return JsonResponse({"status": False,"error":"运费不能为负数"})
-    pcount = t.first().purcount
-    price = t.first().temid.purchaseid.price
+    pcount = t.first().temid.purchaseid.quoteid.inquiryid.demandid.tcount
+    price = t.first().temid.purchaseid.quoteid.quote
     id = request.session["info"]['id']
-    bid = t.first().temid.purchaseid.quoteid.bussid
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     totalcount = pcount
+    fee=round(float(fee),2)
     money = round(float(totalcount) * float(price),2)
-    totalmoney = money + float(fee)
-    totalmoney=round(totalmoney,2)
     moreinfo = request.POST.get("moreinfo")
 
     n = 10000000
     if models.Fapiao.objects.all().first():
         n = models.Fapiao.objects.all().order_by('-invoiceid').first().invoiceid[2:]
     ivid = "iv" + str(int(n) + 1)  # 编号递增，
-    models.Fapiao.objects.create(invoiceid=ivid, totalmoney=totalmoney, totalcount=totalcount
-                                 , fee=fee, createtime=time, supplyid_id=sid,
+    models.Fapiao.objects.create(invoiceid=ivid
+                                 , fee=fee, createtime=time,
                                  createuserid_id=id, purchaseid_id=pid, money=money, moreinfo=moreinfo
                                  )
     # 更新暂收单状态

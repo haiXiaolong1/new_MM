@@ -144,10 +144,10 @@
                                     {% for obj in queryset %}
                                         <tr>
                                             <td>{{ obj.purchaseid_id }}</td>
-                                            <td>{{ obj.purchaseid.maid_id }}</td>
-                                            <td>{{ obj.purchaseid.facid_id }}</td>
-                                            <td>{{ obj.purchaseid.price }}</td>
-                                            <td>{{ obj.purchaseid.tcount }}</td>
+                                            <td>{{ obj.purchaseid.quoteid.inquiryid.demandid.maid_id }}</td>
+                                            <td>{{ obj.purchaseid.quoteid.inquiryid.demandid.facid_id }}</td>
+                                            <td>{{ obj.purchaseid.quoteid.quote }}</td>
+                                            <td>{{ obj.purchaseid.quoteid.inquiryid.demandid.tcount }}</td>
                                             {% load myfilter %}
                                             <td>
                                                 <a class={{ obj.qualitycheckinfo|table_status:"zsd-jc" }}>{{ obj.get_qualitycheckinfo_display }}</a>

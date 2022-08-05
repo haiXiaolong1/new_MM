@@ -72,7 +72,7 @@ def create_qui(request):
     if not r:
         request.session["notify"] = [dict(id=0, tittle="错误", context="该供应商不提供此物料",type="error", position="top-center")]
         return JsonResponse({"status": False})
-    s=models.Xunjiadan.objects.filter(demandid_id=did,supplyid_id=sid,maid_id=mid)
+    s=models.Xunjiadan.objects.filter(demandid_id=did,supplyid_id=sid)
     if s:
         request.session["notify"] = [dict(id=0, tittle="错误", context="已经向该供应商发出询价单",type="error", position="top-center")]
         return JsonResponse({"status": False})
@@ -92,7 +92,8 @@ def create_qui(request):
                    .format(wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype,
                            datetime.strptime(date, '%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
                                                                                                            "日")))
-    if me.issuper == 0:
+    # if me.issuper == 0:
+    if 1:
         pur_jl = models.Yuangong.objects.filter(businessid_id=me.businessid_id, office="5").first()
         inv_yg = models.Yuangong.objects.filter(businessid_id=me.businessid_id, office="1").first()
         for m in message:
@@ -120,7 +121,8 @@ def create_qui(request):
         message = []
         message.append("【系统消息】操作历史记录")
         next = me
-        if not me.issuper == 1:
+        # if not me.issuper == 1:
+        if 1:
             next = models.Yuangong.objects.filter(businessid=me.businessid, office="1").first()
         message.append("【{}】{}<br/>向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
                        .format(me.get_office_display(), me.username, gys.name, gys.id, set_copy_message(qgd.demandid), set_copy_message(inid)))
@@ -140,15 +142,14 @@ def create_qui(request):
                            type="info", position="top-center"))
     request.session["notify"] = notify
 
-    models.Xunjiadan.objects.create(inquiryid=inid, tcount=d.tcount, validitytime=date,
-                                    createtime=time, bussid_id=user.businessid_id, createuserid_id=id,
-                                    demandid_id=did, maid_id=d.maid_id, supplyid_id=sid)
+    models.Xunjiadan.objects.create(inquiryid=inid, validitytime=date,
+                                    createtime=time,  createuserid_id=id,
+                                    demandid_id=did, supplyid_id=sid)
     # 将请购单的状态修改为2，即已完成状态，所有的状态含义在supply的models里面找到对应实体类可以查看
     models.Caigouxuqiu.objects.filter(demandid=did).update(status=2)
 
     # 这里为了展示，需要同时生成报价单,暂时将报价单号等于询价单号，供应商完报价之后，真正形成报价单
-    models.Baojiadan.objects.create(inquiryid_id=inid, tcount=d.tcount, validitytime=date,
-                                    bussid_id=user.businessid_id, maid_id=d.maid_id,
+    models.Baojiadan.objects.create(inquiryid_id=inid, validitytime=date,
                                     supplyid_id=sid, quoteid=inid)
     return JsonResponse({"status": True, "inid": inid})
 
@@ -204,7 +205,8 @@ def quote_evaluateByID(request):
             .format(bjd.supplyid.name, set_copy_message(bjd.supplyid_id), bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
         situation+='<br/>接受报价单号{}'.format(set_copy_message(bjd.quoteid))
         message.append(situation)
-        if me.issuper==0:  #非管理员
+        # if me.issuper==0:  #非管理员
+        if me.office!="0":
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
             message[0]="【系统消息】收到新报价评估"
@@ -235,7 +237,8 @@ def quote_evaluateByID(request):
         if request.session['produceActive']:
             message[1] = '【{}】{}<br/>'.format(me.get_office_display(), me.username) + message[1]
             next = me
-            if me.issuper == 0:
+            # if me.issuper == 0:
+            if me.office!="0":
                 next = models.Yuangong.objects.filter(businessid=me.businessid, office="4").first()
             message.append('下一步操作人:【{}】{}<br/>'
                            '下一步骤:引用报价单，创建采购订单<a class="chat_link" href="/purchase/list/">>></a><br/>'
@@ -294,16 +297,14 @@ def purchase_createByQuote(request):
     puid = "pu" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
     createtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id = request.session["info"]['id']
-    tcount = quote.first().tcount
     ff = quote.first().inquiryid.demandid.facid
     fid=ff.id
-    mid = quote.first().maid_id
-    sid = quote.first().supplyid_id
-    price = quote.first().quote
-    models.Caigoudan.objects.create(purchaseid=puid, price=price, tcount=tcount,
+    tcount=quote.first().inquiryid.demandid.tcount
+    mid = quote.first().inquiryid.demandid.maid_id
+    models.Caigoudan.objects.create(purchaseid=puid,
                                     createtime=createtime, deadline=deadline,
-                                    iscomplete=0, createuserid_id=id, facid_id=fid,
-                                    maid_id=mid, quoteid_id=quid, supplyid_id=sid)
+                                    iscomplete=0, createuserid_id=id,
+                                   quoteid_id=quid)
     # 更新该工厂的在途库存
     w = models.Gongchangkucun.objects.filter(facid_id=fid, maid_id=mid).order_by("-updatetime").first()
     if w:
@@ -318,7 +319,7 @@ def purchase_createByQuote(request):
                                              , updatetime=createtime)
 
     # 为了展示需要这里需要，同时生成暂存单，当进行暂存处理时真正生成暂存单
-    models.Zanshoudan.objects.create(temid=puid, tcount=tcount, maid_id=mid,
+    models.Zanshoudan.objects.create(temid=puid,
                                      purchaseid_id=puid, qualitycheckinfo=-1,
                                      quantitycheckinfo=-1)
     # 系统自动发信
@@ -334,7 +335,7 @@ def purchase_createByQuote(request):
     message.append("引用报价单 {}<br/>创建采购订单 {}<br/>发往工厂:{}({})<br/>收货截至期限：{}"
                    .format(set_copy_message(quid),set_copy_message(puid),ff.type,ff.address,datetime.strptime(deadline,"%Y-%m-%d").strftime("%Y{}%m{}%d{}").format("年","月","日")))
     message.append('请在追踪供应商送货进度<br/>在截止期限前将货物暂存<a class="chat_link" href="/inventory/temp/">>></a>')
-    if me.issuper==0 and not me.office=="4":
+    if me.office!="0" and not me.office=="4":
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
         message[0]="【反馈消息】采购订单反馈信息"
@@ -357,7 +358,7 @@ def purchase_createByQuote(request):
         message[0] = "【系统消息】创建采购订单"
         message[1] = '【{}】{}<br/>'.format(me.get_office_display(), me.username) + message[1]
         next = me
-        if me.issuper == 0:
+        if me.office!="0":
             next = models.Yuangong.objects.filter(businessid=me.businessid, office="3").first()
         message.append('下一步操作人:【{}】{}<br/>'
                        '下一步骤:追踪供货进度，维护暂存单<a class="chat_link" href="/inventory/temp/">>></a><br/>'

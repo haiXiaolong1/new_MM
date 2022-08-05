@@ -239,13 +239,13 @@ def delete_notify(request):
 
 #询价单系列数据
 def xjd_info(xjd,retu):
-    wl = xjd.maid
-    gs = xjd.bussid
+    wl = xjd.demandid.maid
+    gs = xjd.demandid.createuserid.businessid
     gc = xjd.demandid.facid
     retu["gs"] = {'id': gs.myid, 'name': gs.name}
     retu['gc'] = {'type': gc.type, 'id': gc.id, 'add': gc.address}
     retu['wl'] = {"id": wl.id, "desc": wl.desc, "cal": wl.calcutype, "type": wl.type}
-    retu['tcount'] = xjd.tcount
+    retu['tcount'] = xjd.demandid.tcount
     return
 
 #表单信息展示函数
@@ -303,7 +303,7 @@ def form_set_byId(request):
         cgd=rkd.temid.purchaseid
         bjd=cgd.quoteid
         xjd=bjd.inquiryid
-        gys=cgd.supplyid
+        gys=cgd.quoteid.inquiryid.supplyid
         xjd_info(xjd,retu)
         facid=xjd.demandid.facid_id
         maid=xjd.demandid.maid_id
@@ -341,7 +341,7 @@ def login(request):
         err[0] = "该账户已禁用"
         return JsonResponse({"status": False, "errors": err})
     # 记录登录信息
-    request.session["info"] = {"name": ins.username, "id": ins.id, "issuper": ins.issuper
+    request.session["info"] = {"name": ins.username, "id": ins.id
         , "office": ins.office, "business": ins.businessid.name, "officename": ins.get_office_display()}
     request.session["messageFlow"] = all_message_by_user(None, ins.id)
     request.session['produceActive']=True #控制是否向生产经理抄送操作记录
@@ -565,7 +565,8 @@ def quote_add(request):
         notify.append(dict(id=2, tittle="系统消息", context="已提示 【{}】{} 前往评估报价单".format(jl.get_office_display(),jl.username), type="info", position="top-center"))
         message.append("【反馈信息】报价反馈信息")
         message.append("询价单 {} 已收到报价<br/>报价单号 {}".format(set_copy_message(xjd.inquiryid), set_copy_message(qid)))
-        if me.issuper==0:
+        # if me.issuper==0:
+        if 1:
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
             message[0]="【系统消息】收到新报价单"
@@ -588,7 +589,8 @@ def quote_add(request):
             message[0] = "【系统消息】报价评估完成"
             message[1]='下一步操作人:【{}】{}<br/>'.format(me.get_office_display(),me.username)+message[1]
             next=me
-            if me.issuper==0:
+            # if me.issuper==0:
+            if 1:
                 next = models.Yuangong.objects.filter(businessid=me.businessid, office="2").first()
             message.append('下一步操作人:【{}】{}<br/>'
                            '下一步骤:维护供应商报价单<a class="chat_link" href="/supply/quote/list/">>></a><br/>'

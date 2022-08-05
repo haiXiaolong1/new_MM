@@ -32,12 +32,13 @@
                                     {% for obj in queryset %}
                                         <tr>
                                             <td>{{ obj.invoiceid }}</td>
-                                            <td>{{ obj.supplyid.name }}</td>
-                                            <td>{{ obj.supplyid_id }}</td>
+                                            <td>{{ obj.purchaseid.quoteid.inquiryid.supplyid.name }}</td>
+                                            <td>{{ obj.purchaseid.quoteid.inquiryid.supplyid_id }}</td>
                                             <td>{{ obj.purchaseid_id }}</td>
-                                            <td>{{ obj.purchaseid.maid_id }}</td>
-                                            <td>{{ obj.totalcount }}</td>
-                                            <td>{{ obj.totalmoney }}</td>
+                                            <td>{{ obj.purchaseid.quoteid.inquiryid.demandid.maid_id }}</td>
+                                            <td>{{ obj.purchaseid.quoteid.inquiryid.demandid.tcount }}</td>
+                                            {% load myfilter %}
+                                            <td>{{ obj.money|money_add:obj.fee }}</td>
                                             <td>{{ obj.createtime|date:"Y-m-d H:i:s" }}</td>
                                             <td>
                                                 <a class="btn btn-primary btn-xs btnDetail"

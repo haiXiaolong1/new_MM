@@ -20,12 +20,12 @@
                         <div class="panel-body" id="invoicePdf" style="background-color: #FFFFFF">
                             <div class="col-md-4" style="padding-left:0;">
                                 <label><strong>供应商:</strong></label>
-                                <h3 class="m-b-md m-t-xxs"><b>{{ invoice.supplyid.name }}</b></h3>
+                                <h3 class="m-b-md m-t-xxs"><b>{{ invoice.purchaseid.quoteid.inquiryid.supplyid.name }}</b></h3>
                                 <address>
                                     <label><strong>供应商编号：</strong></label><br>
-                                    {{ invoice.supplyid_id }}<br>
+                                    {{ invoice.purchaseid.quoteid.inquiryid.supplyid_id }}<br>
                                      <label><strong>供应商地址：</strong></label><br>
-                                    中国
+                                    {{ invoice.purchaseid.quoteid.inquiryid.supplyid.address }}
                                 </address>
                             </div>
                             <div class="col-md-8 text-right" style="padding-right:0;">
@@ -36,12 +36,12 @@
                                 <p>
                                     <strong>Invoice to</strong><br>
                                      <label><strong>名称：</strong></label>
-                                    {{ invoice.purchaseid.quoteid.bussid.name }}<br>
+                                    {{ invoice.purchaseid.quoteid.createuserid.businessid.name }}<br>
                                     <label><strong>邮政编码：</strong></label>
-                                    {{ invoice.purchaseid.quoteid.bussid.postcode }}<br>
+                                    {{ invoice.purchaseid.quoteid.createuserid.businessid.postcode }}<br>
                                      <label><strong>地址：</strong></label>
-                                    {{ invoice.purchaseid.quoteid.bussid.address }}<br>
-                                    <strong>电话:</strong> {{ invoice.purchaseid.quoteid.bussid.telephone }}<br>
+                                    {{ invoice.purchaseid.quoteid.createuserid.businessid.address }}<br>
+                                    <strong>电话:</strong> {{ invoice.purchaseid.quoteid.createuserid.businessid.telephone }}<br>
                                 </p>
                             </div>
                             <div class="col-md-12" style="padding-left:0;padding-right:0;">
@@ -57,11 +57,11 @@
                                     </thead>
                                     <tbody>
                                     <tr>
-                                        <td>{{ invoice.purchaseid.quoteid.maid_id }}</td>
-                                        <td>{{ invoice.purchaseid.maid.desc }}</td>
-                                        <td>{{ invoice.purchaseid.tcount }}</td>
-                                        <td>{{ invoice.purchaseid.maid.calcutype }}</td>
-                                        <td>{{ invoice.purchaseid.price }}</td>
+                                        <td>{{ invoice.purchaseid.quoteid.inquiryid.demandid.maid_id }}</td>
+                                        <td>{{ invoice.purchaseid.quoteid.inquiryid.demandid.maid.desc }}</td>
+                                        <td>{{ invoice.purchaseid.quoteid.inquiryid.demandid.tcount }}</td>
+                                        <td>{{ invoice.purchaseid.quoteid.inquiryid.demandid.maid.calcutype }}</td>
+                                        <td>{{ invoice.purchaseid.quoteid.quote }}</td>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -81,7 +81,8 @@
                                     <h2 class="no-m">{{ invoice.fee }}</h2>
                                     <hr>
                                     <h4 class="no-m m-t-md text-success">总计</h4>
-                                    <h1 class="no-m text-success">{{ invoice.totalmoney }}</h1>
+                                    {% load myfilter %}
+                                    <h1 class="no-m text-success">{{ invoice.money|money_add:invoice.fee }}</h1>
                                     <hr>
                                     <!--endprint-->
                                     <button class="btn btn-info">post</button>

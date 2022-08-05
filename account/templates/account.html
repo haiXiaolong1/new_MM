@@ -151,7 +151,7 @@
                                         <th>是否激活？</th>
                                         {#                                    <th>是否管理员？</th>#}
                                         <th>公司编号</th>
-                                        {% if  request.session.info.issuper %}
+                                        {% if  request.session.info.office == "0" %}
                                             <th>操作</th>
                                         {% endif %}
                                     </tr>
