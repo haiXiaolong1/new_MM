@@ -201,8 +201,9 @@ def r_massage(request):
     else:
         name = request.POST.get("name")
         sq = request.POST.get("sq")
+        sq=models.Securityquestion.objects.filter(question=sq).first().id
         verification = request.POST.get("verification")
-        models.Yuangong.objects.filter(id=request.session['info']['id']).update(username=name, question=sq,
+        models.Yuangong.objects.filter(id=request.session['info']['id']).update(username=name,questionid_id=sq,
                                                                                 verification=verification)
         # 更新session
         request.session['info']['name'], request.session['info']['verification'], request.session['info'][

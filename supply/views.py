@@ -365,7 +365,7 @@ def r_password(request):
     if ins is None:
         messages.success(request, "员工号输入错误！", locals())
         return redirect('/forgot')
-    if ins.question == sq:
+    if ins.questionid.question == sq:
         if ins.verification == sq_verification:
             models.Yuangong.objects.filter(id=username).update(password=new_password)
             return redirect('/login')

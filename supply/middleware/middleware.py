@@ -10,7 +10,7 @@ class AuthMW(MiddlewareMixin):
                 request.path_info == "/account/ac/send/" or request.path_info == "/account/ac/login/":
             return
 
-        if request.path_info == "/forgot/":
+        if request.path_info == "/forgot":
             return
         if request.path_info == "/supply/r_password":
             return
