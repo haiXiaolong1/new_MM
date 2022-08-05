@@ -64,12 +64,12 @@
                                         {% if obj.quoteid != obj.inquiryid_id %}
                                             <tr>
                                                 <td>{{ obj.purchaseid }}</td>
-                                                <td>{{ obj.maid_id }}</td>
-                                                <td>{{ obj.facid_id }}</td>
-                                                <td>{{ obj.supplyid_id }}</td>
+                                                <td>{{ obj.quoteid.inquiryid.demandid.maid_id }}</td>
+                                                <td>{{ obj.quoteid.inquiryid.demandid.facid_id }}</td>
+                                                <td>{{ obj.quoteid.inquiryid.supplyid_id }}</td>
                                                 <td>{{ obj.get_iscomplete_display }}</td>
-                                                <td>{{ obj.price }}</td>
-                                                <td>{{ obj.tcount }}</td>
+                                                <td>{{ obj.quoteid.quote }}</td>
+                                                <td>{{ obj.quoteid.inquiryid.demandid.tcount }}</td>
                                                 <td>{{ obj.deadline|date:"Y-m-d" }}</td>
                                                 {% if  request.session.info.office == "0" or request.session.info.office == "4" or request.session.info.office == "2" %}
                                                     <td>

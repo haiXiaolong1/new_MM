@@ -386,11 +386,11 @@ def documents(list, puid):
             name = "采购单"
             status = p.iscomplete
             id = p.purchaseid
-            fid = p.facid_id
-            mid = p.maid_id
-            sid = p.supplyid_id
-            tcount = p.tcount
-            price = p.price
+            fid = p.quoteid.inquiryid.demandid.facid_id
+            mid = p.quoteid.inquiryid.demandid.maid_id
+            sid = p.quoteid.inquiryid.supplyid_id
+            tcount = p.quoteid.inquiryid.demandid.tcount
+            price = p.quoteid.quote
             m["date"] = date
             m["status"] = status
             m["id"] = id
@@ -430,7 +430,7 @@ def documents(list, puid):
             m["fid"] = fid
             m["tcount"] = tcount
             m["mid"] = mid
-            m['bid'] = i.bussid.name
+            m['bid'] = i.demandid.createuserid.businessid_id
             m["name"] = name
             list.append(m)
             # 报价单
@@ -452,54 +452,55 @@ def documents(list, puid):
             list.append(m)
             # 暂存单
             t = models.Zanshoudan.objects.filter(purchaseid_id=puid).first()
-            tid = t.temid
-            m = {}
-            if t.purchaseid_id == tid:
-                m["name"] = "暂收单"
-                m["id"] = "暂未创建"
-                list.append(m)
-            else:
-                name = "暂收单"
-                status = t.isreceived - 1
-                id = t.temid
-                moreinfo = t.moreinfo
-                date = t.createtime
-                m["status"] = status
-                m["date"] = date
-                m["id"] = id
-                m["fid"] = fid
-                m["tcount"] = tcount
-                m["moreinfo"] = moreinfo
-                m["mid"] = mid
-                m['sid'] = sid
-                m["name"] = name
-                list.append(m)
-            # 入库单
-            r = models.Rukudan.objects.filter(temid_id=tid).first()
-            if r:
-                if r.id == tid:
-                    m["name"] = "入库单"
+            if t:
+                tid = t.temid
+                m = {}
+                if t.purchaseid_id == tid:
+                    m["name"] = "暂收单"
                     m["id"] = "暂未创建"
                     list.append(m)
                 else:
-                    m = {}
-                    date = r.createtime
-                    name = "入库单"
-                    id = r.id
-                    rcount = r.receivecount
-                    moreinfo = r.moreinfo
-                    m["date"] = date
+                    name = "暂收单"
+                    status = t.isreceived - 1
+                    id = t.temid
+                    moreinfo = t.moreinfo
+                    date = t.createtime
                     m["status"] = status
+                    m["date"] = date
                     m["id"] = id
                     m["fid"] = fid
                     m["tcount"] = tcount
-                    m["price"] = p.price
+                    m["moreinfo"] = moreinfo
                     m["mid"] = mid
                     m['sid'] = sid
                     m["name"] = name
-                    m["rcount"] = rcount
-                    m["moreinfo"] = moreinfo
                     list.append(m)
+                # 入库单
+                r = models.Rukudan.objects.filter(temid_id=tid).first()
+                if r:
+                    if r.id == tid:
+                        m["name"] = "入库单"
+                        m["id"] = "暂未创建"
+                        list.append(m)
+                    else:
+                        m = {}
+                        date = r.createtime
+                        name = "入库单"
+                        id = r.id
+                        rcount = r.receivecount
+                        moreinfo = r.moreinfo
+                        m["date"] = date
+                        m["status"] = status
+                        m["id"] = id
+                        m["fid"] = fid
+                        m["tcount"] = tcount
+                        m["price"] = p.price
+                        m["mid"] = mid
+                        m['sid'] = sid
+                        m["name"] = name
+                        m["rcount"] = rcount
+                        m["moreinfo"] = moreinfo
+                        list.append(m)
 
                 #发票
                 iv=models.Fapiao.objects.filter(purchaseid_id=puid).first()
