@@ -664,6 +664,10 @@ def purchase_documents(request):
                 inid = qu.inquiryid_id
                 did = qu.inquiryid.demandid_id
                 demand_list(list, did, quid, inid)
+            if qu.isreceived == 2:
+                inid = qu.inquiryid_id
+                did = qu.inquiryid.demandid_id
+                demand_list(list, did, quid, inid)
     elif teid:
         te = models.Zanshoudan.objects.filter(temid=teid).first()
         if te:
