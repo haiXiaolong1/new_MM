@@ -258,6 +258,7 @@
                 $("#formAdd")[0].reset();
                 $("#myModalLabel").text("数量检查");
                 $("#myLa").text("量检结果");
+                $('#message').text("");
                 // 获取页码值
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
@@ -292,6 +293,7 @@
                 $("#formAdd")[0].reset();
                 $("#myModalLabel").text("质量检查");
                 $("#myLa").text("质检结果");
+                $('#message').text("");
                 // 获取页码值
                 PAGE=oSettings._iDisplayStart;
                 //获取页面分割长度
@@ -328,7 +330,6 @@
             })
             $("#fail").click(function () {
                 $("#reason").css("display","block");
-
             })
             $("input[name='check_reason']").click(function(index,item){
                 var dic={
