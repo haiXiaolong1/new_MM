@@ -85,7 +85,7 @@
                                     <h1 class="no-m text-success">{{ invoice.money|money_add:invoice.fee }}</h1>
                                     <hr>
                                     <!--endprint-->
-                                    <button class="btn btn-info">post</button>
+{#                                    <button class="btn btn-info">post</button>#}
                                 </div>
                             </div>
                         </div>
@@ -108,7 +108,7 @@
             $('#inventory_ul').css('display', 'block');
             $('#inventory_ul li').addClass('animation');
             
-            function doprint() {
+            function doPrint() {
                 let bdhtml = window.document.body.innerHTML;
                 let sprnstr = "<!--startprint-->"; //开始打印标识字符串有17个字符
                 let eprnstr = "<!--endprint-->"; //结束打印标识字符串
@@ -119,9 +119,32 @@
                 window.document.body.innerHTML = bdhtml;//重新给页面内容赋值；
                 return false;
             }
+            function doPrint3(){
+
+                //判断iframe是否存在，不存在则创建iframe
+                var iframe=document.getElementById("print-iframe");
+                if(!iframe){
+                    var el = document.getElementById("invoicePdf");
+                    iframe = document.createElement('IFRAME');
+                    var doc = null;
+                    iframe.setAttribute("id", "print-iframe");
+                    iframe.setAttribute('style', 'position:absolute;width:0px;height:0px;left:-500px;top:-500px;');
+                    document.body.appendChild(iframe);
+                    doc = iframe.contentWindow.document;
+                    //这里可以自定义样式
+                    doc.write('<style media="print">@page {size: auto;margin: 0mm;}</style>'); //解决出现页眉页脚和路径的问题
+                    doc.write('<div>' + el.innerHTML + '</div>');
+                    doc.close();
+                    iframe.contentWindow.focus();
+                }
+                setTimeout(function(){ iframe.contentWindow.print();},50)  //解决第一次样式不生效的问题
+                if (navigator.userAgent.indexOf("MSIE") > 0){
+                    document.body.removeChild(iframe);
+                }
+            }
             $('#printBtn').click(function () {
                 if (confirm("您确认下载该PDF文件吗?")) {
-                    doprint();
+                    doPrint();
                 }
             })
             
