@@ -108,7 +108,7 @@ def add_message(line):
     icon = ""
     if line["isThem"]:
         html_class = "them"
-        icon = '<div class="chat-bubble-img-container"><img src="http://via.placeholder.com/38x38" alt=""></div>'
+        icon = '<div class="chat-bubble-img-container"><img src="/static/images/fill.png" alt=""></div>'
     html_template = ' <div class="chat-bubble {}">{}<div class="chat-bubble-text-container"><span class="chat-bubble-text">{}</span></div></div>'
     html = html_template.format(html_class, icon, line["text"])
     return html
@@ -141,7 +141,7 @@ def add_group(group):
 def add_chart_item(k, v, unread):
     template = '<a href="javascript:void(0);" class="{}"' \
                'data-sidebar-id="chat-right-sidebar" yid="{}">' \
-               '<div class="user-avatar"><img src="http://via.placeholder.com/40x40" alt=""></div>' \
+               '<div class="user-avatar"><img src="/static/images/fill.png" alt=""></div>' \
                '<div class="chat-info"><span class="chat-author">{}</span><span class="chat-text">{}</span><span class="chat-time">{}</span></div></a>'
     clas = "right-sidebar-toggle chat-item"
     if unread:
