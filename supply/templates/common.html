@@ -595,6 +595,34 @@
                             var pre = $("#messageRedPoint").text();
                             if (res.count > pre) {
                                 setMessageList();
+                                if ($("#chat-right-sidebar").hasClass("visible")) {
+                                    var them = $("#chatDetailName").attr("yid");
+                                    $.ajax({
+                                        url: "/supply/updateMessage",
+                                        type: "get",
+                                        data: { "meid": meid,"them":them },
+                                        dataType: "JSON",
+                                        success: function (res) {
+                                            if (res.status) {
+                                                console.log(res.ids)
+                                                var ids=res.ids
+                                                console.log(res.newFlow);
+                                                for(i in res.newFlow)
+                                                {
+                                                    addMessage(res.newFlow[i],"them");
+                                                }
+                                                $.ajax({
+                                                    url: "/supply/readMessage",
+                                                    type: "get",
+                                                    traditional: true,
+                                                    data: { "ids":ids },
+                                                    dataType: "JSON",
+                                                })
+                                            } else {
+                                            }
+                                        }
+                                    })
+                                        }
                             }
                         } else {
                         }
@@ -663,13 +691,21 @@
             // 将当前聊天框里的内容发送到窗口
             // 窗口内采取添加html段落的方法,退出窗口后由后台生成
             // 未完成:发送按钮样式设计
-            function addMessage() {
-                if ($('.right-sidebar-chat .chat-bubbles .chat-bubble:last-child').hasClass('me')) {
-                    $('<span class="chat-bubble-text">' + $("#textMessage").val() + '</span>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child span:last-child");
+            function addMessage(text,which) {
+                if(which=="me"){
+                    if ($('.right-sidebar-chat .chat-bubbles .chat-bubble:last-child').hasClass('me')) {
+                    $('<span class="chat-bubble-text">' + text + '</span>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child span:last-child");
                 } else {
-                    $('<div class="chat-bubble me"><div class="chat-bubble-text-container"><span class="chat-bubble-text">' + $("#textMessage").val() + '</span></div></div>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child");
+                    $('<div class="chat-bubble me"><div class="chat-bubble-text-container"><span class="chat-bubble-text">' + text + '</span></div></div>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child");
                 };
-                $("#textMessage").val('');
+                }
+                else{
+                    if ($('.right-sidebar-chat .chat-bubbles .chat-bubble:last-child').hasClass('them')) {
+                    $('<div class="chat-bubble-img-container"><img src="/static/images/fill1.png" alt=""></div><div class="chat-bubble-text-container"><span class="chat-bubble-text">' + text + '</span></div>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child");
+                } else {
+                    $('<div class="chat-bubble them"><div class="chat-bubble-img-container"><img src="/static/images/fill1.png" alt=""></div><div class="chat-bubble-text-container"><span class="chat-bubble-text">' + text + '</span></div></div>').insertAfter(".right-sidebar-chat .chat-bubbles .chat-bubble:last-child");
+                };
+                }
                 myScrollDown();
             };
 
@@ -685,7 +721,8 @@
                         data: { "meid": me, "yid": them, "text": text },
                         dataType: "JSON",
                         success: function (res) {
-                            addMessage();
+                            addMessage($("#textMessage").val(),"me");
+                            $("#textMessage").val('');
                         }
                     })
                 }

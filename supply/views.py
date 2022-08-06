@@ -230,6 +230,28 @@ def send_message(request):
     models.Xiaoxi.objects.create(fromId_id=me, toId_id=them, context=text, time=datetime.now(), read=0)
     return JsonResponse({"status": True})
 
+def update_message(request):
+    meid=request.GET.get("meid")
+    themid=request.GET.get("them")
+    flow=models.Xiaoxi.objects.filter(fromId_id=themid,toId_id=meid,read=0).all()
+    # flow.update(read=1)
+    nf,ids=[],[]
+    for f in flow:
+        ids.append(f.id)
+        nf.append(f.context)
+    print(flow)
+    print(nf)
+    return JsonResponse({"status": True,"newFlow":nf,"ids":ids})
+
+def read_message(request):
+    print("!!!!!!!!!!!!!!!!!!1")
+    print(request)
+    ids = request.GET.get("ids")
+    print(ids)
+    for idx in ids:
+        models.Xiaoxi.objects.filter(id=idx).update(read=1)
+    return JsonResponse({"status": True})
+
 def delete_notify(request):
     try:
         request.session.pop("notify")
