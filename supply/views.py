@@ -673,18 +673,24 @@ def mm_list(request):
     return render(request, 'create_material.html', {"queryset": qu, "yuangong": yuan, "title": "物料列表"})
 
 def mm_add(request):
-    n = 1000
-    if models.Wuliao.objects.first():
-        n = models.Wuliao.objects.all().order_by('-id').first().id[1:]
-    sid = "m" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
-
     o = request.POST
-    id = request.session["info"]['id']
-    notify=[]
-    models.Wuliao.objects.create(type=o['type'], salegroup=o['salegroup'], saleway=o['saleway']
-                                 , id=sid, calcutype=o['calcutype'], desc=o['desc'])
-    notify.append(dict(id=0, tittle="提示", context="物料 {} 创建成功".format(sid), type="success", position="top-center"))
-    request.session["notify"] = notify
+    n=0
+    if o['type']=="半成品":
+        n = 1000
+        if models.Wuliao.objects.filter(type="半成品").first():
+            n = models.Wuliao.objects.filter(type="半成品").all().order_by('-id').first().id[1:]
+        sid = "m" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
+    if o['type']=="原材料":
+        n = 2000
+        if models.Wuliao.objects.filter(type="原材料").first():
+            n = models.Wuliao.objects.filter(type="原材料").all().order_by('-id').first().id[1:]
+        sid = "m" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
+    if n!=0:
+        notify=[]
+        models.Wuliao.objects.create(type=o['type'], salegroup=o['salegroup'], saleway=o['saleway']
+                                     , id=sid, calcutype=o['calcutype'], desc=o['desc'])
+        notify.append(dict(id=0, tittle="提示", context="物料 {} 创建成功".format(sid), type="success", position="top-center"))
+        request.session["notify"] = notify
     return JsonResponse({"status": True})
 
 

@@ -22,4 +22,6 @@ urlpatterns = [
     path("invoice/add/", views.invoice_add),
     path("invoice/<slug:ivid>/display/", views.invoice_display),
 
+
+
 ]

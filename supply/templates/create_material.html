@@ -47,13 +47,21 @@
                                                 {% csrf_token %}
                                                 <div class="form-group">
                                                     <label>物料种类</label>
-                                                    <input type="text" class="form-control" placeholder="物料种类"
-                                                           name="type" id="type" required>
+                                                    <select class="form-control" name="type" id="type">
+                                                        <option value selected>物料种类</option>
+                                                        <option value="原材料">原材料</option>
+                                                        <option value="半成品">半成品</option>
+                                                    </select>
                                                 </div>
                                                 <div class="form-group">
                                                      <label>销售组</label>
-                                                    <input type="text" class="form-control" placeholder="销售组"
-                                                           name="salegroup" id="salegroup" required>
+                                                    <select class="form-control" name="salegroup" id="salegroup">
+                                                        <option value selected>销售组</option>
+                                                        <option value="SH00">SH00</option>
+                                                        <option value="BJ00">BJ00</option>
+                                                        <option value="HZ00">HZ00</option>
+                                                        <option value="GZ00">GZ00</option>
+                                                    </select>
                                                 </div>
                                                 <div class="form-group">
                                                      <label>销售渠道</label>
@@ -62,8 +70,13 @@
                                                 </div>
                                                 <div class="form-group">
                                                      <label>计量单位</label>
-                                                    <input type="text" class="form-control" placeholder="计量单位"
-                                                           name="calcutype" id="calcutype" required>
+                                                    <select class="form-control" name="calcutype" id="calcutype">
+                                                        <option value selected>计量单位</option>
+                                                        <option value="千克">千克</option>
+                                                        <option value="克">克</option>
+                                                        <option value="个">个</option>
+                                                        <option value="箱">箱</option>
+                                                    </select>
                                                 </div>
                                                 <div class="form-group">
                                                      <label>物料描述</label>
