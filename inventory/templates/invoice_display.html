@@ -22,10 +22,8 @@
                                 <label><strong>供应商:</strong></label>
                                 <h3 class="m-b-md m-t-xxs"><b>{{ invoice.purchaseid.quoteid.inquiryid.supplyid.name }}</b></h3>
                                 <address>
-                                    <label><strong>供应商编号：</strong></label><br>
-                                    {{ invoice.purchaseid.quoteid.inquiryid.supplyid_id }}<br>
-                                     <label><strong>供应商地址：</strong></label><br>
-                                    {{ invoice.purchaseid.quoteid.inquiryid.supplyid.address }}
+                                    <label><strong>供应商编号：</strong></label> {{ invoice.purchaseid.quoteid.inquiryid.supplyid_id }}<br>
+                                     <label><strong>供应商地址：</strong></label> {{ invoice.purchaseid.quoteid.inquiryid.supplyid.address }}
                                 </address>
                             </div>
                             <div class="col-md-8 text-right" style="padding-right:0;">
@@ -68,8 +66,11 @@
                             </div>
                             <div class="col-md-8" style="padding-left:0;  ">
                                 <h4>备注</h4>
+                                {% if invoice.moreinfo == "" %}
                                 <h4>Thank you!</h4>
+                                {% else %}
                                 <p>{{ invoice.moreinfo }}</p>
+                                {% endif %}
                                 <img src={% static 'images/money.png' %} height="150" class="m-t-lg" alt="">
                             </div>
                             <div class="col-md-4" style="padding-right:0;">
