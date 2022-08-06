@@ -654,6 +654,11 @@ def purchase_documents(request):
                 did = qu.inquiryid.demandid_id
                 quid = qu.quoteid
                 demand_list(list, did, quid, inid)
+            if qu.isreceived == 2:
+                inid = qu.inquiryid_id
+                did = qu.inquiryid.demandid_id
+                quid = qu.quoteid
+                demand_list(list, did, quid, inid)
     elif quid:
         qu = models.Baojiadan.objects.filter(quoteid=quid).first()
         if qu:
