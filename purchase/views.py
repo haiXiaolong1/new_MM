@@ -704,12 +704,16 @@ def purchase_documents(request):
         else:
             bjds=models.Baojiadan.objects.filter(inquiryid=xjd).all()
             flag=False
+            non=False
             for i in bjds:
                 if not i.isreceived==2:
                     flag=True
-                    break
-            if flag:
+                if not i.quote==None:
+                    non=True
+            if flag and non:
                 document_state+="报1"
+            elif flag:
+                document_state+="报2"
             else:
                 document_state+="报-1"
     if document_state == "采0请1询X报1暂X":  # 区分三种质检情况
@@ -722,6 +726,8 @@ def purchase_documents(request):
     document_state_dict={"采1请1询X报1暂1入1发X":[10,0,0],
                          "采1请1询X报1暂0入0":[8,1,0],
                          "采0请1询X报1入-1入-1":[7,1,0],
+                         "采0请1询X报1暂X质1量0": [6, 1, 0],
+                         "采0请1询X报1暂X质0量1":[6,1,0],
                          "采0请1询X报1暂X质1量-1":[6,1,0],
                          "采0请1询X报1暂X质-1量1":[6,1,0],
                          "采0请1询X报1暂X质-1量-1":[5,1,0],
@@ -730,8 +736,10 @@ def purchase_documents(request):
                          "采-1请1询X报1暂-2质0量1":[6,0,1],
                          "采-1请1询X报1暂-2质1量0":[6,0,1],
                          "请1询X报-1":[4,1,0],
+                         "请1报2": [2, 1, 0],
                          "请1报1":[3,1,0],
                          "请1报0":[2,1,0],
+                         "请1询X报0": [3, 0, 1],
                          "请1报-1": [3, 0, 1],
                          "请0":[1,1,0],
                          "请-1":[-1,1,0],

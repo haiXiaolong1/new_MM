@@ -128,7 +128,7 @@ def demand_add(request):
         notify = []
         notify.append(dict(id=0, tittle="提示", context="请购单创建成功！", type="success", position="top-center"))
         wl = models.Wuliao.objects.filter(id=r['maid_id']).first()
-        if me.office != "5" and me.isactive==1 :
+        if me.office != "5" and me.office !="0" and me.isactive==1 :
             message.append("【系统消息】申请审核")
             message.append('待审核请购单：{}<br/>采购物料：{}({})<br/>采购数量：{}<br/>预期采购价：{}元/{}<br/>请前往审核<a class="chat_link" href="/inventory/demand/n/">>></a>'
                            .format(set_copy_message(did),wl.desc,wl.id,r['tcount'],r['price'],wl.calcutype))
