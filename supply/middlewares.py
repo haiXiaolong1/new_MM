@@ -1,6 +1,6 @@
 import time
 from django.utils.deprecation import MiddlewareMixin
-from django.shortcuts import HttpResponse
+from django.shortcuts import HttpResponse,render
 # 访问IP池
 visit_ip_pool = {}
 class IPmiddleware(MiddlewareMixin):
@@ -25,4 +25,5 @@ class IPmiddleware(MiddlewareMixin):
             return None
         else:
             # 如果大于10次就禁止访问
-            return HttpResponse("访问过于频繁,还需等待%s秒才能继续访问"%int(3-(visit_time-history_time[-1])))
+            return render(request, '418teapot.html')
+
