@@ -29,7 +29,7 @@ def ac_add(request):
         res["status"]=False
     if res["status"]:
         models.Yuangong.objects.create(office=o['office'],username=o['username'],password=o['password'],email=o['email']
-                                        ,id=sid,isactive=isactive,businessid_id=bid)
+                                        ,id=sid,isactive=isactive,businessid_id=bid,questionid_id="1")
         notify.append(dict(id=0, tittle="提示", context="员工 {} 创建成功".format(sid), type="success", position="top-center"))
         request.session["notify"] = notify
     return JsonResponse(res)
