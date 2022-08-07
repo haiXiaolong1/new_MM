@@ -51,7 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'supply.middleware.middleware.AuthMW'
+    'supply.middleware.middleware.AuthMW',
+    'supply.middlewares.IPmiddleware',
 ]
 
 ROOT_URLCONF = 'newMM.urls'
