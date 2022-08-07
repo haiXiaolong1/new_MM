@@ -99,7 +99,7 @@
                     <li class="topli" id="inventory">
                         <a href="javascript:void(0);">
                             <i class="menu-icon icon-home2"></i>
-                            <span style="font-size: large"><strong>库存管理</strong></span><i
+                            <span style="font-size: large"><strong>收货管理</strong></span><i
                                 class="accordion-icon fa fa-angle-left"></i>
                         </a>
                         <ul class="sub-menu" id="inventory_ul">
@@ -110,7 +110,7 @@
                             <li id="inventory_temp"><a href="/inventory/temp/" style="font-size:medium">暂存检查</a>
                             </li>
                             <li id="inventory_receive"><a href="/inventory/receive/"
-                                                          style="font-size:medium">收货管理</a></li>
+                                                          style="font-size:medium">入库管理</a></li>
                             <li id="inventory_invoice"><a href="/inventory/invoice/" style="font-size:medium">发票</a>
                             </li>
                         </ul>
@@ -522,7 +522,7 @@
                         case "暂存检查":
                             top.location.href = "/inventory/temp/";
                             break;
-                        case "收货管理":
+                        case "入库管理":
                             top.location.href = "/inventory/receive/";
                             break;
                         case "发票":
@@ -536,7 +536,7 @@
             })
             $("#topSearch").on('input', function (e) {
                 var s = ["维护物料", "维护供应商", "维护物料关系", "维护报价单", "查看单据流", "创建询价单", "评估报价单",
-                    "创建采购单", "查看库存", "请购单管理", "暂存检查", "收货管理", "发票"]
+                    "创建采购单", "查看库存", "请购单管理", "暂存检查", "入库管理", "发票"]
                 var v = $("#topSearch")[0].value;
                 p = "<br>";
                 divstart = "<a class='option' style='width: 100%;' >"
