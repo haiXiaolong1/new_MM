@@ -55,7 +55,7 @@
                             <p class="error-page-top-text">警告！.. 您访问该网页过于频繁！..</p>
                             <p class="error-page-bottom-text">Warning! . You are visiting this page too often! . </p>
                             <a href="#" class="btn btn-primary m-b-xxs">Help Center</a>
-                            <a href="index.html" class="btn btn-default m-b-xxs">返回首页</a>
+                            <button id="btnReturn" class="btn btn-default m-b-xxs">返回</button>
                         </div>
                     </div><!-- Row -->
                 </div><!-- Main Wrapper -->
@@ -73,7 +73,17 @@
         <script src={% static 'plugins/uniform/js/jquery.uniform.standalone.js' %}></script>
         <script src={% static 'plugins/switchery/switchery.min.js' %}></script>
         <script src={% static 'js/ecaps.min.js' %}></script>
+        <script type="text/javascript" language="JavaScript">
+            $(document).ready(function () {
+                $("#btnReturn").click(function () {
+                    window.history.back(-1);
+                    location.reload();
+                })
 
+
+            });
+
+        </script>
 
     </body>
 </html>
