@@ -764,3 +764,9 @@ def material_delete(request):
 
 def map(request,pos):
     return render(request, 'map.html',{'pos':pos})
+
+def page_404(request,excption):
+    return render(request,'404.html')
+
+def page_500(request):
+    return render(request,'500.html')

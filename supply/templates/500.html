@@ -1,4 +1,3 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="en">
     <head>
@@ -11,10 +10,10 @@
         <!-- The above 6 meta tags *must* come first in the head; any other head content must come *after* these tags -->
 
         <!-- Title -->
-        <title>418</title>
+        <title>500</title>
 
         <!-- Styles -->
-        <link href={% static "plugins/bootstrap/css/bootstrap.min.css" %} rel="stylesheet">
+       <link href={% static "plugins/bootstrap/css/bootstrap.min.css" %} rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
         <link href={% static "plugins/bootstrap/css/bootstrap.min.css" %} rel="stylesheet">
         <link href={% static 'plugins/datatables/css/jquery.datatables.min.css' %} rel="stylesheet" type="text/css" />
@@ -51,22 +50,17 @@
                 <div id="main-wrapper" class="container">
                     <div class="row">
                         <div class="col-md-6 center">
-                            <h1 class="error-page-logo">418 </h1>
-                            <h3 >I'm a teapot</h3>
-                            <p class="error-page-top-text">警告！.. 您访问该网页过于频繁！..</p>
-                            <p class="error-page-bottom-text">Warning! . You are visiting this page too often! . </p>
+                            <h1 class="error-page-logo">500</h1>
+                            <p class="error-page-top-text">Oops.. Something went wrong..</p>
+                            <p class="error-page-bottom-text">We can't seem to find the page you're looking for.</p>
                             <a href="#" class="btn btn-primary m-b-xxs">Help Center</a>
-                            <button id="btnReturn" class="btn btn-default m-b-xxs">返回</button>
+                            <a id="btnReturn" class="btn btn-default m-b-xxs">Return Home</a>
                         </div>
                     </div><!-- Row -->
                 </div><!-- Main Wrapper -->
             </div><!-- /Page Inner -->
         </div><!-- /Page Content -->
         </div>
-
-
-        <!-- Javascripts -->
-        <link href="https://fonts.googleapis.com/css?family=Ubuntu" rel="stylesheet">
 
         <script src={% static 'plugins/jquery/jquery-3.1.0.min.js' %}></script>
         <script src={% static 'plugins/bootstrap/js/bootstrap.min.js' %}></script>
@@ -85,6 +79,5 @@
             });
 
         </script>
-
     </body>
 </html>

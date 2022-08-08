@@ -22,6 +22,7 @@ urlpatterns = [
     path("invoice/add/", views.invoice_add),
     path("invoice/<slug:ivid>/display/", views.invoice_display),
 
-
-
 ]
+
+handler404 = 'supply.views.page_404'
+handler500 = 'supply.views.page_500'
