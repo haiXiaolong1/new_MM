@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.urls import path,include
 from supply import views
+from django.views.generic.base import RedirectView
 urlpatterns = [
     path('supply/',include('supply.urls')),
     path('login/',views.login),
@@ -26,4 +27,5 @@ urlpatterns = [
     path('excel/',include('excel.urls')),
     path('initial/',views.initial),
     path('guide/',views.guide),
+    path('favicon.ico/',RedirectView.as_view(url=r'static/images/favicon.ico')),
 ]
