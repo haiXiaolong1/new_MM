@@ -58,7 +58,7 @@ class Yuangong(models.Model):
     )
     email=models.CharField(max_length=40,blank=True,null=True)
     businessid = models.ForeignKey(to='Gongsi', to_field='myid', on_delete=models.CASCADE)
-    questionid = models.ForeignKey(to='Securityquestion',to_field='id',on_delete=models.CASCADE)
+    questionid = models.ForeignKey(to='Securityquestion',to_field='id',on_delete=models.CASCADE,default="")
     verification = models.CharField(max_length=40, blank=True, null=True)
 
     class Meta:
