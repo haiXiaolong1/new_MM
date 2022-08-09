@@ -8,18 +8,16 @@
     <meta name="google" content="notranslate">
     <title>PDF.js viewer</title>
 
-{#    <link rel="stylesheet" href="../static/pdfjs/web/viewer.css">#}
     <link rel="stylesheet" href={% static 'pdfjs/web/viewer.css' %}>
 
-<!-- This snippet is used in production (included from viewer.html) -->
       	<link rel="stylesheet" type="text/css" href={% static 'loginui/styles.css' %}>
 
-{#<link rel="resource" type="application/l10n" href="../static/pdfjs/web/locale/locale.properties">#}
 <link rel="resource" type="application/l10n" href={% static 'pdfjs/web/locale/locale.properties' %}>
-{#<script src="../static/pdfjs/build/pdf.js"></script>#}
+      <link rel="shortcut icon" href="{%static 'images/favicon.ico' %}" />
+
 <script src={% static 'pdfjs/build/pdf.js' %}></script>
 
-{#  <script src="../static/pdfjs/web/viewer.js"></script>#}
+
   <script src={% static 'pdfjs/web/viewer.js' %}></script>
 
   </head>

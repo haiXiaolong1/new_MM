@@ -33,7 +33,7 @@
     <!-- Theme Styles -->
     <link rel="stylesheet" href={% static 'css/ecaps.min.css' %}>
     <link href={% static 'css/custom.css' %} rel="stylesheet">
-
+    <link rel="shortcut icon" href="{%static 'images/favicon.ico' %}" />
     <script src={% static 'plugins/vertical-timeline/js/modernizr.js' %}></script>
 
     <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
@@ -412,10 +412,7 @@
                 return;
             }
 
-            // Notification测试函数
-            // $("#showtoast").click(function(){
-            //     Notification(1,"1","1");
-            // })
+
 
             function notify(){
                 var much=$("#notifySave").attr("ns");
@@ -630,7 +627,7 @@
                 })
                 // 设置检测间隔，开发阶段可不启用
                 //  如要注释，注释此处即可
-                setTimeout(checkMessage, 1000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
+               // setTimeout(checkMessage, 1000); //time是指本身,延时递归调用自己,500为间隔调用时间,单位毫秒
             }            
             // 调用时间：进入和刷新页面时，间隔调用时
             setTimeout(checkMessage, 2000)

@@ -22,9 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(8q@2)+3(76hqq1tg^8xpeeu_gzkv2(@qn%is2@ed)fs2^89vo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -51,7 +51,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'supply.middleware.middleware.AuthMW'
+    'supply.middleware.middleware.AuthMW',
+    'supply.middlewares.IPmiddleware',
 ]
 
 ROOT_URLCONF = 'newMM.urls'
@@ -80,9 +81,9 @@ WSGI_APPLICATION = 'newMM.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mmssm',
+        'NAME': 'mmnew1',
         'USER': 'root',
-        'PASSWORD': 'Tj215283#',
+        'PASSWORD': '201221',
         'HOST': 'localhost',
         'PORT': '3306',
     }

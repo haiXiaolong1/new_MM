@@ -15,6 +15,13 @@ Including another URLconf
 """
 from django.urls import path,include
 from supply import views
+from django.views.generic.base import RedirectView
+
+##静态url所需配置
+from django.urls import re_path as url
+from django.views import static
+from django.conf import settings
+
 urlpatterns = [
     path('supply/',include('supply.urls')),
     path('login/',views.login),
@@ -26,4 +33,8 @@ urlpatterns = [
     path('excel/',include('excel.urls')),
     path('initial/',views.initial),
     path('guide/',views.guide),
+    # path(r'^favicon\.ico$',RedirectView.as_view(url=r'static/images/favicon.ico')),
+    url(r'^favicon\.ico$', RedirectView.as_view(url='/static/images/favicon.ico')),
+    # url(r'^static/(?P<path>.*)$', static.serve,
+    #   {'document_root': settings.STATIC_ROOT}, name='static'),
 ]
