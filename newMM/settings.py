@@ -22,9 +22,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-(8q@2)+3(76hqq1tg^8xpeeu_gzkv2(@qn%is2@ed)fs2^89vo'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1','localhost','150.158.23.28','*']
 
 # Application definition
 
@@ -52,7 +52,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'supply.middleware.middleware.AuthMW',
-    'supply.middlewares.IPmiddleware',
+         'supply.middlewares.IPmiddleware',
 ]
 
 ROOT_URLCONF = 'newMM.urls'
@@ -81,9 +81,9 @@ WSGI_APPLICATION = 'newMM.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mmssm',
+        'NAME': 'mmnew1',
         'USER': 'root',
-        'PASSWORD': 'Tj215283#',
+        'PASSWORD': '201221',
         'HOST': 'localhost',
         'PORT': '3306',
     }
@@ -122,7 +122,7 @@ USE_L10N = True
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-# STATIC_ROOT = os.path.join(BASE_DIR, 'all_static')
+STATIC_ROOT = os.path.join(BASE_DIR, 'all_static')
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
