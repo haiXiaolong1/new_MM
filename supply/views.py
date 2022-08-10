@@ -264,10 +264,14 @@ def xjd_info(xjd,retu):
     wl = xjd.demandid.maid
     gs = xjd.demandid.createuserid.businessid
     gc = xjd.demandid.facid
+    kc = models.Gongchangkucun.objects.filter(facid=gc, maid=wl).order_by('-updatetime').first()
     retu["gs"] = {'id': gs.myid, 'name': gs.name}
     retu['gc'] = {'type': gc.type, 'id': gc.id, 'add': gc.address}
     retu['wl'] = {"id": wl.id, "desc": wl.desc, "cal": wl.calcutype, "type": wl.type}
     retu['tcount'] = xjd.demandid.tcount
+    retu['kc']=0
+    if kc:
+        retu['kc']=kc.inventoryunrest
     return
 
 #表单信息展示函数
