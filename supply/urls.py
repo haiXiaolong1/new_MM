@@ -42,5 +42,4 @@ urlpatterns = [
     path('r_password', views.r_password),
 
     path('map/<str:pos>/', views.map),
-    
 ]

@@ -12,6 +12,11 @@ class Gongsi(models.Model):
 
     class Meta:
         db_table = 'gongsi'
+        verbose_name = '公司'
+        verbose_name_plural = '公司'
+
+    def __str__(self):
+        return self.myid+'|'+self.name
 
 
 class Wuliao(models.Model):
@@ -24,6 +29,12 @@ class Wuliao(models.Model):
 
     class Meta:
         db_table = 'wuliao'
+        verbose_name = '物料'
+        verbose_name_plural = '物料'
+
+    def __str__(self):
+        return self.id+'|'+self.type+'|'+self.desc
+
 
 class Securityquestion(models.Model):
     id = models.CharField(primary_key=True, max_length=40)
@@ -31,6 +42,12 @@ class Securityquestion(models.Model):
 
     class Meta:
         db_table = 'securityquestion'
+        verbose_name = '保密问题'
+        verbose_name_plural = '保密问题'
+
+    def __str__(self):
+        return self.id+'|'+self.question
+
 
 class Yuangong(models.Model):
     id = models.CharField(primary_key=True, max_length=40)
@@ -63,6 +80,12 @@ class Yuangong(models.Model):
 
     class Meta:
         db_table = 'yuangong'
+        verbose_name = '员工'
+        verbose_name_plural = '员工'
+
+    def __str__(self):
+        return self.id + '|' + self.username
+
 
 class Xiaoxi(models.Model):
     fromId = models.ForeignKey(to='Yuangong', to_field='id', related_name='from_id', on_delete=models.CASCADE)
@@ -76,6 +99,11 @@ class Xiaoxi(models.Model):
     read = models.IntegerField(default=0, choices=choices)
     class Meta:
         db_table = 'xiaoxi'
+        verbose_name = '消息'
+        verbose_name_plural = '消息'
+
+    def __str__(self):
+        return self.fromId + '|' + self.context+ '|' + self.time
 
 class Gongchang(models.Model):
     id = models.CharField(primary_key=True, max_length=40)
@@ -84,6 +112,12 @@ class Gongchang(models.Model):
 
     class Meta:
         db_table = 'gongchang'
+        verbose_name = '工厂'
+        verbose_name_plural = '工厂'
+
+    def __str__(self):
+        return self.id + '|' + self.address
+
 
 class Gongyingshang(models.Model):
     id = models.CharField(primary_key=True, max_length=40)
@@ -98,6 +132,12 @@ class Gongyingshang(models.Model):
 
     class Meta:
         db_table = 'gongyingshang'
+        verbose_name = '供应商'
+        verbose_name_plural = '供应商'
+
+    def __str__(self):
+        return self.id + '|' + self.name + '|' + self.address
+
 
 class Gongyingguanxi(models.Model):
     supplyid = models.ForeignKey(to='Gongyingshang', to_field='id', on_delete=models.CASCADE)
@@ -109,6 +149,12 @@ class Gongyingguanxi(models.Model):
 
     class Meta:
         db_table = 'gongyingguanxi'
+        verbose_name = '供应关系'
+        verbose_name_plural = '供应关系'
+
+    def __str__(self):
+        return self.supplyid + '|' + self.materialid+ '|' + self.updateid
+
 
 class Gongchangkucun(models.Model):
     facid = models.ForeignKey(to='Gongchang', to_field='id', on_delete=models.CASCADE)
@@ -121,6 +167,12 @@ class Gongchangkucun(models.Model):
 
     class Meta:
         db_table = 'gongchangkucun'
+        verbose_name = '工厂关系'
+        verbose_name_plural = '工厂关系'
+
+    def __str__(self):
+        return self.facid + '|' + self.maid+ '|' + self.updatetime
+
 
 class Caigouxuqiu(models.Model):
     demandid = models.CharField(primary_key=True, max_length=40)
@@ -145,6 +197,11 @@ class Caigouxuqiu(models.Model):
 
     class Meta:
         db_table = 'caigouxuqiu'
+        verbose_name = '采购需求'
+        verbose_name_plural = '采购需求'
+
+    def __str__(self):
+        return self.demandid + '|' + self.facid + '|' + self.price
 
 class Xunjiadan(models.Model):
     inquiryid = models.CharField(primary_key=True, max_length=40)
@@ -159,6 +216,11 @@ class Xunjiadan(models.Model):
 
     class Meta:
         db_table = 'xunjiadan'
+        verbose_name = '询价单'
+        verbose_name_plural = '询价单'
+
+    def __str__(self):
+        return self.demandid + '|' + self.inquiryid + '|' + self.supplyid
 
 
 class Baojiadan(models.Model):
@@ -182,6 +244,11 @@ class Baojiadan(models.Model):
 
     class Meta:
         db_table = 'baojiadan'
+        verbose_name = '报价单'
+        verbose_name_plural = '报价单'
+
+    def __str__(self):
+        return self.quoteid + '|' + self.inquiryid + '|' + self.supplyid
 
 
 class Caigoudan(models.Model):
@@ -203,6 +270,11 @@ class Caigoudan(models.Model):
 
     class Meta:
         db_table = 'caigoudan'
+        verbose_name = '采购单'
+        verbose_name_plural = '采购单'
+
+    def __str__(self):
+        return self.quoteid + '|' + self.purchaseid + '|' + self.createuserid
 
 
 class Zanshoudan(models.Model):
@@ -236,6 +308,11 @@ class Zanshoudan(models.Model):
     # 给暂收单加个创建时间
     class Meta:
         db_table = 'zanshoudan'
+        verbose_name = '暂收单'
+        verbose_name_plural = '暂收单'
+
+    def __str__(self):
+        return self.temid + '|' + self.purchaseid
 
 
 
@@ -253,6 +330,11 @@ class Rukudan(models.Model):
 
     class Meta:
         db_table = 'rukudan'
+        verbose_name = '入库单'
+        verbose_name_plural = '入库单'
+
+    def __str__(self):
+        return self.id + '|' + self.temid
 
 
 class Fapiao(models.Model):
@@ -263,10 +345,15 @@ class Fapiao(models.Model):
     fee = models.FloatField(blank=True, null=True)
     # 税款改成运费
     createtime = models.DateTimeField(blank=True, null=True)
-    createuserid = models.ForeignKey(to='Yuangong', to_field='id', on_delete=models.CASCADE)
+    createtime = models.ForeignKey(to='Yuangong', to_field='id', on_delete=models.CASCADE)
     moreinfo = models.CharField(max_length=255, blank=True, null=True)
     # 1表示删除，当作删除操作时逻辑删除，不进行物理删除
     isdelete = models.IntegerField(default=0)
 
     class Meta:
         db_table = 'fapiao'
+        verbose_name = '发票'
+        verbose_name_plural = '发票'
+
+    def __str__(self):
+        return self.invoiceid + '|' + self.purchaseid+ '|' + self.createtime

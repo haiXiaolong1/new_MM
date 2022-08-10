@@ -665,6 +665,12 @@ def quote_edit(request):
         request.session['notify']=[dict(id=0, tittle="提示", context="报价单 {} 报价修改成功".format(quid), type="success", position="top-center")]
     return JsonResponse(json.dumps(res, ensure_ascii=False), safe=False)
 # 展示物料列表
+
+
+def mm_list(request):
+    return redirect("/admin")
+
+'''
 def mm_list(request):
     qu = models.Wuliao.objects.all()
     yu = models.Yuangong.objects.all()
@@ -675,6 +681,7 @@ def mm_list(request):
         n.append(i.username)
     yuan = dict(zip(id, n))
     return render(request, 'create_material.html', {"queryset": qu, "yuangong": yuan, "title": "物料列表"})
+'''
 
 def mm_add(request):
     o = request.POST

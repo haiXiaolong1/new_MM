@@ -25,12 +25,16 @@ SECRET_KEY = 'django-insecure-(8q@2)+3(76hqq1tg^8xpeeu_gzkv2(@qn%is2@ed)fs2^89vo
 DEBUG = True
 
 STATIC_URL = '/static/'
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static')
+]
 # STATIC_ROOT = os.path.join(BASE_DIR, 'all_static')
 ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
 INSTALLED_APPS = [
+    'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -42,7 +46,7 @@ INSTALLED_APPS = [
     'purchase',
     'supply.templatetags',
     'account',
-    'excel'
+    'excel',
 ]
 
 MIDDLEWARE = [
@@ -152,3 +156,5 @@ CACHES = {
         }
     }
 }
+
+SIMPLEUI_HOME_INFO = False

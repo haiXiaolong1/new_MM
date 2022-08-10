@@ -135,7 +135,7 @@
                         </a>
                         <ul class="sub-menu" id="init_ul">
                             <li class="subMenu" id="init_documents"><a href="/supply/mm/list"
-                                                                       style="font-size: medium">物料维护</a></li>
+                                                                       style="font-size: medium">超管端口</a></li>
                         </ul>
                     </li>
                     {% endif %}
@@ -486,7 +486,7 @@
                 if (even.which == 13) {
                     var name = $("#topSearch")[0].value
                     switch (name) {
-                        case "维护物料":
+                        case "超管端口":
                             top.location.href = "/supply/mm/list";
                             break;
                         case "维护供应商":
@@ -532,7 +532,7 @@
                 }
             })
             $("#topSearch").on('input', function (e) {
-                var s = ["维护物料", "维护供应商", "维护物料关系", "维护报价单", "查看单据流", "创建询价单", "评估报价单",
+                var s = ["超管端口", "维护供应商", "维护物料关系", "维护报价单", "查看单据流", "创建询价单", "评估报价单",
                     "创建采购单", "查看库存", "请购单管理", "暂存检查", "入库管理", "发票"]
                 var v = $("#topSearch")[0].value;
                 p = "<br>";
