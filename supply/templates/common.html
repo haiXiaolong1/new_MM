@@ -217,7 +217,7 @@
                                     <li><a href="/account/ac/r_massage">修改个人资料</a></li>
                                     <li><a href="/account/ac/r_password">修改登录密码</a></li>
 
-                                    <li><a href="/logout">退出</a></li>
+                                    <li><a href="/logout" id="logout">退出</a></li>
                                 </ul>
                             </li>
                         </ul>
@@ -751,14 +751,17 @@
 
             $("#collapsed-sidebar-toggle-button").click(function () {
                 if($('body').hasClass('page-sidebar-collapsed')){
-                    localStorage.setItem("side","1");
+                    sessionStorage.setItem("side","1");
                 }else {
-                    localStorage.removeItem("side");
+                    sessionStorage.removeItem("side");
                 }
             })
-            if(localStorage.getItem("side")=="1"){
+            if(sessionStorage.getItem("side")=="1"){
                 $("#collapsed-sidebar-toggle-button").trigger("click");
             }
+            $("#logout").click(function () {
+                sessionStorage.clear();
+            })
 
         });
 
