@@ -103,7 +103,7 @@ class Xiaoxi(models.Model):
         verbose_name_plural = '消息'
 
     def __str__(self):
-        return self.fromId + '|' + self.context+ '|' + self.time
+        return self.fromId_id+" 发往 "+self.toId_id + '|' + self.time.strftime("%Y-%m-%d %H:%M:%S")
 
 class Gongchang(models.Model):
     id = models.CharField(primary_key=True, max_length=40)
@@ -153,7 +153,7 @@ class Gongyingguanxi(models.Model):
         verbose_name_plural = '供应关系'
 
     def __str__(self):
-        return self.supplyid + '|' + self.materialid+ '|' + self.updateid
+        return self.supplyid_id + '|' + self.materialid_id+ '|' + self.updateid_id
 
 
 class Gongchangkucun(models.Model):
@@ -167,11 +167,11 @@ class Gongchangkucun(models.Model):
 
     class Meta:
         db_table = 'gongchangkucun'
-        verbose_name = '工厂关系'
-        verbose_name_plural = '工厂关系'
+        verbose_name = '工厂库存'
+        verbose_name_plural = '工厂库存'
 
     def __str__(self):
-        return self.facid + '|' + self.maid+ '|' + self.updatetime
+        return self.facid_id + '|' + self.maid_id+ '|' + self.updatetime.strftime("%Y-%m-%d %H:%M:%S")
 
 
 class Caigouxuqiu(models.Model):
@@ -201,7 +201,7 @@ class Caigouxuqiu(models.Model):
         verbose_name_plural = '采购需求'
 
     def __str__(self):
-        return self.demandid + '|' + self.facid + '|' + self.price
+        return self.demandid + '|' + str(self.facid_id) + '|' + str(self.price)
 
 class Xunjiadan(models.Model):
     inquiryid = models.CharField(primary_key=True, max_length=40)
@@ -220,7 +220,7 @@ class Xunjiadan(models.Model):
         verbose_name_plural = '询价单'
 
     def __str__(self):
-        return self.demandid + '|' + self.inquiryid + '|' + self.supplyid
+        return self.demandid_id + '|' + self.inquiryid + '|' + self.supplyid_id
 
 
 class Baojiadan(models.Model):
@@ -248,7 +248,7 @@ class Baojiadan(models.Model):
         verbose_name_plural = '报价单'
 
     def __str__(self):
-        return self.quoteid + '|' + self.inquiryid + '|' + self.supplyid
+        return self.quoteid + '|' + self.inquiryid_id + '|' + self.supplyid_id
 
 
 class Caigoudan(models.Model):
@@ -274,7 +274,7 @@ class Caigoudan(models.Model):
         verbose_name_plural = '采购单'
 
     def __str__(self):
-        return self.quoteid + '|' + self.purchaseid + '|' + self.createuserid
+        return self.quoteid_id + '|' + self.purchaseid + '|' + self.createuserid_id
 
 
 class Zanshoudan(models.Model):
@@ -312,7 +312,7 @@ class Zanshoudan(models.Model):
         verbose_name_plural = '暂收单'
 
     def __str__(self):
-        return self.temid + '|' + self.purchaseid
+        return self.temid + '|' + self.purchaseid_id
 
 
 
@@ -334,7 +334,7 @@ class Rukudan(models.Model):
         verbose_name_plural = '入库单'
 
     def __str__(self):
-        return self.id + '|' + self.temid
+        return self.id + '|' + self.temid_id
 
 
 class Fapiao(models.Model):
@@ -345,7 +345,7 @@ class Fapiao(models.Model):
     fee = models.FloatField(blank=True, null=True)
     # 税款改成运费
     createtime = models.DateTimeField(blank=True, null=True)
-    createtime = models.ForeignKey(to='Yuangong', to_field='id', on_delete=models.CASCADE)
+    createuserid = models.ForeignKey(to='Yuangong', to_field='id', on_delete=models.CASCADE)
     moreinfo = models.CharField(max_length=255, blank=True, null=True)
     # 1表示删除，当作删除操作时逻辑删除，不进行物理删除
     isdelete = models.IntegerField(default=0)
@@ -356,4 +356,4 @@ class Fapiao(models.Model):
         verbose_name_plural = '发票'
 
     def __str__(self):
-        return self.invoiceid + '|' + self.purchaseid+ '|' + self.createtime
+        return self.invoiceid + '|' + self.purchaseid_id+ '|' + self.createtime.strftime("%Y-%m-%d %H:%M:%S")
