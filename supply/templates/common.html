@@ -748,6 +748,18 @@
                 return;
             })
 
+
+            $("#collapsed-sidebar-toggle-button").click(function () {
+                if($('body').hasClass('page-sidebar-collapsed')){
+                    localStorage.setItem("side","1");
+                }else {
+                    localStorage.removeItem("side");
+                }
+            })
+            if(localStorage.getItem("side")=="1"){
+                $("#collapsed-sidebar-toggle-button").trigger("click");
+            }
+
         });
 
     </script>
