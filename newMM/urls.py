@@ -21,6 +21,7 @@ from django.views.generic.base import RedirectView
 from django.urls import re_path as url
 from django.views import static
 from django.conf import settings
+from django.contrib import admin
 
 urlpatterns = [
     path('supply/',include('supply.urls')),
@@ -37,4 +38,5 @@ urlpatterns = [
     url(r'^favicon\.ico$', RedirectView.as_view(url='/static/images/favicon.ico')),
     # url(r'^static/(?P<path>.*)$', static.serve,
     #   {'document_root': settings.STATIC_ROOT}, name='static'),
+    url(r'^admin/', admin.site.urls),
 ]
