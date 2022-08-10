@@ -158,3 +158,126 @@ CACHES = {
 }
 
 SIMPLEUI_HOME_INFO = False
+
+SIMPLEUI_CONFIG = {
+    # 是否使用系统默认菜单，自定义菜单时建议关闭。
+    'system_keep': False,
+
+    # 用于菜单排序和过滤, 不填此字段为默认排序和全部显示。空列表[] 为全部不显示.
+    'menu_display': ['基本信息设置'],
+
+    # 设置是否开启动态菜单, 默认为False. 如果开启, 则会在每次用户登陆时刷新展示菜单内容。
+    # 一般建议关闭。
+    'dynamic': False,
+    'menus': [
+
+        {
+            'name': '基本信息设置',
+            'icon': 'fa fa-th-list',
+            'models': [
+                {
+                    'name': '公司',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/gongsi/',
+                    'icon': 'fa fa-building'
+                },
+                {
+                    'name': '物料',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/wuliao/',
+                    'icon': 'fa fa-truck'
+                },
+                {
+                    'name': '保密问题',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/securityquestion/',
+                    'icon': 'fa fa-question'
+                },
+                {
+                    'name': '消息',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/xiaoxi/',
+                    'icon': 'fa fa-comments'
+                },
+                {
+                    'name': '员工',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/yuangong/',
+                    'icon': 'fa fa-users'
+                },
+                {
+                    'name': '工厂',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/gongchang/',
+                    'icon': 'fa fa-industry'
+                },
+                {
+                    'name': '供应商',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/gongyingshang/',
+                    'icon': 'fa fa-briefcase'
+                },
+                {
+                    'name': '供应关系',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/gongyingguanxi/',
+                    'icon': 'fa fa-podcast'
+                },
+                {
+                    'name': '工厂库存',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/gongchangkucun/',
+                    'icon': 'fa fa-tint'
+                },
+                {
+                    'name': '采购需求',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/caigouxuqiu/',
+                    'icon': 'fa fa-laptop'
+                },
+                {
+                    'name': '询价单',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/xunjiadan/',
+                    'icon': 'fa fa-window-restore'
+                },
+                {
+                    'name': '报价单',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/baojiadan/',
+                    'icon': 'fa fa-archive'
+                },
+                {
+                    'name': '询价单',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/xunjiadan/',
+                    'icon': 'fa fa-balance-scale'
+                },
+                {
+                    'name': '采购单',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/caigoudan/',
+                    'icon': 'fa fa-address-card'
+                },
+                {
+                    'name': '暂售单',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/zanshoudan/',
+                    'icon': 'fa fa-bookmark'
+                },
+                {
+                    'name': '入库单',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/rukudan/',
+                    'icon': 'fa fa-american-sign-language-interpreting'
+                },
+                {
+                    'name': '发票',
+                    # 注意url按'/admin/应用名小写/模型名小写/'命名。
+                    'url': '/admin/supply/fapiao/',
+                    'icon': 'fa fa-university'
+                },
+            ]
+        },
+    ]
+}
