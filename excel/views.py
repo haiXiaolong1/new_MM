@@ -44,11 +44,22 @@ import time
 class TestDjangoExcelDownload(View):
 
     def get(self, request):
-        sheet = excel.pe.Sheet([["供应商名称name", "供应商地址address"]])
-        name = "供应商上传批量模板"
-
+        name = "supplyTemp"
         ts = int(time.time())
-        return excel.make_response(sheet, "xlsx",file_name=name+str(ts))
+        file_name = name + str(ts)+'.xlsx'
+        x_io = BytesIO()
+        work_book = xlsxwriter.Workbook(x_io)
+        cen_format = work_book.add_format({'align':'center'})
+        work_sheet = work_book.add_worksheet(name)
+        work_sheet.write(0, 0, "供应商名称name",cen_format)
+        work_sheet.write(0, 1, "供应商地址address",cen_format)
+        work_book.close()
+        res = HttpResponse()
+        res["Content-Type"] = "application/octet-stream"
+        res["Content-Disposition"] = 'filename="'+file_name+'"'
+        res.write(x_io.getvalue())
+        return res
+
 
 
 def add_supply_axu(data_each,request):
