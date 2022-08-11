@@ -11,6 +11,8 @@ class AuthMW(MiddlewareMixin):
             return
         if re.match("^(/admin)(.)*",request.path_info):
             return
+        if re.match("^(/favicon.ico)(.)*",request.path_info):
+            return
         if request.path_info == "/forgot":
             return
         if request.path_info == "/supply/r_password":

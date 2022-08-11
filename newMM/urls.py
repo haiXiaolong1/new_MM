@@ -16,7 +16,7 @@ Including another URLconf
 from django.urls import path,include
 from supply import views
 from django.views.generic.base import RedirectView
-
+from django.contrib import admin
 ##静态url所需配置
 from django.urls import re_path as url
 from django.views import static
@@ -24,6 +24,7 @@ from django.conf import settings
 from django.contrib import admin
 
 urlpatterns = [
+    # path('admin/', admin.site.urls),
     path('supply/',include('supply.urls')),
     path('login/',views.login),
     path('logout/', views.logout),
