@@ -1,5 +1,5 @@
 from django.shortcuts import render, HttpResponse,redirect
-
+import xlsxwriter as xls
 # Create your views here.
 
 from supply import models
@@ -11,13 +11,57 @@ import json
 from datetime import datetime
 
 
+class formatController:
+    def __init__(self,workbook):
+        self.wk=workbook
+
+    def titleF(self):
+        form=self.wk.add_format({
+            'bold': True,
+            'align': 'center',  # 水平居中
+            'valign': 'vcenter',  # 垂直居中
+            'border':2,
+            'border_color':'white',
+            'font_color':'white',
+        })
+        form.set_bg_color('#5b9bd5')
+        return form
+
+    def rowF(self):
+        form1=self.wk.add_format({
+            'bold': False,
+            'align': 'center',  # 水平居中
+            'valign': 'vcenter',  # 垂直居中
+            'border':1,
+            'border_color':'white',
+        })
+        form1.set_bg_color('#bdd6ee')
+        form2=self.wk.add_format({
+            'bold': False,
+            'align': 'center',  # 水平居中
+            'valign': 'vcenter',  # 垂直居中
+            'border': 1,
+            'border_color': 'white',
+        })
+        form2.set_bg_color('#deeaf6')
+        return [form1,form2]
+
+    def editF(self):
+        form=self.wk.add_format({
+            'bold': False,
+            'align': 'center',  # 水平居中
+            'valign': 'vcenter',  # 垂直居中
+            'border': 1,
+            'border_color': 'white',
+        })
+        form.set_bg_color("#eaeaea")
+        return form
+
 class UploadFileForm(forms.Form):
     file = forms.FileField()
 
 
 class TestDjangoExcelUpload(View):
-
-
     def get(self, request):
         form = UploadFileForm()
         return render(request, 'upload_form.html', context={'form': form})
@@ -54,6 +98,7 @@ class TestDjangoExcelDownload(View):
         work_sheet.write(0, 0, "供应商名称name",cen_format)
         work_sheet.write(0, 1, "供应商地址address",cen_format)
         work_book.close()
+        print(type(work_book))
         res = HttpResponse()
         res["Content-Type"] = "application/octet-stream"
         res["Content-Disposition"] = 'filename="'+file_name+'"'
@@ -81,8 +126,6 @@ from io import BytesIO
 import xlsxwriter
 
 def new_excel(request):
-
-
     x_io = BytesIO()
     work_book = xlsxwriter.Workbook(x_io)
     work_sheet = work_book.add_worksheet("excel-1")
@@ -102,7 +145,6 @@ class TestDjangoExcelDownload_ac(View):
 
     def get(self, request):
         #sheet = excel.pe.Sheet([["姓名", "登录密码","邮箱","职位","是否激活","公司编号"]])
-
         office = [
             ("系统管理员"),
             ("供应商员工"),
@@ -112,13 +154,9 @@ class TestDjangoExcelDownload_ac(View):
             ("库存经理"),
             ("生产经理")
         ]
-
-
         name = "acTemp"
-
         ts = int(time.time())
         file_name = name + str(ts)+'.xlsx'
-
 
         x_io = BytesIO()
         work_book = xlsxwriter.Workbook(x_io)
@@ -135,7 +173,6 @@ class TestDjangoExcelDownload_ac(View):
         work_sheet.write(0, 3, "职位")
         work_sheet.write(0, 4, "是否激活")
         work_sheet.write(0, 5, "公司编号")
-
 
         work_sheet.merge_range('J1:K1', '职位录入参考', merge_format)
 
@@ -164,7 +201,6 @@ class TestDjangoExcelDownload_ac(View):
         res["Content-Type"] = "application/octet-stream"
         res["Content-Disposition"] = 'filename="'+file_name+'"'
         res.write(x_io.getvalue())
-
         return res
 
 class TestDjangoExcelUpload_ac(View):
@@ -190,7 +226,6 @@ class TestDjangoExcelUpload_ac(View):
         else:
             return HttpResponse("出错了")
 
-
 def add_account_axu(data_each,request):
     n = 1000
     if models.Yuangong.objects.first():
@@ -199,7 +234,6 @@ def add_account_axu(data_each,request):
     tcc = str(int(n) + 1)
     adt=4-len(tcc)
     sid = "e" + adt*'0'+str(tcc)  # 编号递增，这样计算避免删除后出现错误
-
 
     named=data_each[0]
     passworded=data_each[1]
@@ -218,45 +252,46 @@ def add_account_axu(data_each,request):
 class TestDjangoExcelDownload_mt(View):
 
     def get(self, request):
-
         name = "mtTemp"
         ts = int(time.time())
         file_name = name + str(ts)+'.xlsx'
 
         x_io = BytesIO()
         work_book = xlsxwriter.Workbook(x_io)
-        cen_format = work_book.add_format({'align':'center'})
-        merge_format = work_book.add_format({
-            'bold': True,
-            'align': 'center',  # 水平居中
-            'valign': 'vcenter',  # 垂直居中
-        })
+        fc=formatController(work_book)
+        tf = fc.titleF()
+        ef=fc.editF()
+        rf=fc.rowF()
         work_sheet = work_book.add_worksheet(name)
-        work_sheet.write(0, 0, "供应商编号",cen_format)
-        work_sheet.write(0, 1, "物料编号",cen_format)
-
-
-        work_sheet.merge_range('E1:G1', '供应商-编号参考', merge_format)
+        work_sheet.merge_range('A1:C1', '参考信息', tf)
+        tl=1 #表头行所占行数
+        work_sheet.merge_range('A{}:C{}'.format(tl+1,tl+1), '供应商列表',tf)
         yu = models.Gongyingshang.objects.all().values("id", "name","address")
+        gys=[]
         for i in range(len(yu)):
-            work_sheet.write(i + 1, 4, yu[i]['id'], cen_format)
-            work_sheet.write(i + 1, 5, yu[i]['name'], cen_format)
-            work_sheet.write(i + 1, 6, yu[i]['address'], cen_format)
+            work_sheet.write(i + 1+tl, 0, yu[i]['id'], rf[i%2])
+            work_sheet.write(i + 1+tl, 1, yu[i]['name'], rf[i%2])
+            work_sheet.write(i + 1+tl, 2, yu[i]['address'], rf[i%2])
+            gys.append(yu[i]['id'])
+        i+=2
 
-        work_sheet.merge_range('I1:K1', '物料-编号参考', merge_format)
+        work_sheet.merge_range('A{}:C{}'.format(tl+i+1,tl+i+1), '物料列表', tf)
 
         wu = models.Wuliao.objects.all().values("id", "type", "desc")
-        for i in range(len(wu)):
-            work_sheet.write(i + 1, 8, wu[i]['id'], cen_format)
-            work_sheet.write(i + 1, 9, wu[i]['type'], cen_format)
-            work_sheet.write(i + 1, 10, wu[i]['desc'], cen_format)
+        wl=[]
+        for j in range(len(wu)):
+            work_sheet.write(i+j + 1+tl, 0, wu[j]['id'], rf[j%2])
+            work_sheet.write(i+j + 1+tl, 1, wu[j]['type'], rf[j%2])
+            work_sheet.write(i+j + 1+tl, 2, wu[j]['desc'], rf[j%2])
+            wl.append(wu[j]['id'])
+        work_sheet.set_column('A1:C1', 11)
 
-        work_sheet.set_column('A1:B1', 10)
-        work_sheet.set_column('E1:G1', 11)
-        work_sheet.set_column('I1:K1', 11)
-
-        #work_sheet.data_validation("D2:D10", {'validate': 'list', 'source': office})
-        #work_sheet.data_validation("E2:E10", {'validate': 'list', 'source': [0,1]})
+        work_sheet.set_column('E:F', 11,ef)
+        work_sheet.merge_range('E1:F1', '添加供应关系', tf)
+        work_sheet.write(1, 4, "供应商编号",tf)
+        work_sheet.write(1, 5, "物料编号", tf)
+        work_sheet.data_validation("E3:E20", {'validate': 'list', 'source': gys,'dropdown':True})
+        work_sheet.data_validation("F3:F20", {'validate': 'list', 'source': wl,'dropdown':True})
 
         work_book.close()
         res = HttpResponse()

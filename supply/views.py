@@ -239,15 +239,15 @@ def update_message(request):
     for f in flow:
         ids.append(f.id)
         nf.append(f.context)
-    print(flow)
-    print(nf)
+    # print(flow)
+    # print(nf)
     return JsonResponse({"status": True,"newFlow":nf,"ids":ids})
 
 def read_message(request):
-    print("!!!!!!!!!!!!!!!!!!1")
-    print(request)
+    # print("!!!!!!!!!!!!!!!!!!1")
+    # print(request)
     ids = request.GET.get("ids")
-    print(ids)
+    # print(ids)
     for idx in ids:
         models.Xiaoxi.objects.filter(id=idx).update(read=1)
     return JsonResponse({"status": True})
