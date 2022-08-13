@@ -142,59 +142,43 @@ def new_excel(request):
 from supply import models
 from django.db import connection
 class TestDjangoExcelDownload_ac(View):
-
     def get(self, request):
         #sheet = excel.pe.Sheet([["姓名", "登录密码","邮箱","职位","是否激活","公司编号"]])
-        office = [
-            ("系统管理员"),
-            ("供应商员工"),
-            ("采购员工"),
-            ("库存员工"),
-            ("采购经理"),
-            ("库存经理"),
-            ("生产经理")
-        ]
+        office = ["系统管理员","供应商员工","采购员工","库存员工","采购经理","库存经理","生产经理"]
         name = "acTemp"
         ts = int(time.time())
         file_name = name + str(ts)+'.xlsx'
 
         x_io = BytesIO()
         work_book = xlsxwriter.Workbook(x_io)
-        cen_format = work_book.add_format({'align':'center'})
-        merge_format = work_book.add_format({
-            'bold': True,
-            'align': 'center',  # 水平居中
-            'valign': 'vcenter',  # 垂直居中
-        })
+        fc = formatController(work_book)
+        tf = fc.titleF()
+        ef = fc.editF()
+        rf = fc.rowF()
         work_sheet = work_book.add_worksheet(name)
-        work_sheet.write(0, 0, "姓名")
-        work_sheet.write(0, 1, "登录密码")
-        work_sheet.write(0, 2, "邮箱")
-        work_sheet.write(0, 3, "职位")
-        work_sheet.write(0, 4, "是否激活")
-        work_sheet.write(0, 5, "公司编号")
+        srow,scol=1,3
+        work_sheet.set_column("D:H",10,ef)
+        work_sheet.merge_range("D1:H1","编辑员工",tf)
+        work_sheet.write(srow + 0, scol+0, "姓名",tf)
+        work_sheet.write(srow + 0, scol+1, "登录密码",tf)
+        work_sheet.write(srow + 0, scol+2, "邮箱",tf)
+        work_sheet.write(srow + 0, scol+3, "职位",tf)
+        work_sheet.write(srow + 0, scol+4, "公司编号",tf)
 
-        work_sheet.merge_range('J1:K1', '职位录入参考', merge_format)
+        gs=models.Gongsi.objects.all().values("myid",'name')
+        gsb=[]
+        work_sheet.set_column("A:B", 11)
+        work_sheet.merge_range("A1:B1", "公司列表", tf)
+        work_sheet.write(1, 0, "公司编号", tf)
+        work_sheet.write(1, 1, "公司名称", tf)
 
-        for i in range(len(office)):
-            work_sheet.write(i+1, 9, i,cen_format)
-            work_sheet.write(i+1, 10, office[i],cen_format)
+        for i in range(len(gs)):
+            work_sheet.write(2+i, 0, gs[i]["myid"], rf[i%2])
+            work_sheet.write(2+i, 1, gs[i]["name"], rf[i%2])
+            gsb.append(gs[i]["myid"])
 
-        yu = models.Gongsi.objects.all().values("name", "myid")
-        #print(yu)
-
-
-        work_sheet.merge_range('J10:K10', '公司-编号参考', merge_format)
-
-
-        for i in range(len(yu)):
-            work_sheet.write(i + 11, 9, yu[i]['myid'], cen_format)
-            work_sheet.write(i + 11, 10, yu[i]['name'], cen_format)
-
-        work_sheet.set_column('J1:K1', 15)
-
-        #work_sheet.data_validation("D2:D10", {'validate': 'list', 'source': office})
-        #work_sheet.data_validation("E2:E10", {'validate': 'list', 'source': [0,1]})
+        work_sheet.data_validation("G3:G20",{'validate':'list','source':office,'dropdown':True})
+        work_sheet.data_validation("H3:H20",{'validate':'list','source':gsb,'dropdown':True})
 
         work_book.close()
         res = HttpResponse()
