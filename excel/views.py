@@ -72,10 +72,8 @@ class TestDjangoExcelUpload(View):
             filehandle = request.FILES['file']
             sheet = filehandle.get_sheet()  # 对准
             print(sheet.to_array())
-
             data = sheet.to_array()
-
-            da = data[1:]
+            da = data[2:]
             for ea in da:
                 add_supply_axu(ea,request)
 
@@ -93,10 +91,14 @@ class TestDjangoExcelDownload(View):
         file_name = name + str(ts)+'.xlsx'
         x_io = BytesIO()
         work_book = xlsxwriter.Workbook(x_io)
-        cen_format = work_book.add_format({'align':'center'})
+        fc = formatController(work_book)
+        tf = fc.titleF()
+        ef = fc.editF()
         work_sheet = work_book.add_worksheet(name)
-        work_sheet.write(0, 0, "供应商名称name",cen_format)
-        work_sheet.write(0, 1, "供应商地址address",cen_format)
+        work_sheet.set_column("A:B",10,ef)
+        work_sheet.merge_range("A1:B1","编辑供应商",tf)
+        work_sheet.write(1, 0, "供应商名称",tf)
+        work_sheet.write(1, 1, "供应商地址",tf)
         work_book.close()
         print(type(work_book))
         res = HttpResponse()
