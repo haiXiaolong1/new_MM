@@ -87,9 +87,9 @@ import time
 class TestDjangoExcelDownload(View):
 
     def get(self, request):
-        name = "supplyTemp"
+        name = "供应商模板"
         ts = int(time.time())
-        file_name = name + str(ts)+'.xlsx'
+        file_name = name.encode('utf-8').decode('ISO-8859-1') + str(ts)+'.xlsx'
         x_io = BytesIO()
         work_book = xls.Workbook(x_io)
         fc = formatController(work_book)
@@ -146,9 +146,9 @@ class TestDjangoExcelDownload_ac(View):
     def get(self, request):
         #sheet = excel.pe.Sheet([["姓名", "登录密码","邮箱","职位","是否激活","公司编号"]])
         office = ["系统管理员","供应商员工","采购员工","库存员工","采购经理","库存经理","生产经理"]
-        name = "acTemp"
+        name = "用户管理模板"
         ts = int(time.time())
-        file_name = name + str(ts)+'.xlsx'
+        file_name = name.encode('utf-8').decode('ISO-8859-1') + str(ts)+'.xlsx'
 
         x_io = BytesIO()
         work_book = xls.Workbook(x_io)
@@ -232,9 +232,9 @@ def add_account_axu(data_each,request):
 class TestDjangoExcelDownload_mt(View):
 
     def get(self, request):
-        name = "mtTemp"
+        name = "供应关系模板"
         ts = int(time.time())
-        file_name = name + str(ts)+'.xlsx'
+        file_name = name.encode('utf-8').decode('ISO-8859-1') + str(ts)+'.xlsx'
 
         x_io = BytesIO()
         work_book = xls.Workbook(x_io)
