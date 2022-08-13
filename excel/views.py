@@ -60,7 +60,7 @@ class formatController:
 class UploadFileForm(forms.Form):
     file = forms.FileField()
 
-
+# 供应商-数据上传
 class TestDjangoExcelUpload(View):
     def get(self, request):
         form = UploadFileForm()
@@ -83,6 +83,7 @@ class TestDjangoExcelUpload(View):
             return HttpResponse("出错了")
 
 import time
+# 供应商-模板下载
 class TestDjangoExcelDownload(View):
 
     def get(self, request):
@@ -90,7 +91,7 @@ class TestDjangoExcelDownload(View):
         ts = int(time.time())
         file_name = name + str(ts)+'.xlsx'
         x_io = BytesIO()
-        work_book = xlsxwriter.Workbook(x_io)
+        work_book = xls.Workbook(x_io)
         fc = formatController(work_book)
         tf = fc.titleF()
         ef = fc.editF()
@@ -106,9 +107,7 @@ class TestDjangoExcelDownload(View):
         res["Content-Disposition"] = 'filename="'+file_name+'"'
         res.write(x_io.getvalue())
         return res
-
-
-
+# 数据库插入供应商
 def add_supply_axu(data_each,request):
     n = 10000000
     if models.Gongyingshang.objects.first():
@@ -125,11 +124,10 @@ def add_supply_axu(data_each,request):
 
 from django.http import HttpResponse
 from io import BytesIO
-import xlsxwriter
 
 def new_excel(request):
     x_io = BytesIO()
-    work_book = xlsxwriter.Workbook(x_io)
+    work_book = xls.Workbook(x_io)
     work_sheet = work_book.add_worksheet("excel-1")
     work_sheet.write(0,0,"test")
     work_sheet.data_validation("A1:A5", {'validate':'list', 'source':[1, 2, 3, 4]})
@@ -143,6 +141,7 @@ def new_excel(request):
 
 from supply import models
 from django.db import connection
+# 员工管理-模板下载
 class TestDjangoExcelDownload_ac(View):
     def get(self, request):
         #sheet = excel.pe.Sheet([["姓名", "登录密码","邮箱","职位","是否激活","公司编号"]])
@@ -152,7 +151,7 @@ class TestDjangoExcelDownload_ac(View):
         file_name = name + str(ts)+'.xlsx'
 
         x_io = BytesIO()
-        work_book = xlsxwriter.Workbook(x_io)
+        work_book = xls.Workbook(x_io)
         fc = formatController(work_book)
         tf = fc.titleF()
         ef = fc.editF()
@@ -188,7 +187,7 @@ class TestDjangoExcelDownload_ac(View):
         res["Content-Disposition"] = 'filename="'+file_name+'"'
         res.write(x_io.getvalue())
         return res
-
+# 员工管理-数据上传
 class TestDjangoExcelUpload_ac(View):
     def get(self, request):
         form = UploadFileForm()
@@ -202,10 +201,10 @@ class TestDjangoExcelUpload_ac(View):
             print(sheet.to_array())
             data = sheet.to_array()
 
-            da = data[1:]
+            da = data[2:]
             for ea in da:
-                if ea[5] != "":
-                    add_account_axu(ea[:6],request)
+                if ea[7] != "":
+                    add_account_axu(ea[3:8],request)
 
             #return HttpResponse(data)
             return redirect("/account/ac/list/")
@@ -216,23 +215,18 @@ def add_account_axu(data_each,request):
     n = 1000
     if models.Yuangong.objects.first():
         n = models.Yuangong.objects.all().order_by('-id').first().id[1:]
-    long = 4
     tcc = str(int(n) + 1)
     adt=4-len(tcc)
     sid = "e" + adt*'0'+str(tcc)  # 编号递增，这样计算避免删除后出现错误
-
     named=data_each[0]
     passworded=data_each[1]
     emailed=data_each[2]
     officed=data_each[3]
-    actived=data_each[4]
-    bussinessd=data_each[5]
-
-
+    bussinessd=data_each[4]
     cursor = connection.cursor()
-    query_recreation = 'insert  into  yuangong(id,password,email,office,username,isactive,businessid_id)' \
+    query_recreation = 'insert  into  yuangong(id,password,email,office,username,businessid_id,questionid_id)' \
                        "  values('"+str(sid)+"','"+str(passworded)+"','"+str(emailed)  \
-                       +"','"+str(officed)+"','"+str(named) +"','"+str(actived) +"','"+str(bussinessd)+"')"
+                       +"','"+str(officed)+"','"+str(named) +"','"+str(bussinessd)+"',1)"
     cursor.execute(query_recreation)
 
 class TestDjangoExcelDownload_mt(View):
@@ -243,7 +237,7 @@ class TestDjangoExcelDownload_mt(View):
         file_name = name + str(ts)+'.xlsx'
 
         x_io = BytesIO()
-        work_book = xlsxwriter.Workbook(x_io)
+        work_book = xls.Workbook(x_io)
         fc=formatController(work_book)
         tf = fc.titleF()
         ef=fc.editF()
@@ -308,32 +302,18 @@ class TestDjangoExcelUpload_mt(View):
         if form.is_valid():
             filehandle = request.FILES['file']
             sheet = filehandle.get_sheet()  # 对准
-            #print(sheet.to_array())
-
+            print(sheet.to_array())
             data = sheet.to_array()
-
-            da = data[1:]
-
-            temp1 = []
-            temp2 = []
-            temp=[]
-            for ea in da:
-                if ea[0] != "" and ea[1] != "":
-                    temp1.append(ea[:2][0])
-                    temp2.append(ea[:2][1])
-
-                    #add_mt_axu(ea[:2],request)
+            da = data[2:]
 
             c=[]
-            for i in range(len(temp1)):
-                temp=[]
-                temp.append(temp1[i])
-                temp.append(temp2[i])
-                c.append(temp)
-
-
+            for ea in da:
+                if ea[4] != "" and ea[5] != "":
+                    c.append(ea[4:6])
+                    #add_mt_axu(ea[:2],request)
             flag = 1
             q_l=[]
+            #检查供应商编号，物料编号是否合法
             for j in range(len(c)):
                 try:
                     models.Gongyingshang.objects.get(id=c[j][0])
@@ -355,8 +335,8 @@ class TestDjangoExcelUpload_mt(View):
                 })
 
             for ea in da:
-                if ea[0] != "" and ea[1] != "":
-                    add_mt_axu(ea[:2],request)
+                if ea[4] != "" and ea[5] != "":
+                    add_mt_axu(ea[4:6],request)
 
 
             return redirect("/supply/material/list/")
