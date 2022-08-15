@@ -142,10 +142,10 @@ def new_excel(request):
 from supply import models
 from django.db import connection
 # 员工管理-模板下载
+office = ["系统管理员","供应商员工","采购员工","库存员工","采购经理","库存经理","生产经理"]
 class TestDjangoExcelDownload_ac(View):
     def get(self, request):
         #sheet = excel.pe.Sheet([["姓名", "登录密码","邮箱","职位","是否激活","公司编号"]])
-        office = ["系统管理员","供应商员工","采购员工","库存员工","采购经理","库存经理","生产经理"]
         name = "用户管理模板"
         ts = int(time.time())
         file_name = name.encode('utf-8').decode('ISO-8859-1') + str(ts)+'.xlsx'
@@ -211,6 +211,7 @@ class TestDjangoExcelUpload_ac(View):
         else:
             return HttpResponse("出错了")
 
+
 def add_account_axu(data_each,request):
     n = 1000
     if models.Yuangong.objects.first():
@@ -221,12 +222,12 @@ def add_account_axu(data_each,request):
     named=data_each[0]
     passworded=data_each[1]
     emailed=data_each[2]
-    officed=data_each[3]
+    officed=str(office.index(data_each[3]))
     bussinessd=data_each[4]
     cursor = connection.cursor()
-    query_recreation = 'insert  into  yuangong(id,password,email,office,username,businessid_id,questionid_id)' \
+    query_recreation = 'insert  into  yuangong(id,password,email,office,username,businessid_id,questionid_id,isactive)' \
                        "  values('"+str(sid)+"','"+str(passworded)+"','"+str(emailed)  \
-                       +"','"+str(officed)+"','"+str(named) +"','"+str(bussinessd)+"',1)"
+                       +"','"+str(officed)+"','"+str(named) +"','"+str(bussinessd)+"',1,1)"
     cursor.execute(query_recreation)
 
 class TestDjangoExcelDownload_mt(View):

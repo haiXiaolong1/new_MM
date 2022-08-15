@@ -68,7 +68,7 @@ class Yuangong(models.Model):
         (1, "启用"),
         (0, "禁用")
     )
-    isactive = models.IntegerField(blank=True, null=True, choices=choices1,verbose_name="是否启用")
+    isactive = models.IntegerField(blank=True, null=True, choices=choices1,verbose_name="是否启用",default=1)
 
     email=models.CharField(max_length=40,blank=True,null=True,verbose_name="电子邮箱")
     businessid = models.ForeignKey(to='Gongsi', to_field='myid', on_delete=models.CASCADE,verbose_name="公司")
