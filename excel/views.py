@@ -248,11 +248,14 @@ class TestDjangoExcelDownload_mt(View):
         work_sheet.merge_range('A{}:C{}'.format(tl+1,tl+1), '供应商列表',tf)
         yu = models.Gongyingshang.objects.all().values("id", "name","address")
         gys=[]
+        lens,addlens=[],[]
         for i in range(len(yu)):
             work_sheet.write(i + 1+tl, 0, yu[i]['id'], rf[i%2])
             work_sheet.write(i + 1+tl, 1, yu[i]['name'], rf[i%2])
             work_sheet.write(i + 1+tl, 2, yu[i]['address'], rf[i%2])
             gys.append(yu[i]['id'])
+            lens.append(len(yu[i]['name']))
+            addlens.append(len(yu[i]['address']))
         i+=2
 
         work_sheet.merge_range('A{}:C{}'.format(tl+i+1,tl+i+1), '物料列表', tf)
@@ -264,7 +267,9 @@ class TestDjangoExcelDownload_mt(View):
             work_sheet.write(i+j + 1+tl, 1, wu[j]['type'], rf[j%2])
             work_sheet.write(i+j + 1+tl, 2, wu[j]['desc'], rf[j%2])
             wl.append(wu[j]['id'])
-        work_sheet.set_column('A1:C1', 11)
+        work_sheet.set_column('A1:A1', 11)
+        work_sheet.set_column('B1:B1', 2*max(lens))
+        work_sheet.set_column('C1:C1', 2*max(addlens))
 
         work_sheet.set_column('E:F', 11,ef)
         work_sheet.merge_range('E1:F1', '添加供应关系', tf)
