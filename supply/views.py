@@ -239,15 +239,13 @@ def update_message(request):
     for f in flow:
         ids.append(f.id)
         nf.append(f.context)
-    # print(flow)
-    # print(nf)
+
     return JsonResponse({"status": True,"newFlow":nf,"ids":ids})
 
 def read_message(request):
-    # print("!!!!!!!!!!!!!!!!!!1")
-    # print(request)
+
     ids = request.GET.get("ids")
-    # print(ids)
+
     for idx in ids:
         models.Xiaoxi.objects.filter(id=idx).update(read=1)
     return JsonResponse({"status": True})
@@ -372,7 +370,7 @@ def login(request):
     request.session["messageFlow"] = all_message_by_user(None, ins.id)
     request.session['produceActive']=True #控制是否向生产经理抄送操作记录
     return JsonResponse({"status": True})
-from django.contrib import messages
+
 # 找回密码-跳转
 def forgot(request):
     question = models.Securityquestion.objects.filter().all()
@@ -385,23 +383,29 @@ def forgot(request):
 def r_password(request):
     username = request.POST.get("username")
     sq = request.POST.get("sq")
+    error=["","","",""]
     sq_verification = request.POST.get("sq_verification")
     new_password = request.POST.get("new_password")
     ins = models.Yuangong.objects.filter(id=username).first()
     if ins is None:
-        messages.success(request, "员工号输入错误！", locals())
-        return redirect('/forgot')
+        error[0]="请输入正确的员工号"
+        return JsonResponse({"status":False,"errors":error})
     if ins.questionid.question == sq:
         if ins.verification == sq_verification:
-            models.Yuangong.objects.filter(id=username).update(password=new_password)
-            return redirect('/login')
+            if new_password:
+                request.session["info"] = {"name": ins.username, "id": ins.id
+                    , "office": ins.office, "business": ins.businessid.name, "officename": ins.get_office_display()}
+                request.session["messageFlow"] = all_message_by_user(None, ins.id)
+                request.session['produceActive']=True
+                return JsonResponse({"status":True})
+            error[3]="新密码不能为空"
+            return JsonResponse({"status":False,"errors":error})
         else:
-            messages.success(request, "密保答案错误！", locals())
-            return redirect('/forgot')
+            error[2]="密保问题回答错误"
+            return JsonResponse({"status":False,"errors":error})
     else:
-        messages.success(request, "密保问题选择错误！", locals())
-        return redirect('/forgot')
-
+        error[1]="密保问题选择错误"
+        return JsonResponse({"status":False,"errors":error})
 # 登出功能
 def logout(request):
     request.session.clear()
@@ -670,18 +674,6 @@ def quote_edit(request):
 def mm_list(request):
     return redirect("/admin")
 
-'''
-def mm_list(request):
-    qu = models.Wuliao.objects.all()
-    yu = models.Yuangong.objects.all()
-    id = []
-    n = []
-    for i in yu:
-        id.append(i.id)
-        n.append(i.username)
-    yuan = dict(zip(id, n))
-    return render(request, 'create_material.html', {"queryset": qu, "yuangong": yuan, "title": "物料列表"})
-'''
 
 def mm_add(request):
     o = request.POST

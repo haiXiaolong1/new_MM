@@ -41,11 +41,11 @@
 
 				<!-- Loging form -->
 
-				<form method="post" action="/supply/r_password">
+				<form method="post" id="formAdd">
 					{% csrf_token %}
 					<div>
 						<input type="text" class="form-control" id="exampleInputEmail1" placeholder="员工编号" name="username" >
-						<a class="formError" id="username_error" style="color: red;text-align: left"></a>
+						<a class="formError" id="username_error" style="color: red;text-align: left;float: left;padding-top:5px;padding-bottom:8px;width: 100%"></a>
 					</div>
 					<br>
 					<div >
@@ -57,21 +57,20 @@
                                     <option value="{{ q }}" name="sq">{{ q }}</option>
                                 {% endfor %}
                             </select>
-                            <a class="formError" id="sq_error"></a>
+                            <a class="formError" id="sq_error" style="color: red;text-align: left;float: left;padding-top:5px;padding-bottom:8px;width: 100%"></a>
                         </div>
 					</div>
                     <div>
 						<input type="text" class="form-control" id="exampleInputEmail1" placeholder="密保验证" name="sq_verification" >
-						<a class="formError" id="sq_verification_error" style="color: red;text-align: left"></a>
+						<a class="formError" id="sq_verification_error" style="color: red;text-align: left;float: left;padding-top:5px;padding-bottom:8px;width: 100%"></a>
 					</div>
                     <br>
                     <div>
 						<input type="password" class="form-control" id="exampleInputEmail1" placeholder="新密码" name="new_password" >
-						<a class="formError" id="new_password_error" style="color: red;text-align: left"></a>
+						<a class="formError" id="new_password_error" style="color: red;text-align: left;float: left;padding-top:5px;padding-bottom:8px;width: 100%"></a>
 					</div>
 					<hr>
-					<button type="submit" class="btn-success btn"  style="width:100%;margin: auto">修改密码</button>
-
+					<button type="button" class="btn-success btn" id="btnLogin" style="width:100%;margin: auto">修改密码</button>
 					<div class="form-check">
 						<label class="forgot-password"><a href="/login">返回登录？</a></label>
 					</div>
@@ -92,13 +91,45 @@
 	<script src={% static 'plugins/datatables/js/jquery.datatables.min.js' %}></script>
 	<script src={% static 'plugins/bootstrap-datepicker/js/bootstrap-datepicker.js' %}></script>
     <script src={% static 'js/sweetalert-dev.js' %}></script>
-    {% if messages %}
-        <script>
-            {% for msg in messages %}
-                swal('{{ msg.message }}')
-            {% endfor %}
-        </script>
-    {% endif %}
+    <script type="text/javascript">
+        $(document).ready(function() {
+
+            $("#btnLogin").click(function () {
+                $("#username_error").text("")
+                $("#sq_error").text("")
+                $("#sq_verification_error").text("")
+                $("#new_password_error").text("")
+                $.ajax({
+                    url:"/supply/r_password/",
+                    type:"post",
+                    data:$("#formAdd").serialize(),
+                    dataType:"JSON",
+                    success:function (res){
+                        if(res.status){
+                            if(confirm("修改成功，是否直接登录系统")){
+                                top.location.href = "/supply/list/";
+                            }else {
+
+                            }
+                        }
+                        else{
+                            $("#username_error").text(res.errors[0])
+                            $("#sq_error").text(res.errors[1])
+                            $("#sq_verification_error").text(res.errors[2])
+                            $("#new_password_error").text(res.errors[3])
+                        }
+                    }
+                })
+
+            })
+        })
+
+        $(document).keyup(function(event){
+            if(event.keyCode ==13){
+                $("#btnLogin").trigger("click");
+            }
+        });
+    </script>
 </div>
 </body>
 </html>

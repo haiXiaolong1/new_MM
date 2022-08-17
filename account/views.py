@@ -195,21 +195,30 @@ def ac_login(request):
 
 # 修改个人信息（密保等）
 def r_massage(request):
+    notify=[]
     if request.method == "GET":
         sq = models.Securityquestion.objects.all()
-        return render(request, 'r_massage.html', locals())
+        ins=models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
+        id = ins.questionid_id
+        answer=ins.verification
+        return render(request, 'r_massage.html',{"sq":sq,"id":id,"answer":answer})
     else:
         name = request.POST.get("name")
         sq = request.POST.get("sq")
-        sq=models.Securityquestion.objects.filter(question=sq).first().id
         verification = request.POST.get("verification")
+        error=["","",""]
+        if not name:
+            error[0]="姓名不能为空"
+            return JsonResponse({"status":False,"errors":error})
+        if not verification:
+            error[2]="密保答案不能为空"
+            return JsonResponse({"status":False,"errors":error})
         models.Yuangong.objects.filter(id=request.session['info']['id']).update(username=name,questionid_id=sq,
-                                                                                verification=verification)
-        # 更新session
-        request.session['info']['name'], request.session['info']['verification'], request.session['info'][
-            'question'] = name, verification, sq
-        messages.success(request, "修改成功！", locals())
-        return redirect('/account/ac/r_massage/')
+        verification=verification)
+        notify=[]
+        notify.append(dict(id=0, tittle="提示", context="个人信息修改成功", type="success", position="top-center"))
+        request.session["notify"] = notify
+        return JsonResponse({"status":True})
 
 
 # 修改密码
@@ -220,18 +229,30 @@ def r_password(request):
         old_password = request.POST.get("old_password")
         new1_password = request.POST.get("new1_password")
         new2_password = request.POST.get("new2_password")
+        error=["","",""]
+        notify=[]
+        if not old_password:
+            error[0]="请输入旧密码"
+            return JsonResponse({"status":False,"errors":error})
+        if not new1_password:
+            error[1]="请输入新密码"
+            return JsonResponse({"status":False,"errors":error})
+        if not new2_password:
+            error[2]="请再次输入新密码"
+            return JsonResponse({"status":False,"errors":error})
         old_pass = models.Yuangong.objects.filter(id=request.session['info']['id']).values()[0]['password']
         if old_pass == old_password:
             if new1_password == new2_password:
                 models.Yuangong.objects.filter(id=request.session['info']['id']).update(password=new1_password)
-                messages.success(request, "修改成功！", locals())
-                return redirect('/account/ac/r_password/')
+                notify.append(dict(id=0, tittle="提示", context="个人密码修改成功", type="success", position="top-center"))
+                request.session["notify"] = notify
+                return JsonResponse({"status":True})
             else:
-                messages.success(request, "两次新密码不一致！", locals())
-                return redirect('/account/ac/r_password/')
+                error[2]="两次输入密码不一致"
+                return JsonResponse({"status":False,"errors":error})
         else:
-            messages.success(request, "原密码错误！", locals())
-            return redirect('/account/ac/r_password/')
+            error[0]="旧密码错误"
+            return JsonResponse({"status":False,"errors":error})
 
 def ac_excel(request):
     if request.method == "GET":
