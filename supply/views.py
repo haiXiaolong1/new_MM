@@ -57,8 +57,9 @@ def ambu_time(time):
         return time.strftime("%m{m}%d{d}").format(m="月", d="日")
     return time.strftime("%H:%M")
 
-#返回登录用户的消息列表，按已读未读分组
-#消息列表：所有聊天对象的最后一条消息+人名+格式化时间
+
+# 返回登录用户的消息列表，按已读未读分组
+# 消息列表：所有聊天对象的最后一条消息+人名+格式化时间
 def all_message_by_user(request, me="e0002"):
     relevant = models.Xiaoxi.objects.filter(Q(fromId=me) | Q(toId=me)).all().order_by('time')
     read = {}
@@ -68,7 +69,7 @@ def all_message_by_user(request, me="e0002"):
         if other == me:
             other = i.fromId_id
         info = {"id": other, "time": ambu_time(i.time), "text": i.context}
-        if (i.read == 0 and i.toId_id==me):
+        if (i.read == 0 and i.toId_id == me):
             try:
                 read.pop(other)
             except:
@@ -77,12 +78,13 @@ def all_message_by_user(request, me="e0002"):
         else:
             read[other] = info
     for k, v in read.items():
-        yg=models.Yuangong.objects.filter(id=k).first()
-        read[k]["name"] = "【{}】{}".format(yg.get_office_display(),yg.username)
+        yg = models.Yuangong.objects.filter(id=k).first()
+        read[k]["name"] = "【{}】{}".format(yg.get_office_display(), yg.username)
     for k, v in unread.items():
         yg = models.Yuangong.objects.filter(id=k).first()
-        unread[k]["name"] = "【{}】{}".format(yg.get_office_display(),yg.username)
+        unread[k]["name"] = "【{}】{}".format(yg.get_office_display(), yg.username)
     return {"read": read, "unread": unread, "me": me}
+
 
 # 找到一对聊天对象的所有消息流
 def all_message(them='e0003', me='e0002'):
@@ -102,7 +104,8 @@ def all_message(them='e0003', me='e0002'):
     flow = {"who": who, "flow": message_flow}
     return flow
 
-#生成页面中一条消息的html
+
+# 生成页面中一条消息的html
 def add_message(line):
     html_class = "me"
     icon = ""
@@ -113,12 +116,12 @@ def add_message(line):
     html = html_template.format(html_class, icon, line["text"])
     return html
 
-#按时间对消息分组，一段时间内的消息归进一组，显示一个时间戳
+
+# 按时间对消息分组，一段时间内的消息归进一组，显示一个时间戳
 def group_by_time(f):
     flow = f["flow"]
     start = int(flow[0]["compare"])
-    print(start)
-    interval = 300000000 #同一时间组发送时间差上限  分钟|秒（2位）|毫秒（6位）
+    interval = 300000000  # 同一时间组发送时间差上限  分钟|秒（2位）|毫秒（6位）
     group = 0
     groups = {0: []}
     for i in flow:
@@ -146,7 +149,7 @@ def add_chart_item(k, v, unread):
     clas = "right-sidebar-toggle chat-item"
     if unread:
         clas = "right-sidebar-toggle chat-item unread active-user"
-    return template.format(clas, k, v['name'], re.sub(r"<a.*?</a>",'',v['text']), v['time'])
+    return template.format(clas, k, v['name'], re.sub(r"<a.*?</a>", '', v['text']), v['time'])
 
 
 def add_chart_group(which, d):
@@ -169,7 +172,7 @@ def set_chart_group(flow):
     out += add_chart_group("新消息", flow["unread"])
     out += add_chart_group("已读消息", flow["read"])
     if len(flow["unread"]) == 0 and len(flow['read']) == 0:
-        out += add_chart_group("暂无消息",None)
+        out += add_chart_group("暂无消息", None)
     cou = 0
     me = flow["me"]
     for i in flow["unread"].keys():
@@ -201,20 +204,23 @@ def set_message_detail(request):
     out = ""
     for g in groups.values():
         out += add_group(g)
-    return JsonResponse({"status": True, "message": out,"office": office, "who": who, "when": state, "setList": set_list, "count": cou})
+    return JsonResponse(
+        {"status": True, "message": out, "office": office, "who": who, "when": state, "setList": set_list,
+         "count": cou})
 
 
 def send_test_message(request):
     me = request.GET.get("meid")
     gj = models.Yuangong.objects.filter().exclude(id=me)
-    div='<div class="copyDiv">{}{}</div>'
-    input='<input class="copyInput" readonly value="{}"></input>'
-    but='<button class="copyButton"><i class="fa fa-clone" aria-hidden="true"></i></button>'
-    html=div.format(input,but)
+    div = '<div class="copyDiv">{}{}</div>'
+    input = '<input class="copyInput" readonly value="{}"></input>'
+    but = '<button class="copyButton"><i class="fa fa-clone" aria-hidden="true"></i></button>'
+    html = div.format(input, but)
     for gjr in gj:
         models.Xiaoxi.objects.create(fromId_id=gjr.id, toId_id=me, context=html.format(str(random.randint(1, 20))),
                                      time=datetime.now(), read=0)
     return JsonResponse({"status": True})
+
 
 def set_copy_message(s):
     div = '<div class="copyDiv">{}{}</div>'
@@ -223,6 +229,7 @@ def set_copy_message(s):
     html = div.format(input, but)
     return html.format(s)
 
+
 def send_message(request):
     me = request.GET.get("meid")
     them = request.GET.get("yid")
@@ -230,25 +237,27 @@ def send_message(request):
     models.Xiaoxi.objects.create(fromId_id=me, toId_id=them, context=text, time=datetime.now(), read=0)
     return JsonResponse({"status": True})
 
+
 def update_message(request):
-    meid=request.GET.get("meid")
-    themid=request.GET.get("them")
-    flow=models.Xiaoxi.objects.filter(fromId_id=themid,toId_id=meid,read=0).all()
+    meid = request.GET.get("meid")
+    themid = request.GET.get("them")
+    flow = models.Xiaoxi.objects.filter(fromId_id=themid, toId_id=meid, read=0).all()
     # flow.update(read=1)
-    nf,ids=[],[]
+    nf, ids = [], []
     for f in flow:
         ids.append(f.id)
         nf.append(f.context)
 
-    return JsonResponse({"status": True,"newFlow":nf,"ids":ids})
+    return JsonResponse({"status": True, "newFlow": nf, "ids": ids})
+
 
 def read_message(request):
-
     ids = request.GET.get("ids")
 
     for idx in ids:
         models.Xiaoxi.objects.filter(id=idx).update(read=1)
     return JsonResponse({"status": True})
+
 
 def delete_notify(request):
     try:
@@ -257,8 +266,9 @@ def delete_notify(request):
         None
     return JsonResponse({"status": True})
 
-#询价单系列数据
-def xjd_info(xjd,retu):
+
+# 询价单系列数据
+def xjd_info(xjd, retu):
     wl = xjd.demandid.maid
     gs = xjd.demandid.createuserid.businessid
     gc = xjd.demandid.facid
@@ -267,79 +277,82 @@ def xjd_info(xjd,retu):
     retu['gc'] = {'type': gc.type, 'id': gc.id, 'add': gc.address}
     retu['wl'] = {"id": wl.id, "desc": wl.desc, "cal": wl.calcutype, "type": wl.type}
     retu['tcount'] = xjd.demandid.tcount
-    retu['kc']=0
+    retu['kc'] = 0
     if kc:
-        retu['kc']=kc.inventoryunrest
+        retu['kc'] = kc.inventoryunrest
     return
 
-#表单信息展示函数
+
+# 表单信息展示函数
 def form_set_byId(request):
-    type=request.GET.get("type").split(",")
-    retu={"status": True}
+    type = request.GET.get("type").split(",")
+    retu = {"status": True}
     if "gc" in type:
         id = request.GET.get("facid")
         gc = models.Gongchang.objects.filter(id=id).first()
-        if gc==None:
+        if gc == None:
             retu["gc"] = {"add": "工厂地址", "type": "工厂类型"}
         else:
             retu["gc"] = {"add": gc.address, "type": gc.type}
     if "wl" in type:
         id = request.GET.get("maid")
         wl = models.Wuliao.objects.filter(id=id).first()
-        if wl==None:
-            retu["wl"] = {"desc": "物料描述", "cal": "计量单位","type": "物料类型"}
+        if wl == None:
+            retu["wl"] = {"desc": "物料描述", "cal": "计量单位", "type": "物料类型"}
         else:
-            retu["wl"] = {"desc": wl.desc, "cal": wl.calcutype,"type":wl.type}
+            retu["wl"] = {"desc": wl.desc, "cal": wl.calcutype, "type": wl.type}
     if "gckc" in type:
         facid = request.GET.get("facid")
-        maid=request.GET.get("maid")
+        maid = request.GET.get("maid")
         kc = models.Gongchangkucun.objects.filter(facid=facid, maid=maid).order_by('-updatetime').first()
-        if not kc==None:
-            retu["gckc"] = {"unres":kc.inventoryunrest}
+        if not kc == None:
+            retu["gckc"] = {"unres": kc.inventoryunrest}
         else:
-            retu["gckc"] = {"unres":0}
+            retu["gckc"] = {"unres": 0}
     if "xjd" in type:
-        xid=request.GET.get("xjd")
-        xjd=models.Xunjiadan.objects.filter(inquiryid=xid).first()
-        xjd_info(xjd,retu)
-        retu['xjyxq']=xjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")
+        xid = request.GET.get("xjd")
+        xjd = models.Xunjiadan.objects.filter(inquiryid=xid).first()
+        xjd_info(xjd, retu)
+        retu['xjyxq'] = xjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年", "月", "日")
     if "bjd" in type:
-        xid=request.GET.get("xjd")
-        bjd=models.Baojiadan.objects.filter(quoteid=xid).first()
-        xjd=bjd.inquiryid
-        xjd_info(xjd,retu)
-        retu['xjyxq']=xjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年","月","日")
-        retu['bjyxq'] =bjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年", "月", "日")
+        xid = request.GET.get("xjd")
+        bjd = models.Baojiadan.objects.filter(quoteid=xid).first()
+        xjd = bjd.inquiryid
+        xjd_info(xjd, retu)
+        retu['xjyxq'] = xjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年", "月", "日")
+        retu['bjyxq'] = bjd.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年", "月", "日")
     if 'gys' in type:
-        bid=request.GET.get('xjd')
-        bjd=models.Baojiadan.objects.filter(quoteid=bid).first()
-        gys=bjd.supplyid
-        retu['gys']={"id":gys.id,"name":gys.name,"price":bjd.quote}
+        bid = request.GET.get('xjd')
+        bjd = models.Baojiadan.objects.filter(quoteid=bid).first()
+        gys = bjd.supplyid
+        retu['gys'] = {"id": gys.id, "name": gys.name, "price": bjd.quote}
     if 'cgd' in type:
         pid = request.GET.get("cgd")
         cgd = models.Caigoudan.objects.filter(purchaseid=pid).first()
         xjd = cgd.quoteid.inquiryid
         xjd_info(xjd, retu)
     if 'rkd' in type:
-        rid=request.GET.get("rkd")
-        rkd=models.Rukudan.objects.filter(id=rid).first()
-        zsd=rkd.temid
-        cgd=rkd.temid.purchaseid
-        bjd=cgd.quoteid
-        xjd=bjd.inquiryid
-        gys=cgd.quoteid.inquiryid.supplyid
-        xjd_info(xjd,retu)
-        facid=xjd.demandid.facid_id
-        maid=xjd.demandid.maid_id
-        kc=models.Gongchangkucun.objects.filter(facid=facid, maid=maid).order_by('-updatetime').first()
-        if not kc==None:
+        rid = request.GET.get("rkd")
+        rkd = models.Rukudan.objects.filter(id=rid).first()
+        zsd = rkd.temid
+        cgd = rkd.temid.purchaseid
+        bjd = cgd.quoteid
+        xjd = bjd.inquiryid
+        gys = cgd.quoteid.inquiryid.supplyid
+        xjd_info(xjd, retu)
+        facid = xjd.demandid.facid_id
+        maid = xjd.demandid.maid_id
+        kc = models.Gongchangkucun.objects.filter(facid=facid, maid=maid).order_by('-updatetime').first()
+        if not kc == None:
             retu["gckc"] = kc.inventoryunrest
         else:
             retu["gckc"] = 0
-        retu['gys']={"id":gys.id,"name":gys.name,"price":bjd.quote}
-        retu['cgd']={"time":cgd.createtime.strftime("%Y{}%m{}%d{} %H:%M:%S").format("年","月","日")}
-        retu['zsd']={'time':zsd.createtime.strftime("%Y{}%m{}%d{} %H:%M:%S").format("年","月","日"),'info':zsd.moreinfo}
+        retu['gys'] = {"id": gys.id, "name": gys.name, "price": bjd.quote}
+        retu['cgd'] = {"time": cgd.createtime.strftime("%Y{}%m{}%d{} %H:%M:%S").format("年", "月", "日")}
+        retu['zsd'] = {'time': zsd.createtime.strftime("%Y{}%m{}%d{} %H:%M:%S").format("年", "月", "日"),
+                       'info': zsd.moreinfo}
     return JsonResponse(retu)
+
 
 # 登录功能
 def login(request):
@@ -368,8 +381,9 @@ def login(request):
     request.session["info"] = {"name": ins.username, "id": ins.id
         , "office": ins.office, "business": ins.businessid.name, "officename": ins.get_office_display()}
     request.session["messageFlow"] = all_message_by_user(None, ins.id)
-    request.session['produceActive']=True #控制是否向生产经理抄送操作记录
+    request.session['produceActive'] = True  # 控制是否向生产经理抄送操作记录
     return JsonResponse({"status": True})
+
 
 # 找回密码-跳转
 def forgot(request):
@@ -377,39 +391,43 @@ def forgot(request):
     sq = []
     for i in question:
         sq.append(i.question)
-    return render(request, 'forgot.html',locals())
+    return render(request, 'forgot.html', locals())
+
 
 # 修改密码
 def r_password(request):
     username = request.POST.get("username")
     sq = request.POST.get("sq")
-    error=["","","",""]
+    error = ["", "", "", ""]
     sq_verification = request.POST.get("sq_verification")
     new_password = request.POST.get("new_password")
     ins = models.Yuangong.objects.filter(id=username).first()
     if ins is None:
-        error[0]="请输入正确的员工号"
-        return JsonResponse({"status":False,"errors":error})
+        error[0] = "请输入正确的员工号"
+        return JsonResponse({"status": False, "errors": error})
     if ins.questionid.question == sq:
         if ins.verification == sq_verification:
             if new_password:
                 request.session["info"] = {"name": ins.username, "id": ins.id
                     , "office": ins.office, "business": ins.businessid.name, "officename": ins.get_office_display()}
                 request.session["messageFlow"] = all_message_by_user(None, ins.id)
-                request.session['produceActive']=True
-                return JsonResponse({"status":True})
-            error[3]="新密码不能为空"
-            return JsonResponse({"status":False,"errors":error})
+                request.session['produceActive'] = True
+                return JsonResponse({"status": True})
+            error[3] = "新密码不能为空"
+            return JsonResponse({"status": False, "errors": error})
         else:
-            error[2]="密保问题回答错误"
-            return JsonResponse({"status":False,"errors":error})
+            error[2] = "密保问题回答错误"
+            return JsonResponse({"status": False, "errors": error})
     else:
-        error[1]="密保问题选择错误"
-        return JsonResponse({"status":False,"errors":error})
+        error[1] = "密保问题选择错误"
+        return JsonResponse({"status": False, "errors": error})
+
+
 # 登出功能
 def logout(request):
     request.session.clear()
     return redirect('/login')
+
 
 # 展示供应商列表
 def supply_list(request):
@@ -423,6 +441,7 @@ def supply_list(request):
     yuan = dict(zip(id, n))
     return render(request, 'supply_list.html', {"queryset": qu, "yuangong": yuan, "title": "供应商列表"})
 
+
 # 添加供应商
 def supply_add(request):
     n = 10000000
@@ -435,21 +454,22 @@ def supply_add(request):
     toCheck = [o['name'], o['address']]
     types = ['nan', 'nan']
     res = form_check(toCheck, types)
-    l1=len(o['name'])
-    l2=len(o['address'])
-    notify=[]
-    if l1>20:
-        res['error'][0]='供应商名称不能超过20个字符'
-        res['status']=False
-    if l2>20:
-        res['error'][0]='供应商地址不能超过20个字符'
-        res['status']=False
+    l1 = len(o['name'])
+    l2 = len(o['address'])
+    notify = []
+    if l1 > 20:
+        res['error'][0] = '供应商名称不能超过20个字符'
+        res['status'] = False
+    if l2 > 20:
+        res['error'][0] = '供应商地址不能超过20个字符'
+        res['status'] = False
     if res['status']:
         notify.append(dict(id=0, tittle="提示", context="供应商 {} 创建成功".format(sid), type="success", position="top-center"))
         request.session["notify"] = notify
         models.Gongyingshang.objects.create(name=o['name'], address=o['address'], createtime=time
                                             , id=sid, updatetime=time, createnumberid_id=id, updatenumberid_id=id)
     return JsonResponse(res)
+
 
 # 编辑供应商时返回供应商原始数据
 def supply_detail(request):
@@ -459,25 +479,26 @@ def supply_detail(request):
         return JsonResponse({"status": False, "error": "数据不存在"})
     return JsonResponse({"supply": su, "status": True})
 
+
 # 保存编辑供应商的最新数据
 def supply_edit(request):
     id = request.GET.get("uid")
     uid = request.session["info"]['id']
     # 用户ID
     s = request.POST
-    notify=[]
+    notify = []
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     toCheck = [s['name'], s['address']]
     types = ['nan', 'nan']
     res = form_check(toCheck, types)
-    l1=len(s['name'])
-    l2=len(s['address'])
-    if l1>20:
-        res['error'][0]='供应商名称不能超过20个字符'
-        res['status']=False
-    if l2>20:
-        res['error'][0]='供应商地址不能超过20个字符'
-        res['status']=False
+    l1 = len(s['name'])
+    l2 = len(s['address'])
+    if l1 > 20:
+        res['error'][0] = '供应商名称不能超过20个字符'
+        res['status'] = False
+    if l2 > 20:
+        res['error'][0] = '供应商地址不能超过20个字符'
+        res['status'] = False
     if res['status']:
         notify.append(dict(id=0, tittle="提示", context="供应商 {} 编辑成功".format(id), type="success", position="top-center"))
         request.session["notify"] = notify
@@ -486,20 +507,23 @@ def supply_edit(request):
 
     return JsonResponse(res)
 
+
 # 删除供应商
 def supply_delete(request):
     id = request.GET.get("uid")
     s = models.Gongyingguanxi.objects.filter(supplyid_id=id).first()
-    notify=[]
+    notify = []
     # 先判断是否有关联的供应关系，如果有则不能删除
     if s:
-        notify.append(dict(id=0, tittle="提示", context="供应商 {} 存在供应关系，不能删除".format(id), type="error", position="top-center"))
+        notify.append(
+            dict(id=0, tittle="提示", context="供应商 {} 存在供应关系，不能删除".format(id), type="error", position="top-center"))
         request.session["notify"] = notify
         return JsonResponse({"status": False})
     notify.append(dict(id=0, tittle="提示", context="供应商 {} 删除成功".format(id), type="success", position="top-center"))
     request.session["notify"] = notify
     models.Gongyingshang.objects.filter(id=id).delete()
     return JsonResponse({"status": True})
+
 
 # 展示供应商与材料的供应关系
 def material_list(request):
@@ -514,6 +538,8 @@ def material_list(request):
     }
 
     return render(request, 'material_list.html', result)
+
+
 # 添加供应商与物料的供应关系
 def material_add(request):
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
@@ -524,7 +550,8 @@ def material_add(request):
     # 判断是否已经存在此供应关系，如果已存在则提示不能重复添加
     isexist = models.Gongyingguanxi.objects.filter(supplyid_id=sid, materialid_id=mid)
     if isexist:
-        request.session['notify'] = [dict(id=0, tittle="提示", context="供应关系已存在，不能重复创建", type="error", position="top-center")]
+        request.session['notify'] = [
+            dict(id=0, tittle="提示", context="供应关系已存在，不能重复创建", type="error", position="top-center")]
         return JsonResponse({"status": True, "isexist": True})
     toCheck = [sid, mid]
     types = ['id供应商编号', 'id物料编号']
@@ -536,6 +563,8 @@ def material_add(request):
                                              supplyid_id=sid, materialid_id=mid)
         request.session['notify'] = [dict(id=0, tittle="提示", context="供应关系创建成功", type="success", position="top-center")]
     return JsonResponse(res)
+
+
 # 编辑供应关系时展示原始数据
 def material_detail(request):
     smid = request.GET.get("uid")
@@ -543,6 +572,8 @@ def material_detail(request):
     if not su:
         return JsonResponse({"status": False, "error": "数据不存在"})
     return JsonResponse({"sm": su, "status": True})
+
+
 # 保存编辑过后的供应关系
 def material_edit(request):
     id = request.GET.get("uid")
@@ -551,7 +582,7 @@ def material_edit(request):
     s = request.POST
     mid = s["materialid"]
     sid = s["supplyid"]
-    notify=[]
+    notify = []
     time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     isexist = models.Gongyingguanxi.objects.filter(supplyid_id=sid, materialid_id=mid)
     i = models.Gongyingguanxi.objects.filter(id=id)
@@ -570,13 +601,15 @@ def material_edit(request):
         i.update(supplyid_id=sid, materialid_id=mid, updatetime=time, updateid_id=uid)
     return JsonResponse(res)
 
+
 def quote_list(request):
     """进行报价"""
     time = datetime.now()
-    m=models.Baojiadan.objects.filter(quote=None).filter(validitytime__gte=time)
+    m = models.Baojiadan.objects.filter(quote=None).filter(validitytime__gte=time)
     q = models.Baojiadan.objects.filter(isdelete=0).filter(quote__isnull=False)
     # 仅显示有效期内的报价单
     return render(request, 'quote_list.html', {"queryset": m.union(q), "title": "报价单管理"})
+
 
 def quote_add(request):
     """报价完成"""
@@ -591,51 +624,57 @@ def quote_add(request):
     toCheck = [quote]
     types = ["float+"]
     res = form_check(toCheck, types)
-    res['did']=models.Xunjiadan.objects.filter(inquiryid=inid).first().demandid_id
+    res['did'] = models.Xunjiadan.objects.filter(inquiryid=inid).first().demandid_id
     if res['status']:
         models.Baojiadan.objects.filter(inquiryid_id=inid).update(quote=quote,
                                                                   quoteid=qid,
                                                                   createtime=time,
                                                                   createuserid_id=id,
                                                                   isreceived=0)
-        notify,message=[],[]
+        notify, message = [], []
         me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
-        yg = models.Yuangong.objects.filter(isactive=1,businessid_id=me.businessid_id,office="2").first()
-        jl = models.Yuangong.objects.filter(isactive=1,businessid_id=me.businessid_id,office="4").first()
+        yg = models.Yuangong.objects.filter(isactive=1, businessid_id=me.businessid_id, office="2").first()
+        jl = models.Yuangong.objects.filter(isactive=1, businessid_id=me.businessid_id, office="4").first()
         xjd = models.Xunjiadan.objects.filter(inquiryid=inid).first()
         qgd = models.Caigouxuqiu.objects.filter(demandid=xjd.demandid_id).first()
         wl = models.Wuliao.objects.filter(id=qgd.maid_id).first()
         gys = models.Gongyingshang.objects.filter(id=xjd.supplyid_id).first()
         notify.append(dict(id=0, tittle="提示", context="报价单 {} 创建成功".format(qid), type="success", position="top-center"))
-        notify.append(dict(id=1, tittle="系统消息", context="向 【{}】{} 发信反馈已报价".format(yg.get_office_display(),yg.username), type="info", position="top-center"))
-        notify.append(dict(id=2, tittle="系统消息", context="已提示 【{}】{} 前往评估报价单".format(jl.get_office_display(),jl.username), type="info", position="top-center"))
+        notify.append(dict(id=1, tittle="系统消息", context="向 【{}】{} 发信反馈已报价".format(yg.get_office_display(), yg.username),
+                           type="info", position="top-center"))
+        notify.append(
+            dict(id=2, tittle="系统消息", context="已提示 【{}】{} 前往评估报价单".format(jl.get_office_display(), jl.username),
+                 type="info", position="top-center"))
         message.append("【反馈信息】报价反馈信息")
         message.append("询价单 {} 已收到报价<br/>报价单号 {}".format(set_copy_message(xjd.inquiryid), set_copy_message(qid)))
 
-        if me.office!="0":
+        if me.office != "0":
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=yg.id, time=datetime.now(), context=m, read=0)
-            message[0]="【系统消息】收到新报价单"
-            message[1] = '供应商:{}<br/>({})已报价<br/>请购单号:{}<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>'\
-                .format(gys.name,gys.id,set_copy_message(qgd.demandid),set_copy_message(xjd.inquiryid),set_copy_message(qid),qgd.price,wl.calcutype,quote,wl.calcutype)
+            message[0] = "【系统消息】收到新报价单"
+            message[
+                1] = '供应商:{}<br/>({})已报价<br/>请购单号:{}<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>' \
+                .format(gys.name, gys.id, set_copy_message(qgd.demandid), set_copy_message(xjd.inquiryid),
+                        set_copy_message(qid), qgd.price, wl.calcutype, quote, wl.calcutype)
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=jl.id, time=datetime.now(), context=m, read=0)
         else:
-            message[0]="【系统消息】操作历史记录"
+            message[0] = "【系统消息】操作历史记录"
             fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
             models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(),
-                                         context='供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>'\
-                                         .format(gys.name,gys.id,set_copy_message(xjd.inquiryid),set_copy_message(qid),qgd.price,wl.calcutype,quote,wl.calcutype),
+                                         context='供应商:{}<br/>({})已报价<br/>询价单号:{}<br/>报价单号:{}<br/>预期报价:{}元/{}<br/>供应商报价:{}元/{}<br/>请评估报价<a class="chat_link" href="/purchase/quote/evaluate/">>></a>' \
+                                         .format(gys.name, gys.id, set_copy_message(xjd.inquiryid),
+                                                 set_copy_message(qid), qgd.price, wl.calcutype, quote, wl.calcutype),
                                          read=0)
-            notify=notify[:1]
+            notify = notify[:1]
             notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
         if request.session['produceActive']:
             message[0] = "【系统消息】报价评估完成"
-            message[1]='下一步操作人:【{}】{}<br/>'.format(me.get_office_display(),me.username)+message[1]
-            next=me
-            if me.office!=0:
+            message[1] = '下一步操作人:【{}】{}<br/>'.format(me.get_office_display(), me.username) + message[1]
+            next = me
+            if me.office != 0:
                 next = models.Yuangong.objects.filter(businessid=me.businessid, office="2").first()
             message.append('下一步操作人:【{}】{}<br/>'
                            '下一步骤:维护供应商报价单<a class="chat_link" href="/supply/quote/list/">>></a><br/>'
@@ -651,11 +690,13 @@ def quote_add(request):
     request.session["notify"] = notify
     return JsonResponse(res)
 
+
 def quote_detail(request):
     """修改报价单时返回相应数据"""
     id = request.GET.get("uid")
     quote = models.Baojiadan.objects.filter(quoteid=id).first().quote
     return JsonResponse({"status": True, "quote": quote})
+
 
 def quote_edit(request):
     """根据报价单号修改报价"""
@@ -666,8 +707,11 @@ def quote_edit(request):
     res = form_check(toCheck, types)
     if res['status']:
         models.Baojiadan.objects.filter(quoteid=quid).update(quote=quote)
-        request.session['notify']=[dict(id=0, tittle="提示", context="报价单 {} 报价修改成功".format(quid), type="success", position="top-center")]
+        request.session['notify'] = [
+            dict(id=0, tittle="提示", context="报价单 {} 报价修改成功".format(quid), type="success", position="top-center")]
     return JsonResponse(json.dumps(res, ensure_ascii=False), safe=False)
+
+
 # 展示物料列表
 
 
@@ -677,25 +721,24 @@ def mm_list(request):
 
 def mm_add(request):
     o = request.POST
-    n=0
-    if o['type']=="半成品":
+    n = 0
+    if o['type'] == "半成品":
         n = 1000
         if models.Wuliao.objects.filter(type="半成品").first():
             n = models.Wuliao.objects.filter(type="半成品").all().order_by('-id').first().id[1:]
         sid = "m" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
-    if o['type']=="原材料":
+    if o['type'] == "原材料":
         n = 2000
         if models.Wuliao.objects.filter(type="原材料").first():
             n = models.Wuliao.objects.filter(type="原材料").all().order_by('-id').first().id[1:]
         sid = "m" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
-    if n!=0:
-        notify=[]
+    if n != 0:
+        notify = []
         models.Wuliao.objects.create(type=o['type'], salegroup=o['salegroup'], saleway=o['saleway']
                                      , id=sid, calcutype=o['calcutype'], desc=o['desc'])
         notify.append(dict(id=0, tittle="提示", context="物料 {} 创建成功".format(sid), type="success", position="top-center"))
         request.session["notify"] = notify
     return JsonResponse({"status": True})
-
 
 
 def mm_detail(request):
@@ -706,24 +749,24 @@ def mm_detail(request):
     return JsonResponse({"supply": su, "status": True})
 
 
-
 def mm_edit(request):
     id = request.GET.get("uid")
     uid = request.session["info"]['id']
     o = request.POST
-    notify=[]
+    notify = []
     models.Wuliao.objects.filter(id=id).update(type=o['type'], salegroup=o['salegroup'], saleway=o['saleway']
                                                , calcutype=o['calcutype'], desc=o['desc'])
     notify.append(dict(id=0, tittle="提示", context="物料 {} 编辑成功".format(id), type="success", position="top-center"))
     request.session["notify"] = notify
     return JsonResponse({"status": True})
 
+
 @csrf_exempt
 # 删除物料
 def mm_delete(request):
     id = request.POST.get("uid")
-    notify=[]
-    if  models.Gongyingguanxi.objects.filter(materialid_id=id):
+    notify = []
+    if models.Gongyingguanxi.objects.filter(materialid_id=id):
         notify.append(dict(id=0, tittle="提示", context="物料 {} 不能删除".format(id), type="error", position="top-center"))
         request.session["notify"] = notify
         return JsonResponse({"status": False})
@@ -735,41 +778,49 @@ def mm_delete(request):
 
 import json
 
+
 def supply_excel(request):
     if request.method == "GET":
         return render(request, 'supplyexcel.html')
 
+
 def mt_excel(request):
     if request.method == "GET":
         return render(request, 'mt_excel.html')
-   
+
+
 def initial(request):
     return render(request, 'initial.html')
+
+
 def guide(request):
     return render(request, 'viewer.html')
 
 
 def material_delete(request):
-    id=request.GET.get("uid")
-    gy=models.Gongyingguanxi.objects.filter(id=id).first()
-    mid=gy.materialid_id
-    notify=[]
-    sid=gy.supplyid_id
-    q=models.Xunjiadan.objects.filter(supplyid_id=sid,demandid__maid=mid)
+    id = request.GET.get("uid")
+    gy = models.Gongyingguanxi.objects.filter(id=id).first()
+    mid = gy.materialid_id
+    notify = []
+    sid = gy.supplyid_id
+    q = models.Xunjiadan.objects.filter(supplyid_id=sid, demandid__maid=mid)
     if q:
         notify.append(dict(id=0, tittle="提示", context="该此供应关系存在未处理采购单，不能删除", type="error", position="top-center"))
         request.session["notify"] = notify
-        return JsonResponse({"status":False})
+        return JsonResponse({"status": False})
     models.Gongyingguanxi.objects.filter(id=id).delete()
     notify.append(dict(id=0, tittle="提示", context="供应关系删除成功", type="success", position="top-center"))
     request.session["notify"] = notify
-    return JsonResponse({"status":True})
+    return JsonResponse({"status": True})
 
-def map(request,pos):
-    return render(request, 'map.html',{'pos':pos})
 
-def page_404(request,excption):
-    return render(request,'404.html')
+def map(request, pos):
+    return render(request, 'map.html', {'pos': pos})
+
+
+def page_404(request, excption):
+    return render(request, '404.html')
+
 
 def page_500(request):
-    return render(request,'500.html')
+    return render(request, '500.html')

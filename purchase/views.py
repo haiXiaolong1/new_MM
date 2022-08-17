@@ -52,11 +52,12 @@ def inquiry_createByid(request, did):
 def create_qui(request):
     did = request.GET.get("did")
     date = request.POST.get("date")
-    if date.strip()=="":
+    if date.strip() == "":
         request.session["notify"] = [dict(id=0, tittle="错误", context="请填写询价有效期", type="error", position="top-center")]
         return JsonResponse({"status": False})
-    if (datetime.strptime(date,'%Y-%m-%dT%H:%M') -datetime.now()).days<0:
-        request.session["notify"] = [dict(id=0, tittle="错误", context="有效期不应早于当前日期！", type="error", position="top-center")]
+    if (datetime.strptime(date, '%Y-%m-%dT%H:%M') - datetime.now()).days < 0:
+        request.session["notify"] = [
+            dict(id=0, tittle="错误", context="有效期不应早于当前日期！", type="error", position="top-center")]
         return JsonResponse({"status": False})
     sid = request.POST.get("sid")
     d = models.Caigouxuqiu.objects.filter(demandid=did).first()
@@ -64,25 +65,26 @@ def create_qui(request):
     if models.Xunjiadan.objects.all().first():
         n = models.Xunjiadan.objects.all().order_by('-inquiryid').first().inquiryid[2:]
     inid = "in" + str(int(n) + 1)  # 编号递增，这样计算避免删除后出现错误
-    time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id = request.session["info"]['id']
     user = models.Yuangong.objects.filter(id=id).first()
-    mid=models.Caigouxuqiu.objects.filter(demandid=did).first().maid_id
-    r=models.Gongyingguanxi.objects.filter(materialid_id=mid,supplyid_id=sid)
+    mid = models.Caigouxuqiu.objects.filter(demandid=did).first().maid_id
+    r = models.Gongyingguanxi.objects.filter(materialid_id=mid, supplyid_id=sid)
     if not r:
-        request.session["notify"] = [dict(id=0, tittle="错误", context="该供应商不提供此物料",type="error", position="top-center")]
+        request.session["notify"] = [dict(id=0, tittle="错误", context="该供应商不提供此物料", type="error", position="top-center")]
         return JsonResponse({"status": False})
-    s=models.Xunjiadan.objects.filter(demandid_id=did,supplyid_id=sid)
+    s = models.Xunjiadan.objects.filter(demandid_id=did, supplyid_id=sid)
     if s:
-        request.session["notify"] = [dict(id=0, tittle="错误", context="已经向该供应商发出询价单",type="error", position="top-center")]
+        request.session["notify"] = [
+            dict(id=0, tittle="错误", context="已经向该供应商发出询价单", type="error", position="top-center")]
         return JsonResponse({"status": False})
-    #系统自动发信
-    qgd=models.Caigouxuqiu.objects.filter(demandid=did).first()
-    gys=models.Gongyingshang.objects.filter(id=sid).first()
-    me=models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
-    wl=qgd.maid
-    message=[]
-    notify=[]
+    # 系统自动发信
+    qgd = models.Caigouxuqiu.objects.filter(demandid=did).first()
+    gys = models.Gongyingshang.objects.filter(id=sid).first()
+    me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
+    wl = qgd.maid
+    message = []
+    notify = []
     notify.append(dict(id=0, tittle="提示", context="询价单 {} 创建成功！".format(inid),
                        type="success", position="top-center"))
     message.append("【反馈消息】询价反馈信息")
@@ -93,12 +95,12 @@ def create_qui(request):
                            datetime.strptime(date, '%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
                                                                                                            "日")))
 
-    if me.office!="0":
+    if me.office != "0":
         pur_jl = models.Yuangong.objects.filter(businessid_id=me.businessid_id, office="5").first()
         inv_yg = models.Yuangong.objects.filter(businessid_id=me.businessid_id, office="1").first()
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
-        message[0]="【系统消息】创建询价单"
+        message[0] = "【系统消息】创建询价单"
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
         models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(),
@@ -108,8 +110,8 @@ def create_qui(request):
                            .format(pur_jl.get_office_display(), pur_jl.username), type="info", position="top-center"))
         notify.append(dict(id=2, tittle="系统消息", context="已提示 【{}】{} 询价并维护供应商报价单"
                            .format(inv_yg.get_office_display(), inv_yg.username), type="info", position="top-center"))
-    else:  #管理员情况
-        message[0]="【系统消息】操作历史记录"
+    else:  # 管理员情况
+        message[0] = "【系统消息】操作历史记录"
         fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
@@ -121,10 +123,11 @@ def create_qui(request):
         message = []
         message.append("【系统消息】操作历史记录")
         next = me
-        if me.office!="0":
+        if me.office != "0":
             next = models.Yuangong.objects.filter(businessid=me.businessid, office="1").first()
         message.append("【{}】{}<br/>向供应商【{}】<br/>({})发送询价单<br/>请购单号:{}<br/>询价单号:{}"
-                       .format(me.get_office_display(), me.username, gys.name, gys.id, set_copy_message(qgd.demandid), set_copy_message(inid)))
+                       .format(me.get_office_display(), me.username, gys.name, gys.id, set_copy_message(qgd.demandid),
+                               set_copy_message(inid)))
         message.append("询价物料:{}({})<br/>数量:{} 预期报价:{}元/{}<br/>询价有效期:{}"
                        .format(wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype,
                                datetime.strptime(date, '%Y-%m-%dT%H:%M').strftime("%Y{}%m{}%d{} %H:%M").format("年", "月",
@@ -142,7 +145,7 @@ def create_qui(request):
     request.session["notify"] = notify
 
     models.Xunjiadan.objects.create(inquiryid=inid, validitytime=date,
-                                    createtime=time,  createuserid_id=id,
+                                    createtime=time, createuserid_id=id,
                                     demandid_id=did, supplyid_id=sid)
     # 将请购单的状态修改为2，即已完成状态，所有的状态含义在supply的models里面找到对应实体类可以查看
     models.Caigouxuqiu.objects.filter(demandid=did).update(status=2)
@@ -155,7 +158,7 @@ def create_qui(request):
 
 # 评估报价单页面
 def quote_evaluate(request):
-    m=models.Baojiadan.objects.filter(isreceived=0).filter(validitytime__gte=datetime.now())
+    m = models.Baojiadan.objects.filter(isreceived=0).filter(validitytime__gte=datetime.now())
     q = models.Baojiadan.objects.filter(isdelete=0).filter(isreceived__gte=1)
     # 返回有效期内的待评估报价单和已完成被拒绝的报价单
     result = {
@@ -171,7 +174,7 @@ def quote_evaluateByID(request):
     quid = request.GET.get("quid")
     isrece = request.POST.get("isreceived")
     isall = request.POST.get("isall")
-    state_dict={1: "接受",0: "待评估",2: "拒绝"}
+    state_dict = {1: "接受", 0: "待评估", 2: "拒绝"}
     bjd = models.Baojiadan.objects.filter(quoteid=quid).first()
     did = bjd.inquiryid.demandid_id
     c = models.Baojiadan.objects.filter(inquiryid__demandid_id=did).exclude(quoteid=quid)
@@ -182,9 +185,9 @@ def quote_evaluateByID(request):
     bjd = models.Baojiadan.objects.filter(quoteid=quid)
     bjd.update(isreceived=isrece)
     bjd = bjd.first()
-    notify=[]
+    notify = []
     notify.append(dict(id=0, tittle="提示", context="报价单 {} 评估成功！".format(quid), type="success", position="top-center"))
-    if isrece=="1":
+    if isrece == "1":
         # 系统自动发信
         me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
         buss = me.businessid
@@ -198,16 +201,18 @@ def quote_evaluateByID(request):
                        .format(set_copy_message(bjd.inquiryid_id), wl.desc, wl.id, qgd.tcount, qgd.price, wl.calcutype))
         situation = "报价评估情况:"
         for bj in c:
-            situation += '<br/>{}{}{}元/{} <a class="chat_status_{}">{}</a>'\
-                .format(bj.supplyid.name, set_copy_message(bj.supplyid_id), bj.quote, wl.calcutype,bj.isreceived,bj.get_isreceived_display())
-        situation += '<hr>{}{}{}元/{} <a class="chat_status_{}">{}</a>'\
-            .format(bjd.supplyid.name, set_copy_message(bjd.supplyid_id), bjd.quote,wl.calcutype,bjd.isreceived, bjd.get_isreceived_display())
-        situation+='<br/>接受报价单号{}'.format(set_copy_message(bjd.quoteid))
+            situation += '<br/>{}{}{}元/{} <a class="chat_status_{}">{}</a>' \
+                .format(bj.supplyid.name, set_copy_message(bj.supplyid_id), bj.quote, wl.calcutype, bj.isreceived,
+                        bj.get_isreceived_display())
+        situation += '<hr>{}{}{}元/{} <a class="chat_status_{}">{}</a>' \
+            .format(bjd.supplyid.name, set_copy_message(bjd.supplyid_id), bjd.quote, wl.calcutype, bjd.isreceived,
+                    bjd.get_isreceived_display())
+        situation += '<br/>接受报价单号{}'.format(set_copy_message(bjd.quoteid))
         message.append(situation)
-        if me.office!="0":
+        if me.office != "0":
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
-            message[0]="【系统消息】收到新报价评估"
+            message[0] = "【系统消息】收到新报价评估"
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(), context=m, read=0)
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_yg.id, time=datetime.now(),
@@ -222,20 +227,21 @@ def quote_evaluateByID(request):
                 dict(id=2, context="向 【{}】{} 发信报价评估情况，并提示创建采购订单".format(pur_yg.get_office_display(), pur_yg.username)
                      , tittle="系统消息", type="info", position="top-center"))
         else:
-            message[0]="【系统消息】操作历史记录"
-            next=me
+            message[0] = "【系统消息】操作历史记录"
+            next = me
             fromid = models.Yuangong.objects.filter(businessid=me.businessid, office="7").first()
             for m in message:
                 models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=m, read=0)
-            models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(),context=
+            models.Xiaoxi.objects.create(fromId_id=fromid.id, toId_id=me.id, time=datetime.now(), context=
             '请在报价有效期({}) 内创建采购订单<a class="chat_link" href="/purchase/list/">>></a>'
-                                         .format(bjd.inquiryid.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年", "月", "日")))
-            notify=notify[:1]
+                                         .format(
+                bjd.inquiryid.validitytime.strftime("%Y{}%m{}%d{} %H:%M").format("年", "月", "日")))
+            notify = notify[:1]
             notify.append(dict(id=1, tittle="系统消息", context="操作历史已更新", type="info", position="top-center"))
         if request.session['produceActive']:
             message[1] = '【{}】{}<br/>'.format(me.get_office_display(), me.username) + message[1]
             next = me
-            if me.office!="0":
+            if me.office != "0":
                 next = models.Yuangong.objects.filter(businessid=me.businessid, office="4").first()
             message.append('下一步操作人:【{}】{}<br/>'
                            '下一步骤:引用报价单，创建采购订单<a class="chat_link" href="/purchase/list/">>></a><br/>'
@@ -249,7 +255,7 @@ def quote_evaluateByID(request):
                                context="操作历史已抄送至 【{}】{}".format(toid.get_office_display(), toid.username),
                                type="info", position="top-center"))
     request.session["notify"] = notify
-    return JsonResponse({"status": True,"state":state_dict[int(isrece)]})
+    return JsonResponse({"status": True, "state": state_dict[int(isrece)]})
 
 
 # 采购订单列表
@@ -259,7 +265,6 @@ def purchase_list(request):
         "queryset": q
         , "title": "采购订单管理"
     }
-    print(q)
     return render(request, 'purchase_list.html', result)
 
 
@@ -281,7 +286,7 @@ def purchase_createByQuote(request):
     deadline = request.POST.get("deadline")
     if not deadline:
         return JsonResponse({"status": False, "error": "请填写截止日期"})
-    if (datetime.strptime(deadline,"%Y-%m-%d")-datetime.now()).days<0:
+    if (datetime.strptime(deadline, "%Y-%m-%d") - datetime.now()).days < 0:
         return JsonResponse({"status": False, "error": "截止日期不能早于今天"})
 
     # 修改报价单的状态
@@ -295,13 +300,13 @@ def purchase_createByQuote(request):
     createtime = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     id = request.session["info"]['id']
     ff = quote.first().inquiryid.demandid.facid
-    fid=ff.id
-    tcount=quote.first().inquiryid.demandid.tcount
+    fid = ff.id
+    tcount = quote.first().inquiryid.demandid.tcount
     mid = quote.first().inquiryid.demandid.maid_id
     models.Caigoudan.objects.create(purchaseid=puid,
                                     createtime=createtime, deadline=deadline,
                                     iscomplete=0, createuserid_id=id,
-                                   quoteid_id=quid)
+                                    quoteid_id=quid)
     # 更新该工厂的在途库存
     w = models.Gongchangkucun.objects.filter(facid_id=fid, maid_id=mid).order_by("-updatetime").first()
     if w:
@@ -322,21 +327,22 @@ def purchase_createByQuote(request):
     # 系统自动发信
     me = models.Yuangong.objects.filter(id=request.session["info"]["id"]).first()
     buss = me.businessid
-    inv_yg = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="3").first()
-    pur_jl = models.Yuangong.objects.filter(businessid=buss,isactive=1,office="4").first()
+    inv_yg = models.Yuangong.objects.filter(businessid=buss, isactive=1, office="3").first()
+    pur_jl = models.Yuangong.objects.filter(businessid=buss, isactive=1, office="4").first()
     message = []
     notify = []
     message.append("【系统消息】新采购订单")
     notify.append(
         dict(id=0, tittle="提示", context="采购订单 {} 创建成功！".format(puid), type="success", position="top-center"))
     message.append("引用报价单 {}<br/>创建采购订单 {}<br/>发往工厂:{}({})<br/>收货截至期限：{}"
-                   .format(set_copy_message(quid),set_copy_message(puid),ff.type,ff.address,datetime.strptime(deadline,"%Y-%m-%d").strftime("%Y{}%m{}%d{}").format("年","月","日")))
+                   .format(set_copy_message(quid), set_copy_message(puid), ff.type, ff.address,
+                           datetime.strptime(deadline, "%Y-%m-%d").strftime("%Y{}%m{}%d{}").format("年", "月", "日")))
     message.append('请在追踪供应商送货进度<br/>在截止期限前将货物暂存<a class="chat_link" href="/inventory/temp/">>></a>')
-    if me.office!="0" and not me.office=="4":
+    if me.office != "0" and not me.office == "4":
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=inv_yg.id, time=datetime.now(), context=m, read=0)
-        message[0]="【反馈消息】采购订单反馈信息"
-        message=message[:-1]
+        message[0] = "【反馈消息】采购订单反馈信息"
+        message = message[:-1]
         for m in message:
             models.Xiaoxi.objects.create(fromId_id=me.id, toId_id=pur_jl.id, time=datetime.now(), context=m, read=0)
         notify.append(dict(id=1, context="向 【{}】{} 发信反馈采购订单情况".format(pur_jl.get_office_display(), pur_jl.username)
@@ -355,7 +361,7 @@ def purchase_createByQuote(request):
         message[0] = "【系统消息】创建采购订单"
         message[1] = '【{}】{}<br/>'.format(me.get_office_display(), me.username) + message[1]
         next = me
-        if me.office!="0":
+        if me.office != "0":
             next = models.Yuangong.objects.filter(businessid=me.businessid, office="3").first()
         message.append('下一步操作人:【{}】{}<br/>'
                        '下一步骤:追踪供货进度，维护暂存单<a class="chat_link" href="/inventory/temp/">>></a><br/>'
@@ -499,8 +505,8 @@ def documents(list, puid):
                         m["moreinfo"] = moreinfo
                         list.append(m)
 
-                #发票
-                iv=models.Fapiao.objects.filter(purchaseid_id=puid).first()
+                # 发票
+                iv = models.Fapiao.objects.filter(purchaseid_id=puid).first()
                 if iv:
                     m = {}
                     date = iv.createtime
@@ -511,7 +517,7 @@ def documents(list, puid):
                     m["id"] = id
                     m["tcount"] = tcount
                     m["fee"] = iv.fee
-                    m["totalmoney"]=iv.money+iv.fee
+                    m["totalmoney"] = iv.money + iv.fee
                     m["mid"] = mid
                     m['sid'] = sid
                     m["name"] = name
@@ -587,7 +593,7 @@ def purchase_documents(request):
     quid = ""
     teid = ""
     wid = ""
-    ivid=""
+    ivid = ""
     nid = request.GET.get("id", "")
     tp = nid[:2]
     if tp == "pu":
@@ -603,7 +609,7 @@ def purchase_documents(request):
     if tp == "wa":
         wid = nid
     if tp == "iv":
-        ivid=nid
+        ivid = nid
     if puid:
         documents(list, puid)
     elif did:
@@ -684,96 +690,93 @@ def purchase_documents(request):
             puid = wa.temid.purchaseid_id
             documents(list, puid)
     elif ivid:
-        iv=models.Fapiao.objects.filter(invoiceid=ivid).first()
+        iv = models.Fapiao.objects.filter(invoiceid=ivid).first()
         if iv:
-            puid=iv.purchaseid_id
-            documents(list,puid)
-    document_state=""
+            puid = iv.purchaseid_id
+            documents(list, puid)
+    document_state = ""
     for docu in list:
-        document_state+=docu['name'][0]
+        document_state += docu['name'][0]
         try:
-            document_state+=str(docu["status"])
+            document_state += str(docu["status"])
         except:
-            document_state+="X"
-    if document_state=="请1":  #区分无报价/未评估报价
-        xjd=models.Xunjiadan.objects.filter(demandid=list[0]["id"]).first().inquiryid
-        bjd=models.Baojiadan.objects.filter(inquiryid=xjd).first()
-        print(xjd,bjd)
-        if bjd==None:
-            document_state+="报0"
+            document_state += "X"
+    if document_state == "请1":  # 区分无报价/未评估报价
+        xjd = models.Xunjiadan.objects.filter(demandid=list[0]["id"]).first().inquiryid
+        bjd = models.Baojiadan.objects.filter(inquiryid=xjd).first()
+        if bjd == None:
+            document_state += "报0"
         else:
-            bjds=models.Baojiadan.objects.filter(inquiryid=xjd).all()
-            flag=False
-            non=False
+            bjds = models.Baojiadan.objects.filter(inquiryid=xjd).all()
+            flag = False
+            non = False
             for i in bjds:
-                if not i.isreceived==2:
-                    flag=True
-                if not i.quote==None:
-                    non=True
+                if not i.isreceived == 2:
+                    flag = True
+                if not i.quote == None:
+                    non = True
             if flag and non:
-                document_state+="报1"
+                document_state += "报1"
             elif flag:
-                document_state+="报2"
+                document_state += "报2"
             else:
-                document_state+="报-1"
+                document_state += "报-1"
     if document_state == "采0请1询X报1暂X":  # 区分三种质检情况
         zsd = models.Zanshoudan.objects.filter(temid=list[0]["id"]).first()
         document_state += "质{}量{}".format(zsd.qualitycheckinfo, zsd.quantitycheckinfo)
-    if document_state=="采-1请1询X报1暂-2":  #区分三种质检情况
-        print(list)
-        zsd=models.Zanshoudan.objects.filter(temid=list[-1]["id"]).first()
-        document_state+="质{}量{}".format(zsd.qualitycheckinfo,zsd.quantitycheckinfo)
-    document_state_dict={"采1请1询X报1暂1入1发X":[10,0,0],
-                         "采1请1询X报1暂0入0":[8,1,0],
-                         "采0请1询X报1入-1入-1":[7,1,0],
-                         "采0请1询X报1暂X质1量0": [6, 1, 0],
-                         "采0请1询X报1暂X质0量1":[6,1,0],
-                         "采0请1询X报1暂X质1量-1":[6,1,0],
-                         "采0请1询X报1暂X质-1量1":[6,1,0],
-                         "采0请1询X报1暂X质-1量-1":[5,1,0],
-                         "采-1请1询X报1暂-2质0量-1":[5,0,1],
-                         "采-1请1询X报1暂-2质-1量0":[5,0,1],
-                         "采-1请1询X报1暂-2质0量1":[6,0,1],
-                         "采-1请1询X报1暂-2质1量0":[6,0,1],
-                         "请1询X报-1":[4,1,0],
-                         "请1报2": [2, 1, 0],
-                         "请1报1":[3,1,0],
-                         "请1报0":[2,1,0],
-                         "请1询X报0": [3, 0, 1],
-                         "请1报-1": [3, 0, 1],
-                         "请0":[1,1,0],
-                         "请-1":[-1,1,0],
-                         "":[-2,1,0]}
-    active="background:#5893df"
-    inprogress="background:#f3cb2a"
-    danger="background:#ec5e69"
-    style=[""]*11
-    print(document_state)
-    progress=document_state_dict[document_state]
-    for i in range(progress[0]+1):
-        style[i]=active
-    if progress[1]==1:
-        style[progress[0]+1] = inprogress
-    if progress[2]==1:
-        style[progress[0]+1+progress[1]]=danger
-    textFirst="货物质检"
-    textSecond="货物量检"
-    if document_state=="采0请1询X报1暂X质-1量1" \
-            or document_state=="采-1请1询X报1暂-2质-1量0" \
-            or document_state=="采-1请1询X报1暂-2质0量1":
-        textFirst,textSecond=textSecond,textFirst
-    progressShow=(len(list)>0)
+    if document_state == "采-1请1询X报1暂-2":  # 区分三种质检情况
+        zsd = models.Zanshoudan.objects.filter(temid=list[-1]["id"]).first()
+        document_state += "质{}量{}".format(zsd.qualitycheckinfo, zsd.quantitycheckinfo)
+    document_state_dict = {"采1请1询X报1暂1入1发X": [10, 0, 0],
+                           "采1请1询X报1暂0入0": [8, 1, 0],
+                           "采0请1询X报1入-1入-1": [7, 1, 0],
+                           "采0请1询X报1暂X质1量0": [6, 1, 0],
+                           "采0请1询X报1暂X质0量1": [6, 1, 0],
+                           "采0请1询X报1暂X质1量-1": [6, 1, 0],
+                           "采0请1询X报1暂X质-1量1": [6, 1, 0],
+                           "采0请1询X报1暂X质-1量-1": [5, 1, 0],
+                           "采-1请1询X报1暂-2质0量-1": [5, 0, 1],
+                           "采-1请1询X报1暂-2质-1量0": [5, 0, 1],
+                           "采-1请1询X报1暂-2质0量1": [6, 0, 1],
+                           "采-1请1询X报1暂-2质1量0": [6, 0, 1],
+                           "请1询X报-1": [4, 1, 0],
+                           "请1报2": [2, 1, 0],
+                           "请1报1": [3, 1, 0],
+                           "请1报0": [2, 1, 0],
+                           "请1询X报0": [3, 0, 1],
+                           "请1报-1": [3, 0, 1],
+                           "请0": [1, 1, 0],
+                           "请-1": [-1, 1, 0],
+                           "": [-2, 1, 0]}
+    active = "background:#5893df"
+    inprogress = "background:#f3cb2a"
+    danger = "background:#ec5e69"
+    style = [""] * 11
+    progress = document_state_dict[document_state]
+    for i in range(progress[0] + 1):
+        style[i] = active
+    if progress[1] == 1:
+        style[progress[0] + 1] = inprogress
+    if progress[2] == 1:
+        style[progress[0] + 1 + progress[1]] = danger
+    textFirst = "货物质检"
+    textSecond = "货物量检"
+    if document_state == "采0请1询X报1暂X质-1量1" \
+            or document_state == "采-1请1询X报1暂-2质-1量0" \
+            or document_state == "采-1请1询X报1暂-2质0量1":
+        textFirst, textSecond = textSecond, textFirst
+    progressShow = (len(list) > 0)
     result = {
         "list": list,
         "id": nid,
         "title": "查看单据流",
-        "progress":progress[0],
-        "progress1":progress[1],
-        "progress2":progress[2],
-        "style":style,
-        "textFirst":textFirst,
-        "textSecond":textSecond,
-        "progressShow":progressShow,
+        "progress": progress[0],
+        "progress1": progress[1],
+        "progress2": progress[2],
+        "style": style,
+        "textFirst": textFirst,
+        "textSecond": textSecond,
+        "progressShow": progressShow,
     }
     return render(request, 'purchase_documents.html', result)
 
@@ -782,7 +785,7 @@ def purchase_documents(request):
 def purchase_delete(request):
     id = request.GET.get("uid")
     models.Caigoudan.objects.filter(purchaseid=id).update(isdelete=1)
-    notify=[]
+    notify = []
     notify.append(dict(id=0, tittle="提示", context="采购订单 {} 删除成功！".format(id), type="success", position="top-center"))
     request.session["notify"] = notify
     return JsonResponse({"status": True})
@@ -792,7 +795,7 @@ def purchase_delete(request):
 def quote_delete(request):
     id = request.GET.get("uid")
     models.Baojiadan.objects.filter(quoteid=id).update(isdelete=1)
-    notify=[]
+    notify = []
     notify.append(dict(id=0, tittle="提示", context="报价单 {} 删除成功！".format(id), type="success", position="top-center"))
     request.session["notify"] = notify
     return JsonResponse({"status": True})
