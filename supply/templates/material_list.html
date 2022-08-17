@@ -280,7 +280,6 @@
                     dataType: "JSON",
                     success: function (res) {
                         if (res.status) {
-                            console.log(res);
                             $.each(res.sm, function (name, value) {
                                 var options = $("#" + name)[0];
                                 for (i = 0; i < options.length; i++) {
@@ -288,7 +287,6 @@
                                     if (options[i].value == value)
                                         options[i].selected = true;
                                 }
-                                console.log(res, options);
                             })
                             $(".formError").text("");
                             $("#myModalLabel").text("编辑供应关系");
