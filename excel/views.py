@@ -151,8 +151,7 @@ from supply import models
 from django.db import connection
 
 # 员工管理-模板下载
-office = ["系统管理员", "供应商员工", "采购员工", "库存员工", "采购经理", "库存经理", "生产经理"]
-
+office = ["系统管理员", "供应商员工", "采购员工", "库存员工", "采购经理", "库存经理", "生产经理","系统消息"]
 
 class TestDjangoExcelDownload_ac(View):
     def get(self, request):
@@ -213,6 +212,7 @@ class TestDjangoExcelUpload_ac(View):
             sheet = filehandle.get_sheet()  # 对准
             data = sheet.to_array()
             da = data[2:]
+            print(da)
             for ea in da:
                 if ea[7] != "":
                     add_account_axu(ea[3:8], request)
@@ -232,6 +232,7 @@ def add_account_axu(data_each, request):
     passworded = data_each[1]
     emailed = data_each[2]
     officed = str(office.index(data_each[3]))
+    print(officed)
     bussinessd = data_each[4]
     cursor = connection.cursor()
     query_recreation = 'insert  into  yuangong(id,password,email,office,username,businessid_id,questionid_id,isactive)' \
@@ -334,9 +335,13 @@ class TestDjangoExcelUpload_mt(View):
                 try:
                     models.Gongyingshang.objects.get(id=c[j][0])
                     models.Wuliao.objects.get(id=c[j][1])
+                    if models.Gongyingguanxi.objects.get(supplyid=c[j][0],materialid=c[j][1]).first()!=None:
+                        flag = 0
+                        q_l.append(j + 1)
                 except:
                     flag = 0
                     q_l.append(j + 1)
+
 
             strq = ""
             for e in q_l:
