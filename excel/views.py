@@ -259,7 +259,8 @@ class TestDjangoExcelDownload_mt(View):
         work_sheet.merge_range('A{}:C{}'.format(tl + 1, tl + 1), '供应商列表', tf)
         yu = models.Gongyingshang.objects.all().values("id", "name", "address")
         gys = []
-        lens, addlens = [], []
+        lens, addlens = [5], [5]
+        i=0
         for i in range(len(yu)):
             work_sheet.write(i + 1 + tl, 0, yu[i]['id'], rf[i % 2])
             work_sheet.write(i + 1 + tl, 1, yu[i]['name'], rf[i % 2])
