@@ -44,7 +44,7 @@
 				<form method="post" id="formAdd">
 					{% csrf_token %}
 					<div>
-						<input type="text" class="form-control" id="exampleInputEmail1" placeholder="员工编号" name="username" >
+						<input type="text" autocomplete="off" class="form-control" id="exampleInputEmail1" placeholder="员工编号" name="username" >
 						<a class="formError" id="username_error" style="color: red;text-align: left;float: left;padding-top:5px;padding-bottom:8px;width: 100%"></a>
 					</div>
 					<br>
@@ -61,12 +61,12 @@
                         </div>
 					</div>
                     <div>
-						<input type="text" class="form-control" id="exampleInputEmail1" placeholder="密保验证" name="sq_verification" >
+						<input type="text" autocomplete="off" class="form-control" id="exampleInputEmail1" placeholder="密保验证" name="sq_verification" >
 						<a class="formError" id="sq_verification_error" style="color: red;text-align: left;float: left;padding-top:5px;padding-bottom:8px;width: 100%"></a>
 					</div>
                     <br>
                     <div>
-						<input type="password" class="form-control" id="exampleInputEmail1" placeholder="新密码" name="new_password" >
+						<input type="password" autocomplete="off" class="form-control" id="exampleInputEmail1" placeholder="新密码" name="new_password" >
 						<a class="formError" id="new_password_error" style="color: red;text-align: left;float: left;padding-top:5px;padding-bottom:8px;width: 100%"></a>
 					</div>
 					<hr>

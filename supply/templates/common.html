@@ -151,12 +151,12 @@
                 <form action="#" method="GET">
                     <div class="input-group">
                         <input type="text" name="search" class="form-control search-input" placeholder="搜索功能模块"
-                               id="topSearch">
+                               autocomplete="off"   id="topSearch">
                         <span class="input-group-btn">
                                 <button class="btn btn-default" id="close-search" type="button"><i
                                         class="icon-close"></i></button>
                             </span>
-                        <input type="text" name="search" style="display: none">
+                        <input autocomplete="off" type="text" name="search" style="display: none">
                     </div>
                     <div style="float: left;margin-left: 25px;color: grey;background-color: #f7f9fa;width: 200px"
                          id="tips">
@@ -332,7 +332,7 @@
                     <div class="chat-write">
                         <div class="form-horizontal" action="javascript:void(0);">
                             <input type="text" class="form-control my-left" id="textMessage" autocomplete="off"
-                                   style="width:80%;" placeholder="在这里输入新消息">
+                                   autocomplete="off"   style="width:80%;" placeholder="在这里输入新消息">
                             <button id="sendTextMessage">发送</button>
                         </div>
                     </div>
