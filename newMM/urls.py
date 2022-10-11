@@ -26,6 +26,7 @@ from django.contrib import admin
 urlpatterns = [
     # path('admin/', admin.site.urls),
     path('supply/',include('supply.urls')),
+    path('spider/',include('spider.urls')),
     path('login/',views.login),
     path('logout/', views.logout),
     path('forgot/', views.forgot),

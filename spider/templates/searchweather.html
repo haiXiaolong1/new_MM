@@ -1,0 +1,374 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">天气查询</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title">请购单列表</h4>
+                        </div>
+                        <div>
+                            {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
+                                <button type="button" class="btn btn-info" style="margin-bottom: 20px" id="btnAdd">添加
+                                </button>
+                            {% endif %}
+                            <!-- 新建对话框 -->
+                            <div class="modal fade" id="myd" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title" id="myModalLabel">新建请购单</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form method="post" id="formAdd">
+                                                {% csrf_token %}
+                                                <div class="form-group form-line-start" style="width:28%">
+                                                    <input class="form-control" disabled placeholder="工厂地址" id="fac_add" name="fac_add"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:28%">
+                                                    <input class="form-control" disabled placeholder="工厂类型" id="fac_type"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width:40%">
+                                                    <select class="form-control" name="facid_id" id="facid_id">
+                                                        <option value selected id="fac_select">工厂编号</option>
+                                                        {% for s in factory %}
+                                                            <option value="{{ s.id }}">{{ s.id }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <a class="formError" id="facid_id_error"></a>
+                                                </div>
+                                                <div class="form-group form-line-start" style="width:58%">
+                                                    <input class="form-control" disabled placeholder="物料描述" id="ma_desc"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width: 40%;">
+                                                    <select class="form-control" name="maid_id" id="maid_id">
+                                                        <option value selected id="ma_select">物料编号</option>
+                                                        {% for m in material %}
+                                                            <option value="{{ m.id }}"
+                                                                    id="{{ m.id }}">{{ m.id }}</option>
+                                                        {% endfor %}
+                                                    </select>
+                                                    <a class="formError" id="maid_id_error"></a>
+                                                </div>
+                                                <div class="form-group form-line-start" style="width:23%">
+                                                    <input class="form-control" disabled placeholder="物料类型" id="ma_type"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width: 23%">
+                                                    <input class="form-control" disabled placeholder="计量单位" id="ma_cal"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width: 33%;">
+                                                    <input type="number" class="form-control" placeholder="价格"
+                                                           name="price" id="price" required >
+                                                    <a class="formError" id="price_error"></a>
+                                                </div>
+                                                <div class="form-group form-line" style="width: 15%;">
+                                                    <input class="form-control" disabled placeholder="元/单位" id="ma_pri"></input>
+                                                </div>
+                                                <div class="form-group form-line-start" style="width:48%">
+                                                    <input class="form-control" disabled placeholder="库存数量" id="inv_count"></input>
+                                                </div>
+                                                <div class="form-group form-line" style="width: 50%;">
+                                                    <input type="number" class="form-control" placeholder="数量"
+                                                           name="tcount" id="tcount" required >
+                                                    <a class="formError" id="tcount_error"></a>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
+                                            <button type="button" id="btnSave" class="btn btn-info">保存</button>
+                                        </div>
+                                    </div>info
+                                </div>
+                            </div>
+
+                            <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog"
+                                 aria-labelledby="myModalLabel">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span></button>
+                                            <h4 class="modal-title">删除请购单</h4>
+                                        </div>
+                                        <div class="modal-body">
+                                            <span>是否确定删除？</span>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                            </button>
+                                            <button type="submit" id="Delete" class="btn btn-info">确定</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th>请购单号</th>
+                                        <th>物料编号</th>
+                                        <th>工厂编号</th>
+                                        <th>价格</th>
+                                        <th>数量</th>
+                                        <th>状态</th>
+                                        <th>创建时间</th>
+                                        <th>审核时间</th>
+                                        <th>创建人</th>
+                                        <th>审核人</th>
+                                        {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
+                                            <th>操作</th>
+                                        {% endif %}
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table">
+                                    {% for obj in caigou %}
+                                        <tr>
+                                            <td>{{ obj.demandid }}</td>
+                                            <td>{{ obj.maid_id }}</td>
+                                            <td>{{ obj.facid_id }}</td>
+                                            <td>{{ obj.price }}</td>
+                                            <td>{{ obj.tcount }}</td>
+                                            {% load myfilter %}
+                                            <td>
+                                                <a class={{ obj.status|table_status:"cgxq" }}>{{ obj.get_status_display }}</a>
+                                            </td>
+                                            <td>{{ obj.createtime|date:"Y-m-d H:i:s" }}</td>
+                                            <td>{{ obj.verifytime|date:"Y-m-d H:i:s" }}</td>
+                                            <td>{{ obj.createuserid.username }}</td>
+                                            <td>{{ obj.verifyuserid.username }}</td>
+                                            {#                                        判断是否是管理员，普通员工只能查看#}
+                                            {% if  request.session.info.office == "0" or request.session.info.office == "3" or request.session.info.office == "5" %}
+                                                <td>
+                                                    {% if obj.status == 2 %}
+                                                        <button class="btn btn-danger btn-xs btnDelete"
+                                                                uid="{{ obj.demandid }}">删除
+                                                        </button>
+                                                    {% elif obj.status == 1 %}
+                                                        <button class="btn btn-default btn-xs btnCom"
+                                                                uid="{{ obj.demandid }}">完成
+                                                        </button>
+                                                    {% elif request.session.info.office != "3" %}
+                                                        <button class="btn btn-primary btn-xs btnVerify"
+                                                                uid="{{ obj.demandid }}">确认
+                                                        </button>
+                                                    {% endif %}
+                                                </td>
+                                            {% endif %}
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div><!-- Row -->
+        </div><!-- Main Wrapper -->
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        var VERIFY_ID, DELETE_ID;
+        var PAGE,LENGTH;
+        // var showToast = localStorage.getItem("notify_show");
+        $(document).ready(function () {
+            $('li').removeClass('active-page');
+            $('#spider_weather').addClass('active-page');
+            $('#spider').addClass('active-page').addClass('open');
+            $('#spider_ul').css('display', 'block');
+            $('#spider_ul li').addClass('animation');
+            var oTable = $('#example').dataTable();
+            var oSettings = oTable.fnSettings();
+            $("#btnAdd").click(function () {
+                $(".formError").text("");
+                $("#formAdd")[0].reset();
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
+                $("#inv_count").attr("value","库存数量");
+                $("#ma_desc").attr("value","物料描述");
+                $("#ma_type").attr("value","物料类型");
+                $("#ma_cal").attr("value","计量单位");
+                $("#ma_pri").attr("value","元/单位");
+                $("#fac_add").attr("value","工厂地址");
+                $("#fac_type").attr("value","工厂类型");
+
+                $("#myd").modal('show');
+            })
+            $("#btnSave").click(function () {
+                $.ajax({
+                    url: "/inventory/demand/add/n/",
+                    type: "post",
+                    data: $("#formAdd").serialize(),
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            $("#myd").modal('hide');
+                            $("#formAdd")[0].reset();
+                            // 先reload后提示，由request将notify信息传值给session并在reload后清空
+                            sessionStorage.setItem("page",PAGE);
+                            sessionStorage.setItem("length",LENGTH);
+                            sessionStorage.setItem("search",$('#example_filter input')[0].value);
+                            location.reload()
+                        } else {
+                            var ids = ["#facid_id_error", "#maid_id_error", "#price_error", "#tcount_error"];
+                            for (var i = 0; i < ids.length; i++) {
+                                $(ids[i]).text("");
+                                if (res.error[i] != true) {
+                                    $(ids[i]).text(res.error[i]);
+                                }
+                            }
+                        }
+                    }
+                })
+            })
+
+            $("#table").on('click', '.btnVerify', function () {
+                VERIFY_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
+                $.ajax({
+                    url: "/inventory/demand/verify/n/",
+                    type: "post",
+                    data: {"did": VERIFY_ID,"csrfmiddlewaretoken":'{{ csrf_token }}'},
+                    dataType: "JSON",
+                    success: function (res) {
+                        if (res.status) {
+                            sessionStorage.setItem("page",PAGE);
+                            sessionStorage.setItem("length",LENGTH);
+                            sessionStorage.setItem("search",$('#example_filter input')[0].value);
+                            location.reload();
+                        }
+                    }
+                })
+            })
+
+            $("#table").on('click', '.btnDelete', function () {
+                DELETE_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
+                $("#deleteModel").modal('show');
+            })
+
+            $("#Delete").click(
+                function () {
+                    $.ajax({
+                        url: "/inventory/demand/delete/n/",
+                        type: "get",
+                        data: {uid: DELETE_ID},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#deleteModel").modal('hide');
+                                DELETE_ID = undefined;
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
+                                location.reload();
+                            } else {
+                            }
+                        }
+                    })
+                }
+            )
+
+            $("#facid_id").change(
+                function(){
+                    var fac=facid_id.value;
+                    if (fac=="")
+                    {
+                        $("#inv_count").attr("value","库存数量");
+                        $("#fac_add").attr("value","工厂地址");
+                        $("#fac_type").attr("value","工厂类型");
+                        return;
+                    }
+                    var ma=maid_id.value;
+                    var type="gc"
+                    if (ma!="" && ma!=$("#ma_select").text())
+                    {
+                        type="gc,gckc";
+                    }
+                    $.ajax({
+                        url: "/supply/formSetup",
+                        type: "get",
+                        data: {'facid':fac,'type':type,"maid":ma},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#fac_add").attr("value",res.gc.add);
+                                $("#fac_type").attr("value",res.gc.type);
+                                if(ma!=""&& ma!=$("#ma_select").text())
+                                {
+                                    $("#inv_count").attr("value","库存数量："+res.gckc.unres+res.wl.cal);
+                                }
+                            } else {
+                            }
+                        }
+                    })
+                }
+            )
+
+            $("#maid_id").change(
+                function(){
+                    var fac=facid_id.value;
+                    var ma=maid_id.value;
+                    if(ma=="")
+                    {
+                        $("#inv_count").attr("value","库存数量");
+                        $("#ma_desc").attr("value","物料描述");
+                        $("#ma_type").attr("value","物料类型");
+                        $("#ma_cal").attr("value","计量单位");
+                        $("#ma_pri").attr("value","元/单位");
+                        return;
+                    }
+                    var type="wl"
+                    if (fac!=""&& fac!=$("#fac_select").text)
+                    {
+                        type="wl,gckc";
+                    }
+                    $.ajax({
+                        url: "/supply/formSetup",
+                        type: "get",
+                        data: {'maid':ma,'facid':fac,'type':type},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#ma_desc").attr("value",res.wl.desc);
+                                $("#ma_type").attr("value",res.wl.type);
+                                $("#ma_cal").attr("value",res.wl.cal);
+                                $("#ma_pri").attr("value","元/"+res.wl.cal);
+                                if(fac!=""&& fac!=$("#fac_select").text())
+                                {
+                                    $("#inv_count").attr("value","库存数量："+res.gckc.unres+res.wl.cal);
+                                }
+                            } else {
+                            }
+                        }
+                    })
+                }
+            )
+
+        })
+
+
+    </script>
+{% endblock %}
