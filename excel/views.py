@@ -335,7 +335,7 @@ class TestDjangoExcelUpload_mt(View):
                 try:
                     models.Gongyingshang.objects.get(id=c[j][0])
                     models.Wuliao.objects.get(id=c[j][1])
-                    if models.Gongyingguanxi.objects.get(supplyid=c[j][0],materialid=c[j][1]).first()!=None:
+                    if models.Gongyingguanxi.objects.filter(supplyid_id=c[j][0],materialid_id=c[j][1]).first():
                         flag = 0
                         q_l.append(j + 1)
                 except:

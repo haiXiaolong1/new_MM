@@ -53,11 +53,11 @@
                                 <form style="width: 100%;display: inline-block;" id="purchase_create">
                                     {% csrf_token %}
                                     <div style="margin-bottom: 2px">
-                                        采购数量：<input id="purchase_volume" class="form-control" autocomplete="off" placeholder="需求量" style="width: 40%; display: inline-block;"> {{ now.maid.calcutype }}
+                                        采购数量：<input autocomplete="off" id="purchase_volume" class="form-control" autocomplete="off" placeholder="需求量" style="width: 40%; display: inline-block;"> {{ now.maid.calcutype }}
                                     </div>
                                     <a class="formError" id="purchase_volume_error" style="width: 100%"></a>
                                     <div style="margin-top: 12px">
-                                        采购单价：<input id="purchase_price" class="form-control" autocomplete="off" placeholder="预期单价" style="width: 40%; display: inline-block;margin-right: 5px;"> 元/{{ now.maid.calcutype }}
+                                        采购单价：<input autocomplete="off" id="purchase_price" class="form-control" autocomplete="off" placeholder="预期单价" style="width: 40%; display: inline-block;margin-right: 5px;"> 元/{{ now.maid.calcutype }}
                                     </div>
                                     <a class="formError" id="purchase_price_error" style="width: 100%"></a>
                                 </form>
