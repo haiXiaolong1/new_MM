@@ -1,7 +1,6 @@
 from django.shortcuts import render
 import random
 import re
-from datetime import datetime
 from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
 from django.http import JsonResponse
@@ -95,7 +94,10 @@ def get_7_weather(name,source):
     temp=mainPage.find('div',id='weatherChart').find('div',class_='split').find('p',class_='tem').text
     temp=temp.split(',')[0][5:].strip().strip('℃')
 
-    data=[]
+    datelist=[]
+    min=[]
+    max=[]
+    weatherlist=[]
     for li in alist:
         date=datetime.date.today().__str__()[:-2]+li.find('h1').text[:-1]
         weather=li.find('p').text
@@ -103,8 +105,16 @@ def get_7_weather(name,source):
         if li.find('span').text:
             max_temp=li.find('span').text.strip('℃')
         min_temp=li.find('i').text.strip('℃')
-        data.append([name,date[:-4],weather,max_temp,min_temp])
-    return data
+
+        datetime.datetime.strptime(date[:-4],"%Y-%m-%d")
+        datelist.append(str(datetime.datetime.strptime(date[:-4],"%Y-%m-%d"))[:-8])
+        # datelist.append(int(date[8:-4]))
+        weatherlist.append(weather)
+        min.append(float(min_temp))
+        max.append(float(max_temp))
+    return [datelist,weatherlist,max,min]
+
+
 def get_1_data(request):
     name=request.GET.get('name')
     source=get_source(name)
@@ -115,3 +125,21 @@ def get_1_data(request):
 
 def get_7_data(request):
     return None
+
+
+def get_weather(request):
+    name=request.GET.get('name','')
+    result={}
+    if name:
+        source=get_source(name)
+        nowdata,liefdata=get_1_detail(source[0])
+        sevendata=get_7_weather(name,source[1])
+        result['datelist']=sevendata[0]
+        result['weather']=sevendata[1]
+        result['max']=sevendata[2]
+        result['min']=sevendata[3]
+        result['name']=name
+        result['nowdata']=nowdata
+        result['life']=liefdata
+    # print(sevendata)
+    return render(request,'searchweather.html',result)
