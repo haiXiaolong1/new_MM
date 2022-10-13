@@ -252,8 +252,7 @@ def get_chapter(request):
 
 
 def get_picture(request):
-    url="https://www.umei.cc/meinvtupian/"
-    url="https://www.umei.cc/katongdongman/"
+    url=request.GET.get('url',"https://www.umei.cc/katongdongman/")
     headers={
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
         ,"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
