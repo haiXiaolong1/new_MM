@@ -3,7 +3,8 @@ from spider import views
 
 urlpatterns = [
     path('weather/',views.get_weather),
-    path('get1data/', views.get_1_data),
-    path('get7data/',views.get_7_data)
+    path('fiction/',views.get_fiction),
+    path('fiction/chapters',views.get_chapters),
+    path('fiction/chapter',views.get_chapter)
 
 ]

@@ -1,0 +1,83 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">{{ title }}详情</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12" style="margin-top: 20px">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title"><strong>{{ title }}</strong></h4>
+                        </div>
+                        <div class="panel-body">
+                            <table id="example1" class="display table" style="width: 100%; cellspacing: 0;">
+                                <thead>
+                                <tr>
+                                    <th>章节名</th>
+                                    <th>操作</th>
+                                </tr>
+                                </thead>
+                                <tbody id="table">
+                                {% for obj in lists %}
+                                    <tr>
+                                        <td>{{ obj.chapter }}</td>
+                                        <td>
+                                            <a class="btn btn-primary btn-xs btnEdit" href="chapter?url={{ obj.url }}&title={{ obj.chapter }}"
+                                               uid="{{ obj.url }}">查看
+                                            </a>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                </div>
+            </div><!-- Row -->
+
+        </div><!-- Main Wrapper -->
+    </div>
+    <!-- Row -->
+    </div><!-- Main Wrapper -->
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('li').removeClass('active-page');
+            $('#spider_fiction').addClass('active-page');
+            $('#spider').addClass('active-page').addClass('open');
+            $('#spider_ul').css('display', 'block');
+            $('#spider_ul li').addClass('animation');
+            $('#example1').dataTable({
+                "lengthMenu": [10, 20,50, 100],
+                "ordering": false,
+                "language": {
+                    "processing": "正在加载中......",
+                    "lengthMenu": "每页显示 _MENU_ 条记录",
+                    "zeroRecords": "对不起，查询不到相关数据！",
+                    "emptyTable": "表中无数据存在！",
+                    "info": "当前显示 _START_ 到 _END_ 条，共 _TOTAL_ 条记录",
+                    "infoEmpty": "无搜索结果",
+                    "infoFiltered": "(数据表中共为 _MAX_ 条记录)",
+                    "search": "搜索",
+                    "paginate": {
+                        "first": "首页",
+                        "previous": "上一页",
+                        "next": "下一页",
+                        "last": "末页"
+                    },
+                    "stateSave":'true'
+                } , //多语言配置
+
+            });
+        })
+
+
+    </script>
+{% endblock %}

@@ -1,6 +1,9 @@
 from django.shortcuts import render
 import random
 import re
+import requests
+from lxml import etree
+from urllib import parse
 from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
 from django.http import JsonResponse
@@ -114,17 +117,87 @@ def get_7_weather(name,source):
         max.append(float(max_temp))
     return [datelist,weatherlist,max,min]
 
+def getResultByName(name):
+    url=f"https://so.biqusoso.com/s.php?ie=utf-8&siteid=qu-la.com&q={name}"
+    headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
+        ,"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Cookie": "BIDUPSID=411397ADCA5FA50A2E41AB2A6D40C08D; PSTM=1644477760; BD_UPN=12314753; __yjs_duid=1_76cb500678e0fad7f03158136645e2641644737380783; BAIDUID=3E36D1A4894DF97FCE7A1491E4480FB1:FG=1; BDUSS=GltV0FWVkRVUlpmUmZTdkJ2ZUFsRU5hTGk5cE1FZllNUDJlZkZVS1BuUy1HdVppSVFBQUFBJCQAAAAAAAAAAAEAAABU70SkMTIyysfO0jczAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6NvmK-jb5iS; BDUSS_BFESS=GltV0FWVkRVUlpmUmZTdkJ2ZUFsRU5hTGk5cE1FZllNUDJlZkZVS1BuUy1HdVppSVFBQUFBJCQAAAAAAAAAAAEAAABU70SkMTIyysfO0jczAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6NvmK-jb5iS; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; delPer=0; BD_CK_SAM=1; PSINO=1; BAIDUID_BFESS=3E36D1A4894DF97FCE7A1491E4480FB1:FG=1; ZD_ENTRY=baidu; RT=\"z=1&dm=baidu.com&si=069naiho9oif&ss=l8y2i71l&sl=4&tt=1bt&bcn=https://fclog.baidu.com/log/weirwood?type=perf&ld=8yt&ul=cpj&hd=cq4\"; BA_HECTOR=0h2k252l0501208h2g0580ip1hjvgat1a; ZFY=1XzLj93E1kpXAhM4o8EUDdn9AOKxd44U5VVIzgsTFoI:C; H_PS_PSSID=36553_37356_36884_34813_37402_37395_36789_37422_26350_37284_37370_37468; baikeVisitId=affeb5e8-219a-4516-826e-0de9cd824380; COOKIE_SESSION=30_0_9_9_9_7_1_0_9_7_1_0_2943_0_0_0_1664959705_0_1664971057|9#1495_123_1664439634|9; BDRCVFR[S4-dAuiWMmn]=FZ_Jfs2436CUAqWmykCULPYrWm1n1fz; H_PS_645EC=fb17pzl/2XwZhS0n9FDV1F/CCfmCwgk98+A/SjJhkCq1c9noJ/9N//Q4IQ8vLo2yVw",
 
-def get_1_data(request):
-    name=request.GET.get('name')
-    source=get_source(name)
-    nowdata,liefdata=get_1_detail(source[0])
-    print(nowdata,liefdata)
-    return render(request,'searchweather.html')
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+    }
+    res=requests.get(url=url,headers=headers)
+    res.encoding='utf-8'
+    obj=re.compile(r'"><a href="(?P<href>.*?)".*?">(?P<title>.*?)</a>.*?<span class="s4">(?P<author>.*?)</span>',re.S)
+    result=obj.finditer(res.text)
+    titles=[]
+    hrefs=[]
+    authors=[]
+    lists=[]
+    for i in result:
+        titles.append(i.group('title'))
+        hrefs.append(i.group('href'))
+        authors.append(i.group('author'))
+        d={}
+        d['title']=i.group('title')
+        d['href']=i.group('href')
+        d['author']=i.group('author')
+        lists.append(d)
+    return lists
 
+def getSourceByHref(href):
+    headers={
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        "cache-control": "max-age=0",
+        "cookie": "Hm_lvt_4238f39670ba0f28c33f896ff335e60a=1665575408; Hm_lpvt_4238f39670ba0f28c33f896ff335e60a=1665576883",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "Windows",
+        "sec-fetch-dest": "document",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-site": "none",
+        "sec-fetch-user": "?1",
+        "upgrade-insecure-requests": "1",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.42"
+    }
+    res=requests.get(url=href,headers=headers)
+    res.encoding='gbk'
+    tree=etree.HTML(res.text)
+    lis=tree.xpath('//*[@id="list"]/div[3]/ul[2]/li')
+    chapters=[]
+    urls=[]
+    lists=[]
+    for li in lis:
 
-def get_7_data(request):
-    return None
+        d={}
+        d['url']=parse.urljoin(href,li.xpath('./a/@href')[0])
+        d['chapter']=li.xpath('./a/text()')[0]
+        urls.append(parse.urljoin(href,li.xpath('./a/@href')[0]))
+        chapters.append(li.xpath('./a/text()')[0])
+        lists.append(d)
+    return urls,chapters,lists
+def getTxtByUrl(url):
+    headers={
+        "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "accept-encoding": "gzip, deflate, br",
+        "accept-language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6",
+        "cache-control": "max-age=0",
+        "cookie": "Hm_lvt_4238f39670ba0f28c33f896ff335e60a=1665575408; Hm_lpvt_4238f39670ba0f28c33f896ff335e60a=1665576883",
+        "sec-ch-ua-mobile": "?0",
+        "sec-ch-ua-platform": "Windows",
+        "sec-fetch-dest": "document",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-site": "none",
+        "sec-fetch-user": "?1",
+        "upgrade-insecure-requests": "1",
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.42"
+    }
+    res=requests.get(url=url,headers=headers)
+    res.encoding='gbk'
+    tree=etree.HTML(res.text)
+    text=tree.xpath('//*[@id="txt"]/text()')
+    return text
 
 
 def get_weather(request):
@@ -143,3 +216,36 @@ def get_weather(request):
         result['life']=liefdata
     # print(sevendata)
     return render(request,'searchweather.html',result)
+
+
+def get_fiction(request):
+    name=request.GET.get('name','')
+    lists=[]
+
+    if name:
+        lists=getResultByName(name)
+
+    return render(request,'fiction.html',{"lists":lists,"name":name})
+
+
+def get_chapters(request):
+    href=request.GET.get('href')
+    title=request.GET.get('title')
+    urls,chapters,lists=getSourceByHref(href)
+    request.session['urls']=urls
+    request.session['chapters']=chapters
+    return render(request,'chapters.html',{"lists":lists,"title":title})
+
+
+def get_chapter(request):
+    url=request.GET.get('url')
+    title=request.GET.get('title')
+    index=request.session['urls'].index(url)
+    next=''
+    previous=''
+    if index<len(request.session['urls'])-1:
+        next=f'chapter?url={request.session["urls"][index+1]}&title={request.session["chapters"][index+1]}'
+    if index>0:
+        previous=f'chapter?url={request.session["urls"][index-1]}&title={request.session["chapters"][index-1]}'
+    txt=getTxtByUrl(url)
+    return render(request,'chapter.html',{"txt":txt,"title":title,"previous":previous,"next":next})
