@@ -296,7 +296,7 @@ def get_bigImage(request):
     res=requests.get(url)
     res.encoding='utf-8'
     # tree=etree.HTML(res.text)
-    obj=re.compile('"big-pic">.*?src="(?P<src>.*?)"')
+    obj=re.compile('"big-pic">.*?src="(?P<src>.*?)"',re.S)
     src=obj.search(res.text).group('src')
     # src=tree.xpath('/html/body/div[3]/div[2]/div[6]/a/img/@src')[0]
     print(src)
