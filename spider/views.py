@@ -249,3 +249,96 @@ def get_chapter(request):
         previous=f'chapter?url={request.session["urls"][index-1]}&title={request.session["chapters"][index-1]}'
     txt=getTxtByUrl(url)
     return render(request,'chapter.html',{"txt":txt,"title":title,"previous":previous,"next":next})
+
+
+def get_picture(request):
+    url="https://www.umei.cc/meinvtupian/"
+    url="https://www.umei.cc/katongdongman/"
+    headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
+        ,"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Cookie": "BIDUPSID=411397ADCA5FA50A2E41AB2A6D40C08D; PSTM=1644477760; BD_UPN=12314753; __yjs_duid=1_76cb500678e0fad7f03158136645e2641644737380783; BAIDUID=3E36D1A4894DF97FCE7A1491E4480FB1:FG=1; BDUSS=GltV0FWVkRVUlpmUmZTdkJ2ZUFsRU5hTGk5cE1FZllNUDJlZkZVS1BuUy1HdVppSVFBQUFBJCQAAAAAAAAAAAEAAABU70SkMTIyysfO0jczAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6NvmK-jb5iS; BDUSS_BFESS=GltV0FWVkRVUlpmUmZTdkJ2ZUFsRU5hTGk5cE1FZllNUDJlZkZVS1BuUy1HdVppSVFBQUFBJCQAAAAAAAAAAAEAAABU70SkMTIyysfO0jczAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6NvmK-jb5iS; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; delPer=0; BD_CK_SAM=1; PSINO=1; BAIDUID_BFESS=3E36D1A4894DF97FCE7A1491E4480FB1:FG=1; ZD_ENTRY=baidu; RT=\"z=1&dm=baidu.com&si=069naiho9oif&ss=l8y2i71l&sl=4&tt=1bt&bcn=https://fclog.baidu.com/log/weirwood?type=perf&ld=8yt&ul=cpj&hd=cq4\"; BA_HECTOR=0h2k252l0501208h2g0580ip1hjvgat1a; ZFY=1XzLj93E1kpXAhM4o8EUDdn9AOKxd44U5VVIzgsTFoI:C; H_PS_PSSID=36553_37356_36884_34813_37402_37395_36789_37422_26350_37284_37370_37468; baikeVisitId=affeb5e8-219a-4516-826e-0de9cd824380; COOKIE_SESSION=30_0_9_9_9_7_1_0_9_7_1_0_2943_0_0_0_1664959705_0_1664971057|9#1495_123_1664439634|9; BDRCVFR[S4-dAuiWMmn]=FZ_Jfs2436CUAqWmykCULPYrWm1n1fz; H_PS_645EC=fb17pzl/2XwZhS0n9FDV1F/CCfmCwgk98+A/SjJhkCq1c9noJ/9N//Q4IQ8vLo2yVw",
+
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+    }
+    res=requests.get(url=url,headers=headers)
+    res.encoding='utf-8'
+    mainPage=BeautifulSoup(res.text,'html.parser')
+    divs=mainPage.find_all('div',class_='taotu-main')
+    themes=mainPage.find_all('div',class_='taotu-nav')
+    result=[]
+    obj=re.compile('<li>.*?href="(?P<url>.*?)".*?title="(?P<name>.*?)".*?data-original="(?P<src>.*?)"',re.S)
+
+    for i in range(len(divs)):
+        title=themes[i].find('span').text
+        more=parse.urljoin('https://www.umei.cc/meinvtupian/',themes[i].find('a').attrs['href'])
+        its=obj.finditer(str(divs[i]))
+        theme=[]
+        for it in its:
+            d={}
+            name=it.group('name')
+            src=it.group('src')
+            u=parse.urljoin(url,it.group('url'))
+            d['name']=name
+            d['src']=src
+            d['title']=title.strip()
+            d['more']=more
+            d['url']=u
+            theme.append(d)
+        result.append(theme)
+
+    return render(request,'picture.html',{"themes":result})
+
+
+def get_bigImage(request):
+    url=request.GET.get('url')
+    name=request.GET.get('name')
+    title=request.GET.get('title')
+    res=requests.get(url)
+    res.encoding='utf-8'
+    # tree=etree.HTML(res.text)
+    obj=re.compile('"big-pic">.*?src="(?P<src>.*?)"')
+    src=obj.search(res.text).group('src')
+    # src=tree.xpath('/html/body/div[3]/div[2]/div[6]/a/img/@src')[0]
+    print(src)
+    print(url)
+    return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
+
+
+def get_more(request):
+    url=request.GET.get('url')
+    res=requests.get(url)
+    res.encoding='utf-8'
+    tree=etree.HTML(res.text)
+    previous=''
+    next=''
+    end=''
+    count=0
+    alla=tree.xpath('//*[@id="pageNum"]/a')
+    if len(alla)>3:
+        previous=parse.urljoin(url,tree.xpath('//*[@id="pageNum"]/a[2]/@href')[0])
+        next=parse.urljoin(url,tree.xpath('//*[@id="pageNum"]/a[4]/@href')[0])
+        end=parse.urljoin(url,tree.xpath('//*[@id="pageNum"]/a[last()]/@href')[0])
+    else:
+        if "首页"==tree.xpath('//*[@id="pageNum"]/a[1]/text()')[0]:
+            previous=parse.urljoin(url,tree.xpath('//*[@id="pageNum"]/a[2]/@href')[0])
+            next=''
+            end=''
+        else:
+            next=parse.urljoin(url,tree.xpath('//*[@id="pageNum"]/a[2]/@href')[0])
+            previous=''
+            end=parse.urljoin(url,tree.xpath('//*[@id="pageNum"]/a[last()]/@href')[0])
+    title=tree.xpath('/html/body/div[5]/div[2]/div[1]/div[1]/span/text()')[0].strip()[:-3]
+    print(title,next,previous,end)
+    obj=re.compile('"item masonry_brick">.*?href="(?P<href>.*?)".*?data-original="(?P<src>.*?)".*?alt="(?P<name>.*?)"',re.S)
+    its=obj.finditer(res.text)
+    # print(res.text)
+    th=[]
+    for it in its:
+        d={}
+        d['href']=parse.urljoin(url,it.group('href'))
+        d['src']=parse.urljoin(url,it.group('src'))
+        d['name']=it.group('name')
+        th.append(d)
+    print(th)
+    return render(request,'more.html',{"title":title,"th":th,"previous":previous,"next":next})

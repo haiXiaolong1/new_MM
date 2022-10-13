@@ -25,39 +25,40 @@
                             </div>
                         </div>
                     </div>
-
-                <div class="col-md-12" style="margin-top: 20px">
-                    <div class="panel panel-white">
-                        <div class="panel-heading clearfix">
-                            <h4 class="panel-title"><strong>{{ name }}{{ nowdata.0 }}</strong></h4>
-                        </div>
-                        <div class="panel-body">
-                            <span>实时温度：{{ nowdata.2 }}℃&nbsp; &nbsp; &nbsp; </span>
-                            <span>实时湿度：{{ nowdata.1 }}&nbsp; &nbsp; &nbsp; </span>
-                            <span>实时风力：{{ nowdata.3 }}{{ nowdata.4 }}&nbsp; &nbsp; &nbsp; </span>
-                            <span>空气质量：{{ nowdata.5 }}</span><br/><br/>
-                            <span>感冒指数：{{ life.0 }}</span><br/><br/>
-                            <span>建议：{{ life.1 }}</span><br/><br/>
-                            <span>运动指数：{{ life.2 }}</span><br/><br/>
-                            <span>建议：{{ life.3 }}</span><br/><br/>
-                            <span>过敏指数：{{ life.4 }}</span><br/><br/>
-                            <span>建议：{{ life.5 }}</span><br/><br/>
-                            <span>穿衣指数：{{ life.6 }}</span><br/><br/>
-                            <span>建议：{{ life.7 }}</span><br/><br/>
-                            <span>洗车指数：{{ life.8 }}</span><br/><br/>
-                            <span>建议：{{ life.9 }}</span><br/><br/>
-                            <span>紫外线：{{ life.10 }}</span><br/><br/>
-                            <span>建议：{{ life.11 }}</span><br/><br/>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-12" style="margin-top: 25px">
-                    <div class="panel panel-white">
-                        <div class="panel-body ">
-                            <div id="chart2" style="width: 100%;height:350px;"></div>
+                {% if name %}
+                    <div class="col-md-12" style="margin-top: 20px">
+                        <div class="panel panel-white">
+                            <div class="panel-heading clearfix">
+                                <h4 class="panel-title"><strong>{{ name }}{{ nowdata.0 }}</strong></h4>
+                            </div>
+                            <div class="panel-body">
+                                <span>实时温度：{{ nowdata.2 }}℃&nbsp; &nbsp; &nbsp; </span>
+                                <span>实时湿度：{{ nowdata.1 }}&nbsp; &nbsp; &nbsp; </span>
+                                <span>实时风力：{{ nowdata.3 }}{{ nowdata.4 }}&nbsp; &nbsp; &nbsp; </span>
+                                <span>空气质量：{{ nowdata.5 }}</span><br/><br/>
+                                <span>感冒指数：{{ life.0 }}</span><br/><br/>
+                                <span>建议：{{ life.1 }}</span><br/><br/>
+                                <span>运动指数：{{ life.2 }}</span><br/><br/>
+                                <span>建议：{{ life.3 }}</span><br/><br/>
+                                <span>过敏指数：{{ life.4 }}</span><br/><br/>
+                                <span>建议：{{ life.5 }}</span><br/><br/>
+                                <span>穿衣指数：{{ life.6 }}</span><br/><br/>
+                                <span>建议：{{ life.7 }}</span><br/><br/>
+                                <span>洗车指数：{{ life.8 }}</span><br/><br/>
+                                <span>建议：{{ life.9 }}</span><br/><br/>
+                                <span>紫外线：{{ life.10 }}</span><br/><br/>
+                                <span>建议：{{ life.11 }}</span><br/><br/>
+                            </div>
                         </div>
                     </div>
-                </div>
+                    <div class="col-md-12" style="margin-top: 25px">
+                        <div class="panel panel-white">
+                            <div class="panel-body ">
+                                <div id="chart2" style="width: 100%;height:350px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                {% endif %}
                 </div><!-- Row -->
 
                 </div><!-- Main Wrapper -->
@@ -75,46 +76,48 @@
             $('#spider').addClass('active-page').addClass('open');
             $('#spider_ul').css('display', 'block');
             $('#spider_ul li').addClass('animation');
+            var name='{{ name }}'
+            if(name){
+                var myChart2 = echarts.init(document.getElementById('chart2'));
+                var legenddata2, xdata2, sdata2;
+                // 指定图表的配置项和数据
+                legenddata2 = ['最高气温（℃）', '最低气温（℃）'];
+                xdata2 ={{ datelist|safe }};
+                sdata2 = [
+                    {
+                        'name': '最高气温（℃）',
+                        'type': 'line',
+                        'data': {{ max }}
+                    },
+                    {
+                        'name': '最低气温（℃）',
+                        'type': 'line',
+                        'data': {{ min }}
+                    }
+                ];
+                var option2 = {
+                    title: {
+                        text: '{{ name }}七日天气',
+                        left: "center"
 
+                    },
+                    tooltip: {},
+                    legend: {
+                        data: legenddata2,
+                        bottom: 0
+                    },
+                    xAxis: {
+                        data: xdata2
+                    },
+                    yAxis: {},
+                    color:['red','#0070E0'],
+                    series: sdata2//后台获取
 
-            var myChart2 = echarts.init(document.getElementById('chart2'));
-            var legenddata2, xdata2, sdata2;
-            // 指定图表的配置项和数据
-            legenddata2 = ['最高气温（℃）', '最低气温（℃）'];
-            xdata2 ={{ datelist|safe }};
-            sdata2 = [
-                {
-                    'name': '最高气温（℃）',
-                    'type': 'line',
-                    'data': {{ max }}
-                },
-                {
-                    'name': '最低气温（℃）',
-                    'type': 'line',
-                    'data': {{ min }}
-                }
-            ];
-            var option2 = {
-                title: {
-                    text: '{{ name }}七日天气',
-                    left: "center"
+                };
+                // 使用刚指定的配置项和数据显示图表。
+                myChart2.setOption(option2);
+            }
 
-                },
-                tooltip: {},
-                legend: {
-                    data: legenddata2,
-                    bottom: 0
-                },
-                xAxis: {
-                    data: xdata2
-                },
-                yAxis: {},
-                color:['red','#0070E0'],
-                series: sdata2//后台获取
-
-             };
-            // 使用刚指定的配置项和数据显示图表。
-            myChart2.setOption(option2);
         })
 
 
