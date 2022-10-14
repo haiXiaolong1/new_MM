@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from supply import models
+from spider.models import Audio
 # Create your views here.
 import json
 import datetime
@@ -22,6 +22,7 @@ from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
+from concurrent.futures import ThreadPoolExecutor
 
 def get_source(name):
     url="http://www.weather.com.cn/"#天气网地址
@@ -303,12 +304,12 @@ def get_bigImage(request):
     divs=tree.xpath('/html/body/div[3]/div[2]/div[9]/ul')
     if divs:
         lis=tree.xpath('/html/body/div[3]/div[2]/div[9]/ul/li')
-    for i in range(len(lis)-3):
-        u="htt"+url.strip(".htm")+"_"+str(i+2)+".htm"
-        print(u)
-        res=requests.get(u)
-        res.encoding='utf-8'
-        src.append(obj.search(res.text).group('src'))
+        for i in range(len(lis)-3):
+            u="htt"+url.strip(".htm")+"_"+str(i+2)+".htm"
+            print(u)
+            res=requests.get(u)
+            res.encoding='utf-8'
+            src.append(obj.search(res.text).group('src'))
     return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
 
 
@@ -357,15 +358,11 @@ def getImageByname(name):
     }
     para={
         "q": name,
-        "qs": "n",
-        "form": "QBIR",
-        "qft":  "filterui:imagesize-large",
-        "sp": "-1",
-        "pq": name,
-        "sc": "10-4",
+        "form": "IRFLTR",
+        "qft":  "filterui:imagesize-custom_1080_1920",
+        "sp": "1",
+        "sc": "1-0",
         "cvid": "6E8ADA353A0343609BBF188B663E90C2",
-        "ghsh": "0",
-        "ghacc": "0",
         "first": "1",
         "tsc": "ImageHoverTitle"
     }
@@ -477,3 +474,66 @@ def get_bigPicture(request):
     title=request.GET.get('title')
     src=getBigImageByHerf(url)
     return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
+
+def get_mp3(url):
+    res=requests.get(url)
+    obj=re.compile('audio controls src="(?P<src>.*?)"')
+    src=obj.search(res.text).group('src')
+    return src
+
+def get_mp3List(url,index=1):
+    res=requests.get(url+str(index))
+    obj=re.compile('<article id=".*?<a href="(?P<href>.*?)">(?P<name>.*?)</a>',re.S)
+    hrefs=[]
+    names=[]
+    results=[]
+    for i in obj.finditer(res.text):
+        href=i.group('href')
+        name=i.group('name')
+        d={}
+        d['href']=href
+        src=get_mp3(href)
+        d['src']=src
+        d['name']=name
+        hrefs.append(href)
+        names.append(name)
+        results.append(d)
+    return hrefs,names,results
+def save(url,id):
+    obj=re.compile('<article id=".*?<a href="(?P<href>.*?)">(?P<name>.*?)</a>',re.S)
+    res=requests.get(url)
+    for i in obj.finditer(res.text):
+        href=i.group('href')
+        name=i.group('name')
+        Audio.objects.create(src=get_mp3(href),name=name)
+    print(id+2)
+
+def update_list():
+    Audio.objects.filter().all().delete()
+    res=requests.get("https://asmrlove.club/")
+    obj=re.compile('<article id=".*?<a href="(?P<href>.*?)">(?P<name>.*?)</a>',re.S)
+    end=re.compile('dots">.*?href=".*?>(?P<end>.*?)<',re.S)
+    n=int(end.search(res.text).group('end'))
+    for i in obj.finditer(res.text):
+        href=i.group('href')
+        name=i.group('name')
+        Audio.objects.create(src=get_mp3(href),name=name)
+    print(1)
+    with ThreadPoolExecutor(20) as t:
+        for id in range(n-1):
+            url="https://asmrlove.club/?paged="+str(id+2)
+            t.submit(save,url=url,id=id)
+    return None
+
+
+def get_audioList(request):
+    if request.GET.get("update"):
+        update_list()
+    lists=Audio.objects.filter().all()
+    return render(request,'audioList.html',{"results":lists})
+
+
+def get_audio(request):
+    name=request.GET.get('name')
+    src=request.GET.get('src')
+    return render(request,"audio.html",{"src":src,"name":name})
