@@ -1,0 +1,74 @@
+{% extends 'common.html' %}
+
+{% block content %}
+    <div class="page-inner">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">查询图片</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12" style="height: 240px">
+                    <div class="panel panel-white" style="height: 100%;">
+                        <div class="panel-heading clearfix" >
+                            <h4 class="panel-title" ><strong>查询图片</strong></h4>
+                        </div>
+                        <div class="panel-body">
+                            <div>
+                                <form style="width: 100%;display: inline-block;" id="purchase_create">
+                                    {% csrf_token %}
+                                    <div style="margin-bottom: 2px">
+                                        查询图片关键字：<input autocomplete="off" id="fiction_name" class="form-control" autocomplete="off" placeholder="图片关键字" name="name" style="width: 40%; display: inline-block;" value="{{ name }}">
+                                    </div>
+                                    <button type="submit" id="search_btn" class="btn btn-info" style="float: left;margin-top: 10px" >确认</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div><!-- Row -->
+            <div class="row">
+                {% for theme in results %}
+                    <a href="bigPicture?url={{ theme.bighref }}&name={{ theme.name }}&title={{ name }}">
+                        <div class="col-md-3">
+                            <div class="panel panel-white">
+                                <div class="panel-heading clearfix">
+                                    <h4 class="panel-title">{{ theme.name }}</h4>
+                                </div>
+                                <div class="panel-body">
+                                    <img id="" src="{{ theme.small }}" data-zoom-image="{{ theme.small }}" style="width: 100%;" alt=""/>
+                                </div>
+                            </div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        </div><!-- Main Wrapper -->
+        <div class="panel-footer" style="height: 60px">
+            {% if previous %}
+                <a class="btn btn-info" style="float: left" href="?name={{ name }}&previous={{ previous }}">上一页</a>
+            {% endif %}
+            {% if next %}
+                <a class="btn btn-info" style="float: right" href="?name={{ name }}&next={{ next }}">下一页</a>
+            {% endif %}
+        </div>
+
+    </div>
+    <!-- Row -->
+    </div><!-- Main Wrapper -->
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('li').removeClass('active-page');
+            $('#spider_picturesearch').addClass('active-page');
+            $('#spider').addClass('active-page').addClass('open');
+            $('#spider_ul').css('display', 'block');
+            $('#spider_ul li').addClass('animation');
+
+        })
+
+
+    </script>
+{% endblock %}

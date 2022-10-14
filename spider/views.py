@@ -299,8 +299,7 @@ def get_bigImage(request):
     obj=re.compile('"big-pic">.*?src="(?P<src>.*?)"',re.S)
     src=obj.search(res.text).group('src')
     # src=tree.xpath('/html/body/div[3]/div[2]/div[6]/a/img/@src')[0]
-    print(src)
-    print(url)
+
     return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
 
 
@@ -341,3 +340,131 @@ def get_more(request):
         th.append(d)
     print(th)
     return render(request,'more.html',{"title":title,"th":th,"previous":previous,"next":next})
+
+def getImageByname(name):
+    url='https://cn.bing.com/images/search'
+    headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
+    }
+    para={
+        "q": name,
+        "qs": "n",
+        "form": "QBIR",
+        "qft":  "filterui:imagesize-large",
+        "sp": "-1",
+        "pq": name,
+        "sc": "10-4",
+        "cvid": "6E8ADA353A0343609BBF188B663E90C2",
+        "ghsh": "0",
+        "ghacc": "0",
+        "first": "1",
+        "tsc": "ImageHoverTitle"
+    }
+    res=requests.get(url,headers=headers,params=para)
+    obj=re.compile('img_cont hoff.*?src="(?P<small>.*?)".*?图像结果.*?href="(?P<bighref>.*?)" h=.*?aria-label="(?P<name>.*?)"',re.S)
+    results=[]
+    smalls=[]
+    bighrefs=[]
+    names=[]
+    for i in obj.finditer(res.text):
+        small=i.group('small')
+        bighref=parse.urljoin(url,i.group('bighref').replace("&amp;","@@"))
+        # print(small,bighref)
+        d={}
+        smalls.append(small)
+        bighrefs.append(bighref)
+        d["small"]=small
+        d["bighref"]=bighref
+        d["name"]=i.group('name')
+        results.append(d)
+        # print(bighref)
+    return smalls,bighrefs,names,results
+
+def getBigImageByHerf(href):
+    opt=Options()#设置无头浏览器配置
+    opt.add_argument('--window-size=1920,1080')
+    opt.add_argument("--headless")
+    opt.add_argument("--disable-gpu")
+    web=Chrome(options=opt)
+    web.get(href.replace("@@","&"))
+    time.sleep(0.5)
+    text=web.page_source
+    print(href)
+    obj=re.compile('</span><img src="(?P<src>.*?)"',re.S)
+    src=''
+    for i in obj.finditer(text):
+        src=i.group('src')
+    return src
+
+def getNextByname(name,index):
+    headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
+    }
+    para={
+        "q": name,
+        "first": index,
+        "count": "35",
+        "cw": "1243",
+        "ch": "260",
+        "relp": "35",
+        "tsc": "ImageHoverTitle",
+        "datsrc": "I",
+        "layout": "RowBased_Landscape",
+        "apc": "0",
+        "mmasync": "1",
+        "dgState": "x*353_y*1521_h*181_c*1_i*36_r*9",
+        "IG": "ED728D3EEF304AD4BE0DE0886BDA651F",
+        "SFX": "2",
+        "iid": "images.5530"
+    }
+    url="https://cn.bing.com/images/async"
+    res=requests.get(url,headers=headers,params=para)
+    obj=re.compile('img_cont hoff.*?src="(?P<small>.*?)".*?图像结果.*?aria-label="(?P<name>.*?)".*?href="(?P<bighref>.*?)" h=',re.S)
+    results=[]
+    smalls=[]
+    bighrefs=[]
+    names=[]
+    print(res.text)
+    for i in obj.finditer(res.text):
+        small=i.group('small')
+        bighref=parse.urljoin(url,i.group('bighref').replace("&amp;","@@"))
+        # print(small,bighref)
+        d={}
+        smalls.append(small)
+        bighrefs.append(bighref)
+        d["small"]=small
+        d["bighref"]=bighref
+        d["name"]=i.group('name')
+        results.append(d)
+    return smalls,bighrefs,names,results
+
+
+def get_picturesearch(request):
+    name=request.GET.get('name','')
+    next=request.GET.get('next',0)
+    previous=request.GET.get('previous',0)
+    print(previous)
+    if next==0 and previous==0:
+        smalls,bighrefs,names,results=getImageByname(name)
+        next=1
+        previous=0
+    elif next:
+        next=int(next)+35
+        smalls,bighrefs,names,results=getNextByname(name,next)
+        previous=next
+        print(next,previous)
+    elif previous:
+        previous=int(previous)-35
+        next=previous
+        smalls,bighrefs,names,results=getNextByname(name,previous)
+    print("cwcecq",previous,next)
+    return render(request,'picturesearch.html',{"results":results,"name":name,"previous":previous,"next":next})
+
+
+
+def get_bigPicture(request):
+    url=request.GET.get('url')
+    name=request.GET.get('name')
+    title=request.GET.get('title')
+    src=getBigImageByHerf(url)
+    return render(request,'bigImage.html',{"src":src,"name":name,"title":title})

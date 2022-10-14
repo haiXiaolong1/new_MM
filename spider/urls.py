@@ -8,6 +8,8 @@ urlpatterns = [
     path('fiction/chapter',views.get_chapter),
     path('picture/',views.get_picture),
     path('picture/bigImage',views.get_bigImage),
-    path('picture/more',views.get_more)
+    path('picture/more',views.get_more),
+    path('picturesearch/',views.get_picturesearch),
+    path('picturesearch/bigPicture',views.get_bigPicture)
 
 ]
