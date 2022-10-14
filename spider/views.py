@@ -295,11 +295,20 @@ def get_bigImage(request):
     title=request.GET.get('title')
     res=requests.get(url)
     res.encoding='utf-8'
-    # tree=etree.HTML(res.text)
+    tree=etree.HTML(res.text)
     obj=re.compile('"big-pic">.*?src="(?P<src>.*?)"',re.S)
-    src=obj.search(res.text).group('src')
+    src=[]
+    src.append(obj.search(res.text).group('src'))
     # src=tree.xpath('/html/body/div[3]/div[2]/div[6]/a/img/@src')[0]
-
+    divs=tree.xpath('/html/body/div[3]/div[2]/div[9]/ul')
+    if divs:
+        lis=tree.xpath('/html/body/div[3]/div[2]/div[9]/ul/li')
+    for i in range(len(lis)-3):
+        u="htt"+url.strip(".htm")+"_"+str(i+2)+".htm"
+        print(u)
+        res=requests.get(u)
+        res.encoding='utf-8'
+        src.append(obj.search(res.text).group('src'))
     return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
 
 
@@ -391,9 +400,9 @@ def getBigImageByHerf(href):
     text=web.page_source
     print(href)
     obj=re.compile('</span><img src="(?P<src>.*?)"',re.S)
-    src=''
+    src=[]
     for i in obj.finditer(text):
-        src=i.group('src')
+        src.append(i.group('src'))
     return src
 
 def getNextByname(name,index):
