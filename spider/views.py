@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from spider.models import Audio
+from spider.models import Audio,Image,Picture
 # Create your views here.
 import json
 import datetime
@@ -527,13 +527,151 @@ def update_list():
 
 
 def get_audioList(request):
-    if request.GET.get("update"):
-        update_list()
-    lists=Audio.objects.filter().all()
-    return render(request,'audioList.html',{"results":lists})
+    if request.session["info"]["id"] == "1":
+        if request.GET.get("update"):
+            update_list()
+        lists=Audio.objects.filter().all()
+        return render(request,'audioList.html',{"results":lists})
+    return None
 
 
 def get_audio(request):
     name=request.GET.get('name')
     src=request.GET.get('src')
     return render(request,"audio.html",{"src":src,"name":name})
+
+
+def get_qiwen(request):
+
+    return render(request,'qiwen.html')
+
+def updatasource(url,type=""):
+    headers={
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.42",
+        "x-requested-with": "XMLHttpRequest"
+    }
+    obj=re.compile('egeli_pic_dl.*?<a href="(?P<href>.*?)".*?src="(?P<src>.*?)".*?title="(?P<name>.*?)"',re.S)
+    r=[]
+    for i in range(1,1000):
+        try:
+            res=requests.get(url+str(i)+".html",headers=headers)
+        except:
+            break
+        its=obj.finditer(res.text)
+        for it in its :
+            href=it.group('href')
+            big=getBigSrc(href)
+            if not big:
+                big=it.group('src').replace("edpic_360_360","edpic_source")
+            src=it.group('src')+"@@"+big
+            name=it.group('name')
+            d={}
+            d['href']=href
+            d['src']=src
+            # d['src']=src.replace()
+            d["name"]=name
+            d['type']=type
+            Image.objects.create(name=name,type=type,src=src)
+            print(type,i)
+            r.append(d)
+        if len(obj.findall(res.text))<16:
+            break
+    print('over')
+    return r
+
+def getBigSrc(herf):
+    headers={
+        "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.42",
+        "x-requested-with": "XMLHttpRequest"
+    }
+    res=requests.get(herf,headers=headers)
+    obj=re.compile('class="swiper-slide.*?src="(?P<src>.*?)"',re.S)
+    src=[]
+    for i in obj.finditer(res.text):
+        src.append(i.group('src').replace("edpic","edpic_source"))
+    src="@@".join(src)
+    return src
+
+def save_pic(obj,txt):
+    for i in obj.finditer(str(txt)):
+        href=i.group('href')
+        src=i.group('src')+get_src(href)
+        name=i.group('name')
+        Picture.objects.create(name=name,src=src)
+    print('over')
+
+def get_list(url):
+    res=requests.get(url)
+    mainPage=BeautifulSoup(res.text,'html.parser')
+    txt=mainPage.find("div",class_='ms_main_box')
+    obj=re.compile('<li>.*?href="(?P<href>.*?)">.*?src="(?P<src>.*?)".*?html">(?P<name>.*?)<',re.S)
+    save_pic(obj,txt)
+    with ThreadPoolExecutor(100) as t:
+        for n in range(1,412):
+            u=url+f"list_{str(n)}.html"
+            res=requests.get(u)
+            mainPage=BeautifulSoup(res.text,'html.parser')
+            txt=mainPage.find("div",class_='ms_main_box')
+            t.submit(save_pic,obj,txt)
+            # if len(obj.findall(str(txt)))<15:
+            #     print('break')
+            #     break
+            print(n)
+    return None
+
+def get_src(href):
+    res=requests.get(href)
+    mainPage=BeautifulSoup(res.text,'html.parser')
+    txt=mainPage.find("div",class_='ms_art_body')
+    obj=re.compile('alt="(?P<name>.*?)".*?src="(?P<src>.*?)"',re.S)
+    src=''
+    for i in obj.finditer(str(txt)):
+        src=src+"@@"+i.group('src')
+    return src
+
+
+
+def get_wallpaper(request):
+
+    p=request.GET.get('picture')
+    if p=="2":
+        Picture.objects.filter().all().delete()
+        url='http://www.zhanans.com/mntp/'
+        get_list(url)
+    if p=="1":
+        lists=Picture.objects.filter().all()
+        for i in range(len(lists)):
+            lists[i].src=lists[i].src.split("@@")[0]
+        return render(request,'imageList.html',{"results":lists})
+
+    if request.GET.get("update"):
+        Image.objects.filter().all().delete()
+        urls=['https://mm.enterdesk.com/dalumeinv/','https://mm.enterdesk.com/rihanmeinv/','https://mm.enterdesk.com/gangtaimeinv/',
+              'https://mm.enterdesk.com/dongmanmeinv/','https://mm.enterdesk.com/qingchunmeinv/','https://mm.enterdesk.com/keaimeinv/',
+              'https://www.enterdesk.com/zhuomianbizhi/fengjing/','https://www.enterdesk.com/zhuomianbizhi/dongmankatong/',
+              'https://sj.enterdesk.com/woman/','https://sj.enterdesk.com/anime/','https://sj.enterdesk.com/gaoxiaotupian/']
+        types=['大陆','日韩','港台','动漫','清纯','可爱','风景壁纸','动漫壁纸','手机唯美','手机卡通','手机搞笑']
+
+        with ThreadPoolExecutor(20) as t:
+            for i in range(len(urls)):
+                t.submit(updatasource,urls[i],types[i])
+    lists=Image.objects.filter().all()
+    for i in range(len(lists)):
+        lists[i].src=lists[i].src.split("@@")[0]
+    return render(request,'imageList.html',{"results":lists})
+
+
+def get_bigWallpaper(request):
+    t=request.GET.get('t')
+    id=request.GET.get('id')
+    if t:
+        o=Image.objects.filter(id=id).first()
+        src=o.src.split("@@")[1:]
+        name=o.name
+        title=o.type
+        return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
+    o=Picture.objects.filter(id=id).first()
+    src=o.src.split("@@")[1:]
+    name=o.name
+    title=o.name
+    return render(request,'bigImage.html',{"src":src,"name":name,"title":title})

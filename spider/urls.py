@@ -12,6 +12,10 @@ urlpatterns = [
     path('picturesearch/',views.get_picturesearch),
     path('picturesearch/bigPicture',views.get_bigPicture),
     path('audio/',views.get_audioList),
-    path('audio/audio',views.get_audio)
+    path('audio/audio',views.get_audio),
+    path('qiwen/',views.get_qiwen),
+
+    path('wallpaper/',views.get_wallpaper),
+    path('wallpaper/wallpaper',views.get_bigWallpaper),
 
 ]
