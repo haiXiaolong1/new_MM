@@ -139,7 +139,7 @@ USE_L10N = True
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # session 设置
-SESSION_COOKIE_AGE = 60 * 10  # 设置过期时间10分钟，默认为两周
+SESSION_COOKIE_AGE = 60 * 60 * 2  # 设置过期时间2小时，默认为两周
 SESSION_SAVE_EVERY_REQUEST = True
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True  # 设置关闭浏览器时失效
 
