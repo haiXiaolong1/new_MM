@@ -8,7 +8,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from spider.models import Audio,Image,Picture
+from spider.models import Audio,Image,Picture,New1,New2,New3
 # Create your views here.
 import json
 import datetime
@@ -632,12 +632,46 @@ def get_src(href):
 
 
 def get_wallpaper(request):
+    new1=request.GET.get('new1')
+    new2=request.GET.get('new2')
+    new3=request.GET.get('new3')
+
+    if new3=="2":
+        New3.objects.filter().all().delete()
+        get3list()
+        lists=New3.objects.filter().all()
+        for i in range(len(lists)):
+            lists[i].src=lists[i].src.split("@")[0]
+        return render(request,'imageList.html',{"results":lists,"n":3})
+    if new3=="1":
+        lists=New3.objects.filter().all()
+        for i in range(len(lists)):
+            lists[i].src=lists[i].src.split("@")[0]
+        return render(request,'imageList.html',{"results":lists,"n":3})
+
+
+    if new1=="2":
+        New1.objects.filter().all().delete()
+        get1list()
+        lists=New1.objects.filter().all()
+        for i in range(len(lists)):
+            lists[i].src=lists[i].src.split("@@")[0]
+        return render(request,'imageList.html',{"results":lists,"n":1})
+    if new1=="1":
+        lists=New1.objects.filter().all()
+        for i in range(len(lists)):
+            lists[i].src=lists[i].src.split("@@")[0]
+        return render(request,'imageList.html',{"results":lists,"n":1})
 
     p=request.GET.get('picture')
     if p=="2":
         Picture.objects.filter().all().delete()
         url='http://www.zhanans.com/mntp/'
         get_list(url)
+        lists=Picture.objects.filter().all()
+        for i in range(len(lists)):
+            lists[i].src=lists[i].src.split("@@")[0]
+        return render(request,'imageList.html',{"results":lists})
     if p=="1":
         lists=Picture.objects.filter().all()
         for i in range(len(lists)):
@@ -663,7 +697,21 @@ def get_wallpaper(request):
 
 def get_bigWallpaper(request):
     t=request.GET.get('t')
+    n=request.GET.get('n')
     id=request.GET.get('id')
+    if n:
+        if int(n)==1:
+            o=New1.objects.filter(id=id).first()
+            src=o.src.split("@@")[1:]
+            name=o.name
+            title=o.type
+            return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
+        if int(n)==3:
+            o=New3.objects.filter(id=id).first()
+            src=o.src.split("@")[1:]
+            name=o.name
+            title=o.type
+            return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
     if t:
         o=Image.objects.filter(id=id).first()
         src=o.src.split("@@")[1:]
@@ -675,3 +723,79 @@ def get_bigWallpaper(request):
     name=o.name
     title=o.name
     return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
+
+
+
+
+def get1list():
+    ts=['街拍','套图','微博','写真']
+    for i in range(2,6):
+        for j in range(1,20):
+            url=f"https://www.xiushe4k.com/?cat={str(i)}&paged={str(j)}"
+            headers={
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
+                ,"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+                "Cookie": "BIDUPSID=411397ADCA5FA50A2E41AB2A6D40C08D; PSTM=1644477760; BD_UPN=12314753; __yjs_duid=1_76cb500678e0fad7f03158136645e2641644737380783; BAIDUID=3E36D1A4894DF97FCE7A1491E4480FB1:FG=1; BDUSS=GltV0FWVkRVUlpmUmZTdkJ2ZUFsRU5hTGk5cE1FZllNUDJlZkZVS1BuUy1HdVppSVFBQUFBJCQAAAAAAAAAAAEAAABU70SkMTIyysfO0jczAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6NvmK-jb5iS; BDUSS_BFESS=GltV0FWVkRVUlpmUmZTdkJ2ZUFsRU5hTGk5cE1FZllNUDJlZkZVS1BuUy1HdVppSVFBQUFBJCQAAAAAAAAAAAEAAABU70SkMTIyysfO0jczAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6NvmK-jb5iS; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; delPer=0; BD_CK_SAM=1; PSINO=1; BAIDUID_BFESS=3E36D1A4894DF97FCE7A1491E4480FB1:FG=1; ZD_ENTRY=baidu; RT=\"z=1&dm=baidu.com&si=069naiho9oif&ss=l8y2i71l&sl=4&tt=1bt&bcn=https://fclog.baidu.com/log/weirwood?type=perf&ld=8yt&ul=cpj&hd=cq4\"; BA_HECTOR=0h2k252l0501208h2g0580ip1hjvgat1a; ZFY=1XzLj93E1kpXAhM4o8EUDdn9AOKxd44U5VVIzgsTFoI:C; H_PS_PSSID=36553_37356_36884_34813_37402_37395_36789_37422_26350_37284_37370_37468; baikeVisitId=affeb5e8-219a-4516-826e-0de9cd824380; COOKIE_SESSION=30_0_9_9_9_7_1_0_9_7_1_0_2943_0_0_0_1664959705_0_1664971057|9#1495_123_1664439634|9; BDRCVFR[S4-dAuiWMmn]=FZ_Jfs2436CUAqWmykCULPYrWm1n1fz; H_PS_645EC=fb17pzl/2XwZhS0n9FDV1F/CCfmCwgk98+A/SjJhkCq1c9noJ/9N//Q4IQ8vLo2yVw",
+                'Connection': 'close',
+                "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+            }
+            res=requests.get(url,headers=headers)
+            obj=re.compile('<li.*?cxudy-list-format"><a href="(?P<href>.*?)".*?data-original="(?P<src>.*?)".*?alt="(?P<name>.*?)"',re.S)
+            lis=obj.findall(res.text)
+            n=len(lis)
+            print(n)
+            if n>0:
+                with ThreadPoolExecutor(20) as t:
+                    t.submit(save1,obj,res,ts,i)
+                    print(i)
+                if n < 20:
+                    break
+
+def save1(obj,res,ts,i):
+    for it in obj.finditer(res.text):
+        href=it.group('href')
+        src=it.group('src')+get1src(href)
+        name=it.group('name')
+        ty=ts[i-2]
+        New1.objects.create(src=src,name=name,type=ty)
+
+def get1src(href):
+    headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
+        ,"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+        "Cookie": "BIDUPSID=411397ADCA5FA50A2E41AB2A6D40C08D; PSTM=1644477760; BD_UPN=12314753; __yjs_duid=1_76cb500678e0fad7f03158136645e2641644737380783; BAIDUID=3E36D1A4894DF97FCE7A1491E4480FB1:FG=1; BDUSS=GltV0FWVkRVUlpmUmZTdkJ2ZUFsRU5hTGk5cE1FZllNUDJlZkZVS1BuUy1HdVppSVFBQUFBJCQAAAAAAAAAAAEAAABU70SkMTIyysfO0jczAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6NvmK-jb5iS; BDUSS_BFESS=GltV0FWVkRVUlpmUmZTdkJ2ZUFsRU5hTGk5cE1FZllNUDJlZkZVS1BuUy1HdVppSVFBQUFBJCQAAAAAAAAAAAEAAABU70SkMTIyysfO0jczAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6NvmK-jb5iS; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; delPer=0; BD_CK_SAM=1; PSINO=1; BAIDUID_BFESS=3E36D1A4894DF97FCE7A1491E4480FB1:FG=1; ZD_ENTRY=baidu; RT=\"z=1&dm=baidu.com&si=069naiho9oif&ss=l8y2i71l&sl=4&tt=1bt&bcn=https://fclog.baidu.com/log/weirwood?type=perf&ld=8yt&ul=cpj&hd=cq4\"; BA_HECTOR=0h2k252l0501208h2g0580ip1hjvgat1a; ZFY=1XzLj93E1kpXAhM4o8EUDdn9AOKxd44U5VVIzgsTFoI:C; H_PS_PSSID=36553_37356_36884_34813_37402_37395_36789_37422_26350_37284_37370_37468; baikeVisitId=affeb5e8-219a-4516-826e-0de9cd824380; COOKIE_SESSION=30_0_9_9_9_7_1_0_9_7_1_0_2943_0_0_0_1664959705_0_1664971057|9#1495_123_1664439634|9; BDRCVFR[S4-dAuiWMmn]=FZ_Jfs2436CUAqWmykCULPYrWm1n1fz; H_PS_645EC=fb17pzl/2XwZhS0n9FDV1F/CCfmCwgk98+A/SjJhkCq1c9noJ/9N//Q4IQ8vLo2yVw",
+        'Connection': 'close',
+        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
+    }
+    res=requests.get(href,headers=headers)
+    obj=re.compile('<img class="alignnone size-full.*?src="(?P<src>.*?)".*?alt')
+    src=''
+    for it in obj.finditer(res.text):
+        src=src+"@@"+it.group('src')
+    return src
+
+def get3list():
+    with ThreadPoolExecutor(20) as t:
+        for i in range(1,42):
+            t.submit(save3,i)
+        print('over')
+def save3(i):
+    url=f"https://fljloli.ml/ajax/buscar_posts.php?post=&cat=&tag=&search=&page=&index={str(i)}&ver=36"
+    res=requests.get(url)
+    obj=re.compile('a mob="0" webp="0.*?href="(?P<href>.*?)".*?data-src="(?P<src>.*?)".*?alt="(?P<name>.*?)"',re.S)
+    ls=obj.findall(res.text)
+    for l in ls:
+        href=l[0]
+        src=l[1]+get3src(href)
+        name=l[2]
+        New3.objects.create(src=src,name=name,type='和谐')
+    print(i)
+
+
+def get3src(href):
+    res=requests.get(href)
+    obj=re.compile('<div data-src="(?P<src>.*?)"',re.S)
+    src=''
+    for i in obj.finditer(res.text):
+        src=src+"@"+i.group('src')
+    return src

@@ -18,6 +18,12 @@
                             <a  href="?update=1" class="btn btn-info" style="margin-bottom: 20px;margin-right: 5px" id="btn">更新壁纸</a>
                             <a  href="?picture=1" class="btn btn-info" style="margin-bottom: 20px;margin-right: 5px" id="btn">查看美图</a>
                             <a  href="?picture=2" class="btn btn-info" style="margin-bottom: 20px;margin-right: 5px" id="btn">更新美图</a>
+                            <a  href="?new1=1" class="btn btn-info" style="margin-bottom: 20px;margin-right: 5px" id="btn">查看新图1</a>
+                            <a  href="?new1=2" class="btn btn-info" style="margin-bottom: 20px;margin-right: 5px" id="btn">更新新图1</a>
+                            <a  href="?new2=1" class="btn btn-info" style="margin-bottom: 20px;margin-right: 5px" id="btn">查看新图2</a>
+                            <a  href="?new2=2" class="btn btn-info" style="margin-bottom: 20px;margin-right: 5px" id="btn">更新新图2</a>
+                            <a  href="?new3=1" class="btn btn-info" style="margin-bottom: 20px;margin-right: 5px" id="btn">查看新图3</a>
+                            <a  href="?new3=2" class="btn btn-info" style="margin-bottom: 20px;margin-right: 5px" id="btn">更新新图3</a>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
@@ -41,7 +47,7 @@
                                             <td>{{ obj.name }}</td>
                                             <td>{{ obj.type }}</td>
                                             <td>
-                                                <a href="wallpaper?id={{ obj.id }}&t={{ obj.type }}" class="btn btn-info">查看</a>
+                                                <a href="wallpaper?id={{ obj.id }}&t={{ obj.type }}&n={{ n }}" class="btn btn-info">查看</a>
                                             </td>
                                         </tr>
                                     {% endfor %}

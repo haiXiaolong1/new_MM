@@ -28,5 +28,34 @@ class Picture(models.Model):
         verbose_name = '图片'
         verbose_name_plural = '图片'
 
+class New1(models.Model):
+    type=models.CharField(max_length=255,blank=True,null=True,verbose_name="分类")
+    name=models.CharField(max_length=255,blank=True,null=True,verbose_name="名称")
+    src=models.TextField(blank=True,null=True,verbose_name="资源地址")
+    class Meta:
+        db_table = 'new1'
+        verbose_name = '图片1'
+        verbose_name_plural = '图片1'
+
+class New2(models.Model):
+    type=models.CharField(max_length=255,blank=True,null=True,verbose_name="分类")
+    name=models.CharField(max_length=255,blank=True,null=True,verbose_name="名称")
+    src=models.TextField(blank=True,null=True,verbose_name="资源地址")
+    class Meta:
+        db_table = 'new2'
+        verbose_name = '图片2'
+        verbose_name_plural = '图片2'
+
+class New3(models.Model):
+    type=models.CharField(max_length=255,blank=True,null=True,verbose_name="分类")
+    name=models.CharField(max_length=255,blank=True,null=True,verbose_name="名称")
+    src=models.TextField(blank=True,null=True,verbose_name="资源地址")
+    class Meta:
+        db_table = 'new3'
+        verbose_name = '图片3'
+        verbose_name_plural = '图片3'
+
+
+
 
 
