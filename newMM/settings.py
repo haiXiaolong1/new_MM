@@ -5,7 +5,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-(8q@2)+3(76hqq1tg^8xpeeu_gzkv2(@qn%is2@ed)fs2^89vo'
-
+# os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 LOGGING = {

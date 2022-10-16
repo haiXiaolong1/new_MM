@@ -1,4 +1,5 @@
-from django.shortcuts import render
+import asyncio
+import aiohttp
 import random
 import re
 import requests
@@ -9,6 +10,7 @@ from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from spider.models import Audio,Image,Picture,New1,New2,New3
+from django.core.paginator import Paginator
 # Create your views here.
 import json
 import datetime
@@ -620,6 +622,8 @@ def get_list(url):
     return None
 
 def get_src(href):
+
+
     res=requests.get(href)
     mainPage=BeautifulSoup(res.text,'html.parser')
     txt=mainPage.find("div",class_='ms_art_body')
@@ -632,51 +636,111 @@ def get_src(href):
 
 
 def get_wallpaper(request):
-    new1=request.GET.get('new1')
-    new2=request.GET.get('new2')
-    new3=request.GET.get('new3')
-
-    if new3=="2":
+    t=request.GET.get('type')
+    pnum=int(request.GET.get('page',1))
+    if t=="33":
         New3.objects.filter().all().delete()
         get3list()
         lists=New3.objects.filter().all()
         for i in range(len(lists)):
             lists[i].src=lists[i].src.split("@")[0]
-        return render(request,'imageList.html',{"results":lists,"n":3})
-    if new3=="1":
+        pages=Paginator(lists,200)
+        try:
+            page = pages.page(pnum)  # 获取当前页
+        except Exception as e:
+            pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+            page = pages.page(pnum)  # 没有搜索页显示最后一页
+
+        return render(request,'imageList.html',{"results":lists,"page":page,"n":3})
+    if t=="3":
         lists=New3.objects.filter().all()
+
         for i in range(len(lists)):
             lists[i].src=lists[i].src.split("@")[0]
-        return render(request,'imageList.html',{"results":lists,"n":3})
+        pages=Paginator(lists,200)
+        try:
+            page = pages.page(pnum)  # 获取当前页
+        except Exception as e:
+            pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+            page = pages.page(pnum)  # 没有搜索页显示最后一页
+        return render(request,'imageList.html',{"results":lists,"page":page,"n":3})
 
+    if t=="22":
+        # New2.objects.filter().all().delete()
+        get2list()
+        lists=New2.objects.filter().all()
+        for i in range(len(lists)):
+            lists[i].src=lists[i].src.split("@@")[0]
+        pages=Paginator(lists,200)
+        try:
+            page = pages.page(pnum)  # 获取当前页
+        except Exception as e:
+            pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+            page = pages.page(pnum)  # 没有搜索页显示最后一页
+        return render(request,'imageList.html',{"results":lists,"page":page,"n":2})
+    if t=="2":
+        lists=New2.objects.filter().all()
+        for i in range(len(lists)):
+            lists[i].src=lists[i].src.split("@@")[0]
+        pages=Paginator(lists,200)
+        try:
+            page = pages.page(pnum)  # 获取当前页
+        except Exception as e:
+            pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+            page = pages.page(pnum)  # 没有搜索页显示最后一页
+        return render(request,'imageList.html',{"results":lists,"page":page,"n":2})
 
-    if new1=="2":
+    if t=="11":
         New1.objects.filter().all().delete()
         get1list()
         lists=New1.objects.filter().all()
         for i in range(len(lists)):
             lists[i].src=lists[i].src.split("@@")[0]
-        return render(request,'imageList.html',{"results":lists,"n":1})
-    if new1=="1":
+        pages=Paginator(lists,200)
+        try:
+            page = pages.page(pnum)  # 获取当前页
+        except Exception as e:
+            pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+            page = pages.page(pnum)  # 没有搜索页显示最后一页
+        return render(request,'imageList.html',{"results":lists,"page":page,"n":1})
+    if t=="1":
         lists=New1.objects.filter().all()
         for i in range(len(lists)):
             lists[i].src=lists[i].src.split("@@")[0]
-        return render(request,'imageList.html',{"results":lists,"n":1})
+        pages=Paginator(lists,200)
+        try:
+            page = pages.page(pnum)  # 获取当前页
+        except Exception as e:
+            pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+            page = pages.page(pnum)  # 没有搜索页显示最后一页
+        return render(request,'imageList.html',{"results":lists,"page":page,"n":1})
 
-    p=request.GET.get('picture')
-    if p=="2":
+
+    if t=="00":
         Picture.objects.filter().all().delete()
         url='http://www.zhanans.com/mntp/'
         get_list(url)
         lists=Picture.objects.filter().all()
         for i in range(len(lists)):
             lists[i].src=lists[i].src.split("@@")[0]
-        return render(request,'imageList.html',{"results":lists})
-    if p=="1":
+        pages=Paginator(lists,200)
+        try:
+            page = pages.page(pnum)  # 获取当前页
+        except Exception as e:
+            pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+            page = pages.page(pnum)  # 没有搜索页显示最后一页
+        return render(request,'imageList.html',{"results":lists,"page":page,"n":0})
+    if t=="0":
         lists=Picture.objects.filter().all()
         for i in range(len(lists)):
             lists[i].src=lists[i].src.split("@@")[0]
-        return render(request,'imageList.html',{"results":lists})
+        pages=Paginator(lists,200)
+        try:
+            page = pages.page(pnum)  # 获取当前页
+        except Exception as e:
+            pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+            page = pages.page(pnum)  # 没有搜索页显示最后一页
+        return render(request,'imageList.html',{"results":lists,"page":page,"n":0})
 
     if request.GET.get("update"):
         Image.objects.filter().all().delete()
@@ -690,9 +754,16 @@ def get_wallpaper(request):
             for i in range(len(urls)):
                 t.submit(updatasource,urls[i],types[i])
     lists=Image.objects.filter().all()
+
     for i in range(len(lists)):
         lists[i].src=lists[i].src.split("@@")[0]
-    return render(request,'imageList.html',{"results":lists})
+    pages=Paginator(lists,200)
+    try:
+        page = pages.page(pnum)  # 获取当前页
+    except Exception as e:
+        pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+        page = pages.page(pnum)  # 没有搜索页显示最后一页
+    return render(request,'imageList.html',{"results":lists,"page":page})
 
 
 def get_bigWallpaper(request):
@@ -709,6 +780,12 @@ def get_bigWallpaper(request):
         if int(n)==3:
             o=New3.objects.filter(id=id).first()
             src=o.src.split("@")[1:]
+            name=o.name
+            title=o.type
+            return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
+        if int(n)==2:
+            o=New2.objects.filter(id=id).first()
+            src=o.src.split("@@")[1:]
             name=o.name
             title=o.type
             return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
@@ -799,3 +876,44 @@ def get3src(href):
     for i in obj.finditer(res.text):
         src=src+"@"+i.group('src')
     return src
+
+
+
+def get2list():
+    ts=['中国','韩国','台湾','日本']
+    # 6,1400
+    for i in range(3,6):
+        with ThreadPoolExecutor(200) as t:
+            for j in range(1,1400):
+                print(i,j)
+                url=f"https://meitua.top/arttype/2{str(i)}a-{str(j)}.html"
+                res=requests.get(url)
+                obj=re.compile('<li><a class="thumbnail".*?src="(?P<src>.*?)".*?"(?P<name>.*?)".*?href="(?P<href>.*?)"',re.S)
+                ls=obj.findall(res.text)
+                t.submit(save2,ls,ts[i-2])
+                if len(ls)<24:
+                    break
+
+def save2(ls,ty):
+    for l in ls:
+        href=parse.urljoin("https://meitua.top/",l[2])
+        src=l[0]+get2src(href)
+        name=l[1]
+        New2.objects.create(src=src,name=name,type=ty)
+
+def get2src(href):
+    res=requests.get(href)
+    o=re.compile('\[rihide](.*?)\[/rihide]',re.S)
+    obj=re.compile('<img class="img" src="(?P<src>.*?)">',re.S)
+    src=''
+    t=res.text
+    l=o.findall(res.text)
+    if len(l)>0:
+        t=l[0]
+    for i in obj.finditer(t):
+        src=src+"@@"+i.group('src')
+    return src
+
+
+
+
