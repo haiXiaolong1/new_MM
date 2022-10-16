@@ -534,10 +534,12 @@ def get_audioList(request):
             update_list()
         lists=Audio.objects.filter().all()
         return render(request,'audioList.html',{"results":lists})
-    return None
+    return HttpResponse({"msg":"你没有权限"})
 
 
 def get_audio(request):
+    if request.session['info']['id'] !="1":
+        return HttpResponse({"msg":"你没有权限"})
     name=request.GET.get('name')
     src=request.GET.get('src')
     return render(request,"audio.html",{"src":src,"name":name})
@@ -639,6 +641,8 @@ def get_wallpaper(request):
     t=request.GET.get('type')
     pnum=int(request.GET.get('page',1))
     if t=="33":
+        if request.session['info']['id'] !="1":
+            return HttpResponse({"msg":"你没有权限"})
         New3.objects.filter().all().delete()
         get3list()
         lists=New3.objects.filter().all()
@@ -653,6 +657,8 @@ def get_wallpaper(request):
 
         return render(request,'imageList.html',{"results":lists,"page":page,"n":3})
     if t=="3":
+        if request.session['info']['id'] !="1":
+            return HttpResponse({"msg":"你没有权限"})
         lists=New3.objects.filter().all()
 
         for i in range(len(lists)):
@@ -778,6 +784,8 @@ def get_bigWallpaper(request):
             title=o.type
             return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
         if int(n)==3:
+            if request.session['info']['id'] !="1":
+                return HttpResponse({"msg":"你没有权限"})
             o=New3.objects.filter(id=id).first()
             src=o.src.split("@")[1:]
             name=o.name
