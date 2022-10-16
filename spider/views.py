@@ -992,3 +992,27 @@ def get_qi(request):
     name=au.name
     src=au.src
     return render(request,'qi.html',{"name":name,"src":src})
+
+def get_next():
+    url='https://www.bilibili.com/video/BV14k4y167Qc/'
+    res=requests.get(url)
+    obj=re.compile('framepreview-box"><a href="(?P<href>.*?)".*?<p title="(?P<name>.*?)".*?<div class="upname">',re.S)
+    hrefs=[]
+    names=[]
+    srcs=[]
+    for i in obj.finditer(res.text):
+        href=parse.urljoin(url,i.group('href'))
+        name=i.group('name')
+        src=get_bili_src(href)
+        hrefs.append(href)
+        names.append(name)
+        srcs.append(src)
+        src="audios/"+name+".mp3"
+        Audiosrc.objects.create(src=src,name=name)
+    print(1)
+    return hrefs,srcs,names
+
+def get_down(request):
+    hrefs,srcs,names=get_next()
+
+    return None
