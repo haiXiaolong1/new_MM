@@ -14,8 +14,13 @@ urlpatterns = [
     path('audio/',views.get_audioList),
     path('audio/audio',views.get_audio),
     path('qiwen/',views.get_qiwen),
+    path('audio/qi',views.get_qi),
+    # path('audio/audios/<str:name>',views.get_audios),
+
 
     path('wallpaper/',views.get_wallpaper),
     path('wallpaper/wallpaper',views.get_bigWallpaper),
+
+    path('audio/download',views.audio_download)
 
 ]

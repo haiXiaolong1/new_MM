@@ -56,6 +56,12 @@ class New3(models.Model):
         verbose_name_plural = '图片3'
 
 
-
+class Audiosrc(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True,verbose_name="资源名")
+    src = models.CharField(max_length=255, blank=True, null=True,verbose_name="资源地址")
+    class Meta:
+        db_table = 'audiosrc'
+        verbose_name = '本地音频'
+        verbose_name_plural = '本地音频'
 
 
