@@ -944,13 +944,14 @@ def get_search_list(keys,page):
     i=0
     for it in its:
         href="https://"+it.group('href')
-        name=it.group('name')+str(i)
+        name=it.group('name').replace('/','-').replace('\\','-')+str(i)
         i+=1
         src,s=get_bili_src(href)
         addr="audios/"+name+".mp3"
+        print(src)
         if not Audiosrc.objects.filter(name=name).filter().first():
-            Audiosrc.objects.create(src=addr,name=name)
             save_bili_src(href,src,name)
+            Audiosrc.objects.create(src=addr,name=name)
         print(i)
 
 def get_bili_src(href):
@@ -959,7 +960,7 @@ def get_bili_src(href):
     se=obj.search(res.text)
     au=se.group('audio')
     vi=se.group('video')
-    name=se.group('name')
+    name=se.group('name').replace('/','-').replace('\\','-')
     print(name)
     return au,name
 
@@ -969,7 +970,8 @@ def save_bili_src(href,src,name):
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
         ,"referer":href,
     }
-    text=requests.get(url=src,headers=headers).content
+    text=requests.get(url=src,headers=headers,timeout=(3.05,27)).content
+
     with open(f'../supply/static/audios/{name}.mp3',mode='wb') as f:
         f.write(text)
 
@@ -978,6 +980,7 @@ def audio_download(keys,pages):
     with ThreadPoolExecutor(20) as t:
         for i in range(1,pages):
             t.submit(get_search_list,keys,i)
+            print(i)
 
 def get_qiwen(request):
     keys=request.GET.get('keys')
