@@ -18,8 +18,8 @@
                             <h4 class="panel-title">{{ name }}</h4>
                         </div>
                         <div class="panel-body">
-                            <audio controls style="width: 100%" src="{{ src }}" ></audio>
-{#                            <video controls style="width: 100%" src="/static/videos/bibili(含音频).mp4"></video>#}
+{#                            <audio controls style="width: 100%" src="{{ src }}" ></audio>#}
+                            <video controls style="width: 100%" src="{{ src }}"></video>
                         </div>
                     </div>
                 </div>
@@ -38,7 +38,7 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $('li').removeClass('active-page');
-            $('#spider_qiwen').addClass('active-page');
+            $('#spider_video').addClass('active-page');
             $('#spider').addClass('active-page').addClass('open');
             $('#spider_ul').css('display', 'block');
             $('#spider_ul li').addClass('animation');

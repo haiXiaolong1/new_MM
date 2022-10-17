@@ -21,6 +21,9 @@ urlpatterns = [
     path('wallpaper/',views.get_wallpaper),
     path('wallpaper/wallpaper',views.get_bigWallpaper),
 
+    path('video/',views.get_video),
+    path('video/vi',views.see_video),
+
 
 
 ]

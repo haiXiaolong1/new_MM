@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from spider.models import Audio,Image,Picture,New1,New2,New3,Audiosrc
+from spider.models import Audio,Image,Picture,New1,New2,New3,Audiosrc,Video
 from django.core.paginator import Paginator
 # Create your views here.
 import json
@@ -26,6 +26,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from concurrent.futures import ThreadPoolExecutor
+from moviepy import *
+from moviepy.editor import *
 
 def get_source(name):
     url="http://www.weather.com.cn/"#天气网地址
@@ -948,7 +950,6 @@ def get_search_list(keys,page):
         i+=1
         src,s=get_bili_src(href)
         addr="audios/"+name+".mp3"
-        print(src)
         if not Audiosrc.objects.filter(name=name).filter().first():
             save_bili_src(href,src,name)
             Audiosrc.objects.create(src=addr,name=name)
@@ -971,7 +972,6 @@ def save_bili_src(href,src,name):
         ,"referer":href,
     }
     text=requests.get(url=src,headers=headers,timeout=(3.05,27)).content
-
     with open(f'../supply/static/audios/{name}.mp3',mode='wb') as f:
         f.write(text)
 
@@ -993,7 +993,10 @@ def get_qiwen(request):
         audio_download(keys,int(pages))
     res=Audiosrc.objects.filter().all()
     for i in range(len(res)):
-        res[i].src=str(res[i].src,'utf-8')
+        if res[i].id<637:
+            res[i].src="/static/"+str(res[i].src,'utf-8')
+        else:
+            res[i].src="/datas/"+str(res[i].src,'utf-8')
         res[i].name=str(res[i].name,'utf-8')
     return render(request,'qiwen.html',{"results":res,"keys":keys,"pages":pages,"link":link,"num":num})
 
@@ -1032,3 +1035,92 @@ def get_next(link,num):
     print(1)
 
 
+
+
+
+def save_au_vi(href,au,vi,name):
+    headers={
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
+        ,"referer":href,
+    }
+    text=requests.get(url=au,headers=headers).content
+    au_p=f'{name}.mp3'
+    vi_p=f'{name}.mp4'
+    with open(au_p, mode='wb') as f:
+        f.write(text)
+    print(1)
+    text=requests.get(url=vi,headers=headers).content
+    with open(vi_p, mode='wb') as f:
+        f.write(text)
+    print(2)
+    return au_p,vi_p
+def get_bili(href):
+    res=requests.get(href)
+    obj=re.compile('<title data-vue-meta="true">(?P<name>.*?)</title>.*?"video":.*?"baseUrl":"(?P<video>.*?)".*?"audio":.*?"baseUrl":"(?P<audio>.*?)"',re.S)
+    se=obj.search(res.text)
+    au=se.group('audio')
+    vi=se.group('video')
+    name=se.group('name')
+    print(name)
+    return au,vi,name
+
+
+def get_next_video(link,num):
+    # url='https://www.bilibili.com/video/BV14k4y167Qc/'
+    url=link
+    res=requests.get(url)
+    obj=re.compile('framepreview-box"><a href="(?P<href>.*?)".*?<p title="(?P<name>.*?)".*?<div class="upname">',re.S)
+    au,vi,name=get_bili(url)
+    name="".join(name.split(' ')).strip('_哔哩哔哩_bilibili').replace('|','-').replace('\\','-').replace('/','-')
+    if not Video.objects.filter().first():
+        au_p,vi_p=save_au_vi(url,au,vi,name)
+        save_video(vi_p,au_p,name)
+        name=name+"f"
+        addr="videos/"+name+".mp4"
+        Video.objects.create(src=addr,name=name)
+    n=0
+    for i in obj.finditer(res.text):
+        n+=1
+        if n> int(num):
+            break
+        href=parse.urljoin(url,i.group('href'))
+        name=i.group('name').replace('|','-').replace('\\','-').replace('/','-')
+        au,vi,n=get_bili(href)
+        addr="videos/"+name+".mp4"
+        save_video(vi_p,au_p,name)
+        if not Video.objects.filter().first():
+            Video.objects.create(src=addr,name=name)
+        print(au,vi,n,name)
+
+def delete_file(path):
+    if os.path.exists(path):  # 如果文件存在
+        os.remove(path)
+
+def save_video(video_path,audio_path,name):
+    # 提取音轨
+    audio = AudioFileClip(audio_path)
+    # 读入视频
+    video = VideoFileClip(video_path)
+    # 将音轨合并到视频中
+    video = video.set_audio(audio)
+    # 输出
+    video.write_videofile(f"{name}f.mp4")
+    # delete_file(video_path)
+    # delete_file(audio_path)
+    print('有音频视频处理完成')
+
+def get_video(request):
+    link=request.GET.get('link')
+    num=request.GET.get('num',0)
+    if link:
+        get_next_video(link,num)
+    r=Video.objects.filter().all()
+    return render(request,'video.html',{"results":r})
+
+
+def see_video(request):
+    id=request.GET.get('id')
+    s=Video.objects.filter(id=id).first()
+    src=s.src
+    name=s.name
+    return render(request,'vi.html',{"src":src,"name":name})
