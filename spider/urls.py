@@ -15,12 +15,12 @@ urlpatterns = [
     path('audio/audio',views.get_audio),
     path('qiwen/',views.get_qiwen),
     path('audio/qi',views.get_qi),
-    path('audio/down',views.get_down),
+
 
 
     path('wallpaper/',views.get_wallpaper),
     path('wallpaper/wallpaper',views.get_bigWallpaper),
 
-    path('audio/download',views.audio_download)
+
 
 ]

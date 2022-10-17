@@ -508,7 +508,8 @@ def save(url,id):
     for i in obj.finditer(res.text):
         href=i.group('href')
         name=i.group('name')
-        Audio.objects.create(src=get_mp3(href),name=name)
+        if not Audio.objects.filter(src=get_mp3(href)).first():
+            Audio.objects.create(src=get_mp3(href),name=name)
     print(id+2)
 
 def update_list():
@@ -520,7 +521,8 @@ def update_list():
     for i in obj.finditer(res.text):
         href=i.group('href')
         name=i.group('name')
-        Audio.objects.create(src=get_mp3(href),name=name)
+        if not Audio.objects.filter(name=name).first():
+            Audio.objects.create(src=get_mp3(href),name=name)
     print(1)
     with ThreadPoolExecutor(20) as t:
         for id in range(n-1):
@@ -553,11 +555,7 @@ def get_audios(request,name):
         response['Content-Length'] =os.path.getsize(f'../supply/static/audios/{name}')
         return response
 
-def get_qiwen(request):
-    res=Audiosrc.objects.filter().all()
-    # for i in range(len(res)):
-    #     res[i].src="/static/"+res[i].src
-    return render(request,'qiwen.html',{"results":res})
+
 
 def updatasource(url,type=""):
     headers={
@@ -585,7 +583,8 @@ def updatasource(url,type=""):
             # d['src']=src.replace()
             d["name"]=name
             d['type']=type
-            Image.objects.create(name=name,type=type,src=src)
+            if not Image.objects.filter(name=name,type=type).first():
+                Image.objects.create(name=name,type=type,src=src)
             print(type,i)
             r.append(d)
         if len(obj.findall(res.text))<16:
@@ -611,7 +610,8 @@ def save_pic(obj,txt):
         href=i.group('href')
         src=i.group('src')+get_src(href)
         name=i.group('name')
-        Picture.objects.create(name=name,src=src)
+        if not Picture.objects.filter(name=name).first():
+            Picture.objects.create(name=name,src=src)
     print('over')
 
 def get_list(url):
@@ -852,7 +852,8 @@ def save1(obj,res,ts,i):
         src=it.group('src')+get1src(href)
         name=it.group('name')
         ty=ts[i-2]
-        New1.objects.create(src=src,name=name,type=ty)
+        if not New1.objects.filter(name=name,type=ty).first():
+            New1.objects.create(src=src,name=name,type=ty)
 
 def get1src(href):
     headers={
@@ -883,7 +884,8 @@ def save3(i):
         href=l[0]
         src=l[1]+get3src(href)
         name=l[2]
-        New3.objects.create(src=src,name=name,type='和谐')
+        if not New3.objects.filter(src=src).first():
+            New3.objects.create(src=src,name=name,type='和谐')
     print(i)
 
 
@@ -917,7 +919,8 @@ def save2(ls,ty):
         href=parse.urljoin("https://meitua.top/",l[2])
         src=l[0]+get2src(href)
         name=l[1]
-        New2.objects.create(src=src,name=name,type=ty)
+        if not New2.objects.filter(src=src).first():
+            New2.objects.create(src=src,name=name,type=ty)
 
 def get2src(href):
     res=requests.get(href)
@@ -933,40 +936,32 @@ def get2src(href):
     return src
 
 
-def get_search_list(page):
-    url=f"https://search.bilibili.com/all?keyword=as%D0%BCr+%E5%90%B9%E6%B0%94&from_source=webtop_search&spm_id_from=333.1007&search_source=2&page={page}&o=360"
+def get_search_list(keys,page):
+    url=f"https://search.bilibili.com/all?keyword={keys}&from_source=webtop_search&spm_id_from=333.1007&search_source=2&page={page}&o=360"
     res=requests.get(url)
     obj=re.compile('<li class="video-item matrix"><a href="//(?P<href>.*?)".*?title="(?P<name>.*?)"',re.S)
     its=obj.finditer(res.text)
     i=0
-    hrefs=[]
-    names=[]
-    srcs=[]
     for it in its:
         href="https://"+it.group('href')
         name=it.group('name')+str(i)
         i+=1
-        src=get_bili_src(url,href)
+        src,s=get_bili_src(href)
         addr="audios/"+name+".mp3"
-        Audiosrc.objects.create(src=addr,name=name)
-        save_bili_src(href,src,name)
+        if not Audiosrc.objects.filter(name=name).filter().first():
+            Audiosrc.objects.create(src=addr,name=name)
+            save_bili_src(href,src,name)
         print(i)
 
-def get_bili_src(url,href):
-    headers={
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
-        ,"Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
-        "Cookie": "BIDUPSID=411397ADCA5FA50A2E41AB2A6D40C08D; PSTM=1644477760; BD_UPN=12314753; __yjs_duid=1_76cb500678e0fad7f03158136645e2641644737380783; BAIDUID=3E36D1A4894DF97FCE7A1491E4480FB1:FG=1; BDUSS=GltV0FWVkRVUlpmUmZTdkJ2ZUFsRU5hTGk5cE1FZllNUDJlZkZVS1BuUy1HdVppSVFBQUFBJCQAAAAAAAAAAAEAAABU70SkMTIyysfO0jczAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6NvmK-jb5iS; BDUSS_BFESS=GltV0FWVkRVUlpmUmZTdkJ2ZUFsRU5hTGk5cE1FZllNUDJlZkZVS1BuUy1HdVppSVFBQUFBJCQAAAAAAAAAAAEAAABU70SkMTIyysfO0jczAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAL6NvmK-jb5iS; BDORZ=B490B5EBF6F3CD402E515D22BCDA1598; delPer=0; BD_CK_SAM=1; PSINO=1; BAIDUID_BFESS=3E36D1A4894DF97FCE7A1491E4480FB1:FG=1; ZD_ENTRY=baidu; RT=\"z=1&dm=baidu.com&si=069naiho9oif&ss=l8y2i71l&sl=4&tt=1bt&bcn=https://fclog.baidu.com/log/weirwood?type=perf&ld=8yt&ul=cpj&hd=cq4\"; BA_HECTOR=0h2k252l0501208h2g0580ip1hjvgat1a; ZFY=1XzLj93E1kpXAhM4o8EUDdn9AOKxd44U5VVIzgsTFoI:C; H_PS_PSSID=36553_37356_36884_34813_37402_37395_36789_37422_26350_37284_37370_37468; baikeVisitId=affeb5e8-219a-4516-826e-0de9cd824380; COOKIE_SESSION=30_0_9_9_9_7_1_0_9_7_1_0_2943_0_0_0_1664959705_0_1664971057|9#1495_123_1664439634|9; BDRCVFR[S4-dAuiWMmn]=FZ_Jfs2436CUAqWmykCULPYrWm1n1fz; H_PS_645EC=fb17pzl/2XwZhS0n9FDV1F/CCfmCwgk98+A/SjJhkCq1c9noJ/9N//Q4IQ8vLo2yVw",
-        "referer":url,
-        "Accept-Language": "zh-CN,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6"
-    }
+def get_bili_src(href):
     res=requests.get(href)
-    obj=re.compile('"video":.*?"baseUrl":"(?P<video>.*?)".*?"audio":.*?"baseUrl":"(?P<audio>.*?)"',re.S)
+    obj=re.compile('<title data-vue-meta="true">(?P<name>.*?)</title>.*?"video":.*?"baseUrl":"(?P<video>.*?)".*?"audio":.*?"baseUrl":"(?P<audio>.*?)"',re.S)
     se=obj.search(res.text)
     au=se.group('audio')
     vi=se.group('video')
-    return au
-
+    name=se.group('name')
+    print(name)
+    return au,name
 
 
 def save_bili_src(href,src,name):
@@ -979,40 +974,58 @@ def save_bili_src(href,src,name):
         f.write(text)
 
 
-def audio_download(request):
+def audio_download(keys,pages):
     with ThreadPoolExecutor(20) as t:
-        for i in range(1,13):
-            t.submit(get_search_list,i)
-    return None
+        for i in range(1,pages):
+            t.submit(get_search_list,keys,i)
 
+def get_qiwen(request):
+    keys=request.GET.get('keys')
+    pages=request.GET.get('pages')
+    link=request.GET.get('link')
+    num=request.GET.get("num",0)
+    if link:
+        get_next(link,num)
+    if keys and pages:
+        audio_download(keys,int(pages))
+    res=Audiosrc.objects.filter().all()
+    for i in range(len(res)):
+        res[i].src=str(res[i].src,'utf-8')
+        res[i].name=str(res[i].name,'utf-8')
+    return render(request,'qiwen.html',{"results":res,"keys":keys,"pages":pages,"link":link,"num":num})
 
 def get_qi(request):
     id=request.GET.get('id')
     au=Audiosrc.objects.filter(id=id).first()
-    name=au.name
-    src=au.src
+    name=str(au.name,'utf-8')
+    src=str(au.src,'utf-8')
     return render(request,'qi.html',{"name":name,"src":src})
 
-def get_next():
-    url='https://www.bilibili.com/video/BV14k4y167Qc/'
+def get_next(link,num):
+    # url='https://www.bilibili.com/video/BV14k4y167Qc/'
+    url=link
     res=requests.get(url)
     obj=re.compile('framepreview-box"><a href="(?P<href>.*?)".*?<p title="(?P<name>.*?)".*?<div class="upname">',re.S)
-    hrefs=[]
-    names=[]
-    srcs=[]
+    src,name=get_bili_src(url)
+    name="".join(name.split(' ')).strip('_哔哩哔哩_bilibili').split("|")[0]
+    addr="audios/"+name+".mp3"
+    if not Audiosrc.objects.filter(name=name).filter().first():
+        Audiosrc.objects.create(src=addr,name=name)
+        save_bili_src(url,src,name)
+        print('over')
+    n=0
     for i in obj.finditer(res.text):
+        n+=1
+        if n>int(num):
+            break
         href=parse.urljoin(url,i.group('href'))
         name=i.group('name')
-        src=get_bili_src(href)
-        hrefs.append(href)
-        names.append(name)
-        srcs.append(src)
-        src="audios/"+name+".mp3"
-        Audiosrc.objects.create(src=src,name=name)
+        src,s=get_bili_src(href)
+        print(name)
+        addr="audios/"+name+".mp3"
+        if not Audiosrc.objects.filter(name=name).filter().first():
+            Audiosrc.objects.create(src=addr,name=name)
+            save_bili_src(href,src,name)
     print(1)
-    return hrefs,srcs,names
 
-def get_down(request):
-    hrefs,srcs,names=get_next()
 
-    return None

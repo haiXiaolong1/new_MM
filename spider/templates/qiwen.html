@@ -13,8 +13,27 @@
                             <h4 class="panel-title">音频列表</h4>
                         </div>
 
-                        <div>
-                            <a  href="?update=1" class="btn btn-info" style="margin-bottom: 20px;float: right;margin-right: 5px" id="btn">批量添加</a>
+                        <div style="margin-bottom: 20px">
+                            <form method="get" >
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="输入关键词" name="keys" value="{{ keys }}" autocomplete="off" >
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="输入页码（1-30）" name="pages" value="{{ page }}" autocomplete="off" >
+                                </div>
+                                <button class="btn btn-info" type="submit">下载</button>
+                            </form>
+                        </div>
+                        <div style="margin-bottom: 20px">
+                            <form method="get" >
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="输入视频链接" name="link" value="{{ link }}" autocomplete="off" >
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" placeholder="推荐个数(0-19)" name="num" value="{{ num }}" autocomplete="off" >
+                                </div>
+                                <button class="btn btn-info" type="submit">下载</button>
+                            </form>
                         </div>
                         <div class="panel-body">
                             <div class="table-responsive">
