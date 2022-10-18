@@ -13,9 +13,30 @@
                             <h4 class="panel-title">音频列表</h4>
                         </div>
 
-                        <div>
-                            <a  href="?update=1" class="btn btn-info" style="margin-bottom: 20px;float: right;margin-right: 5px" id="btn">批量添加</a>
+                        <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">删除音频</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <span>是否确定删除？</span>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                        </button>
+                                        <button type="submit" id="Delete" class="btn btn-info">确定</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
+
+{#                        <div>#}
+{#                            <a  href="?update=1" class="btn btn-info" style="margin-bottom: 20px;float: right;margin-right: 5px" id="btn">批量添加</a>#}
+{#                        </div>#}
                         <div class="panel-body">
                             <div class="table-responsive">
                                 <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
@@ -33,6 +54,7 @@
                                             <td>{{ obj.name }}</td>
                                             <td>
                                                 <a href="audio?src={{ obj.src }}&name={{ obj.name }}" class="btn btn-info">查看</a>
+                                                <button class="btn btn-danger btn-xs btnDelete" id="" uid="{{ obj.id }}">删除</button>
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -54,12 +76,53 @@
 
 {% block js %}
     <script type="text/javascript">
+        var DELETE_ID;
         $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#spider_audio').addClass('active-page');
             $('#spider').addClass('active-page').addClass('open');
             $('#spider_ul').css('display', 'block');
             $('#spider_ul li').addClass('animation');
+            var oTable = $('#example').dataTable();
+            var oSettings = oTable.fnSettings();
+            $("#table").on('click', '.btnDelete', function () {
+                DELETE_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
+                $("#deleteModel").modal('show');
+            })
+
+            $("#Delete").click(
+                function () {
+                    $.ajax({
+                        url: "/spider/audio/delete",
+                        type: "get",
+                        data: {uid: DELETE_ID},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#deleteModel").modal('hide');
+                                DELETE_ID = undefined;
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
+                                location.reload();
+                            } else {
+
+                                $("#deleteModel").modal('hide');
+                                DELETE_ID = undefined;
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
+                                location.reload();
+                            }
+                        }
+                    })
+                }
+            )
+
 
         })
 

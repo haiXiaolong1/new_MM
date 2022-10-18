@@ -515,7 +515,6 @@ def save(url,id):
     print(id+2)
 
 def update_list():
-    Audio.objects.filter().all().delete()
     res=requests.get("https://asmrlove.club/")
     obj=re.compile('<article id=".*?<a href="(?P<href>.*?)">(?P<name>.*?)</a>',re.S)
     end=re.compile('dots">.*?href=".*?>(?P<end>.*?)<',re.S)
@@ -530,6 +529,29 @@ def update_list():
         for id in range(n-1):
             url="https://asmrlove.club/?paged="+str(id+2)
             t.submit(save,url=url,id=id)
+    return None
+
+def get_mp3src(url):
+    res=requests.get(url)
+    obj=re.compile('controls="controls" src="(?P<src>.*?)"')
+    src=obj.search(res.text).group('src')
+    return src
+def get_mp3urls(index=1):
+    url=f'https://shaonvbaike.buzz/list/8a8188a67e5924b0017ee2cd0b36200e/{index}'
+    res=requests.get(url)
+    obj=re.compile('"colList".*?<a href="(?P<href>.*?)".*?<h2>(?P<name>.*?)</h2>',re.S)
+    for i in obj.finditer(res.text):
+        href=parse.urljoin(url,i.group('href'))
+        name=i.group('name')
+        src=get_mp3src(href)
+        if not Audio.objects.filter(name=name).first():
+            Audio.objects.create(src=src,name=name)
+    print(index)
+
+def up_list(request):
+    with ThreadPoolExecutor(40) as t:
+        for id in range(56):
+            t.submit(get_mp3urls,id+1)
     return None
 
 
@@ -655,7 +677,6 @@ def get_wallpaper(request):
     if t=="33":
         if request.session['info']['id'] !="1":
             return HttpResponse({"msg":"你没有权限"})
-        New3.objects.filter().all().delete()
         get3list()
         lists=New3.objects.filter().all()
         for i in range(len(lists)):
@@ -684,7 +705,6 @@ def get_wallpaper(request):
         return render(request,'imageList.html',{"results":lists,"page":page,"n":3})
 
     if t=="22":
-        # New2.objects.filter().all().delete()
         get2list()
         lists=New2.objects.filter().all()
         for i in range(len(lists)):
@@ -709,7 +729,6 @@ def get_wallpaper(request):
         return render(request,'imageList.html',{"results":lists,"page":page,"n":2})
 
     if t=="11":
-        New1.objects.filter().all().delete()
         get1list()
         lists=New1.objects.filter().all()
         for i in range(len(lists)):
@@ -735,7 +754,6 @@ def get_wallpaper(request):
 
 
     if t=="00":
-        Picture.objects.filter().all().delete()
         url='http://www.zhanans.com/mntp/'
         get_list(url)
         lists=Picture.objects.filter().all()
@@ -761,7 +779,6 @@ def get_wallpaper(request):
         return render(request,'imageList.html',{"results":lists,"page":page,"n":0})
 
     if request.GET.get("update"):
-        Image.objects.filter().all().delete()
         urls=['https://mm.enterdesk.com/dalumeinv/','https://mm.enterdesk.com/rihanmeinv/','https://mm.enterdesk.com/gangtaimeinv/',
               'https://mm.enterdesk.com/dongmanmeinv/','https://mm.enterdesk.com/qingchunmeinv/','https://mm.enterdesk.com/keaimeinv/',
               'https://www.enterdesk.com/zhuomianbizhi/fengjing/','https://www.enterdesk.com/zhuomianbizhi/dongmankatong/',
@@ -1124,3 +1141,26 @@ def see_video(request):
     src=s.src
     name=s.name
     return render(request,'vi.html',{"src":src,"name":name})
+
+
+def delete_audio(request):
+    id = request.GET.get("uid")
+    Audio.objects.filter(id=int(id)).delete()
+    notify = []
+
+    notify.append(dict(id=0, tittle="提示", context="音频 {} 删除成功".format(id), type="success", position="top-center"))
+    request.session["notify"] = notify
+
+    return JsonResponse({"status": True})
+
+
+def delete_audiosrc(request):
+    id = request.GET.get("uid")
+    # delete_file('')
+    Audiosrc.objects.filter(id=int(id)).delete()
+    notify = []
+
+    notify.append(dict(id=0, tittle="提示", context="音频 {} 删除成功".format(id), type="success", position="top-center"))
+    request.session["notify"] = notify
+
+    return JsonResponse({"status": True})
