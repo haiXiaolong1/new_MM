@@ -675,8 +675,6 @@ def get_wallpaper(request):
     t=request.GET.get('type')
     pnum=int(request.GET.get('page',1))
     if t=="44":
-        if request.session['info']['id'] !="1":
-            return HttpResponse({"msg":"你没有权限"})
         get4list()
         lists=New4.objects.filter().all()
         for i in range(len(lists)):
@@ -735,6 +733,8 @@ def get_wallpaper(request):
         return render(request,'imageList.html',{"results":lists,"page":page,"n":3})
 
     if t=="22":
+        if request.session['info']['id'] !="1":
+            return HttpResponse({"msg":"你没有权限"})
         get2list()
         lists=New2.objects.filter().all()
         for i in range(len(lists)):
@@ -747,6 +747,8 @@ def get_wallpaper(request):
             page = pages.page(pnum)  # 没有搜索页显示最后一页
         return render(request,'imageList.html',{"results":lists,"page":page,"n":2})
     if t=="2":
+        if request.session['info']['id'] !="1":
+            return HttpResponse({"msg":"你没有权限"})
         lists=New2.objects.filter().all()
         for i in range(len(lists)):
             lists[i].src=lists[i].src.split("@@")[0]
@@ -759,6 +761,8 @@ def get_wallpaper(request):
         return render(request,'imageList.html',{"results":lists,"page":page,"n":2})
 
     if t=="11":
+        if request.session['info']['id'] !="1":
+            return HttpResponse({"msg":"你没有权限"})
         get1list()
         lists=New1.objects.filter().all()
         for i in range(len(lists)):
@@ -771,6 +775,8 @@ def get_wallpaper(request):
             page = pages.page(pnum)  # 没有搜索页显示最后一页
         return render(request,'imageList.html',{"results":lists,"page":page,"n":1})
     if t=="1":
+        if request.session['info']['id'] !="1":
+            return HttpResponse({"msg":"你没有权限"})
         lists=New1.objects.filter().all()
         for i in range(len(lists)):
             lists[i].src=lists[i].src.split("@@")[0]
@@ -781,8 +787,6 @@ def get_wallpaper(request):
             pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
             page = pages.page(pnum)  # 没有搜索页显示最后一页
         return render(request,'imageList.html',{"results":lists,"page":page,"n":1})
-
-
     if t=="00":
         url='http://www.zhanans.com/mntp/'
         get_list(url)
@@ -837,6 +841,8 @@ def get_bigWallpaper(request):
     id=request.GET.get('id')
     if n:
         if int(n)==1:
+            if request.session['info']['id'] !="1":
+                return HttpResponse({"msg":"你没有权限"})
             o=New1.objects.filter(id=id).first()
             src=o.src.split("@@")[1:]
             name=o.name
@@ -851,6 +857,8 @@ def get_bigWallpaper(request):
             title=o.type
             return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
         if int(n)==2:
+            if request.session['info']['id'] !="1":
+                return HttpResponse({"msg":"你没有权限"})
             o=New2.objects.filter(id=id).first()
             src=o.src.split("@@")[1:]
             name=o.name
@@ -1064,6 +1072,8 @@ def audio_download(keys,pages):
             print(i)
 
 def get_qiwen(request):
+    if request.session['info']['id'] !="1":
+        return HttpResponse({"msg":"你没有权限"})
     keys=request.GET.get('keys')
     pages=request.GET.get('pages')
     link=request.GET.get('link')
@@ -1082,6 +1092,8 @@ def get_qiwen(request):
     return render(request,'qiwen.html',{"results":res,"keys":keys,"pages":pages,"link":link,"num":num})
 
 def get_qi(request):
+    if request.session['info']['id'] !="1":
+        return HttpResponse({"msg":"你没有权限"})
     id=request.GET.get('id')
     au=Audiosrc.objects.filter(id=id).first()
     name=str(au.name,'utf-8')
@@ -1191,6 +1203,8 @@ def save_video(video_path,audio_path,name):
     print('有音频视频处理完成')
 
 def get_video(request):
+    if request.session['info']['id'] !="1":
+        return HttpResponse({"msg":"你没有权限"})
     link=request.GET.get('link')
     num=request.GET.get('num',0)
     if link:
@@ -1200,6 +1214,8 @@ def get_video(request):
 
 
 def see_video(request):
+    if request.session['info']['id'] !="1":
+        return HttpResponse({"msg":"你没有权限"})
     id=request.GET.get('id')
     s=Video.objects.filter(id=id).first()
     src=s.src
