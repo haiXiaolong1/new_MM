@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from spider.models import Audio,Image,Picture,New1,New2,New3,Audiosrc,Video,Gupiao
+from spider.models import Audio,Image,Picture,New1,New2,New3,Audiosrc,Video,Gupiao,New4
 from django.core.paginator import Paginator
 # Create your views here.
 import json
@@ -674,6 +674,36 @@ def get_src(href):
 def get_wallpaper(request):
     t=request.GET.get('type')
     pnum=int(request.GET.get('page',1))
+    if t=="44":
+        if request.session['info']['id'] !="1":
+            return HttpResponse({"msg":"你没有权限"})
+        get4list()
+        lists=New4.objects.filter().all()
+        for i in range(len(lists)):
+            lists[i].src=lists[i].src.split("@@")[0]
+        pages=Paginator(lists,200)
+        try:
+            page = pages.page(pnum)  # 获取当前页
+        except Exception as e:
+            pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+            page = pages.page(pnum)  # 没有搜索页显示最后一页
+
+        return render(request,'imageList.html',{"results":lists,"page":page,"n":4})
+    if t=="4":
+        if request.session['info']['id'] !="1":
+            return HttpResponse({"msg":"你没有权限"})
+        lists=New4.objects.filter().all()
+
+        for i in range(len(lists)):
+            lists[i].src=lists[i].src.split("@")[0]
+        pages=Paginator(lists,200)
+        try:
+            page = pages.page(pnum)  # 获取当前页
+        except Exception as e:
+            pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+            page = pages.page(pnum)  # 没有搜索页显示最后一页
+        return render(request,'imageList.html',{"results":lists,"page":page,"n":4})
+
     if t=="33":
         if request.session['info']['id'] !="1":
             return HttpResponse({"msg":"你没有权限"})
@@ -826,6 +856,12 @@ def get_bigWallpaper(request):
             name=o.name
             title=o.type
             return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
+        if int(n)==4:
+            o=New4.objects.filter(id=id).first()
+            src=o.src.split("@@")[1:]
+            name=o.name
+            title=o.type
+            return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
     if t:
         o=Image.objects.filter(id=id).first()
         src=o.src.split("@@")[1:]
@@ -838,6 +874,32 @@ def get_bigWallpaper(request):
     title=o.name
     return render(request,'bigImage.html',{"src":src,"name":name,"title":title})
 
+def get4list():
+    type=['fantasy-girls-wallpapers','anime-girl-wallpapers','nature-wallpapers','digital-universe-wallpapers']
+    types=['唯美','动漫','自然','宇宙']
+    with ThreadPoolExecutor(4) as t:
+        for i in range(4):
+            t.submit(get_4list,type[i],types[i])
+
+
+def get_4list(type,types):
+    for page in range(1,1000):
+        url=f'https://hdqwalls.com/{type}/sort/views/page/{page}'
+        res=requests.get(url)
+        obj=re.compile("caption hidden-md hidden-sm hidden-xs.*?title='(?P<name>.*?)'.*?src='(?P<src>.*?)'",re.S)
+        it=obj.finditer(res.text)
+        n=0
+        for i in it:
+            src=i.group('src')
+            name=i.group('name')
+            bigsrc=src.replace('/thumb','')
+            src=src+"@@"+bigsrc
+            if not New4.objects.filter(src=src).first():
+                New4.objects.create(src=src,name=name,type=types)
+            n+=1
+        print(types,page)
+        if n<18:
+            break
 
 
 
@@ -864,6 +926,8 @@ def get1list():
                     print(i)
                 if n < 20:
                     break
+
+
 
 def save1(obj,res,ts,i):
     for it in obj.finditer(res.text):

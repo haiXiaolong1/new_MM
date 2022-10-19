@@ -55,6 +55,14 @@ class New3(models.Model):
         verbose_name = '图片3'
         verbose_name_plural = '图片3'
 
+class New4(models.Model):
+    type=models.CharField(max_length=255,blank=True,null=True,verbose_name="分类")
+    name=models.CharField(max_length=255,blank=True,null=True,verbose_name="名称")
+    src=models.TextField(blank=True,null=True,verbose_name="资源地址")
+    class Meta:
+        db_table = 'new4'
+        verbose_name = '图片4'
+        verbose_name_plural = '图片4'
 
 class Audiosrc(models.Model):
     name = models.CharField(max_length=255, blank=True, null=True,verbose_name="资源名")
