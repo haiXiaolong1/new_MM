@@ -24,7 +24,7 @@
 <div id="login-bg" class="container-fluid">
 
 	<div class="bg-img"></div>
-	<div class="bg-color"></div>
+{#	<div class="bg-color"></div>#}
 </div>
 
 <!-- End Backgrounds -->
@@ -38,17 +38,12 @@
 				<h5>欢迎您</h5>
 
 				<!-- Loging form -->
-
 				<form method="post"  >
 					{% csrf_token %}
-
 					<hr>
 					<a href="/login"><button  type="button" class="btn-success btn" id="btnLogin" style="width:100%;margin-top: 5%">登录</button></a>
-                    <a href="/guide"><button type="button" class="btn-success btn" id="btnLogin" style="width:100%;margin-top: 5%;background-color: #ffffff;color: #0c0c0c">操作指南</button></a>
-
+                    <a href="/guide"><button type="button" class="btn-success btn" id="btnLogin" style="width:100%;margin-top: 5%;background-color: rgba(255,255,255,0.5);color: #0c0c0c">操作指南</button></a>
 				</form>
-
-
 			</div>
 		</div>
 	</div>

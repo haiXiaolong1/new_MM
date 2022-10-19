@@ -1,7 +1,7 @@
 {% extends 'common.html' %}
-
+{% load static %}
 {% block content %}
-    <div class="page-inner">
+    <div class="page-inner" style="background-image: url('bg.jpg');height: 1000px;width: 100%">
         <div class="page-title">
             <h3 class="breadcrumb-header">音频赏析</h3>
         </div>
@@ -86,11 +86,16 @@
             </div>
         </div><!-- Main Wrapper -->
 
+{#        <div class="videocontainer">#}
+{#            <video class="fullscreenvideo" id="bgvid" playsinline="" autoplay muted="" loop poster={% static 'video/bg.jpg' %} >#}
+{#                <source type="video/mp4" src={% static 'video/猫羽雫PC%202K.mp4' %} >#}
+{#            </video>#}
+{#        </div>#}
+
 
     </div>
     <!-- Row -->
-    </div><!-- Main Wrapper -->
-    </div>
+
 {% endblock %}
 
 {% block js %}

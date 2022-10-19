@@ -26,6 +26,8 @@ urlpatterns = [
     path('video/',views.get_video),
     path('video/vi',views.see_video),
 
+    path('gupiao/',views.gupiao),
+
 
 
 ]

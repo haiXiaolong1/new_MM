@@ -14,7 +14,7 @@ body {
 /* Background image an color divs*/
 
 .bg-img , .bg-color {
-	min-width: 50%;
+	min-width: 100%;
 	vertical-align: top;
 	padding: 0;
 	margin-left: 0;
@@ -29,7 +29,7 @@ body {
 }
 
 .bg-img {
-	background-image: url(./bg-image.jpeg);
+	background-image: url(./bg.jpg);
 	background-size: cover;
 }
 
@@ -43,7 +43,7 @@ body {
 .login {
 	width: 100%;
 	height: 500px;
-	background-color: #fff;
+	background-color: rgba(255, 255, 255,0.4);
 	padding: 15px;
 	padding-top: 30px;
 }
@@ -67,20 +67,25 @@ body {
 	letter-spacing: 2px;
 	font-size: 20px;
 	padding: 14px;
-	background-color: #2a7acb;
+	background-color: rgba(42, 122, 203,0.5);
 }
 
 .form-group input {
 	font-size: 20px;
 	font-weight: lighter;
 	border: none;
-	background-color: #F0F0F0;
+	background-color: rgba(240, 240, 240,0);
 	color: #465347!important;
 	padding: 26px 30px;
 	border-radius: 50px;
 	transition : 0.2s;
 }
-
+.myinput{
+	background-color: rgba(255,255,255,0.5);
+}
+.myinput:focus {
+	background-color: rgba(255,255,255,0.6);
+}
 
 
 

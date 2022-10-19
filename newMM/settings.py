@@ -1,8 +1,11 @@
 import os
 from pathlib import Path
-
+from django.views.static import serve
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+#配置媒体资源
+MEDIA_URL='/datas/'
+MEDIA_ROOT=os.path.join('/','media')
 
 SECRET_KEY = 'django-insecure-(8q@2)+3(76hqq1tg^8xpeeu_gzkv2(@qn%is2@ed)fs2^89vo'
 # os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"

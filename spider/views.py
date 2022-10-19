@@ -9,7 +9,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.db.models import Q
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from spider.models import Audio,Image,Picture,New1,New2,New3,Audiosrc,Video
+from spider.models import Audio,Image,Picture,New1,New2,New3,Audiosrc,Video,Gupiao
 from django.core.paginator import Paginator
 # Create your views here.
 import json
@@ -1164,3 +1164,15 @@ def delete_audiosrc(request):
     request.session["notify"] = notify
 
     return JsonResponse({"status": True})
+
+
+def gupiao(request):
+    pnum=int(request.GET.get('page',1))
+    lists=Gupiao.objects.filter().all()
+    pages=Paginator(lists,200)
+    try:
+        page = pages.page(pnum)  # 获取当前页
+    except Exception as e:
+        pnum= pages.num_pages  # 如果没有搜索页设置默认数显示最后一页
+        page = pages.page(pnum)  # 没有搜索页显示最后一页
+    return render(request,'gupiao.html',{"results":lists,"page":page})

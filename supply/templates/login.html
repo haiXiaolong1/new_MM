@@ -22,9 +22,8 @@
 <!-- Backgrounds -->
 
 <div id="login-bg" class="container-fluid">
-
 	<div class="bg-img"></div>
-	<div class="bg-color"></div>
+{#	<div class="bg-color"></div>#}
 </div>
 
 <!-- End Backgrounds -->
@@ -43,12 +42,12 @@
 					{% csrf_token %}
                     <input type = 'text' style='display:none'>
 					<div>
-						<input type="text" class="form-control" id="exampleInputEmail1" placeholder="员工编号" name="username" autocomplete="off">
+						<input type="text" class="form-control myinput" style="background-color: rgba(255,255,255,0.5)" id="" placeholder="员工编号" name="username" autocomplete="off">
 						<a class="formError" id="username_error" style="color: red;text-align: left;float: left;padding-top:5px;padding-bottom:8px;width: 100%"></a>
 					</div>
 					<br>
 					<div >
-						<input type="password" class="form-control" id="exampleInputPassword1" placeholder="密码" name="password" autocomplete="off">
+						<input type="password" class="form-control myinput" style="background-color: rgba(255,255,255,0.5);"  id="" placeholder="密码" name="password" autocomplete="off">
 						<a class="formError" id="password_error" style="color: red;text-align: left;float: left;padding-top:5px;padding-bottom: 8px;width: 100%"></a>
 					</div>
                     <br>

@@ -52,6 +52,8 @@
 
 <body class="page-sidebar-fixed">
 
+
+
 <!-- Page Container -->
 <div class="page-container">
     <!-- Page Sidebar -->
@@ -63,58 +65,58 @@
         <div class="page-sidebar-inner">
             <div class="page-sidebar-menu">
                 <ul class="accordion-menu">
-                    <li class="topli" id="supply">
-                        <a href="javascript:void(0);">
-                            <i class="menu-icon icon-people"></i>
-                            <span style="font-size: large"><strong>供应商管理</strong></span>
-                            <i class="accordion-icon fa fa-angle-left">
-                            </i>
-                        </a>
-                        <ul class="sub-menu" id="supply_ul">
-                            <li id="supply1"><a href="/supply/list" style="font-size:medium">维护供应商</a></li>
-                            <li id="supply2"><a href="/supply/material/list" style="font-size:medium">维护物料关系</a>
-                            </li>
-                            <li id="supply3"><a href="/supply/quote/list" style="font-size:medium">维护报价单</a></li>
-                        </ul>
-                    </li>
-                    <li class="topli" id="purchase">
-                        <a href="javascript:void(0);">
-                            <i class="menu-icon glyphicon glyphicon-shopping-cart"></i>
-                            <span style="font-size: large"><strong>采购管理</strong></span><i
-                                class="accordion-icon fa fa-angle-left"></i>
-                        </a>
-                        <ul class="sub-menu" id="purchase_ul">
-                            <li class="subMenu" id="purchase_documents"><a href="/purchase/documents/"
-                                                                           style="font-size:medium">查看单据流</a>
-                            </li>
-                            <li class="subMenu" id="purchase_create_inquiry"><a href="/purchase/inquiry/create/"
-                                                                                style="font-size:medium">创建询价单</a></li>
-                            <li class="subMenu" id="purchase_e_quote"><a href="/purchase/quote/evaluate/"
-                                                                         style="font-size:medium">评估报价单</a>
-                            </li>
-                            <li class="subMenu" id="purchase_list"><a href="/purchase/list/"
-                                                                      style="font-size:medium">创建采购单</a></li>
-                        </ul>
-                    </li>
-                    <li class="topli" id="inventory">
-                        <a href="javascript:void(0);">
-                            <i class="menu-icon icon-home2"></i>
-                            <span style="font-size: large"><strong>收货管理</strong></span><i
-                                class="accordion-icon fa fa-angle-left"></i>
-                        </a>
-                        <ul class="sub-menu" id="inventory_ul">
-                            <li id="inventory_display"><a href="/inventory/display/"
-                                                          style="font-size:medium">查看库存</a></li>
-                            <li id="inventory_demand"><a href="/inventory/demand/n/"
-                                                         style="font-size:medium">请购单管理</a></li>
-                            <li id="inventory_temp"><a href="/inventory/temp/" style="font-size:medium">暂存检查</a>
-                            </li>
-                            <li id="inventory_receive"><a href="/inventory/receive/"
-                                                          style="font-size:medium">入库管理</a></li>
-                            <li id="inventory_invoice"><a href="/inventory/invoice/" style="font-size:medium">发票</a>
-                            </li>
-                        </ul>
-                    </li>
+{#                    <li class="topli" id="supply">#}
+{#                        <a href="javascript:void(0);">#}
+{#                            <i class="menu-icon icon-people"></i>#}
+{#                            <span style="font-size: large"><strong>供应商管理</strong></span>#}
+{#                            <i class="accordion-icon fa fa-angle-left">#}
+{#                            </i>#}
+{#                        </a>#}
+{#                        <ul class="sub-menu" id="supply_ul">#}
+{#                            <li id="supply1"><a href="/supply/list" style="font-size:medium">维护供应商</a></li>#}
+{#                            <li id="supply2"><a href="/supply/material/list" style="font-size:medium">维护物料关系</a>#}
+{#                            </li>#}
+{#                            <li id="supply3"><a href="/supply/quote/list" style="font-size:medium">维护报价单</a></li>#}
+{#                        </ul>#}
+{#                    </li>#}
+{#                    <li class="topli" id="purchase">#}
+{#                        <a href="javascript:void(0);">#}
+{#                            <i class="menu-icon glyphicon glyphicon-shopping-cart"></i>#}
+{#                            <span style="font-size: large"><strong>采购管理</strong></span><i#}
+{#                                class="accordion-icon fa fa-angle-left"></i>#}
+{#                        </a>#}
+{#                        <ul class="sub-menu" id="purchase_ul">#}
+{#                            <li class="subMenu" id="purchase_documents"><a href="/purchase/documents/"#}
+{#                                                                           style="font-size:medium">查看单据流</a>#}
+{#                            </li>#}
+{#                            <li class="subMenu" id="purchase_create_inquiry"><a href="/purchase/inquiry/create/"#}
+{#                                                                                style="font-size:medium">创建询价单</a></li>#}
+{#                            <li class="subMenu" id="purchase_e_quote"><a href="/purchase/quote/evaluate/"#}
+{#                                                                         style="font-size:medium">评估报价单</a>#}
+{#                            </li>#}
+{#                            <li class="subMenu" id="purchase_list"><a href="/purchase/list/"#}
+{#                                                                      style="font-size:medium">创建采购单</a></li>#}
+{#                        </ul>#}
+{#                    </li>#}
+{#                    <li class="topli" id="inventory">#}
+{#                        <a href="javascript:void(0);">#}
+{#                            <i class="menu-icon icon-home2"></i>#}
+{#                            <span style="font-size: large"><strong>收货管理</strong></span><i#}
+{#                                class="accordion-icon fa fa-angle-left"></i>#}
+{#                        </a>#}
+{#                        <ul class="sub-menu" id="inventory_ul">#}
+{#                            <li id="inventory_display"><a href="/inventory/display/"#}
+{#                                                          style="font-size:medium">查看库存</a></li>#}
+{#                            <li id="inventory_demand"><a href="/inventory/demand/n/"#}
+{#                                                         style="font-size:medium">请购单管理</a></li>#}
+{#                            <li id="inventory_temp"><a href="/inventory/temp/" style="font-size:medium">暂存检查</a>#}
+{#                            </li>#}
+{#                            <li id="inventory_receive"><a href="/inventory/receive/"#}
+{#                                                          style="font-size:medium">入库管理</a></li>#}
+{#                            <li id="inventory_invoice"><a href="/inventory/invoice/" style="font-size:medium">发票</a>#}
+{#                            </li>#}
+{#                        </ul>#}
+{#                    </li>#}
                     {% if request.session.info.office == "0" %}
                     <li class="topli" id="account">
                         <a href="javascript:void(0);">
@@ -162,6 +164,8 @@
                             </li>
                             <li id="spider_video"><a href="/spider/video/"
                                                           style="font-size:medium">bili视频</a></li>
+                            <li id="spider_gupiao"><a href="/spider/gupiao/"
+                                                     style="font-size:medium">股票</a></li>
                             <li id=""><a href="/" style="font-size:medium">待开发</a>
                             </li>
                         </ul>
