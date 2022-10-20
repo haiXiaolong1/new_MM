@@ -62,7 +62,7 @@
 
         });
         //使用事件监听方式捕捉事件， 此事件可作为实时监测video 播放状态
-        myVideo.addEventListener("timeupdate",function(){
+        myVideo.addEventListener("seeked",function(){
             var timeDisplay;
             //用秒数来显示当前播放进度
             timeDisplay = Math.floor(myVideo.currentTime);
