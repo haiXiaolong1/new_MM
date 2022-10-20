@@ -29,5 +29,9 @@ urlpatterns = [
     path('gupiao/',views.gupiao),
 
 
+    path('vi/',views.get_vi),
+    path('vi/vi',views.see_vi),
+    path('vi/delete',views.delete_vi),
+
 
 ]

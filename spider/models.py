@@ -83,6 +83,18 @@ class Video(models.Model):
 
 
 
+class Vi(models.Model):
+    name = models.CharField(max_length=255, blank=True, null=True,verbose_name="资源名")
+    visrc = models.CharField(max_length=255, blank=True, null=True,verbose_name="资源地址")
+    ausrc = models.CharField(max_length=255, blank=True, null=True,verbose_name="资源地址")
+    class Meta:
+        db_table = 'vi'
+        verbose_name = '本地无声视频频'
+        verbose_name_plural = '本地无声视频'
+
+
+
+
 class Gupiao(models.Model):
     lirunfenpei = models.CharField(max_length=255, blank=True, null=True,verbose_name="利润分配")
     meigushouyi = models.CharField(max_length=255, blank=True, null=True,verbose_name="每股收益")

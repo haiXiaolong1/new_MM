@@ -1,0 +1,152 @@
+{% extends 'common.html' %}
+{% load static %}
+{% block content %}
+    <div class="page-inner" style="background-image: url('bg.jpg');height: 1000px;width: 100%">
+        <div class="page-title">
+            <h3 class="breadcrumb-header">无声视频赏析</h3>
+        </div>
+        <div id="main-wrapper">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="panel panel-white">
+                        <div class="panel-heading clearfix">
+                            <h4 class="panel-title">视频列表</h4>
+                        </div>
+                        <div class="modal fade" id="deleteModel" tabindex="-1" role="dialog"
+                             aria-labelledby="myModalLabel">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span></button>
+                                        <h4 class="modal-title">删除视频</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <span>是否确定删除？</span>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">取消
+                                        </button>
+                                        <button type="submit" id="Delete" class="btn btn-info">确定</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-bottom: 20px">
+                            <form method="get" >
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="输入关键词" name="keys" value autocomplete="off" >
+                                </div>
+                                <div class="col-md-4">
+                                    <input type="text" class="form-control" placeholder="输入页码（1-30）" name="pages" value autocomplete="off" >
+                                </div>
+                                <button class="btn btn-info" type="submit">下载</button>
+                            </form>
+                        </div>
+                        <div style="margin-bottom: 20px">
+                            <form method="get" >
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" placeholder="输入视频链接" name="link" value autocomplete="off" >
+                                </div>
+                                <div class="col-md-3">
+                                    <input type="text" class="form-control" placeholder="推荐个数(0-19)" name="num" value autocomplete="off" >
+                                </div>
+                                <button class="btn btn-info" type="submit">下载</button>
+                            </form>
+                        </div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table id="example" class="display table" style="width: 100%; cellspacing: 0;">
+                                    <thead>
+                                    <tr>
+                                        <th>编号</th>
+                                        <th>说明</th>
+                                        <th>操作</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="table">
+                                    {% for obj in results %}
+                                        <tr>
+                                            <td>{{ obj.id }}</td>
+                                            <td>{{ obj.name }}</td>
+                                            <td>
+                                                <a href="/spider/vi/vi?src={{ obj.src }}&id={{ obj.id }}" class="btn btn-info">查看</a>
+                                                <button class="btn btn-danger  btnDelete" id="" uid="{{ obj.id }}">删除</button>
+
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- Main Wrapper -->
+
+        {#        <div class="videocontainer">#}
+        {#            <video class="fullscreenvideo" id="bgvid" playsinline="" autoplay muted="" loop poster={% static 'video/bg.jpg' %} >#}
+        {#                <source type="video/mp4" src={% static 'video/猫羽雫PC%202K.mp4' %} >#}
+        {#            </video>#}
+        {#        </div>#}
+
+
+    </div>
+    <!-- Row -->
+
+{% endblock %}
+
+{% block js %}
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('li').removeClass('active-page');
+            $('#spider_vi').addClass('active-page');
+            $('#spider').addClass('active-page').addClass('open');
+            $('#spider_ul').css('display', 'block');
+            $('#spider_ul li').addClass('animation');
+            var oTable = $('#example').dataTable();
+            var oSettings = oTable.fnSettings();
+            $("#table").on('click', '.btnDelete', function () {
+                DELETE_ID = $(this).attr("uid");
+                // 获取页码值
+                PAGE=oSettings._iDisplayStart;
+                //获取页面分割长度
+                LENGTH=oSettings._iDisplayLength;
+                $("#deleteModel").modal('show');
+            })
+
+            $("#Delete").click(
+                function () {
+                    $.ajax({
+                        url: "/spider/vi/delete",
+                        type: "get",
+                        data: {uid: DELETE_ID},
+                        dataType: "JSON",
+                        success: function (res) {
+                            if (res.status) {
+                                $("#deleteModel").modal('hide');
+                                DELETE_ID = undefined;
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
+                                location.reload();
+                            } else {
+
+                                $("#deleteModel").modal('hide');
+                                DELETE_ID = undefined;
+                                sessionStorage.setItem("search",$('#example_filter input')[0].value);
+                                sessionStorage.setItem("page",PAGE);
+                                sessionStorage.setItem("length",LENGTH);
+                                location.reload();
+                            }
+                        }
+                    })
+                }
+            )
+        })
+
+
+    </script>
+{% endblock %}
