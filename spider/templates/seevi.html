@@ -59,7 +59,7 @@
         });
         //监听播放结束
         myVideo.addEventListener('ended',function(){
-
+            myAudio.pause()
         });
         //使用事件监听方式捕捉事件， 此事件可作为实时监测video 播放状态
         myVideo.addEventListener("seeked",function(){
@@ -67,6 +67,24 @@
             //用秒数来显示当前播放进度
             timeDisplay = Math.floor(myVideo.currentTime);
             myAudio.currentTime=timeDisplay
+        },false);
+        myAudio.addEventListener('play',function(){
+            myVideo.play();
+        });
+        //监听播放结束
+        myAudio.addEventListener('pause',function(){
+            myVideo.pause()
+        });
+        //监听播放结束
+        myAudio.addEventListener('ended',function(){
+            myVideo.pause()
+        });
+        //使用事件监听方式捕捉事件， 此事件可作为实时监测video 播放状态
+        myAudio.addEventListener("seeked",function(){
+            var timeDisplay;
+            //用秒数来显示当前播放进度
+            timeDisplay = Math.floor(myVideo.currentTime);
+            myVideo.currentTime=timeDisplay
         },false);
         //设置播放时间为40s
         {#myVideo.currentTime = 40;#}
