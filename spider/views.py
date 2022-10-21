@@ -1,34 +1,20 @@
-import asyncio
-import aiohttp
-import random
 import re
 import requests
-from lxml import etree
-from urllib import parse
-from django.shortcuts import render, redirect, HttpResponse
-from django.db.models import Q
-from django.http import JsonResponse
-from django.views.decorators.csrf import csrf_exempt
-from spider.models import Audio, Image, Picture, New1, New2, New3, Audiosrc, Video, Gupiao, New4,Vi
-from django.core.paginator import Paginator
-# Create your views here.
-import json
 import datetime
 import time
-import os
-import pymysql
-import numpy as np
-import plotly.graph_objects as go
-from matplotlib import pyplot as plt
 from bs4 import BeautifulSoup
 from selenium.webdriver import Chrome
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from concurrent.futures import ThreadPoolExecutor
-from moviepy import *
 from moviepy.editor import *
-
+from lxml import etree
+from urllib import parse
+from django.shortcuts import render, redirect, HttpResponse
+from django.http import JsonResponse
+from spider.models import Audio, Image, Picture, New1, New2, New3, Audiosrc, Video, Gupiao, New4,Vi
+from django.core.paginator import Paginator
 
 def get_source(name):
     url = "http://www.weather.com.cn/"  # 天气网地址

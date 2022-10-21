@@ -18,8 +18,8 @@
                             <h4 class="panel-title">{{ name }}</h4>
                         </div>
                         <div class="panel-body">
-                            <video controls autoplay  style="width: 100%" src="{{ visrc }}" id="vi"></video>
-                            <audio controls  style="width: 100%" src="{{ ausrc }}" id="au"></audio>
+                            <video controls  preload="auto" style="width: 100%" src="{{ visrc }}" id="vi"></video>
+                            <audio controls  preload="auto" style="width: 100%;display: none;" src="{{ ausrc }}" id="au"></audio>
                         </div>
                     </div>
                 </div>
@@ -49,6 +49,7 @@
         //获取视频DOM元素
         var myVideo = document.getElementById("vi");
         var myAudio=document.getElementById('au')
+        myAudio.volume=0.2;
         //监听播放开始
         myVideo.addEventListener('play',function(){
             myAudio.play();
@@ -67,6 +68,10 @@
             //用秒数来显示当前播放进度
             timeDisplay = Math.floor(myVideo.currentTime);
             myAudio.currentTime=timeDisplay
+            myAudio.play();
+        },false);
+        myVideo.addEventListener("seeking",function(){
+            myAudio.pause();
         },false);
         myAudio.addEventListener('play',function(){
             myVideo.play();
@@ -76,16 +81,16 @@
             myVideo.pause()
         });
         //监听播放结束
-        myAudio.addEventListener('ended',function(){
-            myVideo.pause()
-        });
-        //使用事件监听方式捕捉事件， 此事件可作为实时监测video 播放状态
-        myAudio.addEventListener("seeked",function(){
-            var timeDisplay;
-            //用秒数来显示当前播放进度
-            timeDisplay = Math.floor(myVideo.currentTime);
-            myVideo.currentTime=timeDisplay
-        },false);
+        {#myAudio.addEventListener('ended',function(){#}
+        {#    myVideo.pause()#}
+        {# });#}
+        {#//使用事件监听方式捕捉事件， 此事件可作为实时监测video 播放状态#}
+        {#myAudio.addEventListener("seeked",function(){#}
+        {#    var timeDisplay;#}
+        {#    //用秒数来显示当前播放进度#}
+        {#    timeDisplay = Math.floor(myVideo.currentTime);#}
+        {#    myVideo.currentTime=timeDisplay#}
+        {# },false);#}
         //设置播放时间为40s
         {#myVideo.currentTime = 40;#}
         //让音乐开始播放
