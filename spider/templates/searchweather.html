@@ -70,13 +70,16 @@
 
 {% block js %}
     <script type="text/javascript">
-
         $(document).ready(function () {
             $('li').removeClass('active-page');
             $('#spider_weather').addClass('active-page');
             $('#spider').addClass('active-page').addClass('open');
             $('#spider_ul').css('display', 'block');
-            $('#spider_ul li').addClass('animation');
+            $('#spider_ul li').addClass('animation')
+        })
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function () {
             var name='{{ name }}'
             if(name){
                 var myChart2 = echarts.init(document.getElementById('chart2'));

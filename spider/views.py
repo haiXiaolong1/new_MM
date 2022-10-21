@@ -1379,16 +1379,27 @@ def get_bili_visrc(href):
 
 
 def save_bili_visrc(href, ausrc,visrc, name):
+    banth=4096
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36 Edg/106.0.1370.34"
         , "referer": href,
     }
     text = requests.get(url=ausrc, headers=headers, timeout=(3.05, 27)).content
-    with open(f'../supply/static/au/{name}.mp3', mode='wb') as f:
-        f.write(text)
+    with open(f'../supply/static/au/{name}.mp3', mode='wb',buffering=banth) as f:
+        n=0
+        for i in range(int(len(text)/banth)):
+            n+=1
+            f.write(text[banth*i:banth*i+1])
+            f.flush()
+        f.write(text[banth*n:])
     text = requests.get(url=visrc, headers=headers, timeout=(3.05, 27)).content
-    with open(f'../supply/static/vi/{name}.mp4', mode='wb') as f:
-        f.write(text)
+    with open(f'../supply/static/vi/{name}.mp4', mode='wb',buffering=banth) as f:
+        n=0
+        for i in range(int(len(text)/banth)):
+            n+=1
+            f.write(text[banth*i:banth*i+1])
+            f.flush()
+        f.write(text[banth*n:])
 
 def audio_downloadvi(keys, pages):
     with ThreadPoolExecutor(20) as t:

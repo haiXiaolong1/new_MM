@@ -52,13 +52,21 @@
         myAudio.volume=0.2;
         //监听播放开始
         myVideo.addEventListener('play',function(){
-            myAudio.play();
+            if(myVideo.readyState==4&&myAudio.readyState==4){
+                myAudio.play();
+            }else {
+                myVideo.pause();
+            }
+
         });
         myVideo.addEventListener('ratechange',function(){
             myAudio.playbackRate=myVideo.playbackRate
         });
         myVideo.addEventListener('pause',function(){
             myAudio.pause()
+        });
+        myAudio.addEventListener('pause',function(){
+            myVideo.pause()
         });
         //监听播放结束
         myVideo.addEventListener('ended',function(){
@@ -70,7 +78,11 @@
             //用秒数来显示当前播放进度
             timeDisplay = Math.floor(myVideo.currentTime);
             myAudio.currentTime=timeDisplay
-            myAudio.play();
+            if(myVideo.readyState==4&&myAudio.readyState==4){
+                myVideo.play();
+            }else {
+                myVideo.pause();
+            }
         },false);
         myVideo.addEventListener("waiting",function(){
             myAudio.pause();

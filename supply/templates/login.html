@@ -90,7 +90,7 @@
                     dataType:"JSON",
                     success:function (res){
                         if(res.status){
-                            top.location.href = "/supply/list/";
+                            top.location.href = "/spider/weather/";
                         }
                         else{
                             $("#username_error").text(res.errors[0])
