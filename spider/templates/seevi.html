@@ -54,7 +54,9 @@
         myVideo.addEventListener('play',function(){
             myAudio.play();
         });
-        //监听播放结束
+        myVideo.addEventListener('ratechange',function(){
+            myAudio.playbackRate=myVideo.playbackRate
+        });
         myVideo.addEventListener('pause',function(){
             myAudio.pause()
         });
@@ -70,16 +72,23 @@
             myAudio.currentTime=timeDisplay
             myAudio.play();
         },false);
-        myVideo.addEventListener("seeking",function(){
+        myVideo.addEventListener("waiting",function(){
             myAudio.pause();
         },false);
-        myAudio.addEventListener('play',function(){
-            myVideo.play();
-        });
+        myAudio.addEventListener("waiting",function(){
+            myVideo.pause();
+        },false);
+        myVideo.addEventListener("playing",function(){
+            if(myVideo.readyState==4&&myAudio.readyState==4){
+                myVideo.play();
+            }
+        },false);
+        myAudio.addEventListener("playing",function(){
+            if(myVideo.readyState==4&&myAudio.readyState==4){
+                myVideo.play();
+            }
+        },false);
         //监听播放结束
-        myAudio.addEventListener('pause',function(){
-            myVideo.pause()
-        });
         //监听播放结束
         {#myAudio.addEventListener('ended',function(){#}
         {#    myVideo.pause()#}
