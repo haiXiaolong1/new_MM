@@ -299,9 +299,9 @@ def get_bigImage(request):
     res = requests.get(url)
     res.encoding = 'utf-8'
     tree = etree.HTML(res.text)
-    obj = re.compile('"big-pic">.*?src="(?P<src>.*?)"', re.S)
+    obj = re.compile('"big-pic">.*?src=(?P<src>.*?)/>', re.S)
     src = []
-    src.append(obj.search(res.text).group('src'))
+    src.append(obj.search(res.text).group('src').strip().strip('"').strip("'"))
     # src=tree.xpath('/html/body/div[3]/div[2]/div[6]/a/img/@src')[0]
     divs = tree.xpath('/html/body/div[3]/div[2]/div[9]/ul')
     if divs:
@@ -311,7 +311,7 @@ def get_bigImage(request):
             print(u)
             res = requests.get(u)
             res.encoding = 'utf-8'
-            src.append(obj.search(res.text).group('src'))
+            src.append(obj.search(res.text).group('src').strip().strip('"').strip("'"))
     return render(request, 'bigImage.html', {"src": src, "name": name, "title": title})
 
 
